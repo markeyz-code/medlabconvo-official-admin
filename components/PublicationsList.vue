@@ -211,6 +211,7 @@
       <Modal v-model="showModal" title="Publication Details" size="xl">
         <PublicationForm
           :publication="selectedPublication"
+          :loading="selectedPublication ? updating : creating"
           @save="handleSavePublication"
           @cancel="closeModal"
         />
@@ -251,8 +252,8 @@
   
   // Composables
   const { publications, loading, getPublications } = useGetPublications()
-  const { createPublication } = useCreatePublication()
-  const { updatePublication } = useUpdatePublication()
+  const { createPublication, loading: creating } = useCreatePublication()
+  const { updatePublication, loading: updating } = useUpdatePublication()
   const { submitForReview: submitForReviewAction } = useSubmitForReview()
   const { approvePublication: approvePublicationAction } = useApprovePublication()
   const { publishPublication: publishPublicationAction } = usePublishPublication()
@@ -341,7 +342,8 @@
   const handleSavePublication = async (publicationData: any) => {
     try {
       if (selectedPublication.value) {
-        await updatePublication(selectedPublication.value._id, publicationData)
+        const { doiLink, doi, link, ...rest } = publicationData
+        await updatePublication(selectedPublication.value._id, rest)
       } else {
         await createPublication(publicationData)
       }

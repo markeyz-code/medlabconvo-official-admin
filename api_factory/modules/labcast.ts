@@ -93,7 +93,9 @@ export const labcast_api = {
 
   // Get all LabCast episodes with filtering and pagination
   $_get_labcasts: async (queryParams?: QueryLabCastParams) => {
-    const url = `/labcast`
+    // const url = `/labcast`
+    // return GATEWAY_ENDPOINT.get(url, { params: queryParams })
+    const url = `/labcast?limit=1000000`
     return GATEWAY_ENDPOINT.get(url, { params: queryParams })
   },
 

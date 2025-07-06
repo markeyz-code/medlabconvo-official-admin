@@ -152,7 +152,7 @@
 
     <!-- DOI and Links -->
     <div class="space-y-6">
-      <div>
+      <!-- <div>
         <label class="block text-sm font-medium text-slate-700 mb-2">
           DOI
         </label>
@@ -162,9 +162,9 @@
           class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
           placeholder="Digital Object Identifier..."
         />
-      </div>
+      </div> -->
       
-      <div>
+      <!-- <div>
         <label class="block text-sm font-medium text-slate-700 mb-2">
           Publication Link
         </label>
@@ -174,7 +174,7 @@
           class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
           placeholder="Main publication URL..."
         />
-      </div>
+      </div> -->
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
@@ -188,7 +188,7 @@
             placeholder="Publication URL..."
           />
         </div>
-        <div>
+        <!-- <div>
           <label class="block text-sm font-medium text-slate-700 mb-2">
             DOI Link
           </label>
@@ -198,7 +198,7 @@
             class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
             placeholder="DOI URL..."
           />
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -234,10 +234,10 @@
       </button>
       <button
         type="submit"
-        :disabled="isSubmitting"
+        :disabled="loading"
         class="px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center space-x-2"
       >
-        <Loader2 v-if="isSubmitting" class="w-4 h-4 animate-spin" />
+        <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
         <span>{{ publication ? 'Update' : 'Create' }} Publication</span>
       </button>
     </div>
@@ -250,7 +250,8 @@ import { ImagePlus, Loader2, X } from 'lucide-vue-next'
 import { useSingleUploadFile } from '@/composables/core/useSingleUpload'
 
 interface Props {
-  publication?: any
+  publication?: any,
+  loading?: boolean
 }
 
 const props = defineProps<Props>()
@@ -294,8 +295,8 @@ watchEffect(() => {
       authors: props.publication.authors || '',
       journal: props.publication.journal || '',
       year: props.publication.year || new Date().getFullYear(),
-      doi: props.publication.doi || '',
-      link: props.publication.link || '',
+      // doi: props.publication.doi || '',
+      // link: props.publication.link || '',
       pubLink: props.publication.pubLink || '',
       doiLink: props.publication.doiLink || '',
       category: props.publication.category || '',
@@ -310,8 +311,8 @@ watchEffect(() => {
       authors: '',
       journal: '',
       year: new Date().getFullYear(),
-      doi: '',
-      link: '',
+      // doi: '',
+      // link: '',
       pubLink: '',
       doiLink: '',
       category: '',

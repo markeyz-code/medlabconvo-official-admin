@@ -11,12 +11,12 @@
           >
             {{ formatStatus(publication.status) }}
           </span>
-          <button
+          <!-- <button
             @click="$emit('close')"
             class="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
           >
             <X class="w-5 h-5" />
-          </button>
+          </button> -->
         </div>
         
         <h1 class="text-3xl font-bold text-slate-900 mb-4">
@@ -75,10 +75,10 @@
   
       <!-- Publication Details -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div v-if="publication.doi" class="bg-slate-50 rounded-lg p-4">
+        <!-- <div v-if="publication.doi" class="bg-slate-50 rounded-lg p-4">
           <h4 class="font-semibold text-slate-900 mb-2">DOI</h4>
           <p class="text-slate-700 font-mono text-sm">{{ publication.doi }}</p>
-        </div>
+        </div> -->
         
         <div v-if="publication.link" class="bg-slate-50 rounded-lg p-4">
           <h4 class="font-semibold text-slate-900 mb-2">Publication Link</h4>

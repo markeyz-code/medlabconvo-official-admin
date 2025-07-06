@@ -217,6 +217,7 @@
   
   const handleSavePublication = async (publicationData: any) => {
     try {
+      console.log(publicationData, 'pub data')
       if (selectedPublication.value) {
         await updatePublication(selectedPublication.value._id, publicationData)
       } else {

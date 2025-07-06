@@ -675,9 +675,14 @@ const handleSubmit = async () => {
       focusAreas: form.focusAreas.filter(area => area.trim()),
       outcomes: form.outcomes.filter(outcome => outcome.trim()),
       keyResponsibilities: form.keyResponsibilities.filter(resp => resp.trim()),
-      highlights: form.highlights.filter(h => h.title.trim() || h.description.trim()),
+      highlights: form.highlights
+        .filter(h => h.title.trim() || h.description.trim())
+        .map(h => {
+          const { _id, ...cleanHighlight } = h
+          return cleanHighlight
+        }),
       formFields: form.formFields.map(field => {
-        const { optionsText, ...cleanField } = field
+        const { optionsText, _id, ...cleanField } = field
         return cleanField
       })
     }

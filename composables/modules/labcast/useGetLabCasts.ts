@@ -18,7 +18,8 @@ export const useGetLabCasts = () => {
     error.value = null
 
     try {
-      const response = await labcast_api.$_get_labcasts(queryParams)
+      // const response = await labcast_api.$_get_labcasts(queryParams)
+      const response = await labcast_api.$_get_labcasts()
       labcasts.value = response.data.data || response.data
       totalCount.value = response.data.total || response.data.length
       currentPage.value = queryParams?.page || 1
