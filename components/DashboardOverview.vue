@@ -13,10 +13,11 @@
 
     <!-- Stats Cards - All Sidebar Navigation Items -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6">
-      <div
+      <NuxtLink
         v-for="(stat, index) in allStats"
         :key="stat.title"
-        class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-lg transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 animate-fade-in-up group overflow-hidden relative"
+        :to="stat.link"
+        class="bg-white block rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-lg transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 animate-fade-in-up group overflow-hidden relative"
         :style="{ 'animation-delay': `${index * 150}ms` }"
       >
         <!-- Floating background decoration -->
@@ -62,7 +63,7 @@
             ></div>
           </div>
         </div>
-      </div>
+      </NuxtLink>
     </div>
 
     <!-- Recent Activities from Audit Logs -->
@@ -164,77 +165,88 @@ const allStats = computed(() => [
     value: users?.value?.length?.toString() || '0',
     change: '+12%',
     icon: 'heroicons:users',
-    color: 'blue'
+    color: 'blue',
+    link: '/dashboard/users'
   },
   {
     title: 'Enquiries',
     value: enquiries?.value?.length?.toString() || '0',
     change: '+5%',
     icon: 'heroicons:envelope',
-    color: 'green'
+    color: 'green',
+    link: '/dashboard/enquires'
   },
   {
     title: 'Subscriptions',
     value: subscriptions?.value?.length?.toString() || '0',
     change: '+18%',
     icon: 'heroicons:newspaper',
-    color: 'purple'
+    color: 'purple',
+    link: '/dashboard/subscriptions'
   },
   {
     title: 'Team Members',
     value: teamMembers?.value?.length?.toString() || '0',
     change: '+3%',
     icon: 'heroicons:user-group',
-    color: 'orange'
+    color: 'orange',
+    link: '/dashboard/teams'
   },
   {
     title: 'Publications',
     value: publications?.value?.length?.toString() || '0',
     change: '+8%',
     icon: 'heroicons:document-text',
-    color: 'indigo'
+    color: 'indigo',
+    link: '/dashboard/publications'
   },
   {
     title: 'LabCast',
     value: labcasts?.value?.length?.toString() || '0',
     change: '+15%',
     icon: 'heroicons:film',
-    color: 'pink'
+    color: 'pink',
+    link: '/dashboard/labcast'
   },
   {
     title: 'Products',
     value: products?.value?.length?.toString() || '0',
     change: '+22%',
     icon: 'heroicons:cube',
-    color: 'teal'
+    color: 'teal',
+    link: '/dashboard/products'
   },
   {
     title: 'Programs',
     value: programs?.value?.length?.toString() || '0',
     change: '+11%',
     icon: 'heroicons:academic-cap',
-    color: 'emerald'
+    color: 'emerald',
+    link: '/dashboard/programs'
   },
   {
     title: 'Blogs',
     value: blogs?.value?.length?.toString() || '0',
     change: '+7%',
     icon: 'heroicons:pencil-square',
-    color: 'amber'
+    color: 'amber',
+    link: '/dashboard/blogs'
   },
   {
     title: 'Forms',
     value: forms?.value?.length?.toString() || '0',
     change: '+4%',
     icon: 'heroicons:document-duplicate',
-    color: 'rose'
+    color: 'rose',
+    link: '/dashboard/forms'
   },
   {
     title: 'Audit Logs',
     value: auditLogs?.value?.length?.toString() || '0',
     change: '+25%',
     icon: 'heroicons:shield-check',
-    color: 'slate'
+    color: 'slate',
+    link: '/dashboard/audit'
   }
 ])
 

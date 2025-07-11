@@ -103,4 +103,9 @@ export const publications_api = {
     const url = `/publications/${publicationId}/hard`
     return GATEWAY_ENDPOINT.delete(url)
   },
+
+  $_reorder_publication: async (payload:any) => {
+    const url = `/publications/reorder`
+    return GATEWAY_ENDPOINT.patch(url, payload)
+  },
 }
