@@ -21,7 +21,9 @@
           </div>
         </div>
       </div>
-  
+
+
+
       <div class="space-y-8">
         <!-- Enhanced Filters Section -->
         <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 hover:shadow-xl transition-all duration-300">
@@ -29,7 +31,7 @@
             <!-- Search with Animation -->
             <div class="relative group">
               <label class="block text-sm font-semibold text-gray-700 mb-2">Search Episodes</label>
-              <div class="relative">
+              <div class="relative w-full">
                 <Icon 
                   name="lucide:search" 
                   class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-blue-500 transition-colors duration-200" 
@@ -38,7 +40,7 @@
                   v-model="searchQuery"
                   type="text"
                   placeholder="Search by title, description..."
-                  class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-200 placeholder-gray-400"
+                  class="pl-10 pr-4 w-full py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-200 placeholder-gray-400"
                   @input="debouncedSearch"
                 />
                 <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
@@ -95,7 +97,7 @@
             </div>
   
             <!-- View Toggle -->
-            <div class="flex flex-col justify-end">
+            <!-- <div class="flex flex-col justify-end">
               <label class="block text-sm font-semibold text-gray-700 mb-2">View</label>
               <div class="flex rounded-xl border border-gray-200 bg-white/50 backdrop-blur-sm p-1">
                 <button
@@ -121,9 +123,11 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="w-4 h-4" fill="#000000" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg>
                 </button>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
+
+        
   
         <!-- Episodes Grid/List -->
         <div class="relative">
@@ -149,7 +153,158 @@
           </div>
   
           <!-- Episodes List -->
-          <div v-else-if="currentEpisodes?.length" :class="[
+          <TransitionGroup
+            v-else-if="currentEpisodes?.length"
+            enter-active-class="transition-all duration-500 ease-out"
+            enter-from-class="opacity-0 scale-95 translate-y-4"
+            enter-to-class="opacity-100 scale-100 translate-y-0"
+            leave-active-class="transition-all duration-300 ease-in"
+            leave-from-class="opacity-100 scale-100 translate-y-0"
+            leave-to-class="opacity-0 scale-95 -translate-y-4"
+            tag="div"
+            class="space-y-3"
+          >
+            <div
+              v-for="(episode, index) in currentEpisodes"
+              :key="episode._id"
+              :draggable="!searchQuery && !selectedSeason"
+              :class="[
+                'bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300 group relative overflow-hidden',
+                {
+                  'cursor-move': !searchQuery && !selectedSeason,
+                  'opacity-50 scale-95': draggedIndex === index,
+                  'border-amber-300 shadow-amber-100': dropTargetIndex === index && draggedIndex !== index,
+                  'cursor-not-allowed opacity-60': reorderLoading
+                }
+              ]"
+              @dragstart="handleDragStart($event, index)"
+              @dragend="handleDragEnd"
+              @dragover="handleDragOver($event, index)"
+              @dragleave="handleDragLeave"
+              @drop="handleDrop($event, index)"
+            >
+              <!-- Drag Handle -->
+              <div v-if="!searchQuery && !selectedSeason" class="absolute left-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 cursor-move transition-opacity duration-200 z-10">
+                <div class="flex flex-col space-y-1">
+                  <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
+                  <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
+                  <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
+                </div>
+              </div>
+
+              <!-- Drop Target Indicator -->
+              <div 
+                v-if="dropTargetIndex === index" 
+                class="absolute inset-0 border-2 border-dashed border-amber-400 rounded-xl pointer-events-none z-20"
+              >
+                <div v-if="reorderLoading" class="absolute inset-0 flex items-center justify-center">
+                  <div class="animate-spin rounded-full h-8 w-8 border-4 border-amber-500 border-t-transparent"></div>
+                </div>
+              </div>
+
+              <!-- Episode Card Content -->
+              <div class="flex gap-4 p-4 sm:p-6">
+                <!-- Episode Thumbnail -->
+                <div class="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 relative">
+                  <div class="w-full h-full bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg overflow-hidden">
+                    <img 
+                      :src="episode.image" 
+                      :alt="episode.title"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                  <!-- Season/Episode Badge -->
+                  <div class="absolute -bottom-1 -right-1 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-medium text-gray-800 border border-gray-200">
+                    S{{ episode.season }}E{{ episode.episode }}
+                  </div>
+                </div>
+
+                <!-- Episode Info -->
+                <div class="flex-1 min-w-0">
+                  <!-- Header with Title and Status -->
+                  <div class="flex items-start justify-between gap-2 mb-2">
+                    <h3 class="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200">
+                      {{ episode.title }}
+                    </h3>
+                    <span :class="[
+                      'flex-shrink-0 px-2 py-1 rounded-full text-xs font-medium',
+                      episode.isActive 
+                        ? 'bg-green-100 text-green-800 border border-green-200' 
+                        : 'bg-gray-100 text-gray-800 border border-gray-200'
+                    ]">
+                      {{ episode.isActive ? 'Published' : 'Draft' }}
+                    </span>
+                  </div>
+
+                  <!-- Description -->
+                  <p class="text-sm text-gray-600 line-clamp-2 mb-3">
+                    {{ episode.description }}
+                  </p>
+
+                  <!-- Meta Information -->
+                  <div class="flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-3">
+                    <div class="flex items-center gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" width="32" height="32" fill="currentColor" viewBox="0 0 256 256">
+                        <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path>
+                      </svg>
+                      <span>{{ episode.duration || '45:30' }}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" class="w-3 h-3" height="32" fill="currentColor" viewBox="0 0 256 256">
+                        <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-68-76a12,12,0,1,1-12-12A12,12,0,0,1,140,132Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,132ZM96,172a12,12,0,1,1-12-12A12,12,0,0,1,96,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,140,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,172Z"></path>
+                      </svg>
+                      <span>{{ formatDate(episode.publishedAt) }}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                      <span>MLC Journal</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                      <span>Medical Laboratory Science</span>
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons - Mobile First -->
+                  <div class="flex flex-wrap gap-2 sm:gap-3">
+                    <!-- Mobile: Stack buttons vertically on very small screens -->
+                    <div class="flex gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
+                      <button @click="previewEpisode(episode)" class="flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-all duration-200 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="currentColor" viewBox="0 0 256 256">
+                          <path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Preview</span>
+                      </button>
+                      
+                      <button @click="editEpisode(episode)" class="flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="currentColor" viewBox="0 0 256 256">
+                          <path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Edit</span>
+                      </button>
+
+                      <button @click="deleteEpisode(episode)" class="flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="currentColor" viewBox="0 0 256 256">
+                          <path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Delete</span>
+                      </button>
+
+                      <button @click="toggleEpisodeStatus(episode)" :class="[
+                        'flex items-center justify-center gap-1 px-3 py-1.5 text-sm rounded-lg transition-all duration-200',
+                        episode.isActive ? 'bg-orange-50 text-orange-600 hover:bg-orange-100' : 'bg-green-50 text-green-600 hover:bg-green-100'
+                      ]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="currentColor" viewBox="0 0 256 256">
+                          <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm40-68a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,148ZM96,108H160a8,8,0,0,1,0,16H96a8,8,0,0,1,0-16Z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">{{ episode.isActive ? 'Deactivate' : 'Activate' }}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TransitionGroup>
+
+          <!-- <div v-else-if="currentEpisodes?.length" :class="[
             'grid gap-6 transition-all duration-300',
             viewMode === 'grid' 
               ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
@@ -160,13 +315,37 @@
               :key="episode._id"
               class="group bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 overflow-hidden"
               :style="{ animationDelay: `${index * 100}ms` }"
+              draggable="true"
+              @dragstart="handleDragStart($event, index)"
+              @dragend="handleDragEnd"
+              @dragover="handleDragOver($event, index)"
+              @dragleave="handleDragLeave"
+              @drop="handleDrop($event, index)"
             >
-              <!-- Episode Card Content -->
+
+              <div v-if="!searchQuery && !selectedSeason" class="absolute left-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 cursor-move transition-opacity duration-200">
+                <div class="flex flex-col space-y-1">
+                  <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
+                  <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
+                  <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
+                </div>
+              </div>
+
+
+              <div 
+                v-if="dropTargetIndex === index" 
+                class="absolute inset-0 border-2 border-dashed border-amber-400 rounded-2xl pointer-events-none"
+              >
+                <div v-if="reorderLoading" class="absolute inset-0 flex items-center justify-center">
+                  <div class="animate-spin rounded-full h-8 w-8 border-4 border-amber-500 border-t-transparent"></div>
+                </div>
+              </div>
+
+
               <div class="relative">
-                <!-- Episode Image/Thumbnail -->
+   
                 <div class="relative h-48 bg-gradient-to-br from-blue-100 to-indigo-100 overflow-hidden">
-                  <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div> -->
-                   <img :src="episode.image" class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                  <img :src="episode.image" class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                   <div class="absolute top-4 right-4 flex gap-2">
                     <span :class="[
                       'px-3 py-1 rounded-full text-xs font-semibold',
@@ -183,8 +362,8 @@
                     </span>
                   </div>
                 </div>
-  
-                <!-- Episode Info -->
+
+
                 <div class="p-6 space-y-4">
                   <div>
                     <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200">
@@ -194,65 +373,64 @@
                       {{ episode.description }}
                     </p>
                   </div>
-  
-                  <!-- Episode Meta -->
+
+
                   <div class="flex items-center justify-between text-sm text-gray-500">
                     <div class="flex items-center gap-4">
                       <div class="flex items-center gap-1">
-                        <!-- <Icon name="lucide:clock" class="w-4 h-4" /> -->
-                        <svg xmlns="http://www.w3.org/2000/svg"class="w-4 h-4" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg>
                         <span>{{ episode.duration || '45:30' }}</span>
                       </div>
                       <div class="flex items-center gap-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" class="w-4 h-4" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-68-76a12,12,0,1,1-12-12A12,12,0,0,1,140,132Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,132ZM96,172a12,12,0,1,1-12-12A12,12,0,0,1,96,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,140,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,172Z"></path></svg>
-                        <!-- <Icon name="lucide:calendar" class="w-4 h-4" /> -->
                         <span>{{ formatDate(episode.publishedAt) }}</span>
                       </div>
                     </div>
                   </div>
-  
-                  <!-- Action Buttons -->
-                  <div class="flex gap-2 pt-4 border-t border-gray-100">
-                    <button
-                      @click="previewEpisode(episode)"
-                      class="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-all duration-200 font-medium"
-                    >
-                      <!-- <Icon name="lucide:eye" class="w-4 h-4" /> -->
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
-                      Preview
-                    </button>
-                    <button
-                      @click="editEpisode(episode)"
-                      class="flex items-center justify-center px-4 py-2 bg-gray-50 text-gray-600 rounded-xl hover:bg-gray-100 transition-all duration-200"
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M53.92,34.62A8,8,0,1,0,42.08,45.38l48.2,53L36.68,152A15.89,15.89,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31l50.4-50.39,47.69,52.46a8,8,0,1,0,11.84-10.76ZM92.69,208H48V163.31l53.06-53,42.56,46.81ZM227.32,73.37,182.63,28.69a16,16,0,0,0-22.63,0L118.33,70.36a8,8,0,0,0,11.32,11.31L136,75.31,180.69,120l-9,9A8,8,0,0,0,183,140.34L227.32,96A16,16,0,0,0,227.32,73.37ZM192,108.69,147.32,64l24-24L216,84.69Z"></path></svg>
-                      <!-- <Icon name="lucide:edit" class="w-4 h-4" /> -->
-                    </button>
-                    <button
-                      @click="deleteEpisode(episode)"
-                      class="flex items-center justify-center px-4 py-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-all duration-200"
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>
-                      <!-- <Icon name="lucide:trash-2" class="w-4 h-4" /> -->
-                    </button>
-                    <button
-                      @click="toggleEpisodeStatus(episode)"
-                      :class="[
-                        'flex items-center justify-center px-4 py-2 rounded-xl transition-all duration-200',
-                        episode.isActive 
-                          ? 'bg-orange-50 text-orange-600 hover:bg-orange-100' 
-                          : 'bg-green-50 text-green-600 hover:bg-green-100'
-                      ]"
-                    >
-                    <svg v-if="episode.isActive" xmlns="http://www.w3.org/2000/svg" width="32" class="w-4 h-4" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM112,96v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0Z"></path></svg>
 
-                    <svg v-else xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="w-4 h-4" fill="#000000" viewBox="0 0 256 256"><path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"></path></svg>
-                    </button>
-                  </div>
+         
+                  <div class="flex gap-2 pt-4 border-t border-gray-100">
+                              <button
+                                @click="previewEpisode(episode)"
+                                class="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-all duration-200 font-medium"
+                              >
+           
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                                Preview
+                              </button>
+                              <button
+                                @click="editEpisode(episode)"
+                                class="flex items-center justify-center px-4 py-2 bg-gray-50 text-gray-600 rounded-xl hover:bg-gray-100 transition-all duration-200"
+                              >
+                              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M53.92,34.62A8,8,0,1,0,42.08,45.38l48.2,53L36.68,152A15.89,15.89,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31l50.4-50.39,47.69,52.46a8,8,0,1,0,11.84-10.76ZM92.69,208H48V163.31l53.06-53,42.56,46.81ZM227.32,73.37,182.63,28.69a16,16,0,0,0-22.63,0L118.33,70.36a8,8,0,0,0,11.32,11.31L136,75.31,180.69,120l-9,9A8,8,0,0,0,183,140.34L227.32,96A16,16,0,0,0,227.32,73.37ZM192,108.69,147.32,64l24-24L216,84.69Z"></path></svg>
+          
+                              </button>
+                              <button
+                                @click="deleteEpisode(episode)"
+                                class="flex items-center justify-center px-4 py-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-all duration-200"
+                              >
+                              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>
+    
+                              </button>
+                              <button
+                                @click="toggleEpisodeStatus(episode)"
+                                :class="[
+                                  'flex items-center justify-center px-4 py-2 rounded-xl transition-all duration-200',
+                                  episode.isActive 
+                                    ? 'bg-orange-50 text-orange-600 hover:bg-orange-100' 
+                                    : 'bg-green-50 text-green-600 hover:bg-green-100'
+                                ]"
+                              >
+                              <svg v-if="episode.isActive" xmlns="http://www.w3.org/2000/svg" width="32" class="w-4 h-4" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM112,96v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0Z"></path></svg>
+
+                              <svg v-else xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="w-4 h-4" fill="#000000" viewBox="0 0 256 256"><path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"></path></svg>
+                              </button>
+                            </div>
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
+
   
           <!-- Empty State -->
           <div v-else class="text-center py-16">
@@ -549,7 +727,16 @@
   import { useSearchEpisodes } from "@/composables/modules/labcast/useSearchEpisodes"
   import { useUpdateLabCast } from "@/composables/modules/labcast/useUpdateLabCast"
   import { useDeleteLabCast } from "@/composables/modules/labcast/useDeleteLabCast"
+  import { useReorderLabcasts } from '@/composables/modules/labcast/useReorderLabcasts'
   import { definePageMeta } from '#imports'
+
+  const {
+    loading: reorderLoading, 
+    error: reorderError, 
+    success: reorderSuccess, 
+    reorderFromSortedArray,
+    resetState: resetReorderState
+   } = useReorderLabcasts()
   
   definePageMeta({
     layout: 'dashboard'
@@ -747,6 +934,89 @@
       getSeasons()
     ])
   })
+
+  //Labcasts re-ordering
+
+  // Add these new reactive variables and methods in your script setup
+
+// Drag-and-drop state
+const draggedIndex = ref<number | null>(null)
+const dropTargetIndex = ref<number | null>(null)
+const localEpisodes = ref<LabCast[]>([])
+
+// Drag-and-drop methods
+const handleDragStart = (event: DragEvent, index: number) => {
+  if (reorderLoading.value) {
+    event.preventDefault()
+    return
+  }
+
+  draggedIndex.value = index
+  event.dataTransfer!.effectAllowed = 'move'
+  event.dataTransfer!.setData('text/html', '')
+
+  // Store current episodes order for potential revert
+  localEpisodes.value = [...currentEpisodes.value]
+}
+
+const handleDragEnd = () => {
+  draggedIndex.value = null
+  dropTargetIndex.value = null
+}
+
+const handleDragOver = (event: DragEvent, index: number) => {
+  event.preventDefault()
+  event.dataTransfer!.dropEffect = 'move'
+
+  if (draggedIndex.value !== null && draggedIndex.value !== index) {
+    dropTargetIndex.value = index
+  }
+}
+
+const handleDragLeave = () => {
+  // Clear drop target
+}
+
+const handleDrop = async (event: DragEvent, dropIndex: number) => {
+  event.preventDefault()
+
+  if (draggedIndex.value === null || draggedIndex.value === dropIndex || reorderLoading.value) {
+    return
+  }
+
+  try {
+    // Create a new array with the reordered items
+    const reorderedItems = [...currentEpisodes.value]
+    const draggedItem = reorderedItems[draggedIndex.value]
+
+    // Remove the dragged item from its original position
+    reorderedItems.splice(draggedIndex.value, 1)
+
+    // Insert the dragged item at the new position
+    reorderedItems.splice(dropIndex, 0, draggedItem)
+
+    // Call the reorder API
+    await reorderFromSortedArray(reorderedItems)
+
+    // Refresh episodes list
+    await loadEpisodes(labcastsCurrentPage.value)
+  } catch (error) {
+    console.error('Error reordering labcasts:', error)
+  } finally {
+    draggedIndex.value = null
+    dropTargetIndex.value = null
+  }
+}
+
+
+  const reorderLabcasts = async (reorderedLabcasts: LabCast[]) => {
+  try {
+    await reorderFromSortedArray(reorderedLabcasts)
+    resetReorderState()
+  } catch (error) {
+    console.error('Error reordering labcasts:', error)
+  }
+}
   </script>
   
   <style scoped>

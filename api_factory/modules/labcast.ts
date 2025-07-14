@@ -204,5 +204,9 @@ export const labcast_api = {
         isActive: true 
       } 
     })
+  },
+  $_reorder_labcasts: async (payload:any) => {
+    const url = `/labcast/reorder`
+    return GATEWAY_ENDPOINT.patch(url, payload)
   }
 }
