@@ -507,7 +507,21 @@ const handleSavePublication = async (publicationData: any) => {
       const { doiLink, doi, link, ...rest } = publicationData
       await updatePublication(selectedPublication.value._id, rest)
     } else {
-      await createPublication(publicationData)
+      const payload = {
+        title: publicationData.title,
+        abstract: publicationData.abstract,
+        authors: publicationData.authors,
+        journal: publicationData.journal,
+        year: publicationData.year,
+        doi: publicationData.pubLink,
+        link: publicationData.pubLink,
+        pubLink: publicationData.pubLink,
+        doiLink: publicationData.pubLink,
+        category: publicationData.category,
+        images: publicationData.images
+      };
+
+      await createPublication(payload)
     }
     await getPublications()
     closeModal()
