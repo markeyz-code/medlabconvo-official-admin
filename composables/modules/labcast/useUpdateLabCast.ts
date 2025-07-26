@@ -4,6 +4,7 @@ import {
   type LabCast,
   type UpdateLabCastData,
 } from '@/api_factory/modules/labcast'
+import { useCustomToast } from "@/composables/core/useCustomToast"
 
 
 // Update LabCast episode
@@ -12,6 +13,7 @@ export const useUpdateLabCast = () => {
   const error = ref(null)
   const success = ref(false)
   const labcast = ref<LabCast | null>(null)
+  const { showToast } = useCustomToast()
 
   const updateLabCast = async (labcastId: string, updateData: UpdateLabCastData) => {
     loading.value = true
@@ -22,9 +24,19 @@ export const useUpdateLabCast = () => {
       const response = await labcast_api.$_update_labcast(labcastId, updateData)
       success.value = true
       labcast.value = response.data
+      showToast({
+        title: "Success",
+        message: "Labcast Updated Successfully!!!",
+        toastType: "success",
+      })
       return response.data
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to update LabCast episode'
+      showToast({
+        title: "Error",
+        message:err.response?.data?.message || 'Failed to update LabCast episode',
+        toastType: "error",
+      })
       throw err
     } finally {
       loading.value = false
