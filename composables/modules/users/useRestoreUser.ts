@@ -20,7 +20,7 @@ export const useRestoreUser = () => {
       return response.data
     } catch (err: any) {
       error.value = err.response?.data?.message || "Failed to restore user"
-      console.error("Restore user error:", err)
+
       throw err
     } finally {
       loading.value = false
