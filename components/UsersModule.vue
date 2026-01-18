@@ -21,7 +21,7 @@
         </div>
         <button
           @click="openCreateModal"
-          class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center space-x-2"
+          class="px-4 py-2 bg-black text-white rounded-lg  transition-all duration-200 flex items-center space-x-2"
         >
           <Icon name="heroicons:plus" class="w-4 h-4" />
           <span>Add User</span>

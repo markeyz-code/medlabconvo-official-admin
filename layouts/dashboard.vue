@@ -23,7 +23,7 @@
       <div class="flex items-center justify-between p-4 border-b border-slate-200">
         <div v-if="sidebarOpen || !isMobile" class="flex items-center space-x-3">
           <img src="@/assets/img/logo.jpeg" class="h-10 w-10 rounded-lg" />
-          <!-- <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+          <!-- <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
             <span class="text-white font-bold text-sm">O</span>
           </div> -->
           <!-- <span v-if="sidebarOpen || !isMobile" class="font-bold text-xl text-slate-800">medlabconvo</span> -->
@@ -46,7 +46,7 @@
             :class="[
               'w-full flex items-center px-3 py-3 rounded-lg text-left transition-all duration-200',
               $route.path === item.path 
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg' 
+                ? 'bg-black text-white shadow-lg' 
                 : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
             ]"
             @click="isMobile && closeSidebar()"

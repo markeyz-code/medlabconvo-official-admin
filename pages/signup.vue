@@ -44,7 +44,7 @@
         <div class="max-w-md w-full">
           <!-- Logo -->
           <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-teal-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+            <div class="w-16 h-16 bg-black rounded-xl mx-auto mb-4 flex items-center justify-center">
               <img src="@/assets/img/logo.jpeg" class="rounded-xl" />
             </div>
             <h1 class="text-3xl font-bold text-gray-900">Join Medlabconvo</h1>
@@ -54,79 +54,48 @@
           <!-- Signup Form -->
           <form @submit.prevent="handleSignup" class="space-y-6">
             <!-- Name Fields -->
-            <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-y-6">
               <div class="transform transition-all duration-300 hover:scale-105">
-                <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
-                  First Name
-                </label>
-                <input
+                <UiAnimatedInput
                   id="firstName"
                   v-model="signupForm.firstName"
                   type="text"
                   required
-                  :class="[
-                    'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300',
-                    error ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                  ]"
-                  placeholder="John"
+                  label="First Name"
                 />
               </div>
               <div class="transform transition-all duration-300 hover:scale-105">
-                <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
-                  Last Name
-                </label>
-                <input
+                <UiAnimatedInput
                   id="lastName"
                   v-model="signupForm.lastName"
                   type="text"
                   required
-                  :class="[
-                    'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300',
-                    error ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                  ]"
-                  placeholder="Doe"
+                  label="Last Name"
                 />
               </div>
             </div>
   
             <!-- Email Field -->
             <div class="transform transition-all duration-300 hover:scale-105">
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
               <div class="relative">
-                <Icon name="heroicons:envelope" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
+                <UiAnimatedInput
                   id="email"
                   v-model="signupForm.email"
                   type="email"
                   required
-                  :class="[
-                    'w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300',
-                    error ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                  ]"
-                  placeholder="john@example.com"
+                  label="Email"
                 />
               </div>
             </div>
   
             <!-- Password Field -->
             <div class="transform transition-all duration-300 hover:scale-105">
-              <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
               <div class="relative">
-                <Icon name="heroicons:lock-closed" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
+                <UiAnimatedInput
                   id="password"
                   v-model="signupForm.password"
-                  :type="showPassword ? 'text' : 'password'"
                   required
-                  :class="[
-                    'w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300',
-                    error ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                  ]"
-                  placeholder="Create a strong password"
+                  label="Password"
                 />
                 <button
                   type="button"
@@ -140,23 +109,7 @@
   
             <!-- Role Selection -->
             <div class="transform transition-all duration-300 hover:scale-105">
-              <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
-                Role
-              </label>
-              <select
-                id="role"
-                v-model="signupForm.role"
-                required
-                :class="[
-                  'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300',
-                  error ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                ]"
-              >
-                <option value="">Select a role</option>
-                <option value="admin">Admin</option>
-                <option value="editor">Editor</option>
-                <option value="viewer">Viewer</option>
-              </select>
+              <UiSelectInput label="Role" :options="['admin', 'editor', 'viewer']" v-model="signupForm.role" id="role" required />
             </div>
   
             <!-- Error Message -->
@@ -174,13 +127,13 @@
                 v-model="signupForm.agreeToTerms"
                 type="checkbox"
                 required
-                class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500 mt-1"
+                class="custom-checkbox"
               />
               <label for="terms" class="text-sm text-gray-600">
                 I agree to the
-                <a href="#" class="text-green-600 hover:text-green-500">Terms of Service</a>
+                <a href="#" class="text-black">Terms of Service</a>
                 and
-                <a href="#" class="text-green-600 hover:text-green-500">Privacy Policy</a>
+                <a href="#" class="text-black">Privacy Policy</a>
               </label>
             </div>
   
@@ -188,7 +141,7 @@
             <button
               type="submit"
               :disabled="loading || !signupForm.agreeToTerms"
-              class="w-full bg-gradient-to-r from-green-600 to-teal-600 text-white py-3 px-4 rounded-lg font-medium hover:from-green-700 hover:to-teal-700 focus:ring-4 focus:ring-green-200 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-300 hover:scale-105 active:scale-95"
+              class="w-full bg-black text-white py-3 px-4 rounded-lg font-medium  focus:ring-4 focus:ring-green-200 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-300 hover:scale-105 active:scale-95"
             >
               <div v-if="loading" class="flex items-center justify-center space-x-2">
                 <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -202,7 +155,7 @@
           <div class="text-center mt-8">
             <p class="text-gray-600">
               Already have an account?
-              <NuxtLink to="/" class="text-green-600 hover:text-green-500 font-medium">
+              <NuxtLink to="/" class="text-black font-medium">
                 Sign in here
               </NuxtLink>
             </p>

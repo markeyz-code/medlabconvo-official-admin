@@ -1,0 +1,52 @@
+@font-face {
+    font-family: 'Roobert PRO';
+    src: url('../font/RoobertPRO-Bold.eot');
+    src: local('Roobert PRO Regular'), local('RoobertPRO-Regular'),
+        url('../font/RoobertPRO-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../font/RoobertPRO-Regular.woff2') format('woff2'),
+        url('../font/RoobertPRO-Regular.woff') format('woff'),
+        url('../font/RoobertPRO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roobert PRO';
+    src: url('../font/RoobertPRO-Bold.eot');
+    src: local('Roobert PRO Bold'), local('RoobertPRO-Bold'),
+        url('../font/RoobertPRO-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../font/RoobertPRO-Bold.woff2') format('woff2'),
+        url('../font/RoobertPRO-Bold.woff') format('woff'),
+        url('../font/RoobertPRO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roobert PRO';
+    src: url('../font/RoobertPRO-Light.eot');
+    src: local('Roobert PRO Light'), local('RoobertPRO-Light'),
+        url('../font/RoobertPRO-Light.eot?#iefix') format('embedded-opentype'),
+        url('../font/RoobertPRO-Light.woff2') format('woff2'),
+        url('../font/RoobertPRO-Light.woff') format('woff'),
+        url('../font/RoobertPRO-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roobert PRO';
+    src: url('../font/RoobertPRO-Medium.eot');
+    src: local('Roobert PRO Medium'), local('RoobertPRO-Medium'),
+        url('../font/RoobertPRO-Medium.eot?#iefix') format('embedded-opentype'),
+        url('../font/RoobertPRO-Medium.woff2') format('woff2'),
+        url('../font/RoobertPRO-Medium.woff') format('woff'),
+        url('../font/RoobertPRO-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+

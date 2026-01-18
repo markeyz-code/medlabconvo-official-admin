@@ -44,7 +44,7 @@
         <div class="max-w-md w-full">
           <!-- Logo -->
           <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+            <div class="w-16 h-16 bg-black rounded-xl mx-auto mb-4 flex items-center justify-center">
               <img src="@/assets/img/logo.jpeg" class="rounded-xl" />
               <!-- <span class="text-white font-bold text-2xl">O</span> -->
             </div>
@@ -60,17 +60,12 @@
                 Email Address
               </label>
               <div class="relative">
-                <Icon name="heroicons:envelope" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
+                <UiAnimatedInput
+                  label="Email"
                   id="email"
                   v-model="loginForm.email"
                   type="email"
                   required
-                  :class="[
-                    'w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300',
-                    error ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                  ]"
-                  placeholder="admin@medlabconvo.com"
                 />
               </div>
             </div>
@@ -81,17 +76,11 @@
                 Password
               </label>
               <div class="relative">
-                <svg xmlns="http://www.w3.org/2000/svg"  class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M128,112a28,28,0,0,0-8,54.83V184a8,8,0,0,0,16,0V166.83A28,28,0,0,0,128,112Zm0,40a12,12,0,1,1,12-12A12,12,0,0,1,128,152Zm80-72H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"></path></svg>
-                <input
+                <UiAnimatedInput
                   id="password"
+                  label="Password"
                   v-model="loginForm.password"
-                  :type="showPassword ? 'text' : 'password'"
                   required
-                  :class="[
-                    'w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300',
-                    error ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                  ]"
-                  placeholder="Enter your password"
                 />
                 <button
                   type="button"
@@ -117,7 +106,7 @@
                 <input
                   v-model="loginForm.rememberMe"
                   type="checkbox"
-                  class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  class="custom-checkbox"
                 />
                 <span class="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
@@ -130,7 +119,7 @@
             <button
               type="submit"
               :disabled="loading"
-              class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 focus:ring-4 focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-300 hover:scale-105 active:scale-95"
+              class="w-full bg-black text-white py-3 px-4 rounded-lg font-medium  focus:ring-4 focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-300 hover:scale-105 active:scale-95"
             >
               <div v-if="loading" class="flex items-center justify-center space-x-2">
                 <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -154,7 +143,7 @@
     </div>
   </template>
   
-  <script setup lang="ts">
+<script setup lang="ts">
   import { ref, onMounted, onUnmounted } from 'vue'
   import { useRouter } from 'vue-router'
   import Icon from '@/components/Icon.vue'
@@ -246,7 +235,7 @@
   })
   </script>
   
-  <style scoped>
+<style scoped>
   /* Carousel animations */
   .slide-fade-enter-active,
   .slide-fade-leave-active {

@@ -23,7 +23,7 @@
         </div>
         <button
           @click="openCreateModal"
-          class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 flex items-center space-x-2"
+          class="px-4 py-2 bg-black text-white rounded-lg  transition-all duration-200 flex items-center space-x-2"
         >
           <Icon name="heroicons:plus" class="w-4 h-4" />
           <span>Add Member</span>

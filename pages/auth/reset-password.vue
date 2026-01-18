@@ -56,7 +56,7 @@
         </p>
         <NuxtLink 
           to="/auth/forgot-password"
-          class="inline-block w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] text-center"
+          class="inline-block w-full bg-black text-white py-3 px-4 rounded-xl font-medium  transition-all duration-200 transform hover:scale-[1.02] text-center"
         >
           Request New Reset Link
         </NuxtLink>

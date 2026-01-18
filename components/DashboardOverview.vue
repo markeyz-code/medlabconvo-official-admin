@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <!-- Welcome Section -->
-    <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
+    <div class="bg-black rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm"></div>
       <div class="relative z-10">
         <h1 class="text-2xl md:text-3xl font-bold mb-2">Welcome back!</h1>
