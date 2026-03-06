@@ -72,6 +72,7 @@
   
   <script setup lang="ts">
   import { reactive, watchEffect } from 'vue';
+  import { useCustomToast } from '@/composables/core/useCustomToast'
   
   interface Props {
     user?: any
@@ -112,7 +113,17 @@
     }
   })
   
+  const { showToast } = useCustomToast()
+
   const handleSubmit = () => {
+    if (!form.firstName.trim() || !form.lastName.trim() || !form.email.trim()) {
+      showToast({ title: "Validation Error", message: "First name, Last name, and Email are required.", toastType: "error" });
+      return;
+    }
+    if (!props.user && !form.password.trim()) {
+      showToast({ title: "Validation Error", message: "Password is required for new users.", toastType: "error" });
+      return;
+    }
     emit('save', { ...form })
   }
   </script>

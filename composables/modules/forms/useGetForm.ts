@@ -1,7 +1,9 @@
 import { ref } from 'vue'
 import { forms_api, type Form } from '@/api_factory/modules/forms'
+import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetForm = () => {
+    const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const form = ref<Form | null>(null)
@@ -12,7 +14,14 @@ export const useGetForm = () => {
 
     try {
       const response = await forms_api.$_get_form(formId)
+      if ([200, 201].includes(response?.status)) {
       form.value = response.data
+      showToast({
+                title: "Success",
+                message: response?.data?.message || "Operation successful",
+                toastType: "success",
+              });
+      }
       return response.data
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to fetch form'

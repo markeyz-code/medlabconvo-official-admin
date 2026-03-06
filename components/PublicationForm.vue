@@ -248,6 +248,7 @@
 import { reactive, ref, watch, watchEffect } from 'vue'
 import { ImagePlus, Loader2, X } from 'lucide-vue-next'
 import { useSingleUploadFile } from '@/composables/core/useSingleUpload'
+import { useCustomToast } from '@/composables/core/useCustomToast'
 
 interface Props {
   publication?: any,
@@ -379,7 +380,13 @@ const handleDragLeave = () => {
   dragOver.value = false
 }
 
+const { showToast } = useCustomToast()
+
 const handleSubmit = async () => {
+  if (!form.title.trim() || !form.abstract.trim() || !form.authors.trim() || !form.journal.trim() || !form.year || !form.category.trim()) {
+    showToast({ title: "Validation Error", message: "Title, Abstract, Authors, Journal, Year, and Category are required.", toastType: "error" });
+    return;
+  }
   isSubmitting.value = true
   try {
     await emit('save', { ...form })

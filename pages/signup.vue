@@ -109,7 +109,7 @@
   
             <!-- Role Selection -->
             <div class="transform transition-all duration-300 hover:scale-105">
-              <UiSelectInput label="Role" :options="['admin', 'editor', 'viewer']" v-model="signupForm.role" id="role" required />
+              <UiSelectInput label="Role" :options="['super_admin', 'admin', 'editor']" v-model="signupForm.role" id="role" required />
             </div>
   
             <!-- Error Message -->
@@ -170,6 +170,7 @@
   import { useRouter } from 'vue-router'
   import Icon from '@/components/Icon.vue'
   import { useSignup } from '@/composables/modules/auth/useSignup'
+  import { useCustomToast } from '@/composables/core/useCustomToast'
   import { definePageMeta } from '#imports'
   
   // Meta
@@ -236,13 +237,18 @@
   
   // Methods
   const handleSignup = async () => {
+    if (!signupForm.value.firstName || !signupForm.value.lastName || !signupForm.value.email || !signupForm.value.password || !signupForm.value.role) {
+      const { showToast } = useCustomToast();
+      showToast({ title: "Validation Error", message: "Please fill all required fields.", toastType: "error" });
+      return;
+    }
     try {
       await signup({
         firstName: signupForm.value.firstName,
         lastName: signupForm.value.lastName,
         email: signupForm.value.email,
         password: signupForm.value.password,
-        role: signupForm.value.role as 'admin' | 'editor' | 'viewer'
+        role: signupForm.value.role as 'super_admin' | 'admin' | 'editor'
       })
       
       if (success.value) {

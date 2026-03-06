@@ -124,6 +124,7 @@
   
   <script setup lang="ts">
   import { reactive, watchEffect } from 'vue';
+  import { useCustomToast } from '@/composables/core/useCustomToast'
   
   interface Props {
     member?: any
@@ -177,7 +178,13 @@
     }
   })
   
+  const { showToast } = useCustomToast()
+
   const handleSubmit = () => {
+    if (!form.name.trim() || !form.email.trim() || !form.position.trim() || !form.department.trim()) {
+      showToast({ title: "Validation Error", message: "Name, Email, Position, and Department are required.", toastType: "error" });
+      return;
+    }
     emit('save', { ...form })
   }
   </script>

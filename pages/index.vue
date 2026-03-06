@@ -148,6 +148,7 @@
   import { useRouter } from 'vue-router'
   import Icon from '@/components/Icon.vue'
   import { useLogin } from '@/composables/modules/auth/useLogin'
+  import { useCustomToast } from '@/composables/core/useCustomToast'
   import { definePageMeta } from '#imports'
   
   // Meta
@@ -211,6 +212,11 @@
   
   // Methods
   const handleLogin = async () => {
+    if (!loginForm.value.email || !loginForm.value.password) {
+      const { showToast } = useCustomToast();
+      showToast({ title: "Validation Error", message: "Please enter your email and password.", toastType: "error" });
+      return;
+    }
     try {
       await login({
         email: loginForm.value.email,

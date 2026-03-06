@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { publications_api, type Publication } from '@/api_factory/modules/publications'
+import { useCustomToast } from "@/composables/core/useCustomToast";
 
 // Define the reorder payload type to match the backend DTO
 export interface PublicationPositionData {
@@ -12,6 +13,7 @@ export interface ReorderPublicationsPayload {
 }
 
 export const useReorderPublication = () => {
+    const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const success = ref(false)
@@ -24,8 +26,15 @@ export const useReorderPublication = () => {
 
     try {
       const response = await publications_api.$_reorder_publication(publicationReorderPayload)
+      if ([200, 201].includes(response?.status)) {
       success.value = true
       reorderedPublications.value = response.data
+      showToast({
+                title: "Success",
+                message: response?.data?.message || "Operation successful",
+                toastType: "success",
+              });
+      }
       return response.data
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to reorder publications'

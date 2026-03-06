@@ -542,6 +542,7 @@ import { reactive, ref, watchEffect } from 'vue'
 import {
   Check, Plus, Trash2, ChevronLeft, ChevronRight, Loader2
 } from 'lucide-vue-next'
+import { useCustomToast } from '@/composables/core/useCustomToast'
 
 interface Props {
   program?: any
@@ -666,7 +667,13 @@ const updateFieldOptions = (field: any) => {
   }
 }
 
+const { showToast } = useCustomToast()
+
 const handleSubmit = async () => {
+  if (!form.title.trim() || !form.category.trim() || !form.description.trim() || !form.duration.trim()) {
+    showToast({ title: "Validation Error", message: "Title, Category, Description, and Duration are required.", toastType: "error" });
+    return;
+  }
   isSubmitting.value = true
   try {
     // Clean up arrays

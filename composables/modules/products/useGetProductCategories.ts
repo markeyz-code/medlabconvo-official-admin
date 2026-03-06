@@ -1,7 +1,9 @@
 import { ref } from 'vue'
 import { products_api, type CategoryData } from '@/api_factory/modules/products'
+import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetProductCategories = () => {
+    const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const categories = ref<CategoryData[]>([])
@@ -12,7 +14,14 @@ export const useGetProductCategories = () => {
 
     try {
       const response = await products_api.$_get_categories()
+      if ([200, 201].includes(response?.status)) {
       categories.value = response.data
+      showToast({
+                title: "Success",
+                message: response?.data?.message || "Operation successful",
+                toastType: "success",
+              });
+      }
       return response.data
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to fetch product categories'

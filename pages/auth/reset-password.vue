@@ -188,6 +188,7 @@
   import { ref, reactive, computed } from 'vue'
   import { useRoute } from 'vue-router'
   import { useResetPassword } from '@/composables/modules/auth/useResetPassword'
+  import { useCustomToast } from '@/composables/core/useCustomToast'
   import { definePageMeta } from '#imports'
   
 
@@ -207,9 +208,17 @@
   const showConfirmPassword = ref(false)
   
   // Methods
+  const { showToast } = useCustomToast()
   const handleSubmit = async () => {
     if (!token.value) return
-    
+    if (form.password.length < 8) {
+      showToast({ title: "Validation Error", message: "Password must be at least 8 characters.", toastType: "error" });
+      return;
+    }
+    if (form.password !== form.password_confirmation) {
+      showToast({ title: "Validation Error", message: "Passwords do not match.", toastType: "error" });
+      return;
+    }
     try {
       await resetPassword(token.value, {
         password: form.password,

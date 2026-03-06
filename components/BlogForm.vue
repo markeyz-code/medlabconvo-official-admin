@@ -98,6 +98,7 @@
   
   <script setup lang="ts">
   import { reactive, ref, watch, watchEffect } from 'vue'
+  import { useCustomToast } from '@/composables/core/useCustomToast'
   
   interface Props {
     blog?: any
@@ -105,6 +106,7 @@
   
   const props = defineProps<Props>()
   const emit = defineEmits(['save', 'cancel'])
+  const { showToast } = useCustomToast()
   
   const form = reactive({
     title: '',
@@ -152,6 +154,10 @@
   })
   
   const handleSubmit = () => {
+    if (!form.title.trim() || !form.content.trim()) {
+      showToast({ title: "Validation Error", message: "Title and Content are required.", toastType: "error" });
+      return;
+    }
     emit('save', { ...form })
   }
   </script>

@@ -1,7 +1,9 @@
 import { ref } from 'vue'
 import { forms_api, type FormSubmission } from '@/api_factory/modules/forms'
+import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetFormSubmissions = () => {
+    const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const submissions = ref<FormSubmission[]>([])
@@ -12,7 +14,14 @@ export const useGetFormSubmissions = () => {
 
     try {
       const response = await forms_api.$_get_form_submissions(formId)
+      if ([200, 201].includes(response?.status)) {
       submissions.value = response.data
+      showToast({
+                title: "Success",
+                message: response?.data?.message || "Operation successful",
+                toastType: "success",
+              });
+      }
       return response.data
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to fetch form submissions'

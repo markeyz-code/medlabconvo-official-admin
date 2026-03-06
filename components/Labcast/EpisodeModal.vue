@@ -600,7 +600,8 @@ import type { LabCast, CreateLabCastData } from '@/types/labcast'
 import { useCreateLabCast } from "@/composables/modules/labcast/useCreateLabCast"
 import { useUpdateLabCast } from "@/composables/modules/labcast/useUpdateLabCast"
 import { useSingleUploadFile } from '@/composables/core/useSingleUpload'
-import { ref, computed, watch, defineProps, defineEmits } from 'vue'
+import { useCustomToast } from '@/composables/core/useCustomToast'
+import { ref, computed, watch } from 'vue'
 
 interface Props {
   modelValue: boolean
@@ -854,9 +855,32 @@ const removeTag = (tagToRemove: string) => {
   tagsInput.value = form.value.tags.join(', ')
 }
 
+const { showToast } = useCustomToast()
+
 const handleSubmit = async () => {
+  // Validate required fields
+  if (!form.value.title.trim() || !form.value.description.trim()) {
+    showToast({ title: "Validation Error", message: "Title and Description are required.", toastType: "error" });
+    return;
+  }
+  if (!form.value.season || !form.value.episode || !form.value.duration) {
+    showToast({ title: "Validation Error", message: "Season, Episode number, and Duration are required.", toastType: "error" });
+    return;
+  }
+  if (!form.value.publishedAt) {
+    showToast({ title: "Validation Error", message: "Published date is required.", toastType: "error" });
+    return;
+  }
+  if (!form.value.thumbnailUrl) {
+    showToast({ title: "Validation Error", message: "Thumbnail image is required.", toastType: "error" });
+    return;
+  }
   // Clean up hosts array
   form.value.hosts = form.value.hosts.filter(host => host.trim().length > 0)
+  if (form.value.hosts.length === 0) {
+    showToast({ title: "Validation Error", message: "At least one host is required.", toastType: "error" });
+    return;
+  }
 
   if (props.episode) {
     // Update existing episode

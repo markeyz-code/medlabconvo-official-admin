@@ -557,6 +557,7 @@
   } from 'lucide-vue-next'
   import { useCreateProduct } from "@/composables/modules/products/useCreateProduct"
   import { useUpdateProduct } from "@/composables/modules/products/useUpdateProduct"
+  import { useCustomToast } from '@/composables/core/useCustomToast'
   
   interface Props {
     product?: any
@@ -696,7 +697,17 @@
     return new Intl.NumberFormat('en-NG').format(price)
   }
   
+  const { showToast } = useCustomToast()
+
   const handleSubmit = async () => {
+    if (!form.name.trim() || !form.category.trim() || !form.author.trim() || !form.description.trim()) {
+      showToast({ title: "Validation Error", message: "Name, Category, Author, and Description are required.", toastType: "error" });
+      return;
+    }
+    if (form.price <= 0) {
+      showToast({ title: "Validation Error", message: "Price must be greater than zero.", toastType: "error" });
+      return;
+    }
     isSubmitting.value = true
     try {
       // Clean up arrays and prepare data

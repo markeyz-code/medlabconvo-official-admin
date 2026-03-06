@@ -1,7 +1,9 @@
 import { ref } from 'vue'
 import { programs_api } from '@/api_factory/modules/programs'
+import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useHardDeleteProgram = () => {
+    const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const success = ref(false)
@@ -13,7 +15,14 @@ export const useHardDeleteProgram = () => {
 
     try {
       await programs_api.$_hard_delete_program(programId)
+      if ([200, 201].includes(response?.status)) {
       success.value = true
+      showToast({
+                title: "Success",
+                message: response?.data?.message || "Operation successful",
+                toastType: "success",
+              });
+      }
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to permanently delete program'
       throw err

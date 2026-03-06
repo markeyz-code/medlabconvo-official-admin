@@ -107,6 +107,7 @@
   <script setup lang="ts">
   import { ref, reactive } from 'vue'
   import { useForgotPassword } from '@/composables/modules/auth/useForgotPassword'
+  import { useCustomToast } from '@/composables/core/useCustomToast'
   import { definePageMeta } from '#imports'
   
   
@@ -119,7 +120,12 @@
   const { loading, error, success, forgotPassword, resetState } = useForgotPassword()
   
   // Methods
+  const { showToast } = useCustomToast()
   const handleSubmit = async () => {
+    if (!form.email.trim()) {
+      showToast({ title: "Validation Error", message: "Please enter your email address.", toastType: "error" });
+      return;
+    }
     try {
       await forgotPassword({ email: form.email })
     } catch (err) {

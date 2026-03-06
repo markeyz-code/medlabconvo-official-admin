@@ -3,8 +3,10 @@ import {
   labcast_api, 
   type LabCast
 } from '@/api_factory/modules/labcast'
+import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetEpisodesByHost = () => {
+    const { showToast } = useCustomToast();
     const loading = ref(false)
     const error = ref(null)
     const episodes = ref<LabCast[]>([])
@@ -15,7 +17,14 @@ export const useGetEpisodesByHost = () => {
   
       try {
         const response = await labcast_api.$_get_episodes_by_host(hostName)
+        if ([200, 201].includes(response?.status)) {
         episodes.value = response.data.data || response.data
+        showToast({
+                  title: "Success",
+                  message: response?.data?.message || "Operation successful",
+                  toastType: "success",
+                });
+        }
         return response.data
       } catch (err: any) {
         error.value = err.response?.data?.message || 'Failed to fetch episodes by host'
