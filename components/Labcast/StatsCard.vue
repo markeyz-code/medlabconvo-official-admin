@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white rounded-lg shadow-sm border border-gray-50 p-6">
+    <div class="bg-white rounded-lg shadow-sm border  p-6">
       <div class="flex items-center">
         <div :class="[
           'flex-shrink-0 p-3 rounded-lg',

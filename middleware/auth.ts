@@ -1,10 +1,10 @@
-import { defineNuxtRouteMiddleware, navigateTo } from "#app"
+import { defineNuxtRouteMiddleware, navigateTo, useCookie } from "#app"
 
 export default defineNuxtRouteMiddleware((to, from) => {
-  // Check if user is authenticated
-  const token = localStorage.getItem("token")
+  // Check if user is authenticated via cookie
+  const token = useCookie("token")
 
-  if (!token) {
+  if (!token.value) {
     return navigateTo("/")
   }
 })

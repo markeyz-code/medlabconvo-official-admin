@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { labcast_api, type LabCast} from '@/api_factory/modules/labcast'
+import { labcast_api, type LabCast } from '@/api_factory/modules/labcast'
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 // Define the reorder payload type to match the backend DTO
@@ -13,7 +13,7 @@ export interface ReorderPublicationsPayload {
 }
 
 export const useReorderLabcasts = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const success = ref(false)
@@ -27,13 +27,9 @@ export const useReorderLabcasts = () => {
     try {
       const response = await labcast_api.$_reorder_labcasts(labcastReorderPayload)
       if ([200, 201].includes(response?.status)) {
-      success.value = true
-      reorderedLabcasts.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        success.value = true
+        reorderedLabcasts.value = response.data
+
       }
       return response.data
     } catch (err: any) {

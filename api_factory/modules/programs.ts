@@ -37,6 +37,7 @@ export type Program = {
   formTitle?: string
   formInstructions?: string
   applicationsCount?: number
+  form?: any
   createdAt?: string
   updatedAt?: string
 }
@@ -54,6 +55,7 @@ export type CreateProgramData = {
   formFields: FormField[]
   formTitle?: string
   formInstructions?: string
+  formId?: string
 }
 
 export type UpdateProgramData = Partial<CreateProgramData>

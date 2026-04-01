@@ -3,7 +3,7 @@ import { products_api, type PopularTag } from '@/api_factory/modules/products'
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetPopularTags = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const popularTags = ref<PopularTag[]>([])
@@ -15,12 +15,8 @@ export const useGetPopularTags = () => {
     try {
       const response = await products_api.$_get_popular_tags()
       if ([200, 201].includes(response?.status)) {
-      popularTags.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        popularTags.value = response.data
+
       }
       return response.data
     } catch (err: any) {

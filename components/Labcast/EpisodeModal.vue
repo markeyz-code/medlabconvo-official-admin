@@ -466,7 +466,7 @@
                           <input
                             v-model="form.appleUrl"
                             type="url"
-                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-gray-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
+                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:0 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
                             placeholder="https://podcasts.apple.com/..."
                           />
                           <div class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-gray-800 rounded-full flex items-center justify-center">

@@ -3,7 +3,7 @@ import { users_api, type User } from '@/api_factory/modules/users'
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useSoftDeleteUser = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const success = ref(false)
@@ -16,16 +16,12 @@ export const useSoftDeleteUser = () => {
     try {
       await users_api.$_soft_delete_user(userId)
       if ([200, 201].includes(response?.status)) {
-      success.value = true
-      if (process.client) {
-              // You can integrate with your notification system here
-              console.log("User deleted successfully")
-            }
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        success.value = true
+        if (process.client) {
+          // You can integrate with your notification system here
+          console.log("User deleted successfully")
+        }
+
       }
       // Show success notification
     } catch (err: any) {

@@ -4,7 +4,7 @@ import { products_api, type QueryProductParams, type Product } from '@/api_facto
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetProducts = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const filters = ref<string | null>(null)
@@ -20,17 +20,13 @@ export const useGetProducts = () => {
     try {
       const response = await products_api.$_get_products()
       if ([200, 201].includes(response?.status)) {
-      console.log(response, 'respoinsehe reeee')
-      products.value = response.data.data
-      filters.value = response.data.filters
-      totalCount.value = response.data.totalCount || 0
-      currentPage.value = response.data.currentPage || 1
-      totalPages.value = response.data.totalPages || 1
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        console.log(response, 'respoinsehe reeee')
+        products.value = response.data.data
+        filters.value = response.data.filters
+        totalCount.value = response.data.totalCount || 0
+        currentPage.value = response.data.currentPage || 1
+        totalPages.value = response.data.totalPages || 1
+
       }
       // const response = await products_api.$_get_products(queryParams)
       return response.data
@@ -54,7 +50,7 @@ export const useGetProducts = () => {
   // onMounted(() => {
   //   getProducts()
   // })
-  
+
   return {
     loading,
     error,

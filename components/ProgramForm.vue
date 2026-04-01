@@ -104,6 +104,35 @@
             placeholder="e.g., 4 months, 12 weeks, 6 sessions"
           />
         </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-2">
+            Application Form (Internal)
+          </label>
+          <select
+            v-model="form.formId"
+            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+          >
+            <option value="">No link to internal form</option>
+            <option v-for="f in forms" :key="f.id" :value="f.id">
+              {{ f.title }}
+            </option>
+          </select>
+          <p class="mt-1 text-xs text-gray-500">Select a standalone form to link to this program.</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-2">
+            External Form Link (Optional)
+          </label>
+          <input
+            v-model="form.externalFormLink"
+            type="url"
+            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+            placeholder="https://forms.gle/..."
+          />
+          <p class="mt-1 text-xs text-gray-500">If provided, "Apply Now" will redirect to this link instead of the linked internal form.</p>
+        </div>
       </div>
 
       <!-- Step 2: Program Details -->
@@ -305,131 +334,8 @@
         </div>
       </div>
 
-      <!-- Step 4: Application Form Builder -->
+      <!-- Step 4: Review -->
       <div v-if="currentStep === 3" class="space-y-6">
-        <div class="text-center mb-6">
-          <h3 class="text-lg font-semibold text-gray-900">Application Form</h3>
-          <p class="text-sm text-gray-600">Create the application form for your program</p>
-        </div>
-
-        <!-- Form Title and Instructions -->
-        <div class="grid grid-cols-1 gap-6">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">
-              Form Title *
-            </label>
-            <input
-              v-model="form.formTitle"
-              type="text"
-              required
-              class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-              placeholder="e.g., Program Application Form"
-            />
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">
-              Form Instructions
-            </label>
-            <textarea
-              v-model="form.formInstructions"
-              rows="3"
-              class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none"
-              placeholder="Provide instructions for applicants..."
-            ></textarea>
-          </div>
-        </div>
-
-        <!-- Form Fields Builder -->
-        <div>
-          <div class="flex items-center justify-between mb-4">
-            <label class="block text-sm font-medium text-slate-700">
-              Form Fields
-            </label>
-            <button
-              @click="addFormField"
-              type="button"
-              class="inline-flex items-center px-3 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              <Plus class="w-4 h-4 mr-1" />
-              Add Field
-            </button>
-          </div>
-
-          <div class="space-y-4">
-            <div
-              v-for="(field, index) in form.formFields"
-              :key="field.id || index"
-              class="p-4 border border-slate-200 rounded-lg space-y-3"
-            >
-              <div class="flex items-center justify-between">
-                <h4 class="font-medium text-slate-900">Field {{ index + 1 }}</h4>
-                <button
-                  @click="removeFormField(index)"
-                  type="button"
-                  class="p-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
-                >
-                  <Trash2 class="w-4 h-4" />
-                </button>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <input
-                  v-model="field.label"
-                  type="text"
-                  placeholder="Field label..."
-                  class="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                />
-                <select
-                  v-model="field.type"
-                  class="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                >
-                  <option value="text">Text</option>
-                  <option value="email">Email</option>
-                  <option value="textarea">Textarea</option>
-                  <option value="select">Select</option>
-                  <option value="radio">Radio</option>
-                  <option value="checkbox">Checkbox</option>
-                  <option value="number">Number</option>
-                  <option value="date">Date</option>
-                </select>
-              </div>
-
-              <input
-                v-model="field.placeholder"
-                type="text"
-                placeholder="Placeholder text..."
-                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-              />
-
-              <div v-if="['select', 'radio', 'checkbox'].includes(field.type)" class="space-y-2">
-                <label class="block text-xs font-medium text-slate-600">Options (one per line)</label>
-                <textarea
-                  v-model="field.optionsText"
-                  @input="updateFieldOptions(field)"
-                  rows="3"
-                  placeholder="Option 1&#10;Option 2&#10;Option 3"
-                  class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none text-sm"
-                ></textarea>
-              </div>
-
-              <div class="flex items-center space-x-4">
-                <label class="flex items-center">
-                  <input
-                    v-model="field.required"
-                    type="checkbox"
-                    class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                  />
-                  <span class="ml-2 text-sm text-slate-700">Required</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Step 5: Review -->
-      <div v-if="currentStep === 4" class="space-y-6">
         <div class="text-center mb-6">
           <h3 class="text-lg font-semibold text-gray-900">Review & Submit</h3>
           <p class="text-sm text-gray-600">Review your program details before submitting</p>
@@ -451,6 +357,14 @@
                 <span class="text-slate-600">Duration:</span>
                 <span class="ml-2 font-medium">{{ form.duration }}</span>
               </div>
+              <div v-if="form.formId">
+                <span class="text-slate-600">Linked Form:</span>
+                <span class="ml-2 font-medium text-indigo-600">{{ forms.find(f => f.id === form.formId)?.title || 'Selected Form' }}</span>
+              </div>
+              <div v-if="form.externalFormLink">
+                <span class="text-slate-600">External Link:</span>
+                <span class="ml-2 font-medium text-blue-600 truncate inline-block max-w-[150px] align-bottom">{{ form.externalFormLink }}</span>
+              </div>
               <div>
                 <span class="text-slate-600">Focus Areas:</span>
                 <span class="ml-2 font-medium">{{ form.focusAreas.filter(a => a).length }}</span>
@@ -458,10 +372,6 @@
               <div>
                 <span class="text-slate-600">Outcomes:</span>
                 <span class="ml-2 font-medium">{{ form.outcomes.filter(o => o).length }}</span>
-              </div>
-              <div>
-                <span class="text-slate-600">Form Fields:</span>
-                <span class="ml-2 font-medium">{{ form.formFields.length }}</span>
               </div>
             </div>
           </div>
@@ -543,6 +453,7 @@ import {
   Check, Plus, Trash2, ChevronLeft, ChevronRight, Loader2
 } from 'lucide-vue-next'
 import { useCustomToast } from '@/composables/core/useCustomToast'
+import { useGetForms } from '@/composables/modules/forms/useGetForms'
 
 interface Props {
   program?: any
@@ -558,7 +469,6 @@ const steps = [
   { title: 'Basic Info', description: 'Program details' },
   { title: 'Details', description: 'Focus & outcomes' },
   { title: 'Media', description: 'Images & highlights' },
-  { title: 'Form', description: 'Application form' },
   { title: 'Review', description: 'Final review' }
 ]
 
@@ -573,11 +483,13 @@ const form = reactive({
   image: '',
   images: [] as string[],
   highlights: [{ title: '', description: '' }],
-  formTitle: '',
-  formInstructions: '',
-  formFields: [] as any[],
+  formId: '',
+  externalFormLink: '',
   status: 'draft'
 })
+
+const { forms, loading: loadingForms, getForms } = useGetForms()
+getForms()
 
 // Initialize form with program data if editing
 watchEffect(() => {
@@ -593,9 +505,8 @@ watchEffect(() => {
       image: props.program.image || '',
       images: props.program.images || [],
       highlights: props.program.highlights?.length ? props.program.highlights : [{ title: '', description: '' }],
-      formTitle: props.program.formTitle || '',
-      formInstructions: props.program.formInstructions || '',
-      formFields: props.program.formFields || [],
+      formId: props.program.form?._id || props.program.form || '',
+      externalFormLink: props.program.externalFormLink || '',
       status: props.program.status || 'draft'
     })
   } else {
@@ -614,6 +525,7 @@ watchEffect(() => {
       formTitle: '',
       formInstructions: '',
       formFields: [],
+      externalFormLink: '',
       status: 'draft'
     })
   }
@@ -645,28 +557,6 @@ const removeResponsibility = (index: number) => form.keyResponsibilities.splice(
 const addHighlight = () => form.highlights.push({ title: '', description: '' })
 const removeHighlight = (index: number) => form.highlights.splice(index, 1)
 
-const addFormField = () => {
-  form.formFields.push({
-    id: `field_${Date.now()}`,
-    label: '',
-    type: 'text',
-    required: false,
-    options: [],
-    placeholder: '',
-    optionsText: ''
-  })
-}
-
-const removeFormField = (index: number) => form.formFields.splice(index, 1)
-
-const updateFieldOptions = (field: any) => {
-  if (field.optionsText) {
-    field.options = field.optionsText.split('\n').filter((option: string) => option.trim())
-  } else {
-    field.options = []
-  }
-}
-
 const { showToast } = useCustomToast()
 
 const handleSubmit = async () => {
@@ -685,13 +575,9 @@ const handleSubmit = async () => {
       highlights: form.highlights
         .filter(h => h.title.trim() || h.description.trim())
         .map(h => {
-          const { _id, ...cleanHighlight } = h
+          const { _id, ...cleanHighlight } = h as any
           return cleanHighlight
-        }),
-      formFields: form.formFields.map(field => {
-        const { optionsText, _id, ...cleanField } = field
-        return cleanField
-      })
+        })
     }
     
     await emit('save', cleanedForm)

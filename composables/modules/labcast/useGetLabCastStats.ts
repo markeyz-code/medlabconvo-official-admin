@@ -21,7 +21,6 @@ export const useGetLabCastStats = () => {
         stats.value = response.data
         showToast({
                   title: "Success",
-                  message: response?.data?.message || "Operation successful",
                   toastType: "success",
                 });
         }

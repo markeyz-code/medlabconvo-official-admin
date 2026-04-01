@@ -3,6 +3,10 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
   ssr: false,
 
+  devServer: {
+    port: 3001,
+  },
+
   postcss: {
     plugins: {
       "postcss-import": {},

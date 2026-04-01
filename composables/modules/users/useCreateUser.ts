@@ -3,7 +3,7 @@ import { users_api, type CreateUserData, type User } from '@/api_factory/modules
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useCreateUser = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const success = ref(false)
@@ -17,13 +17,9 @@ export const useCreateUser = () => {
     try {
       const response = await users_api.$_create_user(userPayload)
       if ([200, 201].includes(response?.status)) {
-      success.value = true
-      userData.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        success.value = true
+        userData.value = response.data
+
       }
       return response.data
     } catch (err: any) {

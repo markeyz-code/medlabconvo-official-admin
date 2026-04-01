@@ -3,7 +3,7 @@ import { audit_api, type AuditLog } from '@/api_factory/modules/audit'
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetResourceAuditLogs = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const auditLogs = ref<AuditLog[]>([])
@@ -15,12 +15,8 @@ export const useGetResourceAuditLogs = () => {
     try {
       const response = await audit_api.$_get_resource_audit_logs(resource, resourceId)
       if ([200, 201].includes(response?.status)) {
-      auditLogs.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        auditLogs.value = response.data
+
       }
       return response.data
     } catch (err: any) {

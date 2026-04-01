@@ -1,282 +1,181 @@
 <template>
-    <div class="min-h-screen flex">
-      <!-- Left Side - Carousel Animation -->
-      <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 relative overflow-hidden">
-        <!-- Animated Background Elements -->
-        <div class="absolute inset-0">
-          <div class="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full animate-pulse"></div>
-          <div class="absolute bottom-32 right-16 w-24 h-24 bg-white/5 rounded-full animate-bounce"></div>
-          <div class="absolute top-1/2 left-1/4 w-16 h-16 bg-white/15 rounded-full animate-ping"></div>
+  <div class="min-h-screen flex text-gray-900 bg-white">
+    <!-- Left: Image Cover -->
+    <div class="hidden lg:flex lg:w-1/2 relative bg-[#033958] overflow-hidden items-end p-12">
+      <img src="@/assets/img/auth-bg.png" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay" />
+      <div class="absolute inset-0 bg-gradient-to-t from-[#033958] via-[#033958]/80 to-transparent"></div>
+      
+      <div class="relative z-10 w-full max-w-lg mb-12">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl mb-8 overflow-hidden shadow-2xl p-1">
+          <img src="@/assets/img/logo.jpeg" class="w-full h-full object-cover rounded-xl" />
         </div>
-  
-        <!-- Carousel Content -->
-        <div class="relative z-10 flex flex-col justify-center items-center text-white p-12">
-          <div class="max-w-md text-center">
-            <transition name="slide-fade" mode="out-in">
-              <div :key="currentSlide" class="space-y-6">
-                <div class="w-24 h-24 mx-auto mb-8 relative">
-                  <div class="absolute inset-0 bg-white/20 rounded-full animate-spin-slow"></div>
-                  <Icon :name="slides[currentSlide].icon" class="w-16 h-16 absolute inset-4 text-white" />
-                </div>
-                <h2 class="text-3xl font-bold mb-4">{{ slides[currentSlide].title }}</h2>
-                <p class="text-lg text-white/90 leading-relaxed">{{ slides[currentSlide].description }}</p>
-              </div>
-            </transition>
-          </div>
-  
-          <!-- Carousel Indicators -->
-          <div class="flex space-x-2 mt-12">
-            <button
-              v-for="(slide, index) in slides"
-              :key="index"
-              @click="currentSlide = index"
-              :class="[
-                'w-3 h-3 rounded-full transition-all duration-300',
-                currentSlide === index ? 'bg-white' : 'bg-white/30'
-              ]"
-            ></button>
-          </div>
-        </div>
+        <h1 class="text-4xl font-bold text-white mb-4 leading-tight">Empowering Healthcare with Intelligent Conversations</h1>
+        <p class="text-lg text-blue-100/80">Login to the MedLabConvo administrative console to manage departments, users, and oversee the platform's core operations securely.</p>
       </div>
-  
-      <!-- Right Side - Login Form -->
-      <div class="w-full lg:w-1/2 flex items-center justify-center p-8 bg-gray-50">
-        <div class="max-w-md w-full">
-          <!-- Logo -->
-          <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-black rounded-xl mx-auto mb-4 flex items-center justify-center">
-              <img src="@/assets/img/logo.jpeg" class="rounded-xl" />
-              <!-- <span class="text-white font-bold text-2xl">O</span> -->
-            </div>
-            <h1 class="text-3xl font-bold text-gray-900">Welcome Back</h1>
-            <p class="text-gray-600 mt-2">Sign in to your admin dashboard</p>
-          </div>
-  
-          <!-- Login Form -->
-          <form @submit.prevent="handleLogin" class="space-y-6">
-            <!-- Email Field -->
-            <div class="transform transition-all duration-300 hover:scale-105">
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <div class="relative">
-                <UiAnimatedInput
-                  label="Email"
-                  id="email"
-                  v-model="loginForm.email"
-                  type="email"
-                  required
-                />
-              </div>
-            </div>
-  
-            <!-- Password Field -->
-            <div class="transform transition-all duration-300 hover:scale-105">
-              <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <div class="relative">
-                <UiAnimatedInput
-                  id="password"
-                  label="Password"
-                  v-model="loginForm.password"
-                  required
-                />
-                <button
-                  type="button"
-                  @click="showPassword = !showPassword"
-                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  <Icon :name="showPassword ? 'heroicons:eye-slash' : 'heroicons:eye'" class="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-  
-            <!-- Error Message -->
-            <transition name="shake">
-              <div v-if="error" class="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center space-x-3">
-                <Icon name="heroicons:exclamation-triangle" class="w-5 h-5 text-red-500 flex-shrink-0" />
-                <span class="text-red-700 text-sm">{{ error }}</span>
-              </div>
-            </transition>
-  
-            <!-- Remember Me -->
-            <div class="flex items-center justify-between">
-              <label class="flex items-center">
-                <input
-                  v-model="loginForm.rememberMe"
-                  type="checkbox"
-                  class="custom-checkbox"
-                />
-                <span class="ml-2 text-sm text-gray-600">Remember me</span>
-              </label>
-              <NuxtLink to="/auth/forgot-password" class="text-sm text-blue-600 hover:text-blue-500">
-                Forgot password?
-              </NuxtLink>
-            </div>
-  
-            <!-- Submit Button -->
+    </div>
+
+    <!-- Right: Form Area -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 md:p-16 lg:p-24 overflow-y-auto">
+      <div class="w-full max-w-[440px]">
+        
+        <h2 class="text-3xl font-extrabold text-[#033958] mb-2 tracking-tight">Welcome Back</h2>
+        <p class="text-gray-500 mb-10 font-medium">Log in to your admin dashboard.</p>
+
+        <!-- Login Form -->
+        <form @submit.prevent="handleLogin" class="space-y-6">
+          <UiAnimatedInput
+            label="Email Address"
+            id="email"
+            v-model="loginForm.email"
+            type="email"
+            required
+          ></UiAnimatedInput>
+
+          <div class="relative">
+            <UiAnimatedInput
+              id="password"
+              label="Password"
+              v-model="loginForm.password"
+              :type="showPassword ? 'text' : 'password'"
+              required
+            ></UiAnimatedInput>
             <button
-              type="submit"
-              :disabled="loading"
-              class="w-full bg-black text-white py-3 px-4 rounded-lg font-medium  focus:ring-4 focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-300 hover:scale-105 active:scale-95"
+              type="button"
+              @click="showPassword = !showPassword"
+              class="absolute right-4 top-[22px] text-gray-400 hover:text-[#033958] transition-colors"
             >
-              <div v-if="loading" class="flex items-center justify-center space-x-2">
-                <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Signing in...</span>
-              </div>
-              <span v-else>Sign In</span>
+              <Icon :name="showPassword ? 'heroicons:eye-slash' : 'heroicons:eye'" class="w-5 h-5" />
             </button>
-          </form>
-  
-          <!-- Sign Up Link -->
-          <div class="text-center mt-8">
-            <p class="text-gray-600">
-              Don't have an account?
-              <NuxtLink to="/signup" class="text-blue-600 hover:text-blue-500 font-medium">
-                Sign up here
-              </NuxtLink>
-            </p>
           </div>
+
+          <div class="flex items-center justify-between mt-2">
+            <label class="flex items-center cursor-pointer group">
+              <input
+                v-model="loginForm.rememberMe"
+                type="checkbox"
+                class="custom-checkbox"
+              />
+              <span class="ml-2 text-sm text-gray-500 group-hover:text-gray-700 transition-colors font-medium">Remember me</span>
+            </label>
+            <NuxtLink to="/forgot-password" class="text-sm text-[#033958] hover:text-[#044a73] font-bold transition-colors underline-offset-4 hover:underline">
+              Forgot Password?
+            </NuxtLink>
+          </div>
+
+          <transition name="shake">
+            <div v-if="error" class="bg-red-50 border border-red-100 rounded-xl p-3 flex items-center space-x-3">
+              <Icon name="heroicons:exclamation-circle" class="w-5 h-5 text-red-500" />
+              <span class="text-red-800 text-sm font-medium">{{ error }}</span>
+            </div>
+          </transition>
+
+          <button
+            type="submit"
+            :disabled="loading"
+            class="w-full bg-[#033958] hover:bg-[#044a73] text-white mt-8 py-3.5 px-6 rounded-2xl font-bold text-lg transition-all duration-300 active:scale-[0.98] disabled:opacity-50 shadow-md"
+          >
+            <div v-if="loading" class="flex items-center justify-center space-x-3">
+              <div class="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white"></div>
+              <span>Verifying Credentials...</span>
+            </div>
+            <span v-else class="flex items-center justify-center">
+              Sign In
+              <Icon name="heroicons:arrow-right" class="ml-2 w-5 h-5" />
+            </span>
+          </button>
+        </form>
+
+        <div class="mt-10 text-center pt-8 border-t border-gray-100">
+          <p class="text-gray-500 font-medium text-sm">
+            Don't have an account?
+            <NuxtLink to="/signup" class="text-[#3BAB22] hover:text-[#2d851a] font-bold underline-offset-4 hover:underline transition-all ml-1">
+              Join here
+            </NuxtLink>
+          </p>
         </div>
       </div>
     </div>
-  </template>
-  
+    <UiFullscreenLoader :isVisible="isLoading" />
+  </div>
+</template>
+
 <script setup lang="ts">
-  import { ref, onMounted, onUnmounted } from 'vue'
-  import { useRouter } from 'vue-router'
-  import Icon from '@/components/Icon.vue'
-  import { useLogin } from '@/composables/modules/auth/useLogin'
-  import { useCustomToast } from '@/composables/core/useCustomToast'
-  import { definePageMeta } from '#imports'
-  
-  // Meta
-  definePageMeta({
-    layout: false,
-    auth: false
-  })
-  
-  // Composables
-  const router = useRouter()
-  const { loading, error, success, login } = useLogin()
-  
-  // Reactive data
-  const loginForm = ref({
-    email: '',
-    password: '',
-    rememberMe: false
-  })
-  
-  const showPassword = ref(false)
-  const currentSlide = ref(0)
-  
-  // Carousel data
-  const slides = [
-  {
-      icon: 'heroicons:academic-cap',
-      title: 'Leading Change',
-      description: 'We are leading change, inspiring action, and building the capacity of future generations of world-class professionals in medical laboratory science and in the healthcare system at large.'
-    },
-    {
-      icon: 'heroicons:light-bulb',
-      title: 'Career Clarity',
-      description: 'MedLabConvo gave me clarity about my career path. The mentorship and resources have transformed the way I approach learning and professional growth. I now feel equipped to excel in the health ecosystem.'
-    },
-    {
-      icon: 'heroicons:star',
-      title: 'Game-Changer',
-      description: 'MedLabConvo has been a game-changer for me. From knowledge gained through webinars to career mentorship, MedLabConvo has helped me grow professionally and personally.'
-    },
-    {
-      icon: 'heroicons:users',
-      title: 'Global Collaboration',
-      description: 'MedLabConvo fosters collaboration among medical lab scientists worldwide. It\'s a great place to connect, learn, and contribute to the advancement of our profession.'
-    }
-  ]
-  
-  // Carousel auto-play
-  let carouselInterval: NodeJS.Timeout
-  
-  const startCarousel = () => {
-    carouselInterval = setInterval(() => {
-      currentSlide.value = (currentSlide.value + 1) % slides.length
-    }, 4000)
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import Icon from '@/components/Icon.vue'
+import { useLogin } from '@/composables/modules/auth/useLogin'
+import { useUser } from '@/composables/modules/auth/user'
+import { useCustomToast } from '@/composables/core/useCustomToast'
+import { useLoader } from '@/composables/core/useLoader'
+import { definePageMeta } from '#imports'
+
+// Meta
+definePageMeta({
+  layout: false,
+  auth: false
+})
+
+// Composables
+const router = useRouter()
+const { loading, error, success, login } = useLogin()
+const { isLoading, showLoader, hideLoader } = useLoader()
+
+// Reactive data
+const loginForm = ref({
+  email: '',
+  password: '',
+  rememberMe: false
+})
+
+const showPassword = ref(false)
+
+// Methods
+const handleLogin = async () => {
+  if (!loginForm.value.email || !loginForm.value.password) {
+    const { showToast } = useCustomToast();
+    showToast({ title: "Validation Error", message: "Please enter your email and password.", toastType: "error" });
+    return;
   }
-  
-  const stopCarousel = () => {
-    if (carouselInterval) {
-      clearInterval(carouselInterval)
+  try {
+    showLoader()
+    const response: any = await login({
+      email: loginForm.value.email,
+      password: loginForm.value.password
+    })
+    
+    if (response?.requiresOtp) {
+      await router.push({ path: '/verify-login', query: { email: loginForm.value.email } })
+    } else if (success.value) {
+      await router.push('/dashboard')
     }
+  } catch (err) {
+    console.error('Login failed:', err)
+  } finally {
+    hideLoader()
   }
-  
-  // Methods
-  const handleLogin = async () => {
-    if (!loginForm.value.email || !loginForm.value.password) {
-      const { showToast } = useCustomToast();
-      showToast({ title: "Validation Error", message: "Please enter your email and password.", toastType: "error" });
-      return;
-    }
-    try {
-      await login({
-        email: loginForm.value.email,
-        password: loginForm.value.password
-      })
-      
-      if (success.value) {
-        await router.push('/dashboard')
-      }
-    } catch (err) {
-      console.error('Login failed:', err)
-    }
+}
+
+// Lifecycle
+onMounted(() => {
+  const { isLoggedIn } = useUser()
+  if (isLoggedIn.value) {
+    router.push('/dashboard')
   }
-  
-  // Lifecycle
-  onMounted(() => {
-    startCarousel()
-  })
-  
-  onUnmounted(() => {
-    stopCarousel()
-  })
-  </script>
-  
+})
+
+onUnmounted(() => {
+})
+</script>
+
 <style scoped>
-  /* Carousel animations */
-  .slide-fade-enter-active,
-  .slide-fade-leave-active {
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .slide-fade-enter-from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  
-  .slide-fade-leave-to {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  
-  /* Error shake animation */
-  .shake-enter-active {
-    animation: shake 0.6s ease-in-out;
-  }
-  
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-  }
-  
-  /* Custom spin animation */
-  @keyframes spin-slow {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  
-  .animate-spin-slow {
-    animation: spin-slow 8s linear infinite;
-  }
-  </style>
-  
+/* Error shake animation */
+.shake-enter-active {
+  animation: shake 0.6s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+</style>

@@ -3,7 +3,7 @@ import { blogs_api } from '@/api_factory/modules/blogs'
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useHardDeleteBlog = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const success = ref(false)
@@ -16,12 +16,8 @@ export const useHardDeleteBlog = () => {
     try {
       await blogs_api.$_hard_delete_blog(blogId)
       if ([200, 201].includes(response?.status)) {
-      success.value = true
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        success.value = true
+
       }
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to permanently delete blog'

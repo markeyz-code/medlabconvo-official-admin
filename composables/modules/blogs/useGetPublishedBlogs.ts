@@ -3,7 +3,7 @@ import { blogs_api, type Blog } from '@/api_factory/modules/blogs'
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetPublishedBlogs = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const blogs = ref<Blog[]>([])
@@ -15,12 +15,8 @@ export const useGetPublishedBlogs = () => {
     try {
       const response = await blogs_api.$_get_published_blogs()
       if ([200, 201].includes(response?.status)) {
-      blogs.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        blogs.value = response.data
+
       }
       return response.data
     } catch (err: any) {

@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { useUser } from '@/composables/modules/auth/user'
 
 export const useLogout = () => {
   const loading = ref(false)
@@ -7,11 +8,8 @@ export const useLogout = () => {
     loading.value = true
     
     try {
-      // Remove token from localStorage
-      localStorage.removeItem('auth_token')
-      
-      // Redirect to login page
-      await navigateTo('/login')
+      const { logOut } = useUser()
+      logOut()
     } catch (err) {
       console.error('Logout error:', err)
     } finally {

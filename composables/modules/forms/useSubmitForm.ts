@@ -3,7 +3,7 @@ import { forms_api, type SubmitFormData, type FormSubmission } from '@/api_facto
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useSubmitForm = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const success = ref(false)
@@ -17,13 +17,9 @@ export const useSubmitForm = () => {
     try {
       const response = await forms_api.$_submit_form(formId, submissionPayload)
       if ([200, 201].includes(response?.status)) {
-      success.value = true
-      submissionData.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        success.value = true
+        submissionData.value = response.data
+
       }
       return response.data
     } catch (err: any) {

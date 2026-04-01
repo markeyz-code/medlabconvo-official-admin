@@ -3,7 +3,7 @@ import { programs_api, type Program } from '@/api_factory/modules/programs'
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetProgram = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const program = ref<Program | null>(null)
@@ -15,12 +15,8 @@ export const useGetProgram = () => {
     try {
       const response = await programs_api.$_get_program(programId)
       if ([200, 201].includes(response?.status)) {
-      program.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        program.value = response.data
+
       }
       return response.data
     } catch (err: any) {

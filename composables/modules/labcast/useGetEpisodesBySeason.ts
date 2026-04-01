@@ -21,7 +21,6 @@ export const useGetEpisodesBySeason = () => {
         episodes.value = response.data
         showToast({
                   title: "Success",
-                  message: response?.data?.message || "Operation successful",
                   toastType: "success",
                 });
         }

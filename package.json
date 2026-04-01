@@ -6,7 +6,7 @@
     "url": "https://github.com/marquis-code/medlabconvo-admin-frontend"
   },
   "scripts": {
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --port 3001",
     "build": "nuxt build",
     "start": "node .output/server/index.mjs",
     "generate": "nuxt generate",
@@ -25,6 +25,14 @@
     "@nuxtjs/robots": "^5.2.8",
     "@nuxtjs/sitemap": "^7.2.9",
     "@nuxtjs/tailwindcss": "^6.12.2",
+    "@tiptap/extension-image": "^3.22.0",
+    "@tiptap/extension-link": "^3.22.0",
+    "@tiptap/extension-placeholder": "^3.22.0",
+    "@tiptap/extension-text-align": "^3.22.0",
+    "@tiptap/extension-underline": "^3.22.0",
+    "@tiptap/pm": "^3.22.0",
+    "@tiptap/starter-kit": "^3.22.0",
+    "@tiptap/vue-3": "^3.22.0",
     "@vueuse/core": "^13.0.0",
     "aos": "^3.0.0-beta.6",
     "axios": "^1.10.0",

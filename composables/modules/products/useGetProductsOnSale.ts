@@ -4,7 +4,7 @@ import { products_api, type Product } from '@/api_factory/modules/products'
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetProductsOnSale = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const productsOnSale = ref<Product[]>([])
@@ -16,12 +16,8 @@ export const useGetProductsOnSale = () => {
     try {
       const response = await products_api.$_get_products_on_sale()
       if ([200, 201].includes(response?.status)) {
-      productsOnSale.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        productsOnSale.value = response.data
+
       }
       return response.data
     } catch (err: any) {

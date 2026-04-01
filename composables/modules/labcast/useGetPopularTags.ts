@@ -22,7 +22,6 @@ export const useGetPopularTags = () => {
         tags.value = response.data
         showToast({
                   title: "Success",
-                  message: response?.data?.message || "Operation successful",
                   toastType: "success",
                 });
         }

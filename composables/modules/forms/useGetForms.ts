@@ -3,7 +3,7 @@ import { forms_api, type Form } from '@/api_factory/modules/forms'
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetForms = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const forms = ref<Form[]>([])
@@ -15,12 +15,8 @@ export const useGetForms = () => {
     try {
       const response = await forms_api.$_get_forms()
       if ([200, 201].includes(response?.status)) {
-      forms.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        forms.value = response.data
+
       }
       return response.data
     } catch (err: any) {

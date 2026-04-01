@@ -1,178 +1,204 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+  <div class="min-h-screen bg-[#F8FAFC] font-sans text-slate-900">
     <!-- Mobile Overlay -->
     <div
       v-if="sidebarOpen && isMobile"
-      class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+      class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 lg:hidden"
       @click="closeSidebar"
     ></div>
 
     <!-- Navigation Sidebar -->
     <aside 
       :class="[
-        'fixed left-0 top-0 h-full bg-white shadow-xl border-r border-slate-200 transition-all duration-300 z-40',
+        'fixed left-0 top-0 h-full bg-[#033958] text-white transition-all duration-300 z-40 border-r border-white/10 shadow-2xl',
         // Desktop behavior
         'lg:translate-x-0',
-        sidebarOpen && !isMobile ? 'lg:w-64' : 'lg:w-16',
+        sidebarOpen ? 'w-64' : 'w-20',
         // Mobile behavior
-        sidebarOpen && isMobile ? 'translate-x-0 w-64' : '-translate-x-full w-64 lg:translate-x-0'
+        sidebarOpen && isMobile ? 'translate-x-0 w-64' : isMobile ? '-translate-x-full w-64' : 'translate-x-0'
       ]"
     >
-    
       <!-- Logo Section -->
-      <div class="flex items-center justify-between p-4 border-b border-slate-200">
-        <div v-if="sidebarOpen || !isMobile" class="flex items-center space-x-3">
-          <img src="@/assets/img/logo.jpeg" class="h-10 w-10 rounded-lg" />
-          <!-- <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-            <span class="text-white font-bold text-sm">O</span>
-          </div> -->
-          <!-- <span v-if="sidebarOpen || !isMobile" class="font-bold text-xl text-slate-800">medlabconvo</span> -->
+      <div class="flex items-center h-20 px-6 border-b border-white/10 mb-4">
+        <div class="flex items-center space-x-3 overflow-hidden">
+          <img src="@/assets/img/logo.jpeg" class="h-10 w-10 rounded-md ring-2 ring-white/20" />
+          <span v-if="sidebarOpen" class="font-bold text-lg tracking-tight truncate uppercase">MedLabConvo</span>
         </div>
-        
-        <button 
-          @click="toggleSidebar"
-          class="p-2 rounded-lg lg:hidden hover:bg-slate-100 transition-colors"
-        >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>
-          <!-- <Icon name="heroicons:bars-3" class="w-5 h-5 text-slate-600" /> -->
-        </button>
       </div>
 
       <!-- Navigation Menu -->
-      <nav class="mt-6 px-3">
-        <div v-for="item in navigationItems" :key="item.name" class="mb-2">
+      <nav class="px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-160px)] custom-scrollbar">
+        <template v-for="item in navigationItems" :key="item.path || item.name">
+          <!-- Divider -->
+          <div v-if="item.type === 'divider'" class="py-4 px-4">
+            <div class="h-px bg-white/10 w-full"></div>
+            <span v-if="sidebarOpen" class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mt-2 block">Security & Access</span>
+          </div>
+
+          <!-- Nav Link -->
           <NuxtLink
+            v-else
             :to="item.path"
             :class="[
-              'w-full flex items-center px-3 py-3 rounded-lg text-left transition-all duration-200',
+              'group flex items-center px-4 py-3 rounded-lg transition-all duration-200 relative',
               $route.path === item.path 
-                ? 'bg-black text-white shadow-lg' 
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
+                ? 'bg-[#3BAB22] text-white' 
+                : 'text-blue-100/70 hover:bg-white/10 hover:text-white'
             ]"
             @click="isMobile && closeSidebar()"
           >
-            <Icon :name="item.icon" class="w-5 h-5 flex-shrink-0" />
-            <span v-if="sidebarOpen || !isMobile" class="ml-3 font-medium">{{ item.name }}</span>
+            <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0', $route.path === item.path ? 'text-white' : 'text-blue-200/50 group-hover:text-white']" />
+            <span v-if="sidebarOpen" class="ml-4 font-semibold text-sm">{{ item.name }}</span>
+            
             <span 
-              v-if="(sidebarOpen || !isMobile) && item.badge && item.badge > 0" 
-              class="ml-auto px-2 py-1 text-xs rounded-full bg-red-100 text-red-600"
+              v-if="sidebarOpen && item.badge && item.badge > 0" 
+              class="ml-auto px-2 py-0.5 text-[10px] font-bold rounded-full bg-white text-[#033958]"
             >
               {{ item.badge }}
             </span>
+
+            <!-- Tooltip for collapsed state -->
+            <div v-if="!sidebarOpen" class="absolute left-full ml-4 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+              {{ item.name }}
+            </div>
           </NuxtLink>
-        </div>
+        </template>
       </nav>
 
-      <!-- Logout Button -->
-      <div class="absolute bottom-4 left-3 right-3">
+      <!-- Logout & Toggle Section -->
+      <div class="absolute bottom-6 left-3 right-3 space-y-2">
+        <button
+          @click="toggleSidebar"
+          class="hidden lg:flex w-full items-center px-4 py-3 rounded-lg text-blue-100/50 hover:bg-white/10 hover:text-white transition-all"
+        >
+          <Icon :name="sidebarOpen ? 'heroicons:chevron-left' : 'heroicons:chevron-right'" class="w-5 h-5" />
+          <span v-if="sidebarOpen" class="ml-4 font-semibold text-sm">Collapse</span>
+        </button>
+        
         <button
           @click="showLogoutModal = true"
-          :class="[
-            'w-full flex items-center px-3 py-3 rounded-lg text-left transition-all duration-200 text-red-600 hover:bg-red-50'
-          ]"
+          class="w-full flex items-center px-4 py-3 rounded-lg text-red-300 hover:bg-red-500/20 hover:text-red-100 transition-all font-semibold text-sm"
         >
-          <Icon name="heroicons:arrow-right-on-rectangle" class="w-5 h-5 flex-shrink-0" />
-          <span v-if="sidebarOpen || !isMobile" class="ml-3 font-medium">Logout</span>
+          <Icon name="heroicons:arrow-right-on-rectangle" class="w-5 h-5" />
+          <span v-if="sidebarOpen" class="ml-4">Sign Out</span>
         </button>
       </div>
     </aside>
 
     <!-- Main Content Area -->
     <main :class="[
-      'transition-all duration-300',
-      // Desktop margins
-      sidebarOpen && !isMobile ? 'lg:ml-64' : 'lg:ml-16',
-      // Mobile margins
-      'ml-0'
+      'transition-all duration-300 min-h-screen flex flex-col',
+      sidebarOpen && !isMobile ? 'lg:ml-64' : !isMobile ? 'lg:ml-20' : 'ml-0'
     ]">
       <!-- Top Header -->
-      <header class="bg-white shadow-sm border-b border-slate-200 px-4 lg:px-6 py-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <!-- Mobile Hamburger Menu -->
-            <button
-              @click="toggleSidebar"
-              class="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
-            >
-              <Icon name="heroicons:bars-3" class="w-6 h-6 text-slate-600" />
-            </button>
-            
-            <div>
-              <h1 class="text-xl lg:text-2xl font-bold text-slate-800">{{ currentPageTitle }}</h1>
-              <p class="text-slate-600 text-sm lg:text-base hidden sm:block">{{ currentPageDescription }}</p>
+      <header class="h-20 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-20">
+        <div class="flex items-center space-x-6">
+          <button
+            @click="toggleSidebar"
+            class="lg:hidden p-2 rounded-lg hover:bg-slate-100 text-slate-600"
+          >
+            <Icon name="heroicons:bars-3" class="w-6 h-6" />
+          </button>
+          
+          <div>
+            <h1 class="text-xl font-bold text-slate-900 leading-tight">{{ currentPageTitle }}</h1>
+            <div class="flex items-center text-xs text-slate-500 mt-0.5 font-medium uppercase tracking-wider">
+              <span>Admin</span>
+              <Icon name="heroicons:chevron-right" class="w-3 h-3 mx-2 opacity-50" />
+              <span class="text-blue-600">{{ currentPageTitle }}</span>
             </div>
           </div>
-          
-          <div class="flex items-center space-x-2 lg:space-x-4">
-            <!-- Search - Hidden on small screens -->
-            <!-- <div class="relative hidden md:block">
-              <Icon name="heroicons:magnifying-glass" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                v-model="globalSearch"
-                type="text"
-                placeholder="Search..."
-                class="pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div> -->
-            
-            <!-- Notifications -->
-            <!-- <button class="relative p-2 rounded-lg hover:bg-slate-100 transition-colors">
-              <Icon name="heroicons:bell" class="w-5 h-5 text-slate-600" />
-              <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-            </button> -->
-            
-            <!-- User Menu -->
-            <div class="flex items-center space-x-2 lg:space-x-3">
-              <div class="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-                <span class="text-white font-medium text-sm">{{ userInitials }}</span>
-              </div>
-              <span class="font-medium text-slate-700 hidden sm:block">{{ user?.firstName }} {{ user?.lastName }}</span>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <!-- Quick Action -->
+          <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-200">
+            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            <span class="text-xs font-bold text-slate-600">System Live</span>
+          </div>
+
+          <!-- Vertical Divider -->
+          <div class="w-px h-8 bg-slate-200 mx-2"></div>
+
+          <!-- User Profile -->
+          <div class="flex items-center space-x-3 pl-2">
+            <div class="text-right hidden sm:block">
+              <p class="text-sm font-bold text-slate-900 leading-none mb-1">{{ user?.firstName }} {{ user?.lastName }}</p>
+              <p class="text-[10px] font-bold text-blue-600 uppercase tracking-tighter">{{ user?.role?.replace('_', ' ') || 'Admin' }}</p>
+            </div>
+            <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white font-bold ring-4 ring-slate-50 shadow-sm border border-white/10">
+              {{ userInitials }}
             </div>
           </div>
         </div>
       </header>
 
-      <!-- Page Content -->
-      <div class="p-4 lg:p-6">
+      <!-- Page Content Content -->
+      <div class="flex-1 p-6 md:p-8 lg:p-10 max-w-[1600px] mx-auto w-full">
+        <!-- Page Title Description -->
+        <div class="mb-10 pb-6 border-b border-slate-200 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div>
+            <h2 class="text-3xl font-extrabold text-slate-900 mb-2 leading-tight">{{ currentPageTitle }}</h2>
+            <p class="text-slate-500 max-w-2xl font-medium antialiased">{{ currentPageDescription }}</p>
+          </div>
+          <slot name="header-actions" />
+        </div>
+
         <slot />
       </div>
+      
+      <!-- Footer -->
+      <footer class="py-6 px-10 border-t border-slate-200 text-slate-400 text-sm flex justify-between items-center">
+        <p>&copy; 2026 MedLabConvo Admin. All rights reserved.</p>
+        <div class="flex space-x-6">
+          <a href="#" class="hover:text-blue-600 transition-colors">Support</a>
+          <a href="#" class="hover:text-blue-600 transition-colors">Documentation</a>
+        </div>
+      </footer>
     </main>
 
     <!-- Logout Confirmation Modal -->
-    <Modal v-model="showLogoutModal" title="Confirm Logout" size="sm">
-      <div class="text-center py-4">
-        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-          <Icon name="heroicons:exclamation-triangle" class="h-6 w-6 text-red-600" />
+    <Modal v-model="showLogoutModal" title="Security Confirmation" size="sm">
+      <div class="p-4">
+        <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Icon name="heroicons:exclamation-triangle" class="w-8 h-8 text-red-600" />
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Are you sure you want to logout?</h3>
-        <p class="text-sm text-gray-500 mb-6">You will be redirected to the homepage and will need to login again to access the dashboard.</p>
+        <div class="text-center mb-8">
+          <h3 class="text-xl font-bold text-slate-900 mb-2">Ready to Leave?</h3>
+          <p class="text-slate-500 font-medium">Your current session will be terminated and you'll need to re-authenticate to access the portal.</p>
+        </div>
         
-        <div class="flex space-x-3 justify-center">
+        <div class="grid grid-cols-2 gap-3">
           <button
             @click="showLogoutModal = false"
-            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            class="px-4 py-3 text-sm font-bold text-slate-700 bg-slate-100 rounded-xl hover:bg-slate-200 transition-all border border-slate-200"
           >
-            Cancel
+            Stay Logged In
           </button>
           <button
             @click="confirmLogout"
             :disabled="logoutLoading"
-            class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
+            class="px-4 py-3 text-sm font-bold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-all shadow-md shadow-red-200 flex items-center justify-center space-x-2"
           >
-            <div v-if="logoutLoading" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-            <span>{{ logoutLoading ? 'Logging out...' : 'Yes, Logout' }}</span>
+            <div v-if="logoutLoading" class="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white"></div>
+            <span>{{ logoutLoading ? 'Signing out...' : 'Confirm Logout' }}</span>
           </button>
         </div>
       </div>
     </Modal>
 
     <!-- Global Loading Overlay -->
-    <div v-if="globalLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg p-6 flex items-center space-x-4">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span class="text-slate-700 font-medium">Loading...</span>
+    <transition name="fade">
+      <div v-if="globalLoading" class="fixed inset-0 bg-[#033958]/10 backdrop-blur-sm flex items-center justify-center z-[100]">
+        <div class="bg-white rounded-2xl p-8 shadow-2xl border border-slate-200 flex flex-col items-center">
+          <div class="relative w-16 h-16 mb-4">
+            <div class="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-[#033958] rounded-full border-t-transparent animate-spin"></div>
+          </div>
+          <span class="text-slate-900 font-bold tracking-tight">Authenticating...</span>
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -206,9 +232,8 @@ const { labcasts, getLabCasts } = useGetLabCasts()
 const { products, getProducts } = useGetProducts()
 const { programs, getPrograms } = useGetPrograms()
 const { forms, getForms } = useGetForms()
-const { auditLogs, loading: loadingActivities, getAuditLogs } = useGetAuditLogs()
+const { auditLogs, getAuditLogs } = useGetAuditLogs()
 
-// Composables
 const router = useRouter()
 const route = useRoute()
 const { logout, loading: logoutLoading } = useLogout()
@@ -216,153 +241,95 @@ const { user } = useUser()
 
 // Reactive data
 const isMobile = ref(false)
-const sidebarOpen = ref(false) // Default closed on mobile
-const globalSearch = ref('')
+const sidebarOpen = ref(true)
 const globalLoading = ref(false)
 const showLogoutModal = ref(false)
 
-// Navigation items - Now as computed property to be reactive
+// Navigation items
 const navigationItems = computed(() => [
-  { name: 'Dashboard', path: '/dashboard', icon: 'heroicons:home', badge: null },
-  { 
-    name: 'Users', 
-    path: '/dashboard/users', 
-    icon: 'heroicons:users', 
-    badge: users.value?.length || 0
-  },
-  { 
-    name: 'Enquiries', 
-    path: '/dashboard/enquiries', 
-    icon: 'heroicons:envelope', 
-    badge: enquiries.value?.length || 0
-  },
-  { 
-    name: 'Subscriptions', 
-    path: '/dashboard/subscriptions', 
-    icon: 'heroicons:newspaper', 
-    badge: subscriptions.value?.length || 0
-  },
-  { 
-    name: 'Team Members', 
-    path: '/dashboard/teams', 
-    icon: 'heroicons:user-group', 
-    badge: teamMembers.value?.length || 0
-  },
-  { 
-    name: 'Publications', 
-    path: '/dashboard/publications', 
-    icon: 'heroicons:document-text', 
-    badge: publications.value?.length || 0
-  },
-  { 
-    name: 'LabCast', 
-    path: '/dashboard/labcast', 
-    icon: 'heroicons:document-text', 
-    badge: labcasts.value?.length || 0
-  },
-  { 
-    name: 'Products', 
-    path: '/dashboard/products', 
-    icon: 'heroicons:document-text', 
-    badge: products.value?.length || 0
-  },
-  { 
-    name: 'Programs', 
-    path: '/dashboard/programs', 
-    icon: 'heroicons:academic-cap', 
-    badge: programs.value?.length || 0
-  },
-  { 
-    name: 'Blogs', 
-    path: '/dashboard/blogs', 
-    icon: 'heroicons:pencil-square', 
-    badge: blogs.value?.length || 0
-  },
-  { 
-    name: 'Forms', 
-    path: '/dashboard/forms', 
-    icon: 'heroicons:clipboard-document-list', 
-    badge: forms.value?.length || 0
-  },
-  { 
-    name: 'Audit Logs', 
-    path: '/dashboard/audit', 
-    icon: 'heroicons:shield-check', 
-    badge: auditLogs.value?.length || 0
-  },
+  { name: 'Dashboard', path: '/dashboard', icon: 'heroicons:squares-2x2', badge: null },
+  { name: 'Users', path: '/dashboard/users', icon: 'heroicons:users', badge: users.value?.length },
+  { name: 'Teams', path: '/dashboard/teams', icon: 'heroicons:user-group', badge: teamMembers.value?.length },
+  { name: 'Enquiries', path: '/dashboard/enquiries', icon: 'heroicons:chat-bubble-left-right', badge: enquiries.value?.length },
+  { name: 'Subscribers', path: '/dashboard/subscriptions', icon: 'heroicons:envelope', badge: subscriptions.value?.length },
+  { name: 'Publications', path: '/dashboard/publications', icon: 'heroicons:document-text', badge: publications.value?.length },
+  { name: 'LabCast', path: '/dashboard/labcast', icon: 'heroicons:microphone', badge: labcasts.value?.length },
+  { name: 'Inventory', path: '/dashboard/products', icon: 'heroicons:shopping-cart', badge: products.value?.length },
+  { name: 'Programs', path: '/dashboard/programs', icon: 'heroicons:academic-cap', badge: programs.value?.length },
+  { name: 'Blog Posts', path: '/dashboard/blogs', icon: 'heroicons:newspaper', badge: blogs.value?.length },
+  { name: 'Dynamic Forms', path: '/dashboard/forms', icon: 'heroicons:clipboard-document-list', badge: forms.value?.length },
+  { name: 'Convo Stack', path: '/dashboard/convostack', icon: 'heroicons:book-open', badge: null },
+  { name: 'CMS', path: '/dashboard/cms', icon: 'heroicons:document-text', badge: null },
+  
+  // Separator / Section for Access Control
+  { name: 'divider', path: '', icon: '', badge: null, type: 'divider' },
+  { name: 'Role Management', path: '/dashboard/access-control/roles', icon: 'heroicons:shield-check', badge: null },
+  { name: 'Permissions', path: '/dashboard/access-control/permissions', icon: 'heroicons:key', badge: null },
+  
+  { name: 'Audit Logs', path: '/dashboard/audit', icon: 'heroicons:finger-print', badge: auditLogs.value?.length },
 ])
 
-// Computed properties
 const currentPageTitle = computed(() => {
   const item = navigationItems.value.find(item => item.path === route.path)
-  return item?.name || 'Dashboard'
+  return item?.name || 'Admin Console'
 })
 
 const currentPageDescription = computed(() => {
   const descriptions = {
-    '/dashboard': 'Overview of your platform analytics and key metrics',
-    '/dashboard/users': 'Manage user accounts, roles, and permissions',
-    '/dashboard/enquiries': 'Handle customer inquiries and support requests',
-    '/dashboard/subscriptions': 'Manage newsletter subscriptions and communications',
-    '/dashboard/teams': 'Organize team members and their roles',
-    '/dashboard/labcast': 'Overview of your LabCast episodes and analytics',
-    '/dashboard/publications': 'Manage research publications and academic content',
-    '/dashboard/programs': 'Create and manage educational programs',
-    '/dashboard/blogs': 'Publish and manage blog content',
-    '/dashboard/products': 'Manage your books, courses, and digital products.value',
-    '/dashboard/forms': 'Create dynamic forms and collect responses',
-    '/dashboard/audit': 'Monitor system activities and security logs'
+    '/dashboard': 'View real-time platform statistics and activity.',
+    '/dashboard/users': 'Manage user accounts, roles, and access permissions.',
+    '/dashboard/enquiries': 'Respond to customer support tickets and enquiries.',
+    '/dashboard/subscriptions': 'Manage your newsletter subscribers and mailing lists.',
+    '/dashboard/teams': 'Manage internal teams and departmental memberships.',
+    '/dashboard/labcast': 'Manage your podcast episodes and labcast content.',
+    '/dashboard/publications': 'Manage research papers and academic publications.',
+    '/dashboard/programs': 'Manage academic courses and educational programs.',
+    '/dashboard/blogs': 'Create and manage blog posts and news articles.',
+    '/dashboard/products': 'Manage your digital products and inventory.',
+    '/dashboard/forms': 'Create and analyze custom data collection forms.',
+    '/dashboard/convostack': 'Create and publish rich content publications with your Substack-like editor.',
+    '/dashboard/cms': 'Manage all dynamic content and pages across your platform seamlessly.',
+    '/dashboard/audit': 'View security logs and system activity history.',
+    '/dashboard/access-control/roles': 'Define group-based permissions and system roles.',
+    '/dashboard/access-control/permissions': 'Manage individual granular system permissions.'
   }
-  return descriptions[route.path as keyof typeof descriptions] || ''
+  return descriptions[route.path as keyof typeof descriptions] || 'Manage your MedLabConvo platform settings.'
 })
 
 const userInitials = computed(() => {
   if (!user.value) return 'U'
   const first = user.value.firstName?.charAt(0) || ''
   const last = user.value.lastName?.charAt(0) || ''
-  return (first + last).toUpperCase() || 'U'
+  return (first + last).toUpperCase()
 })
 
 // Methods
 const checkMobile = () => {
-  isMobile.value = window.innerWidth < 1024 // lg breakpoint
-  if (!isMobile.value) {
-    sidebarOpen.value = true // Keep sidebar open on desktop
-  }
+  isMobile.value = window.innerWidth < 1024
+  if (isMobile.value) sidebarOpen.value = false
+  else sidebarOpen.value = true
 }
 
-const toggleSidebar = () => {
-  sidebarOpen.value = !sidebarOpen.value
-}
-
-const closeSidebar = () => {
-  if (isMobile.value) {
-    sidebarOpen.value = false
-  }
-}
+const toggleSidebar = () => sidebarOpen.value = !sidebarOpen.value
+const closeSidebar = () => { if (isMobile.value) sidebarOpen.value = false }
 
 const confirmLogout = async () => {
   try {
     await logout()
     showLogoutModal.value = false
-    // Redirect to homepage instead of login
-    await router.push('/')
+    router.push('/')
   } catch (error) {
     console.error('Logout failed:', error)
     showLogoutModal.value = false
   }
 }
 
-// Provide global loading state
 provide('globalLoading', globalLoading)
 
-// Load all data on mount
 onMounted(async () => {
-  // Check mobile on mount
   checkMobile()
   window.addEventListener('resize', checkMobile)
   
-  // Load all data
   try {
     await Promise.all([
       getUsers(),
@@ -378,11 +345,19 @@ onMounted(async () => {
       getAuditLogs()
     ])
   } catch (error) {
-    console.error('Failed to load data:', error)
+    console.error('Core data load failed:', error)
   }
 })
 
-onUnmounted(() => {
-  window.removeEventListener('resize', checkMobile)
-})
+onUnmounted(() => window.removeEventListener('resize', checkMobile))
 </script>
+
+<style>
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+.fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+</style>

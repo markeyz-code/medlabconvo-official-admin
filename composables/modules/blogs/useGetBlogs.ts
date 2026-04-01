@@ -3,7 +3,7 @@ import { blogs_api, type Blog, type BlogQueryParams } from '@/api_factory/module
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useGetBlogs = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const blogs = ref<Blog[]>([])
@@ -15,12 +15,8 @@ export const useGetBlogs = () => {
     try {
       const response = await blogs_api.$_get_blogs(params)
       if ([200, 201].includes(response?.status)) {
-      blogs.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        blogs.value = response.data
+
       }
       return response.data
     } catch (err: any) {

@@ -7,7 +7,7 @@
           class="relative"
         >
           <input
-            :ref="el => inputRefs[index] = el"
+            :ref="(el) => { if (el) inputRefs[index] = el as HTMLInputElement }"
             type="text"
             inputmode="numeric"
             maxlength="1"
@@ -16,7 +16,7 @@
             @keydown="handleKeyDown($event, index)"
             @focus="handleFocus(index)"
             @paste="handlePaste"
-            class="w-14 h-14 text-center text-2xl font-bold bg-[#F7F7F7]  rounded-md focus:outline-none"
+            class="w-12 h-12 text-center text-xl font-semibold bg-[#F7F7F7] rounded-lg focus:outline-none"
             :class="[
               index === activeInput ? 'border-green-500 ring-1 ring-green-500' : 'border-gray-200',
               { 'border-red-500 ring-1 ring-red-500': error }

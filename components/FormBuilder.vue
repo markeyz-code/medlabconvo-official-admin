@@ -75,6 +75,15 @@
       ></textarea>
     </div>
 
+    <!-- Banner Image Upload -->
+    <div class="col-span-full">
+      <label class="block text-sm font-medium text-slate-700 mb-2">Form Banner (Optional)</label>
+      <ImageUpload v-model="form.bannerImage" />
+      <p class="mt-1 text-xs text-slate-500">
+        Upload a promotional banner or poster to be displayed beautifully at the top of the form.
+      </p>
+    </div>
+
     <!-- Form Fields Builder -->
     <div>
       <div class="flex items-center justify-between mb-4">
@@ -259,6 +268,7 @@
 import { reactive, watchEffect, onMounted, computed } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import { useGetPrograms } from '@/composables/modules/programs/useGetPrograms'
+import ImageUpload from '@/components/ImageUpload.vue'
 
 interface Props {
   form?: any,
@@ -273,6 +283,7 @@ const emit = defineEmits(['save', 'cancel'])
 
 const form = reactive({
   title: '',
+  bannerImage: '',
   description: '',
   instructions: '',
   isActive: true,
@@ -292,6 +303,7 @@ watchEffect(() => {
   if (props.form) {
     Object.assign(form, {
       title: props.form.title || '',
+      bannerImage: props.form.bannerImage || '',
       description: props.form.description || '',
       instructions: props.form.instructions || '',
       isActive: props.form.isActive ?? true,
@@ -304,6 +316,7 @@ watchEffect(() => {
     // Reset form for new form
     Object.assign(form, {
       title: '',
+      bannerImage: '',
       description: '',
       instructions: '',
       isActive: true,

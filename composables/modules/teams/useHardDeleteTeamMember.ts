@@ -3,7 +3,7 @@ import { teams_api } from '@/api_factory/modules/teams'
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useHardDeleteTeamMember = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const success = ref(false)
@@ -16,12 +16,8 @@ export const useHardDeleteTeamMember = () => {
     try {
       await teams_api.$_hard_delete_team_member(memberId)
       if ([200, 201].includes(response?.status)) {
-      success.value = true
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        success.value = true
+
       }
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to permanently delete team member'

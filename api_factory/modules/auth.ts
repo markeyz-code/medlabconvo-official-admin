@@ -42,8 +42,8 @@ export const auth_api = {
     return GATEWAY_ENDPOINT.post(url, credentials)
   },
 
-  $_signup: async (userData: SignupData) => {
-    const url = `/users/signup`
+  $_signup: async (userData: SignupData, token?: string) => {
+    const url = token ? `/auth/register?token=${token}` : `/auth/register`
     return GATEWAY_ENDPOINT.post(url, userData)
   },
   $_verify_email: async (token: string) => {
@@ -58,6 +58,16 @@ export const auth_api = {
 
   $_reset_password: async (token: string, payload: ResetPasswordPayload) => {
     const url = `/auth/reset-password/${token}`
+    return GATEWAY_ENDPOINT.post(url, payload)
+  },
+
+  $_verify_otp: async (payload: { email: string, otp: string }) => {
+    const url = `/auth/verify-otp`
+    return GATEWAY_ENDPOINT.post(url, payload)
+  },
+
+  $_verify_login_otp: async (payload: { email: string, otp: string }) => {
+    const url = `/auth/verify-login-otp`
     return GATEWAY_ENDPOINT.post(url, payload)
   },
 }

@@ -18,10 +18,12 @@ export type Publication = {
 
 export type TeamMember = {
   id?: string
+  _id?: string
   image?: string
   name: string
   initials: string
   title: string
+  isActive?: boolean
   position: number
   profiles: Profile[]
   bio: string
@@ -36,6 +38,7 @@ export type CreateTeamMemberData = {
   name: string
   initials: string
   title: string
+  isActive?: boolean
   position: number
   profiles: Profile[]
   bio: string

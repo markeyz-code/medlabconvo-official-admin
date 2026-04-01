@@ -17,6 +17,7 @@ export type FormField = {
 export type Form = {
   id?: string
   title: string
+  bannerImage?: string
   slug?: string
   description?: string
   instructions?: string
@@ -31,6 +32,7 @@ export type Form = {
 
 export type CreateFormData = {
   title: string
+  bannerImage?: string
   description?: string
   instructions?: string
   fields: FormField[]

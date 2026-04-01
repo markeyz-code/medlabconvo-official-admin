@@ -24,7 +24,6 @@ export const useGetActiveEpisodes = () => {
         totalCount.value = response.data.total || response.data.length
         showToast({
                   title: "Success",
-                  message: response?.data?.message || "Operation successful",
                   toastType: "success",
                 });
         }

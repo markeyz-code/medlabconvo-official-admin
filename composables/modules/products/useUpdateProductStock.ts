@@ -3,7 +3,7 @@ import { products_api } from '@/api_factory/modules/products'
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useUpdateProductStock = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const success = ref(false)
@@ -16,12 +16,8 @@ export const useUpdateProductStock = () => {
     try {
       const response = await products_api.$_update_product_stock(productId, quantity)
       if ([200, 201].includes(response?.status)) {
-      success.value = true
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        success.value = true
+
       }
       return response.data
     } catch (err: any) {

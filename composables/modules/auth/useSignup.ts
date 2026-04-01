@@ -9,21 +9,21 @@ export const useSignup = () => {
   const success = ref(false)
   const userData = ref<any>(null)
 
-  const signup = async (signupData: SignupData) => {
+  const signup = async (signupData: SignupData, token?: string) => {
     loading.value = true
     error.value = null
     success.value = false
 
     try {
-      const response = await auth_api.$_signup(signupData)
+      const response = await auth_api.$_signup(signupData, token)
       if ([200, 201].includes(response?.status)) {
-      success.value = true
-      userData.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        success.value = true
+        userData.value = response.data
+        showToast({
+          title: "Success",
+          message: "Account created successfully.",
+          toastType: "success",
+        });
       }
       return response.data
     } catch (err: any) {

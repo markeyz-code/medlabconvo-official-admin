@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { 
   labcast_api, 
   type LabCast, 
@@ -19,18 +19,16 @@ export const useGetLabCasts = () => {
     error.value = null
 
     try {
-      // const response = await labcast_api.$_get_labcasts(queryParams)
+      const response = await labcast_api.$_get_labcasts(queryParams)
       if ([200, 201].includes(response?.status)) {
-      labcasts.value = response.data.data || response.data
-      totalCount.value = response.data.total || response.data.length
-      currentPage.value = queryParams?.page || 1
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        labcasts.value = response.data.data || response.data
+        totalCount.value = response.data.total || response.data.length
+        currentPage.value = queryParams?.page || 1
+        showToast({
+          title: "Success",
+          toastType: "success",
+        });
       }
-      const response = await labcast_api.$_get_labcasts()
       return response.data
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to fetch LabCast episodes'
@@ -49,7 +47,6 @@ export const useGetLabCasts = () => {
   }
 
   onMounted(() => {
-    console.log('Hello world')
     getLabCasts()
   })
 

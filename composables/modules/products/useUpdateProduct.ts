@@ -4,7 +4,7 @@ import { products_api, type UpdateProductData, type Product } from '@/api_factor
 import { useCustomToast } from "@/composables/core/useCustomToast";
 
 export const useUpdateProduct = () => {
-    const { showToast } = useCustomToast();
+  const { showToast } = useCustomToast();
   const loading = ref(false)
   const error = ref<string | null>(null)
   const success = ref(false)
@@ -18,13 +18,9 @@ export const useUpdateProduct = () => {
     try {
       const response = await products_api.$_update_product(productId, updateData)
       if ([200, 201].includes(response?.status)) {
-      success.value = true
-      updatedProduct.value = response.data
-      showToast({
-                title: "Success",
-                message: response?.data?.message || "Operation successful",
-                toastType: "success",
-              });
+        success.value = true
+        updatedProduct.value = response.data
+
       }
       return response.data
     } catch (err: any) {

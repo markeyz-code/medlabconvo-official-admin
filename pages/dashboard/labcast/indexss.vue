@@ -48,8 +48,8 @@
   
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Latest Episodes -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-50">
-          <div class="p-6 border-b border-gray-50">
+        <div class="bg-white rounded-lg shadow-sm border ">
+          <div class="p-6 border-b ">
             <div class="flex items-center justify-between">
               <h3 class="text-lg font-semibold text-gray-900">Latest Episodes</h3>
               <NuxtLink
@@ -113,8 +113,8 @@
         </div>
   
         <!-- Popular Tags -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-50">
-          <div class="p-6 border-b border-gray-50">
+        <div class="bg-white rounded-lg shadow-sm border ">
+          <div class="p-6 border-b ">
             <h3 class="text-lg font-semibold text-gray-900">Popular Tags</h3>
           </div>
           <div class="p-6">
