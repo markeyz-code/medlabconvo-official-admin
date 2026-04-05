@@ -1,5 +1,5 @@
 <template>
-  <div class="animate-in slide-in-from-right duration-500">
+  <div class="animate-in slide-in-from-right duration-500 p-6">
     <!-- Step Indicator -->
     <div class="mb-10">
       <div class="flex items-center justify-between px-2">
@@ -275,9 +275,73 @@
           </div>
         </section>
       </div>
-
-      <!-- Step 4: Finalization -->
+      
+      <!-- Step 4: Speakers & Faculty -->
       <div v-if="currentStep === 3" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <header class="mb-8">
+          <h3 class="text-xl font-bold text-slate-900 mb-1">Scientific speakers & mentors</h3>
+          <p class="text-sm text-slate-500">Add experts and speakers for this program. You can add bios and avatars now or later.</p>
+        </header>
+
+        <section class="space-y-8">
+          <div v-for="(speaker, index) in form.speakers" :key="index" class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 relative group">
+            <button
+              @click="removeSpeaker(index)"
+              type="button"
+              class="absolute top-6 right-6 p-2 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+            >
+              <Icon name="heroicons:trash" class="w-5 h-5" />
+            </button>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+              <!-- Speaker Image -->
+              <div class="md:col-span-4 space-y-4">
+                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Avatar</label>
+                <div class="relative w-32 h-32 mx-auto md:mx-0">
+                  <ImageUpload
+                    v-model="speaker.image"
+                    :multiple="false"
+                    folder="speakers"
+                    class="rounded-full w-32 h-32 border-4 border-white shadow-xl overflow-hidden"
+                  />
+                </div>
+              </div>
+
+              <!-- Speaker Info -->
+              <div class="md:col-span-8 space-y-6">
+                <AnimatedInput
+                  v-model="speaker.name"
+                  :id="'speaker-name-'+index"
+                  label="Speaker name"
+                  placeholder="e.g. Dr. Jane Smith"
+                  position="top"
+                />
+                <AnimatedInput
+                  v-model="speaker.bio"
+                  :id="'speaker-bio-'+index"
+                  type="textarea"
+                  :rows="3"
+                  label="Short biography"
+                  placeholder="A brief overview of their background and expertise..."
+                  position="bottom"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            @click="addSpeaker"
+            type="button"
+            class="w-full py-6 bg-white border-2 border-dashed border-slate-100 rounded-[2rem] text-slate-400 font-bold text-sm hover:border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center space-x-3"
+          >
+            <Icon name="heroicons:plus-circle" class="w-6 h-6" />
+            <span>Add expert speaker</span>
+          </button>
+        </section>
+      </div>
+
+      <!-- Step 5: Finalization -->
+      <div v-if="currentStep === 4" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <header class="mb-8 text-center">
           <h3 class="text-xl font-bold text-slate-900 mb-1">Review program</h3>
           <p class="text-sm text-slate-500">Double check your program settings before publishing.</p>
@@ -390,6 +454,7 @@ const steps = [
   { title: 'Core info', description: 'Basic details' },
   { title: 'Curriculum', description: 'Learning path' },
   { title: 'Media', description: 'Visual assets' },
+  { title: 'Faculty', description: 'Speakers' },
   { title: 'Review', description: 'Final check' }
 ]
 
@@ -416,7 +481,8 @@ const form = reactive({
   highlights: [{ title: '', description: '' }],
   formId: '',
   externalFormLink: '',
-  status: 'draft'
+  status: 'draft',
+  speakers: [] as Array<{ name: string; bio: string; image: string }>
 })
 
 const { forms, getForms } = useGetForms()
@@ -448,7 +514,8 @@ watchEffect(() => {
       highlights: props.program.highlights?.length ? props.program.highlights.map((h: any) => ({...h})) : [{ title: '', description: '' }],
       formId: props.program.form?._id || props.program.form || '',
       externalFormLink: props.program.externalFormLink || '',
-      status: props.program.status || 'draft'
+      status: props.program.status || 'draft',
+      speakers: props.program.speakers?.length ? props.program.speakers.map((s: any) => ({...s})) : []
     })
     maxStepReached.value = 3
   }
@@ -483,6 +550,9 @@ const removeResponsibility = (index: number) => form.keyResponsibilities.splice(
 const addHighlight = () => form.highlights.push({ title: '', description: '' })
 const removeHighlight = (index: number) => form.highlights.splice(index, 1)
 
+const addSpeaker = () => form.speakers.push({ name: '', bio: '', image: '' })
+const removeSpeaker = (index: number) => form.speakers.splice(index, 1)
+
 const { showToast } = useCustomToast()
 
 const handleSubmit = async () => {
@@ -492,8 +562,16 @@ const handleSubmit = async () => {
   }
   isSubmitting.value = true
   try {
+    const extractUrl = (val: any) => {
+      if (typeof val === 'string') return val
+      if (val && typeof val === 'object') return val.url || val.secure_url || ''
+      return ''
+    }
+
     const cleanedForm = {
       ...form,
+      image: extractUrl(form.image),
+      images: form.images.map(extractUrl).filter(url => !!url),
       focusAreas: form.focusAreas.filter(area => area.trim()),
       outcomes: form.outcomes.filter(outcome => outcome.trim()),
       keyResponsibilities: form.keyResponsibilities.filter(resp => resp.trim()),
@@ -501,7 +579,20 @@ const handleSubmit = async () => {
         .filter(h => h.title.trim() || h.description.trim())
         .map(h => {
           const { _id, ...cleanHighlight } = h as any
-          return cleanHighlight
+          return {
+            title: cleanHighlight.title,
+            description: cleanHighlight.description
+          }
+        }),
+      speakers: form.speakers
+        .filter(s => s.name.trim() || s.bio.trim() || s.image)
+        .map(s => {
+          const { _id, ...cleanSpeaker } = s as any
+          return {
+            name: cleanSpeaker.name,
+            bio: cleanSpeaker.bio,
+            image: extractUrl(cleanSpeaker.image)
+          }
         })
     }
     

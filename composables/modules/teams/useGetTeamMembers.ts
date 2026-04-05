@@ -13,7 +13,7 @@ export const useGetTeamMembers = () => {
     error.value = null
 
     try {
-      const response = await teams_api.$_get_team_members()
+      const response = await teams_api.$_get_members()
       if ([200, 201].includes(response?.status)) {
         teamMembers.value = response.data
 

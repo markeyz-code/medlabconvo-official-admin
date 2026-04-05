@@ -103,11 +103,15 @@ const { singleUploadFile, loading: uploadingSingle, uploadResponse: singleUpload
   
   // Computed
   const imageUrls = computed(() => {
-    if (props.multiple) {
-      return Array.isArray(props.modelValue) ? props.modelValue : []
-    } else {
-      return props.modelValue ? [props.modelValue as string] : []
-    }
+    const rawValues = props.multiple 
+      ? (Array.isArray(props.modelValue) ? props.modelValue : [])
+      : (props.modelValue ? [props.modelValue] : [])
+
+    return rawValues.map(val => {
+      if (typeof val === 'string') return val
+      if (val && typeof val === 'object' && 'url' in val) return (val as any).url
+      return ''
+    }).filter(url => !!url)
   })
   
   // Methods

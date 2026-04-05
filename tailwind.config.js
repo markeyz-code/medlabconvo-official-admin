@@ -19,6 +19,21 @@ module.exports = {
         'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
       colors: {
+        primary: {
+          DEFAULT: '#27628B',
+          50: '#f0f7fb',
+          100: '#e0eff7',
+          200: '#b8daf1',
+          300: '#7cbbe8',
+          400: '#3a95d4',
+          500: '#27628B',
+          600: '#1e4d6e',
+          700: '#183e5a',
+          800: '#14334a',
+          900: '#11293e',
+        },
+        secondary: '#DE6129',
+        accent: '#000000',
         green: {
           500: '#4ADE80',
           900: '#1B4332',
