@@ -8,7 +8,7 @@
         </button>
         <div>
           <h2 class="text-lg font-bold text-slate-900">{{ publication ? 'Edit Publication' : 'New Publication' }}</h2>
-          <p class="text-xs text-slate-400 font-medium">Convo Stack Editor</p>
+          <p class="text-sm text-slate-400 font-medium">Convo Stack Editor</p>
         </div>
       </div>
       <div class="flex items-center space-x-3">
@@ -22,76 +22,76 @@
           @click="handleSave"
           :disabled="!isValid"
           :class="[
-            'px-6 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center space-x-2',
+            'px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 flex items-center space-x-2 active:scale-95',
             isValid
-              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-lg shadow-indigo-200'
-              : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+              ? 'bg-[#033958] text-white hover:bg-[#022f42]'
+              : 'bg-slate-100 text-slate-400 cursor-not-allowed'
           ]"
         >
           <Icon name="heroicons:check" class="w-4 h-4" />
-          <span>{{ publication ? 'Update' : 'Publish' }}</span>
+          <span>{{ publication ? 'Save changes' : 'Publish' }}</span>
         </button>
       </div>
     </div>
 
     <!-- Editor Body -->
-    <div class="flex-1 overflow-y-auto bg-slate-50/30">
+    <div class="flex-1 overflow-y-auto bg-slate-100">
       <div class="max-w-5xl mx-auto py-12 px-6 space-y-12">
 
         <!-- Cover Image Upload -->
         <div class="relative group">
-          <div v-if="form.coverImage" class="relative rounded-3xl overflow-hidden aspect-[21/9] shadow-2xl ring-1 ring-slate-200">
+          <div v-if="form.coverImage" class="relative rounded-3xl overflow-hidden aspect-[21/9] ring-1 ring-slate-200">
             <img :src="form.coverImage" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <button @click="triggerCoverUpload" class="px-4 py-2 bg-white/90 backdrop-blur text-slate-900 rounded-xl font-bold text-sm shadow-xl hover:bg-white transition-all transform hover:scale-105 mr-2">Change Cover</button>
-              <button @click="form.coverImage = ''" class="px-4 py-2 bg-red-500/90 backdrop-blur text-white rounded-xl font-bold text-sm shadow-xl hover:bg-red-600 transition-all transform hover:scale-105">Remove</button>
+              <button @click="triggerCoverUpload" class="px-4 py-2 bg-white/90 backdrop-blur text-slate-900 rounded-xl font-bold text-sm hover:bg-white transition-all transform hover:scale-105 mr-2">Change cover</button>
+              <button @click="form.coverImage = ''" class="px-4 py-2 bg-red-500/90 backdrop-blur text-white rounded-xl font-bold text-sm hover:bg-red-600 transition-all transform hover:scale-105">Remove</button>
             </div>
           </div>
-          <div v-else-if="uploadingCover" class="relative rounded-3xl border-2 border-dashed border-indigo-400 bg-indigo-50/50 aspect-[21/9] flex flex-col items-center justify-center animate-pulse">
-            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mb-3"></div>
-            <p class="text-sm font-bold text-indigo-600 uppercase tracking-widest">Uploading Masterpiece...</p>
+          <div v-else-if="uploadingCover" class="relative rounded-3xl border-2 border-dashed border-[#033958] bg-slate-50 aspect-[21/9] flex flex-col items-center justify-center animate-pulse">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#033958] mb-3"></div>
+            <p class="text-sm font-bold text-[#033958]">Uploading publication...</p>
           </div>
-          <div v-else class="relative rounded-3xl border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50 hover:border-indigo-400 transition-all aspect-[21/9] flex flex-col items-center justify-center cursor-pointer group/upload" @click="triggerCoverUpload">
-            <div class="p-4 bg-slate-50 rounded-2xl group-hover/upload:bg-indigo-50 transition-colors mb-4">
-              <Icon name="heroicons:photo" class="w-12 h-12 text-slate-300 group-hover/upload:text-indigo-400 transition-colors" />
+          <div v-else class="relative rounded-3xl border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50 hover:border-[#033958] transition-all aspect-[21/9] flex flex-col items-center justify-center cursor-pointer group/upload" @click="triggerCoverUpload">
+            <div class="p-4 bg-slate-50 rounded-2xl group-hover/upload:bg-slate-100 transition-colors mb-4">
+              <Icon name="heroicons:photo" class="w-12 h-12 text-slate-300 group-hover/upload:text-[#033958] transition-colors" />
             </div>
-            <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">Upload Cover Image</p>
-            <p class="text-xs text-slate-400 mt-2 font-medium">Recommended: High Resolution Landscape (21:9)</p>
+            <p class="text-sm font-bold text-slate-500">Upload cover image</p>
+            <p class="text-sm text-slate-400 mt-2 font-medium">Recommended: landscape (21:9)</p>
           </div>
           <input ref="coverInputRef" type="file" accept="image/*" class="hidden" @change="handleCoverUpload" />
         </div>
 
-        <!-- Title & Excerpt -->
-        <div class="space-y-6">
+        <!-- Document Header (Substack Style) -->
+        <div class="bg-white rounded-3xl p-10 md:p-14 border border-slate-100 shadow-sm space-y-4 relative overflow-hidden">
           <input
             v-model="form.title"
             type="text"
-            placeholder="Enter an inspiring title..."
-            class="w-full text-5xl font-black text-slate-900 placeholder-slate-200 border-none outline-none bg-transparent focus:ring-0 leading-tight tracking-tight"
+            class="w-full text-4xl md:text-5xl font-black text-slate-900 bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight tracking-tight block"
+            style="all: unset; display: block; width: 100%; font-size: 2.5rem; font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; color: #0f172a;"
           />
           <textarea
             v-model="form.excerpt"
-            placeholder="Write a compelling summary that hooks your readers..."
             rows="2"
-            class="w-full text-xl font-medium text-slate-500 placeholder-slate-200 border-none outline-none bg-transparent focus:ring-0 resize-none leading-relaxed italic"
+            class="w-full text-lg md:text-xl font-medium text-slate-500 bg-transparent border-none outline-none resize-none focus:ring-0 p-0 m-0 block leading-relaxed"
+            style="all: unset; display: block; width: 100%; font-size: 1.25rem; font-weight: 500; line-height: 1.6; color: #64748b; height: 3.2rem;"
           ></textarea>
         </div>
 
         <!-- Content Blocks -->
         <div class="space-y-8 relative">
-          <div v-if="form.contentBlocks.length === 0" class="text-center py-20 bg-white rounded-3xl border border-slate-100 shadow-sm">
+          <div v-if="form.contentBlocks.length === 0" class="text-center py-20 bg-white rounded-3xl border border-slate-100">
             <Icon name="heroicons:document-plus" class="w-16 h-16 text-slate-200 mx-auto mb-4" />
-            <h3 class="text-lg font-bold text-slate-400 uppercase tracking-widest">Your story starts here</h3>
-            <p class="text-sm text-slate-300 mt-2">Add your first content block below to begin</p>
+            <h3 class="text-lg font-bold text-slate-400">Start your publication</h3>
+            <p class="text-sm text-slate-300 mt-2 font-medium">Add your first content block below to begin</p>
           </div>
 
           <div
             v-for="(block, index) in form.contentBlocks"
             :key="index"
-            class="group relative bg-white border border-slate-200 rounded-3xl p-8 hover:border-indigo-400 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300 transform hover:-translate-y-1"
+            class="group relative bg-white border border-slate-200 rounded-3xl p-8 hover:border-indigo-400 hover: hover:-500/10 transition-all duration-300 transform hover:-translate-y-1"
           >
             <!-- Block Controls (Sleeker) -->
-            <div class="absolute -top-4 right-8 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center space-x-1 bg-white rounded-2xl shadow-xl border border-slate-100 p-1.5 z-10">
+            <div class="absolute -top-4 right-8 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center space-x-1 bg-white rounded-2xl  border border-slate-100 p-1.5 z-10">
               <button v-if="index > 0" @click="moveBlock(index, -1)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors"><Icon name="heroicons:chevron-up" class="w-4 h-4" /></button>
               <button v-if="index < form.contentBlocks.length - 1" @click="moveBlock(index, 1)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors"><Icon name="heroicons:chevron-down" class="w-4 h-4" /></button>
               <div class="w-px h-4 bg-slate-100 mx-1"></div>
@@ -116,46 +116,46 @@
                 <Icon v-if="block.type === 'quote'" name="heroicons:chat-bubble-bottom-center-text" class="w-4 h-4" />
                 <Icon v-if="block.type === 'divider'" name="heroicons:minus" class="w-4 h-4" />
               </div>
-              <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">{{ block.type }} block</span>
+              <span class="text-[10px] font-bold text-slate-400 capitalize">{{ block.type }} block</span>
             </div>
 
             <!-- Text Block -->
             <div v-if="block.type === 'text'">
-              <RichTextEditor v-model="block.content" placeholder="Type your story..." />
+              <RichTextEditor v-model="block.content" />
             </div>
 
             <!-- Image Block -->
             <div v-if="block.type === 'image'" class="space-y-6">
-              <div v-if="block.content" class="rounded-2xl overflow-hidden border border-slate-200 shadow-lg group/img relative">
+              <div v-if="block.content" class="rounded-2xl overflow-hidden border border-slate-200  group/img relative">
                 <img :src="block.content" class="w-full max-h-[500px] object-contain bg-slate-50" />
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
-                  <button @click="triggerBlockImageUpload(index)" class="px-4 py-2 bg-white text-slate-900 rounded-xl font-bold text-xs shadow-xl">Replace Image</button>
+                  <button @click="triggerBlockImageUpload(index)" class="px-4 py-2 bg-white text-slate-900 rounded-xl font-bold text-sm ">Replace Image</button>
                 </div>
               </div>
-              <div v-else-if="blockUploading[index]" class="border-2 border-dashed border-indigo-400 rounded-2xl p-16 flex flex-col items-center justify-center bg-indigo-50/30 animate-pulse">
-                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mb-3"></div>
-                <span class="text-sm text-indigo-600 font-black uppercase tracking-widest">Uploading...</span>
+              <div v-else-if="blockUploading[index]" class="border-2 border-dashed border-slate-100 rounded-2xl p-16 flex flex-col items-center justify-center bg-white animate-pulse">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#033958] mb-3"></div>
+                <span class="text-sm text-[#033958] font-bold">Uploading...</span>
               </div>
-              <div v-else class="border-2 border-dashed border-slate-200 rounded-2xl p-16 flex flex-col items-center justify-center bg-slate-50/50 cursor-pointer hover:bg-white hover:border-indigo-400 transition-all group/inner" @click="triggerBlockImageUpload(index)">
-                <div class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4 group-hover/inner:scale-110 transition-transform">
+              <div v-else class="border-2 border-dashed border-slate-200 rounded-2xl p-16 flex flex-col items-center justify-center bg-slate-50/50 cursor-pointer hover:bg-white hover:border-[#033958] transition-all group/inner" @click="triggerBlockImageUpload(index)">
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-4 group-hover/inner:scale-110 transition-transform">
                   <Icon name="heroicons:photo" class="w-8 h-8 text-slate-300" />
                 </div>
-                <span class="text-sm text-slate-400 font-bold uppercase tracking-widest">Add an image</span>
+                <span class="text-sm text-slate-400 font-bold">Add image</span>
               </div>
               <input :ref="el => setBlockImageRef(index, el)" type="file" accept="image/*" class="hidden" @change="e => handleBlockImageUpload(e, index)" />
-              <input v-model="block.caption" type="text" placeholder="Add a descriptive caption..." class="w-full px-4 py-4 bg-slate-50 border-none rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 placeholder-slate-300 font-medium italic" />
+              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
             </div>
 
             <!-- Video Block -->
             <div v-if="block.type === 'video'" class="space-y-6">
               <div class="relative">
                 <Icon name="heroicons:link" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
-                <input v-model="block.content" type="text" placeholder="Paste YouTube or Vimeo URL here..." class="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 font-medium" />
+                <input v-model="block.content" type="text" class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
               </div>
-              <div v-if="block.content && isEmbeddableVideo(block.content)" class="rounded-2xl overflow-hidden shadow-2xl aspect-video bg-black">
+              <div v-if="block.content && isEmbeddableVideo(block.content)" class="rounded-2xl overflow-hidden  aspect-video bg-black">
                 <iframe :src="getEmbedUrl(block.content)" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
               </div>
-              <input v-model="block.caption" type="text" placeholder="Video caption..." class="w-full px-4 py-4 bg-slate-50 border-none rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 placeholder-slate-300 font-medium italic" />
+              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
             </div>
 
             <!-- Quote Block -->
@@ -165,11 +165,11 @@
                 <textarea
                   v-model="block.content"
                   rows="3"
-                  placeholder="The quote that matters..."
-                  class="relative z-10 w-full px-6 py-6 bg-indigo-50/50 border-l-4 border-indigo-500 rounded-r-3xl text-xl font-bold italic text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"
+                 
+                  class="relative z-10 w-full px-6 py-6 bg-indigo-50/50 border-l-4 border-indigo-500 rounded-r-3xl text-xl font-bold  text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"
                 ></textarea>
               </div>
-              <input v-model="block.caption" type="text" placeholder="— Author Name" class="w-full px-4 py-4 bg-slate-50 border-none rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 font-black uppercase tracking-widest" />
+              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
             </div>
 
             <!-- Divider -->
@@ -180,7 +180,7 @@
 
           <!-- Add Block Toolbar (Floating or Bottom) -->
           <div class="sticky bottom-8 z-10 flex justify-center">
-            <div class="flex items-center space-x-2 bg-white/80 backdrop-blur-xl p-2 rounded-3xl shadow-2xl border border-white/50 ring-1 ring-slate-200/50">
+            <div class="flex items-center space-x-2 bg-white/80 backdrop-blur-xl p-2 rounded-3xl  border border-white/50 ring-1 ring-slate-200/50">
               <button @click="addBlock('text')" class="p-3 text-blue-600 hover:bg-blue-50 rounded-2xl transition-all" title="Add Text"><Icon name="heroicons:document-text" class="w-6 h-6" /></button>
               <button @click="addBlock('image')" class="p-3 text-green-600 hover:bg-green-50 rounded-2xl transition-all" title="Add Image"><Icon name="heroicons:photo" class="w-6 h-6" /></button>
               <button @click="addBlock('video')" class="p-3 text-purple-600 hover:bg-purple-50 rounded-2xl transition-all" title="Add Video"><Icon name="heroicons:video-camera" class="w-6 h-6" /></button>
@@ -192,57 +192,80 @@
         </div>
 
         <!-- Settings Section -->
-        <div class="bg-white rounded-[40px] shadow-sm border border-slate-100 p-10 space-y-10">
-          <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600">
+        <div class="bg-white rounded-2xl border border-slate-200 p-8 space-y-8">
+          <div class="flex items-center space-x-4 text-slate-900">
+            <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center">
               <Icon name="heroicons:cog-8-tooth" class="w-6 h-6" />
             </div>
-            <h3 class="text-xl font-black text-slate-900 uppercase tracking-widest">Publication Settings</h3>
+            <h3 class="text-xl font-bold tracking-tight">Publication settings</h3>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
-              <input v-model="form.category" type="text" placeholder="e.g. Science, Research" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-indigo-500" />
+              <label class="text-[10px] font-bold text-slate-400 ml-1">Category</label>
+              <input v-model="form.category" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
             </div>
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Estimated Read Time (min)</label>
-              <input v-model.number="form.readTime" type="number" min="1" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-indigo-500" />
+              <label class="text-xs font-semibold text-slate-500 ml-1">Estimated read time (min)</label>
+              <input v-model.number="form.readTime" type="number" min="1" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
             </div>
+          </div>
+
+          <!-- Newsletter Toggle -->
+          <div class="p-6 bg-blue-50/50 rounded-[32px] border border-blue-100/50 flex items-center justify-between group/news">
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover/news:scale-110 transition-transform">
+                <Icon name="heroicons:envelope" class="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-slate-900">Push to Newsletter</h4>
+                <p class="text-xs text-slate-500 font-medium">Send this publication to all active subscribers</p>
+              </div>
+            </div>
+            <button 
+              type="button"
+              @click="form.sendAsNewsletter = !form.sendAsNewsletter"
+              :class="[
+                'w-14 h-8 rounded-full p-1 transition-all duration-300 ring-1 ring-inset',
+                form.sendAsNewsletter ? 'bg-blue-600 ring-blue-700' : 'bg-slate-200 ring-slate-300'
+              ]"
+            >
+              <div :class="['w-6 h-6 rounded-full bg-white shadow-sm transform transition-transform duration-300', form.sendAsNewsletter ? 'translate-x-6' : 'translate-x-0']"></div>
+            </button>
           </div>
 
           <!-- Authors Management -->
           <div class="space-y-2 border-t border-slate-50 pt-8">
-            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Authors (separated by commas)</label>
-            <input v-model="authorsInput" type="text" placeholder="Dr. Jane Doe, Prof. John Smith" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-indigo-500" />
+            <label class="text-xs font-semibold text-slate-500 ml-1">Authors (separated by commas)</label>
+            <input v-model="authorsInput" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
             <div v-if="form.authors.length" class="flex flex-wrap gap-2 mt-3">
-              <span v-for="(author, i) in form.authors" :key="i" class="px-3 py-1.5 bg-blue-50 text-blue-700 text-[10px] font-black uppercase rounded-full border border-blue-100 flex items-center space-x-2">
+              <span v-for="(author, i) in form.authors" :key="i" class="px-3 py-1.5 bg-blue-50 text-[#033958] text-[10px] font-bold rounded-full border border-blue-100 flex items-center space-x-2">
                 <span>{{ author }}</span>
-                <button @click="form.authors.splice(i, 1); authorsInput = form.authors.join(', ')" class="hover:text-red-500 transition-colors"><Icon name="heroicons:x-mark" class="w-3 h-3" /></button>
+                <button @click="form.authors.splice(i, 1); authorsInput = form.authors.join(', ')" class="hover:text-rose-500 transition-colors"><Icon name="heroicons:x-mark" class="w-3 h-3" /></button>
               </span>
             </div>
           </div>
 
 
           <div class="space-y-2">
-            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Tags (separated by commas)</label>
-            <input v-model="tagsInput" type="text" placeholder="tag1, tag2, tag3" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-indigo-500" />
+            <label class="text-xs font-semibold text-slate-500 ml-1">Tags (separated by commas)</label>
+            <input v-model="tagsInput" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
             <div v-if="form.tags.length" class="flex flex-wrap gap-2 mt-3">
-              <span v-for="(tag, i) in form.tags" :key="i" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase rounded-full border border-indigo-100 flex items-center space-x-2">
+              <span v-for="(tag, i) in form.tags" :key="i" class="px-3 py-1.5 bg-slate-50 text-slate-700 text-[10px] font-bold rounded-full border border-slate-200 flex items-center space-x-2">
                 <span>{{ tag }}</span>
-                <button @click="form.tags.splice(i, 1); tagsInput = form.tags.join(', ')" class="hover:text-red-500 transition-colors"><Icon name="heroicons:x-mark" class="w-3 h-3" /></button>
+                <button @click="form.tags.splice(i, 1); tagsInput = form.tags.join(', ')" class="hover:text-rose-500 transition-colors"><Icon name="heroicons:x-mark" class="w-3 h-3" /></button>
               </span>
             </div>
           </div>
 
           <div class="grid grid-cols-1 gap-8 opacity-60 hover:opacity-100 transition-opacity">
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">SEO Title Override</label>
-              <input v-model="form.metaTitle" type="text" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-medium focus:ring-2 focus:ring-indigo-500" />
+              <label class="text-xs font-semibold text-slate-500 ml-1">SEO title override</label>
+              <input v-model="form.metaTitle" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
             </div>
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Meta Description</label>
-              <textarea v-model="form.metaDescription" rows="3" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-medium focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+              <label class="text-xs font-semibold text-slate-500 ml-1">Meta description</label>
+              <textarea v-model="form.metaDescription" rows="3" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none resize-none transition-all shadow-sm"></textarea>
             </div>
           </div>
         </div>
@@ -283,7 +306,8 @@ const form = reactive({
   readTime: 5,
   metaTitle: '',
   metaDescription: '',
-  authors: [] as string[]
+  authors: [] as string[],
+  sendAsNewsletter: false
 })
 
 const tagsInput = ref('')
@@ -311,7 +335,8 @@ watchEffect(() => {
       readTime: props.publication.readTime || 5,
       metaTitle: props.publication.metaTitle || '',
       metaDescription: props.publication.metaDescription || '',
-      authors: props.publication.authors || []
+      authors: props.publication.authors || [],
+      sendAsNewsletter: false // Default to false even on edit
     })
     tagsInput.value = (props.publication.tags || []).join(', ')
     authorsInput.value = (props.publication.authors || []).join(', ')

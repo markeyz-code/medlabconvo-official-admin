@@ -79,7 +79,7 @@ export default defineNuxtConfig({
     transpile: ["lucide-vue-next"],
   },
 
-  css: ['/assets/css/font/stylesheet.css', "/assets/css/main.css"],
+   css: ['/assets/font/stylesheet.css', "/assets/css/main.css"],
 
   modules: [
     "@nuxtjs/tailwindcss",
@@ -87,15 +87,14 @@ export default defineNuxtConfig({
     "@nuxtjs/robots",
   ],
 
-  googleFonts: {
+   googleFonts: {
     families: {
-      // Add your preferred fonts here
       "Inter": [400, 500, 600, 700],
       "Poppins": [400, 500, 600, 700],
+      "Onest": [100, 200, 300, 400, 500, 600, 700, 800, 900],
     },
     display: "swap",
     preload: true,
   },
-
   compatibilityDate: '2025-04-08'
 });

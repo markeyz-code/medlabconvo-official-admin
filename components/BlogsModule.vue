@@ -1,214 +1,248 @@
 <template>
-    <div class="space-y-6">
-      <!-- Header Actions -->
-      <div class="flex justify-between items-center">
-        <div class="flex items-center space-x-4">
-          <input
+  <div class="space-y-8 animate-in fade-in duration-700">
+    <!-- Header Actions -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+        <div class="w-full sm:w-72">
+          <AnimatedInput
             v-model="searchQuery"
+            id="search-blogs"
+            label="Search blog posts"
             type="text"
-            placeholder="Search blogs..."
-            class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
-          <select
-            v-model="statusFilter"
-            class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="">All Status</option>
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-          </select>
         </div>
-        <button
-          @click="openCreateModal"
-          class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-200 flex items-center space-x-2"
-        >
-          <Icon name="heroicons:plus" class="w-4 h-4" />
-          <span>New Blog</span>
-        </button>
+        <div class="w-full sm:w-48">
+          <SelectInput
+            v-model="statusFilter"
+            label="Filter status"
+            :options="[
+              { label: 'All status', value: '' },
+              { label: 'Draft', value: 'draft' },
+              { label: 'Published', value: 'published' }
+            ]"
+          />
+        </div>
       </div>
-  
-      <!-- Blogs Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        <div
-          v-for="blog in filteredBlogs"
-          :key="blog._id"
-          class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-200"
-        >
-          <!-- Blog Image -->
-          <div class="h-48 bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
-            <Icon name="heroicons:photo" class="w-12 h-12 text-white opacity-50" />
+      <button
+        @click="openCreateModal"
+        class="w-full md:w-auto px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
+      >
+        <Icon name="heroicons:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+        <span class="font-bold text-sm">Create post</span>
+      </button>
+    </div>
+
+    <!-- Blogs Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 text-sm">
+      <div
+        v-for="blog in filteredBlogs"
+        :key="blog._id"
+        class="group bg-white rounded-2xl border border-slate-100 overflow-hidden hover:border-[#033958]/20 transition-all duration-500"
+      >
+        <!-- Blog Image -->
+        <div class="relative h-56 bg-slate-50 overflow-hidden">
+          <div 
+            class="absolute inset-0 bg-gradient-to-br from-[#033958]/5 to-transparent group-hover:scale-110 transition-transform duration-700"
+          ></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <Icon name="heroicons:photo" class="w-16 h-16 text-slate-100 group-hover:text-slate-200 transition-colors duration-500" />
           </div>
           
-          <!-- Blog Content -->
-          <div class="p-6">
-            <div class="flex items-center justify-between mb-3">
-              <span :class="[
-                'px-2 py-1 text-xs font-semibold rounded-full',
-                blog.isPublished ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-              ]">
-                {{ blog.isPublished ? 'Published' : 'Draft' }}
-              </span>
-              <div class="flex items-center space-x-1">
-                <button
-                  @click="editBlog(blog)"
-                  class="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50"
-                >
-                  <Icon name="heroicons:pencil" class="w-4 h-4" />
-                </button>
-                <button
-                  v-if="!blog.isPublished"
-                  @click="publishBlog(blog._id)"
-                  class="text-green-600 hover:text-green-800 p-1 rounded hover:bg-green-50"
-                >
-                  <Icon name="heroicons:eye" class="w-4 h-4" />
-                </button>
-                <button
-                  @click="deleteBlog(blog._id)"
-                  class="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
-                >
-                  <Icon name="heroicons:trash" class="w-4 h-4" />
-                </button>
-              </div>
+          <!-- Status Badge Overlay -->
+          <div class="absolute top-4 left-4">
+            <span :class="[
+              'px-3 py-1.5 text-[10px] font-bold rounded-full backdrop-blur-md',
+              blog.status === 'published' ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-200' : 'bg-amber-500/10 text-amber-700 border border-amber-200'
+            ]">
+              {{ blog.status }}
+            </span>
+          </div>
+        </div>
+        
+        <!-- Blog Content -->
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-[10px] font-bold text-slate-400">{{ formatDate(blog.createdAt) }}</span>
+            <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button
+                @click="editBlog(blog)"
+                class="p-2 text-slate-400 hover:text-[#033958] hover:bg-slate-50 rounded-lg transition-all"
+              >
+                <Icon name="heroicons:pencil" class="w-4 h-4" />
+              </button>
+              <button
+                @click="deleteBlog(blog.id)"
+                class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+              >
+                <Icon name="heroicons:trash" class="w-4 h-4" />
+              </button>
             </div>
-            
-            <h3 class="font-semibold text-slate-900 mb-2 line-clamp-2">{{ blog.title }}</h3>
-            <p class="text-sm text-slate-600 mb-4 line-clamp-3">{{ blog.excerpt || blog.content }}</p>
-            
-            <div class="flex items-center justify-between text-sm text-slate-500">
-              <span>{{ formatDate(blog.createdAt) }}</span>
-              <div class="flex items-center space-x-2">
+          </div>
+          
+          <h3 class="text-lg font-bold text-slate-900 mb-3 group-hover:text-[#033958] transition-colors duration-300 line-clamp-2 leading-tight tracking-tight">
+            {{ blog.title }}
+          </h3>
+          <p class="text-sm text-slate-500 mb-6 line-clamp-3 leading-relaxed font-medium">
+            {{ blog.excerpt || blog.content }}
+          </p>
+          
+          <div class="flex items-center justify-between pt-5 border-t border-slate-50">
+            <div class="flex items-center space-x-4">
+              <div class="flex items-center space-x-1.5 text-slate-400">
                 <Icon name="heroicons:eye" class="w-4 h-4" />
-                <span>{{ blog.views || 0 }}</span>
+                <span class="text-sm font-bold">{{ blog.viewCount || 0 }}</span>
+              </div>
+              <div v-if="blog.category" class="px-2 py-0.5 bg-slate-50 text-slate-400 text-[10px] font-bold rounded border border-slate-100">
+                {{ blog.category }}
               </div>
             </div>
+            <button 
+              @click="editBlog(blog)"
+              class="text-[#033958] text-[10px] font-bold hover:underline decoration-2 underline-offset-4"
+            >
+              Edit
+            </button>
           </div>
         </div>
       </div>
-  
-      <!-- Loading State -->
-      <div v-if="loading" class="flex items-center justify-center py-12">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+    </div>
+
+    <!-- Loading State -->
+    <div v-if="loading" class="flex flex-col items-center justify-center py-24 space-y-4">
+      <div class="w-12 h-12 rounded-full border-4 border-slate-50 border-t-[#033958] animate-spin"></div>
+      <span class="text-sm font-bold text-slate-400 animate-pulse">Loading blog posts...</span>
+    </div>
+
+    <!-- Empty State -->
+    <div v-else-if="filteredBlogs.length === 0" class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+      <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mb-6">
+        <Icon name="heroicons:document-text" class="w-10 h-10 text-slate-100" />
       </div>
-  
-      <!-- Empty State -->
-      <div v-else-if="filteredBlogs.length === 0" class="text-center py-12">
-        <Icon name="heroicons:document-text" class="w-12 h-12 text-slate-400 mx-auto mb-4" />
-        <p class="text-slate-500">No blogs found</p>
-      </div>
-  
-      <!-- Create/Edit Blog Modal -->
-      <Modal v-model="showModal" title="Blog Details" size="xl">
+      <h3 class="text-xl font-bold text-slate-900 mb-2">No blog posts found</h3>
+      <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Create a new blog post to display content on the website.</p>
+      <button
+        @click="openCreateModal"
+        class="px-8 py-3 bg-white border border-slate-200 text-slate-900 rounded-xl hover:bg-slate-50 transition-all font-bold text-sm"
+      >
+        Create first post
+      </button>
+    </div>
+
+    <!-- Create/Edit Blog SlideOver -->
+    <SlideOver v-model="showModal" :title="selectedBlog ? 'Edit post' : 'Create post'">
+      <div class="p-8">
         <BlogForm
           :blog="selectedBlog"
           @save="handleSaveBlog"
           @cancel="closeModal"
         />
-      </Modal>
-    </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref, onMounted, computed } from 'vue'
-  import { useGetBlogs } from '@/composables/modules/blogs/useGetBlogs'
-  import { useCreateBlog } from '@/composables/modules/blogs/useCreateBlog'
-  import { useUpdateBlog } from '@/composables/modules/blogs/useUpdateBlog'
-  import { usePublishBlog } from '@/composables/modules/blogs/usePublishBlog'
-  import { useSoftDeleteBlog } from '@/composables/modules/blogs/useSoftDeleteBlog'
-  import Modal from '@/components/Modal.vue'
-  import BlogForm from '@/components/BlogForm.vue'
-  import Icon from '@/components/Icon.vue'
-  
-  // Composables
-  const { blogs, loading, getBlogs } = useGetBlogs()
-  const { createBlog } = useCreateBlog()
-  const { updateBlog } = useUpdateBlog()
-  const { publishBlog: publishBlogAction } = usePublishBlog()
-  const { softDeleteBlog } = useSoftDeleteBlog()
-  
-  // Reactive data
-  const searchQuery = ref('')
-  const statusFilter = ref('')
-  const showModal = ref(false)
-  const selectedBlog = ref(null)
-  
-  // Load blogs on mount
-  onMounted(() => {
-    getBlogs()
-  })
-  
-  // Computed
-  const filteredBlogs = computed(() => {
-    let filtered = blogs.value
-  
-    if (searchQuery.value) {
-      const query = searchQuery.value.toLowerCase()
-      filtered = filtered.filter(blog => 
-        blog.title?.toLowerCase().includes(query) ||
-        blog.content?.toLowerCase().includes(query)
-      )
+      </div>
+    </SlideOver>
+
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue'
+import { useGetBlogs } from '@/composables/modules/blogs/useGetBlogs'
+import { useCreateBlog } from '@/composables/modules/blogs/useCreateBlog'
+import { useUpdateBlog } from '@/composables/modules/blogs/useUpdateBlog'
+import { usePublishBlog } from '@/composables/modules/blogs/usePublishBlog'
+import { useSoftDeleteBlog } from '@/composables/modules/blogs/useSoftDeleteBlog'
+import SlideOver from '@/components/SlideOver.vue'
+import BlogForm from '@/components/BlogForm.vue'
+import Icon from '@/components/Icon.vue'
+import AnimatedInput from '@/components/ui/AnimatedInput.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
+
+// Composables
+const { blogs, loading, getBlogs } = useGetBlogs()
+const { createBlog } = useCreateBlog()
+const { updateBlog } = useUpdateBlog()
+const { publishBlog: publishBlogAction } = usePublishBlog()
+const { softDeleteBlog } = useSoftDeleteBlog()
+
+// Reactive data
+const searchQuery = ref('')
+const statusFilter = ref('')
+const showModal = ref(false)
+const selectedBlog = ref<any>(null)
+
+// Load blogs on mount
+onMounted(() => {
+  getBlogs()
+})
+
+// Computed
+const filteredBlogs = computed(() => {
+  let filtered = (blogs.value || []) as any[]
+
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    filtered = filtered.filter(blog => 
+      blog.title?.toLowerCase().includes(query) ||
+      blog.content?.toLowerCase().includes(query)
+    )
+  }
+
+  if (statusFilter.value) {
+    filtered = filtered.filter(blog => blog.status === statusFilter.value)
+  }
+
+  return filtered
+})
+
+// Methods
+const openCreateModal = () => {
+  selectedBlog.value = null
+  showModal.value = true
+}
+
+const editBlog = (blog: any) => {
+  selectedBlog.value = blog
+  showModal.value = true
+}
+
+const closeModal = () => {
+  showModal.value = false
+  selectedBlog.value = null
+}
+
+const handleSaveBlog = async (blogData: any) => {
+  try {
+    if (selectedBlog.value) {
+      await updateBlog(selectedBlog.value.id, blogData)
+    } else {
+      await createBlog(blogData)
     }
-  
-    if (statusFilter.value) {
-      filtered = filtered.filter(blog => 
-        statusFilter.value === 'published' ? blog.isPublished : !blog.isPublished
-      )
-    }
-  
-    return filtered
-  })
-  
-  // Methods
-  const openCreateModal = () => {
-    selectedBlog.value = null
-    showModal.value = true
+    await getBlogs()
+    closeModal()
+  } catch (error) {
+    console.error('Error saving blog:', error)
   }
-  
-  const editBlog = (blog: any) => {
-    selectedBlog.value = blog
-    showModal.value = true
+}
+
+const publishBlog = async (blogId: string) => {
+  try {
+    await publishBlogAction(blogId)
+    await getBlogs()
+  } catch (error) {
+    console.error('Error publishing blog:', error)
   }
-  
-  const closeModal = () => {
-    showModal.value = false
-    selectedBlog.value = null
-  }
-  
-  const handleSaveBlog = async (blogData: any) => {
+}
+
+const deleteBlog = async (blogId: string) => {
+  if (confirm('Are you sure you want to delete this blog?')) {
     try {
-      if (selectedBlog.value) {
-        await updateBlog(selectedBlog.value._id, blogData)
-      } else {
-        await createBlog(blogData)
-      }
-      await getBlogs()
-      closeModal()
-    } catch (error) {
-      console.error('Error saving blog:', error)
-    }
-  }
-  
-  const publishBlog = async (blogId: string) => {
-    try {
-      await publishBlogAction(blogId)
+      await softDeleteBlog(blogId)
       await getBlogs()
     } catch (error) {
-      console.error('Error publishing blog:', error)
+      console.error('Error deleting blog:', error)
     }
   }
-  
-  const deleteBlog = async (blogId: string) => {
-    if (confirm('Are you sure you want to delete this blog?')) {
-      try {
-        await softDeleteBlog(blogId)
-        await getBlogs()
-      } catch (error) {
-        console.error('Error deleting blog:', error)
-      }
-    }
-  }
-  
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString()
-  }
-  </script>
-  
+}
+
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString()
+}
+</script>

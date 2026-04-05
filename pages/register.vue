@@ -1,18 +1,18 @@
 <template>
-  <div class="min-h-screen bg-white flex font-sans text-slate-900">
+  <div class="h-screen overflow-hidden bg-white flex lg:flex-row-reverse font-sans text-slate-900">
     <!-- Left Section: Registration Form -->
     <div class="w-full lg:w-1/2 flex flex-col p-8 md:p-12 lg:p-20 overflow-y-auto">
       <!-- Logo & Branding -->
       <div class="flex items-center space-x-3 mb-16 animate-in fade-in slide-in-from-left-4 duration-700">
         <img src="@/assets/img/logo.jpeg" class="h-12 w-12 rounded-xl ring-4 ring-slate-50 shadow-sm" />
-        <span class="font-black text-2xl tracking-tighter uppercase text-[#033958]">MedLabConvo</span>
+        <span class="font-black text-2xl tracking-tighter  text-[#033958]">MedLabConvo</span>
       </div>
 
       <div class="max-w-[440px] w-full mx-auto my-auto py-10">
         <!-- Status: Loading -->
         <div v-if="loadingInvite" class="flex flex-col items-center text-center py-20 animate-in fade-in duration-500">
           <div class="w-16 h-16 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-6"></div>
-          <h2 class="text-2xl font-black text-slate-900 mb-2 uppercase tracking-tight">Validating Invite</h2>
+          <h2 class="text-2xl font-black text-slate-900 mb-2  tracking-tight">Validating Invite</h2>
           <p class="text-slate-500 font-medium tracking-tight antialiased">Checking your secure invitation link...</p>
         </div>
 
@@ -21,9 +21,9 @@
           <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm">
             <Icon name="heroicons:exclamation-triangle" class="w-8 h-8 text-rose-600" />
           </div>
-          <h2 class="text-xl font-black text-slate-900 mb-4 uppercase tracking-tight">Access Restricted</h2>
+          <h2 class="text-xl font-black text-slate-900 mb-4  tracking-tight">Access Restricted</h2>
           <p class="text-slate-600 font-medium tracking-tight antialiased mb-8 leading-relaxed">{{ inviteError }}</p>
-          <NuxtLink to="/" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-black transition-all text-center">
+          <NuxtLink to="/" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-sm  tracking-widest hover:bg-black transition-all text-center">
             Return to Gateway
           </NuxtLink>
         </div>
@@ -33,61 +33,58 @@
           <div class="mb-10">
             <div class="inline-flex items-center space-x-2 px-3 py-1 bg-[#3BAB22]/10 rounded-full mb-4">
               <div class="w-1.5 h-1.5 rounded-full bg-[#3BAB22]"></div>
-              <span class="text-[10px] font-black text-[#3BAB22] uppercase tracking-widest">Team Invitation</span>
+              <span class="text-[10px] font-black text-[#3BAB22]  tracking-widest">Team Invitation</span>
             </div>
-            <h2 class="text-4xl font-black text-slate-900 mb-3 tracking-tight">Create your account</h2>
+            <h2 class="text-2xl font-black text-slate-900 mb-3 tracking-tight">Create your account</h2>
             <p class="text-slate-500 font-medium text-lg leading-relaxed antialiased">
-              Welcome aboard! You've been invited as a <span class="text-[#033958] font-bold uppercase">{{ invitation?.role?.replace('_', ' ') }}</span>. Please complete your profile to continue.
+              Welcome aboard! You've been invited as a <span class="text-[#033958] font-bold ">{{ invitation?.role?.replace('_', ' ') }}</span>. Please complete your profile to continue.
             </p>
           </div>
 
           <form @submit.prevent="handleRegister" class="space-y-6">
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">First Name</label>
-                <input
+                <AnimatedInput
                   v-model="form.firstName"
+                  id="firstName"
+                  label="First Name"
                   type="text"
                   required
-                  placeholder="John"
-                  class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#033958] focus:bg-white font-bold text-slate-800 transition-all outline-none"
+                 
                 />
               </div>
               <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Last Name</label>
-                <input
+                <AnimatedInput
                   v-model="form.lastName"
+                  id="lastName"
+                  label="Last Name"
                   type="text"
                   required
-                  placeholder="Doe"
-                  class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#033958] focus:bg-white font-bold text-slate-800 transition-all outline-none"
+                 
                 />
               </div>
             </div>
 
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
-              <div class="relative">
-                <Icon name="heroicons:envelope" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
-                <input
-                  v-model="form.email"
-                  disabled
-                  type="email"
-                  class="w-full pl-14 pr-5 py-4 bg-slate-100 border border-slate-200 rounded-2xl font-bold text-slate-400 cursor-not-allowed italic transition-all appearance-none outline-none"
-                />
-              </div>
+              <AnimatedInput
+                v-model="form.email"
+                id="email"
+                label="Email Address"
+                disabled
+                type="email"
+               
+              />
             </div>
 
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Choose Password</label>
               <div class="relative">
-                <Icon name="heroicons:lock-closed" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
-                <input
+                <AnimatedInput
                   v-model="form.password"
+                  id="password"
+                  label="Choose Password"
                   required
                   :type="showPassword ? 'text' : 'password'"
-                  placeholder="••••••••"
-                  class="w-full pl-14 pr-14 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#033958] focus:bg-white font-bold text-slate-800 transition-all outline-none"
+                 
                 />
                 <button 
                   type="button" 
@@ -97,14 +94,14 @@
                   <Icon :name="showPassword ? 'heroicons:eye-slash' : 'heroicons:eye'" class="w-5 h-5" />
                 </button>
               </div>
-              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tight ml-1">Must be at least 6 characters long</p>
+              <p class="text-[9px] font-bold text-slate-400  tracking-tight ml-1">Must be at least 6 characters long</p>
             </div>
 
             <div class="pt-6">
               <button
                 type="submit"
                 :disabled="loadingRegister"
-                class="w-full py-5 bg-[#3BAB22] text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-[#2d851a] disabled:bg-slate-100 disabled:text-slate-300 transition-all shadow-xl shadow-green-900/10 active:scale-[0.98] flex items-center justify-center space-x-3"
+                class="w-full py-5 bg-[#3BAB22] text-white rounded-2xl font-black text-sm  tracking-widest hover:bg-[#2d851a] disabled:bg-slate-100 disabled:text-slate-300 transition-all shadow-xl shadow-green-900/10 active:scale-[0.98] flex items-center justify-center space-x-3"
               >
                 <div v-if="loadingRegister" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                 <span>{{ loadingRegister ? 'Signing up...' : 'Complete Registration' }}</span>
@@ -112,14 +109,14 @@
             </div>
           </form>
 
-          <p class="mt-10 text-center text-xs font-medium text-slate-400 antialiased">
+          <p class="mt-10 text-center text-sm font-medium text-slate-400 antialiased">
             By joining, you agree to the <a href="#" class="text-[#033958] font-bold hover:underline">Administrative Guidelines</a> and <a href="#" class="text-[#033958] font-bold hover:underline">Security Protocols</a>.
           </p>
         </div>
       </div>
 
       <!-- Footer -->
-      <div class="mt-auto pt-10 text-slate-300 text-[9px] font-black uppercase tracking-[0.2em] text-center lg:text-left">
+      <div class="mt-auto pt-10 text-slate-300 text-[9px] font-black  tracking-[0.2em] text-center lg:text-left">
         &copy; 2026 MedLabConvo Systems. Access Restricted.
       </div>
     </div>
@@ -136,10 +133,10 @@
       <!-- Quote Overlay -->
       <div class="absolute bottom-20 left-16 right-16 text-white p-10 border-l border-white/20 backdrop-blur-sm bg-white/5 rounded-r-3xl animate-in fade-in slide-in-from-right-10 duration-1000 delay-300">
         <Icon name="heroicons:chat-bubble-bottom-center-text" class="w-10 h-10 text-[#3BAB22] mb-6 opacity-80" />
-        <h3 class="text-3xl font-black tracking-tight mb-4 leading-tight lowercase first-letter:uppercase italic">Empowering the medical conversation through modern technology and collaborative research.</h3>
+        <h3 class="text-2xl font-black tracking-tight mb-4 leading-tight lowercase first-letter: ">Empowering the medical conversation through modern technology and collaborative research.</h3>
         <div class="flex items-center space-x-4">
           <div class="w-10 h-px bg-white/30"></div>
-          <p class="text-xs font-black uppercase tracking-[0.3em] text-[#3BAB22]">Platform Infrastructure</p>
+          <p class="text-sm font-black  tracking-[0.3em] text-[#3BAB22]">Platform Infrastructure</p>
         </div>
       </div>
     </div>
@@ -153,6 +150,7 @@ import { useInvitations } from '@/composables/modules/users/useInvitations'
 import { useSignup } from '@/composables/modules/auth/useSignup'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 import { definePageMeta } from '#imports'
+import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 
 definePageMeta({
   layout: false,
@@ -194,8 +192,7 @@ onMounted(async () => {
 const handleRegister = async () => {
   try {
     await signup({
-      ...form,
-      role: invitation.value.role
+      ...form
     }, token.value)
 
     showToast({

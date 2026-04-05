@@ -1,85 +1,84 @@
 <template>
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <!-- Action Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-      <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-        <div class="relative w-full md:w-80">
-          <Icon name="heroicons:magnifying-glass" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-8 rounded-3xl border border-slate-100">
+      <div class="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
+        <div class="w-full md:w-80">
+          <AnimatedInput
             v-model="searchQuery"
+            id="search-roles"
+            label="Search roles"
             type="text"
-            placeholder="Search roles..."
-            class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#033958] focus:border-transparent font-medium text-slate-700 transition-all"
           />
         </div>
       </div>
 
-      <div class="flex items-center gap-3 w-full md:w-auto">
+      <div class="flex items-center gap-4 w-full md:w-auto">
         <button
           @click="openCreateModal"
-          class="flex-1 md:flex-none px-6 py-3 bg-[#033958] text-white rounded-xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-2 shadow-lg shadow-blue-900/10"
+          class="flex-1 md:flex-none px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
-          <Icon name="heroicons:plus" class="w-4 h-4" />
-          <span>Create Role</span>
+          <Icon name="heroicons:plus" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
+          <span>Create role</span>
         </button>
       </div>
     </div>
 
-    <!-- Roles Ledger -->
-    <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden relative">
-      <div v-if="loading" class="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-10 flex items-center justify-center">
-        <div class="flex flex-col items-center">
-          <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
-          <span class="text-xs font-black text-[#033958] uppercase tracking-widest">Synchronizing...</span>
-        </div>
+    <!-- Roles Inventory -->
+    <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden relative">
+      <!-- Loading Overlay -->
+      <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center">
+        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
+        <span class="text-sm font-bold text-[#033958]">Loading roles...</span>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+      <div class="overflow-x-auto text-sm">
+        <table class="w-full text-left border-separate border-spacing-0">
           <thead>
-            <tr class="bg-slate-50/50 border-b border-slate-100">
-              <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Role Name</th>
-              <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Description</th>
-              <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Permissions Count</th>
-              <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
-              <th class="px-8 py-5 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">System Actions</th>
+            <tr class="bg-slate-50/50 text-sm font-bold text-slate-400">
+              <th class="px-10 py-6 border-b border-slate-100">Role name</th>
+              <th class="px-10 py-6 border-b border-slate-100">Permissions</th>
+              <th class="px-10 py-6 border-b border-slate-100">Status</th>
+              <th class="px-10 py-6 text-right border-b border-slate-100">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-50">
-            <tr v-for="role in filteredRoles" :key="role._id" class="group hover:bg-slate-50/80 transition-all">
-              <td class="px-8 py-5 whitespace-nowrap">
-                <div class="text-base font-bold text-slate-900 tracking-tight capitalize">{{ role.name.replace('_', ' ') }}</div>
-              </td>
-              <td class="px-8 py-5 whitespace-nowrap">
-                <div class="text-sm font-medium text-slate-500 max-w-[200px] truncate">{{ role.description || 'No description provided' }}</div>
-              </td>
-              <td class="px-8 py-5 whitespace-nowrap">
-                <div class="inline-flex items-center space-x-2 bg-slate-100 px-3 py-1 rounded-lg">
-                  <span class="text-sm font-bold text-slate-700">{{ role.permissions?.length || 0 }}</span>
-                  <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Perms</span>
+            <tr v-for="role in filteredRoles" :key="role._id" class="group hover:bg-slate-50/50 transition-all duration-300">
+              <td class="px-10 py-8">
+                <div class="flex flex-col">
+                  <span class="text-sm font-bold text-slate-900 tracking-tight mb-1">{{ role.name.replace('_', ' ') }}</span>
+                  <span class="text-sm font-medium text-slate-400 max-w-xs truncate">{{ role.description || 'System role definition.' }}</span>
                 </div>
               </td>
-              <td class="px-8 py-5 whitespace-nowrap">
-                <div class="flex items-center space-x-2">
-                  <div :class="['w-2 h-2 rounded-full', role.isActive ? 'bg-[#3BAB22] shadow-[0_0_8px_rgba(59,171,34,0.4)]' : 'bg-slate-300']"></div>
-                  <span :class="['text-xs font-bold uppercase tracking-tight', role.isActive ? 'text-slate-700' : 'text-slate-400']">
-                    {{ role.isActive ? 'Active' : 'Inactive' }}
+              <td class="px-10 py-8">
+                <div class="flex items-center gap-3">
+                  <div class="px-3 py-1 bg-slate-100 rounded-lg border border-slate-200">
+                    <span class="text-sm font-bold text-slate-700">{{ role.permissions?.length || 0 }}</span>
+                  </div>
+                  <span class="text-[10px] font-bold text-slate-400">Active permissions</span>
+                </div>
+              </td>
+              <td class="px-10 py-8">
+                <div class="flex items-center space-x-3">
+                  <div :class="['w-2 h-2 rounded-full', role.isActive ? 'bg-emerald-500' : 'bg-slate-300']"></div>
+                  <span :class="['text-sm font-bold capitalize', role.isActive ? 'text-emerald-700' : 'text-slate-400']">
+                    {{ role.isActive ? 'active' : 'disabled' }}
                   </span>
                 </div>
               </td>
-              <td class="px-8 py-5 whitespace-nowrap text-right">
-                <div class="flex items-center justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <td class="px-10 py-8 text-right">
+                <div class="flex items-center justify-end space-x-1 text-slate-400">
                   <button
                     @click="editRole(role)"
-                    class="w-10 h-10 flex items-center justify-center text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white rounded-xl transition-all"
-                    title="Modify Role"
+                    class="p-2 hover:text-[#033958] hover:bg-[#033958]/5 rounded-xl transition-all"
+                    title="Edit role"
                   >
                     <Icon name="heroicons:pencil-square" class="w-5 h-5" />
                   </button>
                   <button
                     @click="confirmDelete(role._id)"
-                    class="w-10 h-10 flex items-center justify-center text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-xl transition-all"
-                    title="Delete Role"
+                    class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
+                    title="Delete role"
                   >
                     <Icon name="heroicons:trash" class="w-5 h-5" />
                   </button>
@@ -91,97 +90,118 @@
       </div>
       
       <!-- Empty State -->
-      <div v-if="!loading && filteredRoles.length === 0" class="py-32 text-center">
-        <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Icon name="heroicons:shield-check" class="w-12 h-12 text-slate-200" />
+      <div v-if="!loading && filteredRoles.length === 0" class="py-32 text-center bg-slate-50/30">
+        <div class="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
+          <Icon name="heroicons:shield-check" class="w-10 h-10 text-slate-100" />
         </div>
-        <h3 class="text-xl font-black text-slate-900 mb-2 uppercase tracking-tight">No Roles Found</h3>
-        <p class="text-slate-400 font-medium max-w-xs mx-auto">The system returned zero roles matching your criteria.</p>
+        <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No roles found</h3>
+        <p class="text-slate-400 text-sm font-medium max-w-[240px] mx-auto leading-relaxed">No administrative roles found in the database.</p>
+        <button
+          @click="openCreateModal"
+          class="mt-8 px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all active:scale-95"
+        >
+          Create first role
+        </button>
       </div>
     </div>
 
-    <!-- Create/Edit Modal -->
-    <Modal v-model="showModal" :title="isEditing ? 'Modify Identity Role' : 'Instantiate New Role'" size="lg">
-      <div class="p-6 space-y-6">
-        <div>
-          <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Role Nomenclature</label>
-          <div class="relative">
-            <Icon name="heroicons:identification" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <input
-              v-model="form.name"
-              type="text"
-              placeholder="e.g. content_manager"
-              class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#033958] font-bold text-slate-700"
-            />
+    <!-- Configuration Sheet -->
+    <SlideOver v-model="showModal" :title="isEditing ? 'Edit role' : 'Create role'">
+      <div class="p-8 space-y-10">
+        <div class="space-y-8">
+           <AnimatedInput
+            v-model="form.name"
+            label="Role name"
+            id="roleName"
+            type="text"
+            required
+          />
+
+          <div class="space-y-4">
+            <label class="block text-sm font-bold text-slate-400 ml-1">Description</label>
+            <textarea
+              v-model="form.description"
+              rows="4"
+              class="w-full p-6 bg-slate-50 border border-slate-100 rounded-3xl focus:ring-2 focus:ring-[#033958] focus:bg-white font-medium text-slate-700 resize-none transition-all outline-none"
+              placeholder="Describe what this role is for..."
+            ></textarea>
           </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Description</label>
-          <textarea
-            v-model="form.description"
-            rows="3"
-            placeholder="Briefly describe the purpose of this role..."
-            class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#033958] font-medium text-slate-700 resize-none"
-          ></textarea>
-        </div>
-
-        <div>
-          <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">System Permissions</label>
-          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 max-h-64 overflow-y-auto w-full">
-            <div v-if="permsLoading" class="text-center py-4">
-              <div class="w-6 h-6 border-2 border-slate-200 border-t-[#033958] rounded-full animate-spin mx-auto"></div>
+        <div class="space-y-6">
+          <div class="flex items-center justify-between px-1">
+            <label class="text-sm font-bold text-slate-400">Permissions matrix</label>
+            <span class="text-sm font-bold text-blue-600">{{ form.permissions.length }} selected</span>
+          </div>
+          
+          <div class="bg-slate-50/50 border border-slate-100 rounded-[2rem] p-6 max-h-[400px] overflow-y-auto custom-scrollbar">
+            <div v-if="permsLoading" class="text-center py-12 flex flex-col items-center">
+              <div class="w-8 h-8 border-2 border-slate-200 border-t-[#033958] rounded-full animate-spin mb-4"></div>
+              <span class="text-sm font-bold text-slate-400">Loading permissions...</span>
             </div>
-            <div v-else-if="permissions.length === 0" class="text-center py-4 text-sm font-medium text-slate-500">
-              No permissions available. Create permissions first.
+            <div v-else-if="permissions.length === 0" class="text-center py-12">
+              <p class="text-sm font-bold text-slate-400">No permissions found</p>
             </div>
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <label v-for="perm in permissions" :key="perm._id" class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer border border-transparent hover:border-slate-200">
-                <input
-                  type="checkbox"
-                  :value="perm.name"
-                  v-model="form.permissions"
-                  class="mt-1 w-4 h-4 text-[#033958] border-slate-300 rounded focus:ring-[#033958]"
-                />
-                <div>
-                  <div class="text-sm font-bold text-slate-800">{{ perm.name }}</div>
-                  <div class="text-xs font-medium text-slate-500 mt-0.5">{{ perm.description || `${perm.action} on ${perm.resource}` }}</div>
+            <div v-else class="grid grid-cols-1 gap-3">
+              <label 
+                v-for="perm in permissions" 
+                :key="perm._id" 
+                :class="[
+                  'flex items-start space-x-4 p-5 rounded-2xl transition-all cursor-pointer border',
+                  form.permissions.includes(perm.name) 
+                    ? 'bg-white border-[#033958] ring-1 ring-[#033958]' 
+                    : 'bg-white border-slate-50 hover:border-slate-200'
+                ]"
+              >
+                <div class="relative flex items-center mt-1">
+                  <input
+                    type="checkbox"
+                    :value="perm.name"
+                    v-model="form.permissions"
+                    class="peer h-5 w-5 cursor-pointer appearance-none rounded-lg border border-slate-200 bg-slate-50 transition-all checked:bg-[#033958] checked:border-[#033958] outline-none"
+                  />
+                  <div class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100">
+                    <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"/></svg>
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-bold text-slate-900 font-mono mb-1">{{ perm.name }}</div>
+                  <div class="text-sm font-medium text-slate-500 leading-relaxed">{{ perm.description || `${perm.action} authorization for ${perm.resource}.` }}</div>
                 </div>
               </label>
             </div>
           </div>
         </div>
 
-        <div class="flex items-center space-x-3 pt-2">
-          <input
-            id="isActiveToggle"
-            type="checkbox"
-            v-model="form.isActive"
-            class="w-5 h-5 text-[#3BAB22] border-slate-300 rounded focus:ring-[#3BAB22]"
-          />
-          <label for="isActiveToggle" class="text-sm font-bold text-slate-700 cursor-pointer">
-            Set role as Active upon instantiation
+        <div class="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100 font-bold text-[10px]">
+          <div class="flex flex-col">
+            <span class="text-slate-900">Active status</span>
+            <span class="text-slate-400 mt-1">Operational immediately</span>
+          </div>
+          <label class="relative inline-flex cursor-pointer items-center">
+            <input type="checkbox" v-model="form.isActive" class="peer sr-only" />
+            <div class="peer h-7 w-12 rounded-full bg-slate-200 after:absolute after:left-[4px] after:top-[4px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-emerald-500 peer-checked:after:translate-x-full peer-focus:outline-none"></div>
           </label>
         </div>
 
-        <div class="flex justify-end pt-6 gap-4">
+        <div class="flex justify-end pt-10 gap-6 border-t border-slate-50">
           <button
             @click="closeModal"
-            class="px-8 py-4 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors uppercase tracking-widest"
+            class="text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
           >
             Cancel
           </button>
           <button
             @click="handleSave"
             :disabled="actionLoading || !form.name"
-            class="px-10 py-4 bg-[#033958] text-white rounded-2xl font-black text-sm hover:bg-[#044a73] disabled:bg-slate-100 disabled:text-slate-400 transition-all shadow-xl shadow-blue-900/10 flex items-center space-x-3 uppercase tracking-widest"
+            class="px-12 py-5 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] disabled:bg-slate-100 disabled:text-slate-400 transition-all flex items-center space-x-3 active:scale-95"
           >
             <div v-if="actionLoading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-            <span>{{ actionLoading ? 'Processing...' : 'Save Role' }}</span>
+            <span>{{ actionLoading ? 'Processing...' : (isEditing ? 'Save changes' : 'Create role') }}</span>
           </button>
         </div>
       </div>
-    </Modal>
+    </SlideOver>
   </div>
 </template>
 
@@ -192,6 +212,9 @@ import { useCreateRole } from '@/composables/modules/roles/useCreateRole'
 import { useUpdateRole } from '@/composables/modules/roles/useUpdateRole'
 import { useDeleteRole } from '@/composables/modules/roles/useDeleteRole'
 import { useGetPermissions } from '@/composables/modules/roles/useGetPermissions'
+import SlideOver from '@/components/SlideOver.vue'
+import AnimatedInput from '@/components/ui/AnimatedInput.vue'
+import Icon from '@/components/Icon.vue'
 
 // State
 const searchQuery = ref('')
@@ -217,7 +240,7 @@ const filteredRoles = computed(() => {
   let res = roles.value || []
   if (searchQuery.value) {
     const q = searchQuery.value.toLowerCase()
-    res = res.filter(r => r.name.toLowerCase().includes(q) || (r.description && r.description.toLowerCase().includes(q)))
+    res = res.filter(r => r.name?.toLowerCase().includes(q) || (r.description && r.description.toLowerCase().includes(q)))
   }
   return res
 })
@@ -226,9 +249,15 @@ const isEditing = computed(() => !!selectedRole.value)
 const actionLoading = computed(() => createLoading.value || updateLoading.value)
 
 // Hooks
-onMounted(() => {
-  getRoles()
-  getPermissions()
+onMounted(async () => {
+  try {
+    await Promise.all([
+      getRoles(),
+      getPermissions()
+    ])
+  } catch (err) {
+    console.error('Initial fetch failed:', err)
+  }
 })
 
 // Methods
@@ -276,7 +305,7 @@ const handleSave = async () => {
 }
 
 const confirmDelete = async (id: string) => {
-  if (confirm('Irreversible Action: Are you absolutely sure you want to delete this Role?')) {
+  if (confirm('Are you sure you want to delete this role?')) {
     try {
       await deleteRole(id)
       await getRoles()
@@ -286,3 +315,19 @@ const confirmDelete = async (id: string) => {
   }
 }
 </script>
+
+<style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #CBD5E1;
+}
+</style>

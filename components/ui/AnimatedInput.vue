@@ -4,10 +4,10 @@
       <label 
         :for="inputId"
         :class="[
-          'absolute transition-all duration-300 ease-in-out pointer-events-none z-10',
+          'absolute transition-all duration-300 ease-in-out pointer-events-none z-10 font-medium',
           isFocused || modelValue ? 
-            'text-xs text-gray-500 left-3 top-2' : 
-            `text-base text-gray-500 left-3 ${type === 'textarea' ? 'top-4' : 'top-1/2 transform -translate-y-1/2'}`
+            'text-xs text-[#033958] left-4 top-2' : 
+            `text-sm text-slate-400 left-4 ${type === 'textarea' ? 'top-4' : 'top-1/2 transform -translate-y-1/2'}`
         ]"
       >
         {{ label }}
@@ -22,7 +22,7 @@
         :readonly="readonly"
         :rows="rows"
         :class="[
-          'w-full py-4 pt-6 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus:outline-none focus:ring-1 focus:ring-[#033958] focus:border-[#033958] transition-all duration-300 resize-none',
+          'w-full py-4 pt-6 px-4 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] transition-all duration-300 resize-none font-medium text-slate-900 rounded-2xl shadow-sm',
           roundedClasses,
           disabled ? 'opacity-50 cursor-not-allowed' : '',
           (hasError || (errorMessage && showError)) ? 'border-[0.5px] ring-red-500 border-red-500' : ''
@@ -43,7 +43,7 @@
         :readonly="readonly || type === 'date' || type === 'time' || type === 'datetime-local'"
         :autocomplete="autocomplete"
         :class="[
-          'w-full py-4 pt-6 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus:outline-none focus:ring-1 focus:ring-[#033958] focus:border-[#033958] transition-all duration-300',
+          'w-full py-4 pt-6 px-4 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] transition-all duration-300 font-medium text-slate-900 rounded-2xl shadow-sm',
           roundedClasses,
           disabled ? 'opacity-50 cursor-not-allowed' : '',
           (type === 'date' || type === 'time' || type === 'datetime-local') ? 'cursor-pointer' : '',
@@ -80,7 +80,7 @@
     </div>
     
     <Transition name="slide-fade">
-      <p v-if="errorMessage && showError" class="text-xs text-red-500 mt-1 ml-3">
+      <p v-if="errorMessage && showError" class="text-sm text-red-500 mt-1 ml-3">
         {{ errorMessage }}
       </p>
     </Transition>
@@ -95,7 +95,7 @@
         @click="closeDatePicker"
       >
         <div 
-          class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform"
+          class="bg-white rounded-3xl  w-full max-w-md overflow-hidden transform"
           @click.stop
         >
           <div class="bg-gradient-to-br from-[#033958] to-[#055a8c] p-6 text-white">
@@ -158,7 +158,7 @@
             </div>
             
             <div class="grid grid-cols-7 gap-2 mb-3">
-              <div v-for="d in weekDays" :key="d" class="text-center text-sm font-bold text-gray-500 py-2">{{ d }}</div>
+              <div v-for="d in weekDays" :key="d" class="text-center text-sm font-bold text-gray-900 py-2">{{ d }}</div>
             </div>
             
             <div class="grid grid-cols-7 gap-2">
@@ -203,7 +203,7 @@
         @click="closeTimePicker"
       >
         <div 
-          class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden transform"
+          class="bg-white rounded-3xl  w-full max-w-sm overflow-hidden transform"
           @click.stop
         >
           <div class="bg-gradient-to-br from-[#033958] to-[#055a8c] p-6 text-white">
@@ -236,7 +236,7 @@
                   type="text" 
                   v-model="selectedHour" 
                   @blur="valHour" 
-                  @focus="$event.target.select()" 
+                    @focus="($event.target as HTMLInputElement).select()" 
                   @click.stop 
                   maxlength="2"
                   class="w-20 text-center text-4xl font-bold border-2 border-gray-200 focus:border-[#033958] rounded-2xl py-4 focus:outline-none focus:ring-4 focus:ring-[#033958]/20 transition-all bg-gray-50"
@@ -260,7 +260,7 @@
                   type="text" 
                   v-model="selectedMinute" 
                   @blur="valMin" 
-                  @focus="$event.target.select()" 
+                    @focus="($event.target as HTMLInputElement).select()" 
                   @click.stop 
                   maxlength="2"
                   class="w-20 text-center text-4xl font-bold border-2 border-gray-200 focus:border-[#033958] rounded-2xl py-4 focus:outline-none focus:ring-4 focus:ring-[#033958]/20 transition-all bg-gray-50"
@@ -280,7 +280,7 @@
                 :class="[
                   'flex-1 px-6 py-4 text-lg font-bold rounded-2xl transition-all transform',
                   selectedPeriod === 'AM' 
-                    ? 'bg-[#033958] text-white shadow-lg scale-105' 
+                    ? 'bg-[#033958] text-white  scale-105' 
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 ]"
               >
@@ -292,7 +292,7 @@
                 :class="[
                   'flex-1 px-6 py-4 text-lg font-bold rounded-2xl transition-all transform',
                   selectedPeriod === 'PM' 
-                    ? 'bg-[#033958] text-white shadow-lg scale-105' 
+                    ? 'bg-[#033958] text-white  scale-105' 
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 ]"
               >
@@ -320,7 +320,7 @@
               <button 
                 type="button" 
                 @click.stop="confirmTimeValue"
-                class="px-6 py-2.5 text-sm text-white bg-[#033958] hover:bg-[#022f42] rounded-xl font-bold shadow-lg hover:shadow-xl transition-all"
+                class="px-6 py-2.5 text-sm text-white bg-[#033958] hover:bg-[#022f42] rounded-xl font-bold  hover: transition-all"
               >
                 Confirm
               </button>
@@ -338,7 +338,7 @@
         @click="closeDateTimePicker"
       >
         <div 
-          class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl my-8 overflow-hidden transform"
+          class="bg-white rounded-3xl  w-full max-w-4xl my-8 overflow-hidden transform"
           @click.stop
         >
           <div class="bg-gradient-to-br from-[#033958] to-[#055a8c] p-6 text-white">
@@ -387,7 +387,7 @@
               </div>
               
               <div class="grid grid-cols-7 gap-1 mb-2">
-                <div v-for="d in weekDays" :key="d" class="text-center text-xs font-bold text-gray-500 py-1">{{ d }}</div>
+                <div v-for="d in weekDays" :key="d" class="text-center text-sm font-bold text-gray-900 py-1">{{ d }}</div>
               </div>
               <div class="grid grid-cols-7 gap-1 mb-4">
                 <button 
@@ -419,10 +419,10 @@
                     type="text" 
                     v-model="selectedHour" 
                     @blur="valHour" 
-                    @focus="$event.target.select()" 
+                      @focus="($event.target as HTMLInputElement).select()" 
                     @click.stop 
                     maxlength="2"
-                    class="w-16 text-center text-3xl font-bold border-2 border-gray-200 focus:border-[#033958] rounded-xl py-3 focus:outline-none bg-gray-50"
+                    class="w-16 text-center text-2xl font-bold border-2 border-gray-200 focus:border-[#033958] rounded-xl py-3 focus:outline-none bg-gray-50"
                   />
                   <button type="button" @click.stop="decHour" class="p-2 hover:bg-gray-100 rounded-lg mt-2">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -441,10 +441,10 @@
                     type="text" 
                     v-model="selectedMinute" 
                     @blur="valMin" 
-                    @focus="$event.target.select()" 
+                      @focus="($event.target as HTMLInputElement).select()" 
                     @click.stop 
                     maxlength="2"
-                    class="w-16 text-center text-3xl font-bold border-2 border-gray-200 focus:border-[#033958] rounded-xl py-3 focus:outline-none bg-gray-50"
+                    class="w-16 text-center text-2xl font-bold border-2 border-gray-200 focus:border-[#033958] rounded-xl py-3 focus:outline-none bg-gray-50"
                   />
                   <button type="button" @click.stop="decMin" class="p-2 hover:bg-gray-100 rounded-lg mt-2">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -458,14 +458,14 @@
                 <button 
                   type="button" 
                   @click.stop="setPeriod('AM')"
-                  :class="['flex-1 px-4 py-3 text-base font-bold rounded-xl transition-all', selectedPeriod === 'AM' ? 'bg-[#033958] text-white shadow-lg' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
+                  :class="['flex-1 px-4 py-3 text-base font-bold rounded-xl transition-all', selectedPeriod === 'AM' ? 'bg-[#033958] text-white ' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
                 >
                   AM
                 </button>
                 <button 
                   type="button" 
                   @click.stop="setPeriod('PM')"
-                  :class="['flex-1 px-4 py-3 text-base font-bold rounded-xl transition-all', selectedPeriod === 'PM' ? 'bg-[#033958] text-white shadow-lg' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
+                  :class="['flex-1 px-4 py-3 text-base font-bold rounded-xl transition-all', selectedPeriod === 'PM' ? 'bg-[#033958] text-white ' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
                 >
                   PM
                 </button>
@@ -492,7 +492,7 @@
               <button 
                 type="button" 
                 @click.stop="confirmDTValue"
-                class="px-6 py-2.5 text-sm text-white bg-[#033958] hover:bg-[#022f42] rounded-xl font-bold shadow-lg transition-all"
+                class="px-6 py-2.5 text-sm text-white bg-[#033958] hover:bg-[#022f42] rounded-xl font-bold  transition-all"
               >
                 Confirm
               </button>
@@ -663,16 +663,16 @@ function getDayClass(day: CalendarDay) {
     'aspect-square p-2 text-sm font-semibold rounded-xl transition-all relative',
     day.isCurrentMonth ? 'hover:bg-gray-100 hover:scale-105 cursor-pointer' : 'text-gray-300 opacity-40 cursor-not-allowed',
     day.isToday && !day.isSelected ? 'bg-blue-50 text-[#033958] ring-2 ring-[#033958] ring-inset font-bold' : '',
-    day.isSelected ? 'bg-[#033958] text-white shadow-lg scale-105' : ''
+    day.isSelected ? 'bg-[#033958] text-white  scale-105' : ''
   ]
 }
 
 function getDTDayClass(day: CalendarDay) {
   return [
-    'aspect-square p-2 text-xs font-medium rounded-lg transition-all',
+    'aspect-square p-2 text-sm font-medium rounded-lg transition-all',
     day.isCurrentMonth ? 'hover:bg-gray-100 cursor-pointer' : 'text-gray-300 opacity-30 cursor-not-allowed',
     day.isToday && !day.isSelected ? 'border-2 border-[#033958] text-[#033958] font-bold' : '',
-    day.isSelected ? 'bg-[#033958] text-white shadow-md' : ''
+    day.isSelected ? 'bg-[#033958] text-white ' : ''
   ]
 }
 

@@ -1,186 +1,175 @@
 <template>
-  <div class="space-y-6">
-    <!-- Header Actions -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-      <div class="flex items-center space-x-4 w-full md:w-auto text-slate-700">
-        <div class="relative w-full md:w-80">
-          <Icon name="heroicons:magnifying-glass" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search identities or roles..."
-            class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#033958] font-medium transition-all"
-          />
-        </div>
-      </div>
-      <button
-        @click="openCreateModal"
-        class="w-full md:w-auto px-6 py-3 bg-[#033958] text-white rounded-xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-2 shadow-lg shadow-blue-900/10"
-      >
-        <Icon name="heroicons:plus" class="w-4 h-4" />
-        <span>Instantiate Member</span>
-      </button>
-    </div>
-
-    <!-- Team Members Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative">
-      <div v-if="loading" class="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-10 flex items-center justify-center rounded-3xl">
-        <div class="flex flex-col items-center">
-          <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
-        </div>
+  <div class="space-y-12 animate-in fade-in duration-700">
+    <!-- Action Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8 bg-white p-10 rounded-[3rem] border border-slate-100 shadow-xl relative overflow-hidden">
+      <!-- Background Decor -->
+      <div class="absolute right-0 top-0 w-64 h-64 bg-[#033958]/5 blur-3xl rounded-full"></div>
+      
+      <div class="relative z-10 space-y-2">
+        <h2 class="text-3xl font-black text-slate-900 tracking-tighter uppercase ">Board Management</h2>
+        <p class="text-sm font-bold text-slate-400 tracking-widest uppercase">Administer the governing body and executive registry</p>
       </div>
 
-      <div
-        v-for="member in filteredMembers"
-        :key="member._id"
-        class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 group"
-      >
-        <!-- Member Avatar -->
-        <div class="h-40 bg-slate-100 relative group-hover:scale-105 transition-transform duration-500 overflow-hidden">
-          <img v-if="member.image" :src="member.image" class="w-full h-full object-cover" />
-          <div v-else class="w-full h-full bg-gradient-to-br from-[#033958] to-[#3BAB22] flex items-center justify-center">
-             <span class="text-4xl font-black text-white/50">{{ member.initials || member.name?.substring(0, 2) || 'TM' }}</span>
-          </div>
-
-          <div class="absolute inset-x-0 top-0 p-4 bg-gradient-to-b from-black/50 to-transparent flex justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-            <button
-              @click="editMember(member)"
-              class="w-8 h-8 flex items-center justify-center bg-white/20 backdrop-blur-md rounded-lg hover:bg-white/40 transition-colors"
-            >
-              <Icon name="heroicons:pencil" class="w-4 h-4 text-white" />
-            </button>
-            <button
-              @click="deleteMember(member._id)"
-              class="w-8 h-8 flex items-center justify-center bg-rose-500/80 backdrop-blur-md rounded-lg hover:bg-rose-600 transition-colors"
-            >
-              <Icon name="heroicons:trash" class="w-4 h-4 text-white" />
-            </button>
-          </div>
-        </div>
-        
-        <!-- Member Info -->
-        <div class="p-6 relative bg-white">
-          <div class="flex justify-between items-start mb-2">
-             <h3 class="font-bold text-slate-900 text-lg tracking-tight">{{ member.name }}</h3>
-             <span :class="['text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md bg-slate-100', member.isActive ? 'text-[#3BAB22]' : 'text-slate-400']">{{ member.isActive ? 'Active' : 'Offline' }}</span>
-          </div>
-          <p class="text-sm font-semibold text-[#033958] mb-1 tracking-tight uppercase">{{ member.title }}</p>
-          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-4">Pos: {{ member.position }}</p>
-          
-          <div class="text-xs text-slate-500 line-clamp-3 mb-4 font-medium leading-relaxed">
-            {{ member.bio || 'No biography instantiated.' }}
-          </div>
-          
-          <div class="flex items-center space-x-3 pt-4 border-t border-slate-100">
-            <a v-for="profile in member.profiles || []" :key="profile.type" :href="profile.url" target="_blank" class="text-slate-400 hover:text-[#033958] transition-colors">
-               <Icon :name="profile.type === 'linkedin' ? 'mdi:linkedin' : 'mdi:twitter'" class="w-5 h-5" />
-            </a>
-            <span v-if="!member.profiles || member.profiles.length === 0" class="text-xs text-slate-300 font-medium italic">No linked profiles</span>
-          </div>
-        </div>
+      <div class="relative z-10 flex items-center gap-4 w-full sm:w-auto">
+        <NuxtLink
+          to="/dashboard/leadership/create"
+          class="flex-1 sm:flex-none px-10 py-5 bg-[#033958] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.25em] hover:bg-[#022a41] transition-all flex items-center justify-center space-x-3 shadow-2xl active:scale-95"
+        >
+          <Icon name="heroicons:plus-circle" class="w-5 h-5" />
+          <span>Add Visionary</span>
+        </NuxtLink>
       </div>
     </div>
 
-    <!-- Empty State -->
-    <div v-if="!loading && filteredMembers.length === 0" class="text-center py-20 bg-white rounded-3xl border border-slate-200">
-      <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
-        <Icon name="heroicons:user-group" class="w-10 h-10 text-slate-300" />
-      </div>
-      <p class="text-slate-500 font-medium">Zero administrative personnel found matching query criteria.</p>
-    </div>
-
-    <!-- Create/Edit Member Modal -->
-    <Modal v-model="showModal" size="lg" :title="selectedMember ? 'Modify Identity Parameters' : 'Instantiate Identity parameters'">
-      <div class="p-6">
-        <TeamMemberForm
-          :member="selectedMember"
-          @save="handleSaveMember"
-          @cancel="closeModal"
+    <!-- Search & Control Base -->
+    <div class="flex flex-col md:flex-row gap-6 max-w-4xl">
+      <div class="flex-1">
+        <AnimatedInput 
+          v-model="searchQuery" 
+          id="search-teams" 
+          label="Filter by Name or Title..." 
+          type="text" 
         />
       </div>
-    </Modal>
+      <div class="w-full md:w-64">
+        <SelectInput 
+          v-model="categoryFilter" 
+          label="Executive Group" 
+          :options="[
+            { label: 'All Positions', value: '' },
+            { label: 'Executive Board', value: 'Executive Board' },
+            { label: 'Management Team', value: 'Management Team' },
+            { label: 'Volunteer Committee', value: 'Volunteer Committee' },
+            { label: 'Advisory Council', value: 'Advisory Council' }
+          ]" 
+        />
+      </div>
+    </div>
+
+    <!-- Registry Table -->
+    <div class="bg-white rounded-[3.5rem] border border-slate-100 shadow-2xl overflow-hidden relative min-h-[400px]">
+      <!-- Loading Overlay -->
+      <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
+         <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
+         <span class="text-[10px] font-black uppercase tracking-widest text-[#033958]">Accessing Archives...</span>
+      </div>
+
+      <div v-if="!loading && filteredMembers.length === 0" class="py-40 text-center">
+        <div class="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-8">
+           <Icon name="heroicons:user-group" class="w-12 h-12 text-slate-200" />
+        </div>
+        <h3 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Registry is Empty</h3>
+        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">No leaders match your current filters.</p>
+      </div>
+
+      <table v-else class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b border-slate-100">
+            <th class="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Headshot</th>
+            <th class="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Leader Profile</th>
+            <th class="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Governance Level</th>
+            <th class="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Rank</th>
+            <th class="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Protocol</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+          <tr v-for="member in filteredMembers" :key="member._id" class="group hover:bg-slate-50/50 transition-colors">
+            <td class="px-10 py-8">
+              <div class="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shadow-md transform group-hover:scale-110 transition-transform">
+                 <img v-if="member.image" :src="member.image" class="w-full h-full object-cover" />
+                 <div v-else class="w-full h-full flex items-center justify-center text-slate-300">
+                    <Icon name="heroicons:user" class="w-8 h-8" />
+                 </div>
+              </div>
+            </td>
+            <td class="px-10 py-8">
+               <div class="flex flex-col">
+                  <span class="text-lg font-black text-slate-900 uppercase  tracking-tighter">{{ member.name }}</span>
+                  <span class="text-[10px] font-bold text-[#033958] uppercase tracking-widest">{{ member.title }}</span>
+               </div>
+            </td>
+            <td class="px-10 py-8 text-center sm:text-left">
+               <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#033958] text-white text-[9px] font-black uppercase tracking-widest rounded-lg">
+                  {{ member.roleCategory || 'General' }}
+               </div>
+            </td>
+            <td class="px-10 py-8 text-center text-sm font-black text-slate-300">
+               {{ member.position }}
+            </td>
+            <td class="px-10 py-8 text-right">
+               <div class="flex items-center justify-end space-x-3 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all">
+                  <NuxtLink 
+                    :to="`/dashboard/leadership/${member._id}`"
+                    class="p-3 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-xl border border-slate-100 transition-all shadow-sm"
+                    title="Edit Dossier"
+                  >
+                    <Icon name="heroicons:pencil-square" class="w-5 h-5" />
+                  </NuxtLink>
+                  <button 
+                    @click="handleDelete(member._id!)" 
+                    class="p-3 text-slate-200 hover:text-rose-600 hover:bg-rose-50 rounded-xl border border-slate-100 transition-all shadow-sm"
+                    title="Purge Link"
+                  >
+                    <Icon name="heroicons:trash" class="w-5 h-5" />
+                  </button>
+               </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useGetTeamMembers } from '@/composables/modules/teams/useGetTeamMembers'
-import { useCreateTeamMember } from '@/composables/modules/teams/useCreateTeamMember'
-import { useUpdateTeamMember } from '@/composables/modules/teams/useUpdateTeamMember'
-import { useSoftDeleteTeamMember } from '@/composables/modules/teams/useSoftDeleteTeamMember'
-import Modal from '@/components/Modal.vue'
-import TeamMemberForm from '@/components/TeamMemberForm.vue'
+import { teams_api, type TeamMember } from '@/api_factory/modules/teams'
+import { useCustomToast } from '@/composables/core/useCustomToast'
+import AnimatedInput from '@/components/ui/AnimatedInput.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
+import Icon from '@/components/Icon.vue'
 
-// Composables
-const { teamMembers, loading, getTeamMembers } = useGetTeamMembers()
-const { createTeamMember } = useCreateTeamMember()
-const { updateTeamMember } = useUpdateTeamMember()
-const { softDeleteTeamMember } = useSoftDeleteTeamMember()
+const { showToast } = useCustomToast()
 
-// Reactive data
+const members = ref<TeamMember[]>([])
+const loading = ref(false)
 const searchQuery = ref('')
-const showModal = ref(false)
-const selectedMember = ref(null)
+const categoryFilter = ref('')
 
-// Load team members on mount
-onMounted(() => {
-  getTeamMembers()
-})
-
-// Computed
-const filteredMembers = computed(() => {
-  let filtered = teamMembers.value || []
-
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(m => 
-      m.name?.toLowerCase().includes(query) ||
-      m.title?.toLowerCase().includes(query)
-    )
-  }
-
-  // Sort by position
-  filtered = [...filtered].sort((a, b) => (a.position || 99) - (b.position || 99))
-  return filtered
-})
-
-// Methods
-const openCreateModal = () => {
-  selectedMember.value = null
-  showModal.value = true
-}
-
-const editMember = (member: any) => {
-  selectedMember.value = member
-  showModal.value = true
-}
-
-const closeModal = () => {
-  showModal.value = false
-  selectedMember.value = null
-}
-
-const handleSaveMember = async (memberData: any) => {
+const fetchMembers = async () => {
+  loading.value = true
   try {
-    if (selectedMember.value) {
-      await updateTeamMember(selectedMember.value._id, memberData)
-    } else {
-      await createTeamMember(memberData)
-    }
-    await getTeamMembers()
-    closeModal()
-  } catch (error) {
-    console.error('Error saving team member:', error)
+    const res = await teams_api.$_get_members()
+    members.value = res.data
+  } catch (e) {
+    showToast({ title: 'System Error', message: 'Registry fetch failure.', toastType: 'error' })
+  } finally {
+    loading.value = false
   }
 }
 
-const deleteMember = async (memberId: string) => {
-  if (confirm('Irreversible Protocol Request: Are you absolutely certain you wish to delete this Personnel Record?')) {
+onMounted(fetchMembers)
+
+const filteredMembers = computed(() => {
+  let list = [...members.value]
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase()
+    list = list.filter(m => m.name.toLowerCase().includes(q) || m.title.toLowerCase().includes(q))
+  }
+  if (categoryFilter.value) {
+    list = list.filter(m => m.roleCategory === categoryFilter.value)
+  }
+  return list.sort((a, b) => (a.position || 0) - (b.position || 0))
+})
+
+const handleDelete = async (id: string) => {
+  if (confirm('Are you sure? This will purge the leader registry node.')) {
     try {
-      await softDeleteTeamMember(memberId)
-      await getTeamMembers()
-    } catch (error) {
-      console.error('Error deleting team member:', error)
+      await teams_api.$_delete_member(id)
+      showToast({ title: 'Node Purged', message: 'Leader removed from governance.', toastType: 'success' })
+      await fetchMembers()
+    } catch (e) {
+      showToast({ title: 'Protocol Failure', message: 'Delete operation aborted.', toastType: 'error' })
     }
   }
 }

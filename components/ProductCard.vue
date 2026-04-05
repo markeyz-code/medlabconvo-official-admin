@@ -1,295 +1,164 @@
 <template>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group">
-      <!-- Product Image -->
-      <div class="relative h-48 bg-gray-100 overflow-hidden">
-        <img
-          v-if="product.imageUrl"
-          :src="product.imageUrl"
-          :alt="product.name"
-          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-        <div
-          v-else
-          class="w-full h-full flex items-center justify-center"
-        >
-          <Package class="w-12 h-12 text-gray-400" />
-        </div>
-        
-        <!-- Status Badge -->
-        <div class="absolute top-3 left-3">
-          <span
-            :class="[
-              'px-2 py-1 text-xs font-semibold rounded-full',
-              getStatusColor(product.status)
-            ]"
-          >
-            {{ formatStatus(product.status) }}
-          </span>
-        </div>
-  
-        <!-- Category Badge -->
-        <div class="absolute top-3 right-3">
-          <span class="px-2 py-1 text-xs font-medium bg-white bg-opacity-90 text-gray-700 rounded-full">
-            {{ formatCategoryName(product.category) }}
-          </span>
-        </div>
-  
-        <!-- Digital Badge -->
-        <div v-if="product.isDigital" class="absolute bottom-3 left-3">
-          <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full flex items-center space-x-1">
-            <Download class="w-3 h-3" />
-            <span>Digital</span>
-          </span>
-        </div>
-  
-        <!-- Sale Badge -->
-        <div v-if="product.originalPrice && product.originalPrice > product.price" class="absolute bottom-3 right-3">
-          <span class="px-2 py-1 text-xs font-bold bg-red-500 text-white rounded-full">
-            {{ Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) }}% OFF
-          </span>
-        </div>
+  <div class="group bg-white rounded-2xl border border-slate-100 overflow-hidden hover:border-[#033958]/20 hover: hover:[#033958]/5 transition-all duration-500 relative flex flex-col h-full">
+    <!-- Product Image Area -->
+    <div class="relative h-56 bg-slate-50 overflow-hidden">
+      <div 
+        class="absolute inset-0 bg-gradient-to-br from-[#033958]/5 to-transparent group-hover:scale-110 transition-transform duration-700"
+      ></div>
+      <img
+        v-if="product.imageUrl || product.images?.[0]"
+        :src="product.imageUrl || product.images?.[0]"
+        :alt="product.name"
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+      />
+      <div
+        v-else
+        class="w-full h-full flex items-center justify-center"
+      >
+        <Icon name="heroicons:package" class="w-16 h-16 text-[#033958]/10 group-hover:text-[#033958]/20 transition-colors duration-500" />
       </div>
-  
-      <!-- Product Content -->
-      <div class="p-4">
-        <!-- Title and Author -->
-        <div class="mb-3">
-          <h3 class="font-semibold text-gray-900 line-clamp-2 group-hover:text-indigo-700 transition-colors mb-1">
+      
+      <!-- Badges Overlay -->
+      <div class="absolute top-4 left-4 flex flex-col gap-2">
+        <span :class="[
+          'px-3 py-1.5 text-[10px] font-bold rounded-full backdrop-blur-md border',
+          product.status === 'active' ? 'bg-emerald-500/10 text-emerald-700 border-emerald-200' : 
+          product.status === 'inactive' ? 'bg-rose-500/10 text-rose-700 border-rose-200' :
+          'bg-slate-500/10 text-slate-700 border-slate-200'
+        ]">
+          {{ product.status }}
+        </span>
+        <span v-if="product.isDigital" class="px-3 py-1.5 text-[10px] font-bold rounded-full bg-[#033958]/10 text-[#033958] border border-[#033958]/20 backdrop-blur-md inline-flex items-center space-x-1">
+          <Icon name="heroicons:cloud-arrow-down" class="w-3 h-3" />
+          <span>Digital product</span>
+        </span>
+      </div>
+
+      <div class="absolute top-4 right-4">
+        <span class="px-3 py-1.5 text-[10px] font-bold rounded-full bg-white/90 text-slate-500 border border-slate-100">
+          {{ product.category }}
+        </span>
+      </div>
+
+      <!-- Sale Badge -->
+      <div v-if="product.originalPrice && product.originalPrice > product.price" class="absolute bottom-4 right-4">
+        <span class="px-3 py-2 text-[11px] font-bold bg-[#033958] text-white rounded-xl">
+          -{{ Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) }}%
+        </span>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="p-6 flex flex-col flex-1">
+      <div class="mb-4">
+        <div class="flex items-start justify-between gap-2 mb-2">
+          <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#033958] transition-colors duration-300 line-clamp-1 leading-tight">
             {{ product.name }}
           </h3>
-          <p class="text-sm text-gray-600">by {{ product.author }}</p>
-        </div>
-  
-        <!-- Description -->
-        <p class="text-sm text-gray-600 line-clamp-2 mb-3">
-          {{ product.description }}
-        </p>
-  
-        <!-- Price -->
-        <div class="flex items-center space-x-2 mb-3">
-          <span class="text-lg font-bold text-gray-900">₦{{ formatPrice(product.price) }}</span>
-          <span
-            v-if="product.originalPrice && product.originalPrice > product.price"
-            class="text-sm text-gray-500 line-through"
-          >
-            ₦{{ formatPrice(product.originalPrice) }}
-          </span>
-        </div>
-  
-        <!-- Stock and Availability -->
-        <div class="flex items-center justify-between mb-3 text-sm">
-          <div class="flex items-center space-x-1">
-            <Package class="w-4 h-4 text-gray-400" />
-            <span class="text-gray-600">Stock:</span>
-            <span
-              :class="[
-                'font-medium',
-                product.stock > 10 ? 'text-green-600' : product.stock > 0 ? 'text-yellow-600' : 'text-red-600'
-              ]"
-            >
-              {{ product.stock }}
-            </span>
-          </div>
-          <span
-            :class="[
-              'px-2 py-1 text-xs font-medium rounded-full',
-              product.availability === 'available' 
-                ? 'bg-green-100 text-green-700'
-                : 'bg-red-100 text-red-700'
-            ]"
-          >
-            {{ product.availability === 'available' ? 'Available' : 'Unavailable' }}
-          </span>
-        </div>
-  
-        <!-- Stats -->
-        <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
-          <div class="flex items-center space-x-3">
-            <span class="flex items-center space-x-1">
-              <Eye class="w-3 h-3" />
-              <span>{{ product.viewCount || 0 }}</span>
-            </span>
-            <span class="flex items-center space-x-1">
-              <ShoppingCart class="w-3 h-3" />
-              <span>{{ product.salesCount || 0 }}</span>
-            </span>
-            <span class="flex items-center space-x-1">
-              <Star class="w-3 h-3" />
-              <span>{{ product.rating || 0 }}</span>
-            </span>
-          </div>
-        </div>
-  
-        <!-- Tags -->
-        <div v-if="product.tags?.length" class="flex flex-wrap gap-1 mb-4">
-          <span
-            v-for="tag in product.tags.slice(0, 3)"
-            :key="tag"
-            class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs"
-          >
-            {{ tag }}
-          </span>
-          <span
-            v-if="product.tags.length > 3"
-            class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs"
-          >
-            +{{ product.tags.length - 3 }}
-          </span>
-        </div>
-  
-        <!-- Action Buttons -->
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-1">
-            <button
-              @click="viewProduct"
-              class="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
-              title="View Details"
-            >
-              <Eye class="w-4 h-4" />
+          <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button @click="editProduct" class="p-2 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-lg transition-all">
+              <Icon name="heroicons:pencil" class="w-4 h-4" />
             </button>
-            <button
-              @click="editProduct"
-              class="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200"
-              title="Edit Product"
-            >
-              <Edit class="w-4 h-4" />
-            </button>
-            <button
-              @click="showStockModal = true"
-              class="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all duration-200"
-              title="Update Stock"
-            >
-              <Package class="w-4 h-4" />
-            </button>
-            <button
-              @click="deleteProduct"
-              class="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
-              title="Delete Product"
-            >
-              <Trash2 class="w-4 h-4" />
+            <button @click="deleteProduct" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all">
+              <Icon name="heroicons:trash" class="w-4 h-4" />
             </button>
           </div>
-  
-          <!-- Quick Stock Update -->
-          <div class="flex items-center space-x-1">
-            <button
-              @click="updateStock(-1)"
-              :disabled="product.stock <= 0"
-              class="p-1 text-gray-600 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Minus class="w-3 h-3" />
-            </button>
-            <button
-              @click="updateStock(1)"
-              class="p-1 text-gray-600 hover:text-green-600"
-            >
-              <Plus class="w-3 h-3" />
-            </button>
+        </div>
+        <p class="text-sm font-bold text-slate-400">by {{ product.author || 'MedLabConvo' }}</p>
+      </div>
+
+      <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed mb-6 flex-1">
+        {{ product.description }}
+      </p>
+
+      <div class="flex items-baseline space-x-2 mb-6">
+        <span class="text-2xl font-black text-slate-900">₦{{ formatPrice(product.price) }}</span>
+        <span v-if="product.originalPrice && product.originalPrice > product.price" class="text-sm font-bold text-slate-300 line-through">
+          ₦{{ formatPrice(product.originalPrice) }}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 py-4 border-y border-slate-50 mb-6">
+        <div class="flex flex-col">
+          <span class="text-[9px] font-bold text-slate-400">Inventory</span>
+          <div class="flex items-center space-x-2 mt-1">
+            <div :class="['w-1.5 h-1.5 rounded-full', product.stock > 10 ? 'bg-green-500' : product.stock > 0 ? 'bg-amber-500' : 'bg-red-500']"></div>
+            <span class="text-sm font-bold text-slate-700">{{ product.stock }} Units</span>
+          </div>
+        </div>
+        <div class="flex flex-col text-right">
+          <span class="text-[9px] font-bold text-slate-400">Engagement</span>
+          <div class="flex items-center justify-end space-x-3 mt-1 text-slate-500">
+            <span class="flex items-center space-x-1">
+              <Icon name="heroicons:eye" class="w-3 h-3" />
+              <span class="text-[10px] font-bold">{{ product.viewCount || 0 }}</span>
+            </span>
+            <span class="flex items-center space-x-1">
+              <Icon name="heroicons:shopping-bag" class="w-3 h-3" />
+              <span class="text-[10px] font-bold">{{ product.salesCount || 0 }}</span>
+            </span>
           </div>
         </div>
       </div>
-  
-      <!-- Stock Update Modal -->
-      <Modal v-model="showStockModal" title="Update Stock" size="sm">
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Current Stock: {{ product.stock }}
-            </label>
-            <input
-              v-model.number="newStock"
-              type="number"
-              min="0"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              placeholder="Enter new stock quantity"
-            />
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center -space-x-2">
+          <div v-for="i in 3" :key="i" class="w-7 h-7 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center overflow-hidden">
+            <img :src="`https://ui-avatars.com/api/?name=User+${i}&background=random`" class="w-full h-full object-cover" />
           </div>
-          <div class="flex justify-end space-x-3">
-            <button
-              @click="showStockModal = false"
-              class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              @click="confirmStockUpdate"
-              class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Update
-            </button>
-          </div>
+          <span class="ml-4 text-[10px] font-bold text-slate-400 tracking-tight">+{{ product.salesCount || 0 }} reviews</span>
         </div>
-      </Modal>
+        
+        <div class="flex items-center space-x-2">
+          <button 
+            @click="updateStock(-1)"
+            :disabled="product.stock <= 0"
+            class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 disabled:opacity-30 transition-all border border-slate-100"
+          >
+            <Icon name="heroicons:minus" class="w-4 h-4" />
+          </button>
+          <button 
+            @click="updateStock(1)"
+            class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-green-500 hover:bg-green-50 transition-all border border-slate-100"
+          >
+            <Icon name="heroicons:plus" class="w-4 h-4" />
+          </button>
+        </div>
+      </div>
     </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref } from 'vue'
-  import {
-    Package, Download, Eye, Edit, Trash2, ShoppingCart, Star,
-    Plus, Minus
-  } from 'lucide-vue-next'
-  import Modal from './Modal.vue'
-  
-  interface Props {
-    product: any
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import Icon from '@/components/Icon.vue'
+
+interface Props {
+  product: any
+}
+
+const props = defineProps<Props>()
+
+const emit = defineEmits<{
+  view: [product: any]
+  edit: [product: any]
+  delete: [product: any]
+  'update-stock': [productId: string, newStock: number]
+}>()
+
+const updateStock = (change: number) => {
+  const newValue = (props.product.stock || 0) + change
+  if (newValue >= 0) {
+    emit('update-stock', props.product.id || props.product._id, newValue)
   }
-  
-  const props = defineProps<Props>()
-  
-  const showStockModal = ref(false)
-  const newStock = ref(props.product.stock)
-  
-  const productEmit = defineEmits<{
-    view: [product: any]
-    edit: [product: any]
-    delete: [product: any]
-    'update-stock': [productId: string, newStock: number]
-  }>()
-  
-  const updateStock = (change: number) => {
-    const newValue = props.product.stock + change
-    if (newValue >= 0) {
-      productEmit('update-stock', props.product._id, newValue)
-    }
-  }
-  
-  const confirmStockUpdate = () => {
-    productEmit('update-stock', props.product._id, newStock.value)
-    showStockModal.value = false
-  }
-  
-  const viewProduct = () => {
-    productEmit('view', props.product)
-  }
-  
-  const editProduct = () => {
-    productEmit('edit', props.product)
-  }
-  
-  const deleteProduct = () => {
-    productEmit('delete', props.product)
-  }
-  
-  const getStatusColor = (status: string) => {
-    const colors = {
-      'active': 'bg-green-100 text-green-800',
-      'inactive': 'bg-red-100 text-red-800',
-      'draft': 'bg-gray-100 text-gray-800'
-    }
-    return colors[status] || 'bg-gray-100 text-gray-800'
-  }
-  
-  const formatStatus = (status: string) => {
-    return status.charAt(0).toUpperCase() + status.slice(1)
-  }
-  
-  const formatCategoryName = (category: string) => {
-    return category.charAt(0).toUpperCase() + category.slice(1)
-  }
-  
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-NG').format(price)
-  }
-  </script>
-  
+}
+
+const viewProduct = () => emit('view', props.product)
+const editProduct = () => emit('edit', props.product)
+const deleteProduct = () => emit('delete', props.product)
+
+const formatPrice = (price: number) => {
+  if (!price) return '0.00'
+  return new Intl.NumberFormat('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(price)
+}
+</script>

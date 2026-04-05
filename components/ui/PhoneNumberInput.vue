@@ -7,8 +7,8 @@
         :class="[
           'absolute transition-all duration-300 ease-in-out pointer-events-none z-10',
           isFocused || phoneNumber ? 
-            'text-xs text-gray-500 left-3 top-2' : 
-            'text-base text-gray-500 left-3 top-1/2 transform -translate-y-1/2'
+            'text-sm text-gray-900 left-3 top-2' : 
+            'text-base text-gray-900 left-3 top-1/2 transform -translate-y-1/2'
         ]"
       >
         {{ label }}
@@ -38,7 +38,7 @@
             </div>
             <span class="text-base font-medium text-[#1A1A1B]">{{ selectedDialCode }}</span>
             <svg 
-              class="w-4 h-4 transition-transform duration-200 text-gray-500" 
+              class="w-4 h-4 transition-transform duration-200 text-gray-900" 
               :class="{ 'transform rotate-180': showDropdown }"
               fill="none" 
               stroke="currentColor" 
@@ -53,7 +53,7 @@
           <Transition name="slide-fade">
             <div
               v-if="showDropdown"
-              class="absolute z-50 mt-2 bg-white shadow-2xl rounded-2xl border-[0.5px] border-gray-100 overflow-hidden left-0"
+              class="absolute z-50 mt-2 bg-white  rounded-2xl border-[0.5px] border-gray-100 overflow-hidden left-0"
             >
               <!-- Search Input -->
               <div class="p-4 border-b-[0.5px] border-gray-100 bg-gray-50">
@@ -95,14 +95,14 @@
                   </div>
                   <div class="flex-1 flex items-center justify-between min-w-0">
                     <!-- <span class="text-base font-medium text-[#1A1A1B] truncate">{{ country.name }}</span> -->
-                    <span class="text-base text-gray-500 font-medium ml-2 flex-shrink-0">{{ country.dialCode }}</span>
+                    <span class="text-base text-gray-900 font-medium ml-2 flex-shrink-0">{{ country.dialCode }}</span>
                   </div>
                 </button>
                 
                 <!-- No results -->
                 <div 
                   v-if="filteredCountries.length === 0" 
-                  class="p-6 text-center text-base text-gray-500"
+                  class="p-6 text-center text-base text-gray-900"
                 >
                   No countries found for "{{ searchQuery }}"
                 </div>
@@ -135,7 +135,7 @@
     </p>
 
     <!-- Helper Text -->
-    <p v-if="helperText && !errorMessage" class="mt-1 text-xs text-gray-500">
+    <p v-if="helperText && !errorMessage" class="mt-1 text-sm text-gray-900">
       {{ helperText }}
     </p>
   </div>

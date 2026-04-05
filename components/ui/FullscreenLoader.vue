@@ -11,14 +11,14 @@
           <div class="absolute inset-0 rounded-full border-4 border-t-[#033958] border-r-transparent border-b-[#3BAB22] border-l-transparent animate-spin-slow"></div>
           
           <!-- Inner Pulse Circle -->
-          <div class="absolute inset-2 rounded-full bg-white shadow-inner flex items-center justify-center overflow-hidden animate-pulse-gentle">
+          <div class="absolute inset-2 rounded-full bg-white  flex items-center justify-center overflow-hidden animate-pulse-gentle">
             <img src="@/assets/img/logo.jpeg" class="w-full h-full object-cover" alt="Logo" />
           </div>
         </div>
 
         <!-- Loading Text -->
         <div class="mt-8 text-center">
-          <h2 class="text-[#033958] font-bold text-xl tracking-wider uppercase animate-bounce-subtle">
+          <h2 class="text-[#033958] font-bold text-xl tracking-wider  animate-bounce-subtle">
             Processing
           </h2>
           <div class="flex space-x-1 mt-2 justify-center">

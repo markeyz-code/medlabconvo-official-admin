@@ -8,13 +8,13 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Search publications..."
-            class="w-full sm:w-80 pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white shadow-sm"
+           
+            class="w-full sm:w-80 pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white "
           />
         </div>
         <select
           v-model="statusFilter"
-          class="w-full sm:w-auto px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white shadow-sm"
+          class="w-full sm:w-auto px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white "
         >
           <option value="">All Status</option>
           <option value="draft">Draft</option>
@@ -26,7 +26,7 @@
       </div>
       <button
         @click="openCreateModal"
-        class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+        class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-200 flex items-center justify-center space-x-2  hover: transform hover:-translate-y-0.5"
       >
         <Plus class="w-5 h-5" />
         <span>New Publication</span>
@@ -58,11 +58,11 @@
           :key="publication._id"
           :draggable="!searchQuery && !statusFilter"
           :class="[
-            'bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-lg transition-all duration-300 group relative',
+            'bg-white rounded-2xl  border border-slate-200 p-6 hover: transition-all duration-300 group relative',
             {
               'cursor-move': !searchQuery && !statusFilter,
               'opacity-50 scale-95': draggedIndex === index,
-              'border-amber-300 shadow-amber-100': dropTargetIndex === index && draggedIndex !== index,
+              'border-amber-300 -100': dropTargetIndex === index && draggedIndex !== index,
               'cursor-not-allowed opacity-60': reorderLoading
             }
           ]"
@@ -102,7 +102,7 @@
                   {{ publication.title }}
                 </h3>
                 <span
-                  :class="['px-3 py-1 text-xs font-semibold rounded-full w-fit', getStatusColor(publication.status)]"
+                  :class="['px-3 py-1 text-sm font-semibold rounded-full w-fit', getStatusColor(publication.status)]"
                 >
                   {{ formatStatus(publication.status) }}
                 </span>
@@ -148,7 +148,7 @@
                 </div>
                 <div
                   v-if="publication.images.length > 3"
-                  class="w-16 h-16 rounded-lg bg-slate-100 border-2 border-slate-200 flex items-center justify-center text-slate-500 text-xs font-medium"
+                  class="w-16 h-16 rounded-lg bg-slate-100 border-2 border-slate-200 flex items-center justify-center text-slate-500 text-sm font-medium"
                 >
                   +{{ publication.images.length - 3 }}
                 </div>
@@ -265,7 +265,7 @@
     <!-- Reorder Error Toast -->
     <div
       v-if="reorderError"
-      class="fixed bottom-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2"
+      class="fixed bottom-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg  z-50 flex items-center space-x-2"
     >
       <span>{{ reorderError }}</span>
       <button @click="resetReorderState" class="text-white hover:text-red-200">
@@ -276,7 +276,7 @@
     <!-- Reorder Success Toast -->
     <div
       v-if="reorderSuccess"
-      class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2"
+      class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg  z-50 flex items-center space-x-2"
     >
       <span>Publications reordered successfully!</span>
       <button @click="resetReorderState" class="text-white hover:text-green-200">

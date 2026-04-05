@@ -43,7 +43,7 @@
           </div>
         </div>
         
-        <h1 class="text-3xl font-bold text-slate-900 mb-2">
+        <h1 class="text-2xl font-bold text-slate-900 mb-2">
           {{ product.name }}
         </h1>
         <p class="text-lg text-indigo-600 font-medium mb-4">by {{ product.author }}</p>

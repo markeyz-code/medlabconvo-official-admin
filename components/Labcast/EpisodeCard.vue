@@ -21,7 +21,7 @@
                 {{ episode.description }}
               </p>
               
-              <div class="flex flex-wrap items-center gap-4 mt-3 text-sm text-gray-500">
+              <div class="flex flex-wrap items-center gap-4 mt-3 text-sm text-gray-900">
                 <span class="flex items-center">
                   <Icon name="lucide:layers" class="w-4 h-4 mr-1" />
                   S{{ episode.season }}E{{ episode.episode }}
@@ -39,14 +39,14 @@
               <!-- Hosts and Guest -->
               <div class="mt-3">
                 <div class="flex flex-wrap items-center gap-2 text-sm">
-                  <span class="text-gray-500">Hosts:</span>
-                  <span v-for="host in episode.hosts" :key="host" class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                  <span class="text-gray-900">Hosts:</span>
+                  <span v-for="host in episode.hosts" :key="host" class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                     {{ host }}
                   </span>
                 </div>
                 <div v-if="episode.guest" class="flex items-center gap-2 text-sm mt-2">
-                  <span class="text-gray-500">Guest:</span>
-                  <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                  <span class="text-gray-900">Guest:</span>
+                  <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
                     {{ episode.guest }} ({{ episode.guestTitle }})
                   </span>
                 </div>
@@ -57,13 +57,13 @@
                 <span
                   v-for="tag in episode.tags.slice(0, 3)"
                   :key="tag"
-                  class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs"
+                  class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
                 >
                   {{ tag }}
                 </span>
                 <span
                   v-if="episode.tags.length > 3"
-                  class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs"
+                  class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
                 >
                   +{{ episode.tags.length - 3 }} more
                 </span>
@@ -76,7 +76,7 @@
               <button
                 @click="$emit('toggle-status', episode)"
                 :class="[
-                  'inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-colors',
+                  'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors',
                   episode.isActive
                     ? 'bg-green-100 text-green-800 hover:bg-green-200'
                     : 'bg-gray-100 text-gray-800 hover:bg-gray-200'

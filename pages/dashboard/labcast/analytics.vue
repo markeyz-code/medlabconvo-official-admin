@@ -68,7 +68,7 @@
                       :style="{ width: `${(season.episodeCount / maxEpisodesInSeason) * 100}%` }"
                     ></div>
                   </div>
-                  <span class="text-sm text-gray-500 w-8 text-right">
+                  <span class="text-sm text-gray-900 w-8 text-right">
                     {{ season.episodeCount }}
                   </span>
                 </div>
@@ -76,7 +76,7 @@
             </div>
             <div v-else class="text-center py-8">
               <Icon name="lucide:bar-chart-3" class="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p class="text-gray-500">No season data available</p>
+              <p class="text-gray-900">No season data available</p>
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@
                       :style="{ width: `${(tag.count / maxTagCount) * 100}%` }"
                     ></div>
                   </div>
-                  <span class="text-sm text-gray-500 w-6 text-right">
+                  <span class="text-sm text-gray-900 w-6 text-right">
                     {{ tag.count }}
                   </span>
                 </div>
@@ -117,7 +117,7 @@
             </div>
             <div v-else class="text-center py-8">
               <Icon name="lucide:tag" class="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p class="text-gray-500">No tag data available</p>
+              <p class="text-gray-900">No tag data available</p>
             </div>
           </div>
         </div>
@@ -154,7 +154,7 @@
                   <h4 class="text-sm font-medium text-gray-900 truncate">
                     {{ episode.title }}
                   </h4>
-                  <p class="text-sm text-gray-500">
+                  <p class="text-sm text-gray-900">
                     S{{ episode.season }}E{{ episode.episode }} • 
                     {{ formatDate(episode.publishedAt) }}
                   </p>
@@ -162,7 +162,7 @@
                 <div class="flex items-center">
                   <span
                     :class="[
-                      'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium',
+                      'inline-flex items-center px-2 py-1 rounded-full text-sm font-medium',
                       episode.isActive
                         ? 'bg-green-100 text-green-800'
                         : 'bg-gray-100 text-gray-800'
@@ -175,7 +175,7 @@
             </div>
             <div v-else class="text-center py-8">
               <Icon name="lucide:activity" class="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p class="text-gray-500">No recent episodes</p>
+              <p class="text-gray-900">No recent episodes</p>
             </div>
           </div>
         </div>

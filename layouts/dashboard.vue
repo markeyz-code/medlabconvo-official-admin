@@ -9,30 +9,26 @@
 
     <!-- Navigation Sidebar -->
     <aside 
+      class="fixed left-0 top-0 h-full w-64 bg-white text-slate-800 z-40 border-r border-slate-100 transition-all duration-300"
       :class="[
-        'fixed left-0 top-0 h-full bg-[#033958] text-white transition-all duration-300 z-40 border-r border-white/10 shadow-2xl',
-        // Desktop behavior
-        'lg:translate-x-0',
-        sidebarOpen ? 'w-64' : 'w-20',
-        // Mobile behavior
-        sidebarOpen && isMobile ? 'translate-x-0 w-64' : isMobile ? '-translate-x-full w-64' : 'translate-x-0'
+        isMobile && !sidebarOpen ? '-translate-x-full' : 'translate-x-0'
       ]"
     >
       <!-- Logo Section -->
-      <div class="flex items-center h-20 px-6 border-b border-white/10 mb-4">
+      <div class="flex items-center h-20 px-6 border-b border-slate-50 mb-4">
         <div class="flex items-center space-x-3 overflow-hidden">
-          <img src="@/assets/img/logo.jpeg" class="h-10 w-10 rounded-md ring-2 ring-white/20" />
-          <span v-if="sidebarOpen" class="font-bold text-lg tracking-tight truncate uppercase">MedLabConvo</span>
+          <img src="@/assets/img/logo.jpeg" class="h-10 w-10 rounded-md ring-2 ring-slate-50" />
+          <span class="font-medium text-lg truncate text-slate-900">MedLabConvo</span>
         </div>
       </div>
 
       <!-- Navigation Menu -->
-      <nav class="px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-160px)] custom-scrollbar">
+      <nav class="px-3 pb-20 space-y-1 overflow-y-auto max-h-[calc(100vh-80px)] custom-scrollbar">
         <template v-for="item in navigationItems" :key="item.path || item.name">
           <!-- Divider -->
           <div v-if="item.type === 'divider'" class="py-4 px-4">
-            <div class="h-px bg-white/10 w-full"></div>
-            <span v-if="sidebarOpen" class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mt-2 block">Security & Access</span>
+            <div class="h-px bg-slate-100 w-full"></div>
+            <span class="text-sm font-medium text-slate-400 tracking-wider mt-3 block">Security & Access</span>
           </div>
 
           <!-- Nav Link -->
@@ -40,47 +36,34 @@
             v-else
             :to="item.path"
             :class="[
-              'group flex items-center px-4 py-3 rounded-lg transition-all duration-200 relative',
+              'group flex items-center px-4 py-3 rounded-xl transition-all duration-300 relative',
               $route.path === item.path 
-                ? 'bg-[#3BAB22] text-white' 
-                : 'text-blue-100/70 hover:bg-white/10 hover:text-white'
+                ? 'bg-[#033958] text-white' 
+                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
             ]"
             @click="isMobile && closeSidebar()"
           >
-            <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0', $route.path === item.path ? 'text-white' : 'text-blue-200/50 group-hover:text-white']" />
-            <span v-if="sidebarOpen" class="ml-4 font-semibold text-sm">{{ item.name }}</span>
+            <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110', $route.path === item.path ? 'text-white' : 'text-slate-400 group-hover:text-slate-900']" />
+            <span class="ml-4 font-medium text-sm tracking-tight">{{ item.name }}</span>
             
             <span 
-              v-if="sidebarOpen && item.badge && item.badge > 0" 
-              class="ml-auto px-2 py-0.5 text-[10px] font-bold rounded-full bg-white text-[#033958]"
+              v-if="item.badge && item.badge > 0" 
+              class="ml-auto px-2 py-0.5 text-sm font-medium rounded-lg bg-slate-100 text-slate-700"
             >
               {{ item.badge }}
             </span>
-
-            <!-- Tooltip for collapsed state -->
-            <div v-if="!sidebarOpen" class="absolute left-full ml-4 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
-              {{ item.name }}
-            </div>
           </NuxtLink>
         </template>
       </nav>
 
-      <!-- Logout & Toggle Section -->
-      <div class="absolute bottom-6 left-3 right-3 space-y-2">
-        <button
-          @click="toggleSidebar"
-          class="hidden lg:flex w-full items-center px-4 py-3 rounded-lg text-blue-100/50 hover:bg-white/10 hover:text-white transition-all"
-        >
-          <Icon :name="sidebarOpen ? 'heroicons:chevron-left' : 'heroicons:chevron-right'" class="w-5 h-5" />
-          <span v-if="sidebarOpen" class="ml-4 font-semibold text-sm">Collapse</span>
-        </button>
-        
+      <!-- Logout Section -->
+      <div class="absolute bottom-0 left-0 right-0 p-3 bg-white border-t border-slate-100">
         <button
           @click="showLogoutModal = true"
-          class="w-full flex items-center px-4 py-3 rounded-lg text-red-300 hover:bg-red-500/20 hover:text-red-100 transition-all font-semibold text-sm"
+          class="w-full flex items-center px-4 py-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-all font-medium text-sm group border border-red-100"
         >
-          <Icon name="heroicons:arrow-right-on-rectangle" class="w-5 h-5" />
-          <span v-if="sidebarOpen" class="ml-4">Sign Out</span>
+          <Icon name="heroicons:arrow-right-on-rectangle" class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          <span class="ml-3 font-semibold text-sm">Sign out</span>
         </button>
       </div>
     </aside>
@@ -88,21 +71,21 @@
     <!-- Main Content Area -->
     <main :class="[
       'transition-all duration-300 min-h-screen flex flex-col',
-      sidebarOpen && !isMobile ? 'lg:ml-64' : !isMobile ? 'lg:ml-20' : 'ml-0'
+      isMobile ? 'ml-0' : 'ml-64'
     ]">
       <!-- Top Header -->
       <header class="h-20 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-20">
         <div class="flex items-center space-x-6">
           <button
             @click="toggleSidebar"
-            class="lg:hidden p-2 rounded-lg hover:bg-slate-100 text-slate-600"
+            class="lg:hidden p-2 rounded-lg hover:bg-slate-50 text-slate-600"
           >
             <Icon name="heroicons:bars-3" class="w-6 h-6" />
           </button>
           
           <div>
-            <h1 class="text-xl font-bold text-slate-900 leading-tight">{{ currentPageTitle }}</h1>
-            <div class="flex items-center text-xs text-slate-500 mt-0.5 font-medium uppercase tracking-wider">
+            <h1 class="text-xl font-medium text-slate-900 leading-tight">{{ currentPageTitle }}</h1>
+            <div class="flex items-center text-sm text-slate-500 mt-0.5 font-medium ">
               <span>Admin</span>
               <Icon name="heroicons:chevron-right" class="w-3 h-3 mx-2 opacity-50" />
               <span class="text-blue-600">{{ currentPageTitle }}</span>
@@ -114,7 +97,7 @@
           <!-- Quick Action -->
           <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-200">
             <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span class="text-xs font-bold text-slate-600">System Live</span>
+            <span class="text-sm font-medium text-slate-600">System Live</span>
           </div>
 
           <!-- Vertical Divider -->
@@ -123,10 +106,10 @@
           <!-- User Profile -->
           <div class="flex items-center space-x-3 pl-2">
             <div class="text-right hidden sm:block">
-              <p class="text-sm font-bold text-slate-900 leading-none mb-1">{{ user?.firstName }} {{ user?.lastName }}</p>
-              <p class="text-[10px] font-bold text-blue-600 uppercase tracking-tighter">{{ user?.role?.replace('_', ' ') || 'Admin' }}</p>
+              <p class="text-sm font-medium text-slate-900 leading-none mb-1">{{ user?.firstName }} {{ user?.lastName }}</p>
+              <p class="text-sm font-medium text-blue-600 ">{{ user?.role?.replace('_', ' ') || 'Admin' }}</p>
             </div>
-            <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white font-bold ring-4 ring-slate-50 shadow-sm border border-white/10">
+            <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white font-medium ring-4 ring-slate-50 border border-white/10">
               {{ userInitials }}
             </div>
           </div>
@@ -138,8 +121,8 @@
         <!-- Page Title Description -->
         <div class="mb-10 pb-6 border-b border-slate-200 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div>
-            <h2 class="text-3xl font-extrabold text-slate-900 mb-2 leading-tight">{{ currentPageTitle }}</h2>
-            <p class="text-slate-500 max-w-2xl font-medium antialiased">{{ currentPageDescription }}</p>
+            <h2 class="text-2xl font-medium text-slate-900 mb-2 leading-tight tracking-tight">{{ currentPageTitle }}</h2>
+            <p class="text-slate-400 text-sm font-medium max-w-2xl leading-relaxed antialiased">{{ currentPageDescription }}</p>
           </div>
           <slot name="header-actions" />
         </div>
@@ -148,40 +131,40 @@
       </div>
       
       <!-- Footer -->
-      <footer class="py-6 px-10 border-t border-slate-200 text-slate-400 text-sm flex justify-between items-center">
+      <!-- <footer class="py-6 px-10 border-t border-slate-200 text-slate-400 text-sm flex justify-between items-center bg-white">
         <p>&copy; 2026 MedLabConvo Admin. All rights reserved.</p>
-        <div class="flex space-x-6">
+        <div class="flex space-x-6 font-medium text-sm">
           <a href="#" class="hover:text-blue-600 transition-colors">Support</a>
           <a href="#" class="hover:text-blue-600 transition-colors">Documentation</a>
         </div>
-      </footer>
+      </footer> -->
     </main>
 
     <!-- Logout Confirmation Modal -->
     <Modal v-model="showLogoutModal" title="Security Confirmation" size="sm">
-      <div class="p-4">
+      <div class="p-6">
         <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
           <Icon name="heroicons:exclamation-triangle" class="w-8 h-8 text-red-600" />
         </div>
-        <div class="text-center mb-8">
-          <h3 class="text-xl font-bold text-slate-900 mb-2">Ready to Leave?</h3>
-          <p class="text-slate-500 font-medium">Your current session will be terminated and you'll need to re-authenticate to access the portal.</p>
+        <div class="text-center mb-10">
+          <h3 class="text-xl font-medium text-slate-900 mb-2 tracking-tight">Ready to leave?</h3>
+          <p class="text-slate-400 text-sm font-medium leading-relaxed">Your current session will be terminated and you'll need to re-authenticate to access the portal.</p>
         </div>
         
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-4">
           <button
             @click="showLogoutModal = false"
-            class="px-4 py-3 text-sm font-bold text-slate-700 bg-slate-100 rounded-xl hover:bg-slate-200 transition-all border border-slate-200"
+            class="px-4 py-2.5 text-sm font-medium text-slate-500 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-all border border-slate-100"
           >
-            Stay Logged In
+            Stay Active
           </button>
           <button
             @click="confirmLogout"
             :disabled="logoutLoading"
-            class="px-4 py-3 text-sm font-bold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-all shadow-md shadow-red-200 flex items-center justify-center space-x-2"
+            class="px-4 py-2.5 text-sm font-medium text-white bg-red-600 rounded-2xl hover:bg-red-700 transition-all flex items-center justify-center space-x-2"
           >
             <div v-if="logoutLoading" class="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white"></div>
-            <span>{{ logoutLoading ? 'Signing out...' : 'Confirm Logout' }}</span>
+            <span>{{ logoutLoading ? 'Leaving...' : 'Confirm Signout' }}</span>
           </button>
         </div>
       </div>
@@ -190,12 +173,12 @@
     <!-- Global Loading Overlay -->
     <transition name="fade">
       <div v-if="globalLoading" class="fixed inset-0 bg-[#033958]/10 backdrop-blur-sm flex items-center justify-center z-[100]">
-        <div class="bg-white rounded-2xl p-8 shadow-2xl border border-slate-200 flex flex-col items-center">
-          <div class="relative w-16 h-16 mb-4">
+        <div class="bg-white rounded-[2rem] p-10 border border-slate-100 flex flex-col items-center">
+          <div class="relative w-16 h-16 mb-6">
             <div class="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
             <div class="absolute inset-0 border-4 border-[#033958] rounded-full border-t-transparent animate-spin"></div>
           </div>
-          <span class="text-slate-900 font-bold tracking-tight">Authenticating...</span>
+          <span class="text-slate-900 font-medium text-sm">Authenticating protocol...</span>
         </div>
       </div>
     </transition>
@@ -251,21 +234,20 @@ const navigationItems = computed(() => [
   { name: 'Users', path: '/dashboard/users', icon: 'heroicons:users', badge: users.value?.length },
   { name: 'Teams', path: '/dashboard/teams', icon: 'heroicons:user-group', badge: teamMembers.value?.length },
   { name: 'Enquiries', path: '/dashboard/enquiries', icon: 'heroicons:chat-bubble-left-right', badge: enquiries.value?.length },
-  { name: 'Subscribers', path: '/dashboard/subscriptions', icon: 'heroicons:envelope', badge: subscriptions.value?.length },
+  { name: 'Subscriptions', path: '/dashboard/subscriptions', icon: 'heroicons:envelope', badge: subscriptions.value?.length },
   { name: 'Publications', path: '/dashboard/publications', icon: 'heroicons:document-text', badge: publications.value?.length },
   { name: 'LabCast', path: '/dashboard/labcast', icon: 'heroicons:microphone', badge: labcasts.value?.length },
-  { name: 'Inventory', path: '/dashboard/products', icon: 'heroicons:shopping-cart', badge: products.value?.length },
+  { name: 'Inventory', path: '/dashboard/products', icon: 'heroicons:archive-box', badge: products.value?.length },
   { name: 'Programs', path: '/dashboard/programs', icon: 'heroicons:academic-cap', badge: programs.value?.length },
-  { name: 'Blog Posts', path: '/dashboard/blogs', icon: 'heroicons:newspaper', badge: blogs.value?.length },
-  { name: 'Dynamic Forms', path: '/dashboard/forms', icon: 'heroicons:clipboard-document-list', badge: forms.value?.length },
-  { name: 'Convo Stack', path: '/dashboard/convostack', icon: 'heroicons:book-open', badge: null },
-  { name: 'CMS', path: '/dashboard/cms', icon: 'heroicons:document-text', badge: null },
+  { name: 'Blogs', path: '/dashboard/blogs', icon: 'heroicons:newspaper', badge: blogs.value?.length },
+  { name: 'Forms', path: '/dashboard/forms', icon: 'heroicons:clipboard-document-list', badge: forms.value?.length },
+  { name: 'Content', path: '/dashboard/convostack', icon: 'heroicons:book-open', badge: null },
+  { name: 'CMS', path: '/dashboard/cms', icon: 'heroicons:document-duplicate', badge: null },
   
   // Separator / Section for Access Control
   { name: 'divider', path: '', icon: '', badge: null, type: 'divider' },
-  { name: 'Role Management', path: '/dashboard/access-control/roles', icon: 'heroicons:shield-check', badge: null },
+  { name: 'Roles', path: '/dashboard/access-control/roles', icon: 'heroicons:shield-check', badge: null },
   { name: 'Permissions', path: '/dashboard/access-control/permissions', icon: 'heroicons:key', badge: null },
-  
   { name: 'Audit Logs', path: '/dashboard/audit', icon: 'heroicons:finger-print', badge: auditLogs.value?.length },
 ])
 
@@ -291,7 +273,8 @@ const currentPageDescription = computed(() => {
     '/dashboard/cms': 'Manage all dynamic content and pages across your platform seamlessly.',
     '/dashboard/audit': 'View security logs and system activity history.',
     '/dashboard/access-control/roles': 'Define group-based permissions and system roles.',
-    '/dashboard/access-control/permissions': 'Manage individual granular system permissions.'
+    '/dashboard/access-control/permissions': 'Manage individual granular system permissions.',
+    '/dashboard/style-guide': 'Developer reference for medlabconvo design components.'
   }
   return descriptions[route.path as keyof typeof descriptions] || 'Manage your MedLabConvo platform settings.'
 })
@@ -355,8 +338,8 @@ onUnmounted(() => window.removeEventListener('resize', checkMobile))
 <style>
 .custom-scrollbar::-webkit-scrollbar { width: 4px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.05); border-radius: 10px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.1); }
 
 .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }

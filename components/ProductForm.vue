@@ -1,738 +1,562 @@
 <template>
-    <div class="max-w-4xl mx-auto">
-      <!-- Progress Steps -->
-      <div class="mb-8">
-        <div class="flex items-center justify-between">
-          <div
-            v-for="(step, index) in steps"
-            :key="index"
-            class="flex items-center"
-            :class="{ 'flex-1': index < steps.length - 1 }"
+  <div class="animate-in slide-in-from-right duration-500">
+    <!-- Premium Step Indicator -->
+    <div class="mb-10">
+      <div class="flex items-center justify-between px-2">
+        <div
+          v-for="(step, index) in steps"
+          :key="index"
+          class="flex flex-col items-center relative flex-1"
+        >
+          <!-- Progress Line -->
+          <div 
+            v-if="index < steps.length - 1"
+            class="absolute top-4 left-1/2 w-full h-[1px] bg-slate-100 -z-10"
           >
-            <div class="flex items-center">
-              <div
-                :class="[
-                  'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200',
-                  currentStep > index ? 'bg-indigo-600 text-white' : currentStep === index ? 'bg-indigo-100 text-indigo-600 border-2 border-indigo-600' : 'bg-gray-100 text-gray-400'
-                ]"
-              >
-                <Check v-if="currentStep > index" class="w-4 h-4" />
-                <span v-else>{{ index + 1 }}</span>
-              </div>
-              <span
-                :class="[
-                  'ml-2 text-sm font-medium',
-                  currentStep >= index ? 'text-indigo-600' : 'text-gray-400'
-                ]"
-              >
-                {{ step.title }}
-              </span>
-            </div>
-            <div
-              v-if="index < steps.length - 1"
-              :class="[
-                'flex-1 h-0.5 mx-4 transition-all duration-200',
-                currentStep > index ? 'bg-indigo-600' : 'bg-gray-200'
-              ]"
+            <div 
+              class="h-full bg-[#033958] transition-all duration-500"
+              :style="{ width: currentStep > index ? '100%' : '0%' }"
             ></div>
           </div>
+
+          <div
+            @click="currentStep = index"
+            :class="[
+              'w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-bold transition-all duration-500 cursor-pointer',
+              currentStep === index 
+                ? 'bg-[#033958] text-white ring-4 ring-[#033958]/10' 
+                : currentStep > index 
+                ? 'bg-emerald-500 text-white' 
+                : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-slate-100'
+            ]"
+          >
+            <Icon v-if="currentStep > index" name="heroicons:check" class="w-5 h-5" />
+            <span v-else>{{ index + 1 }}</span>
+          </div>
+          <span
+            :class="[
+              'mt-3 text-[10px] font-bold transition-colors duration-500 text-center px-1',
+              currentStep >= index ? 'text-[#033958]' : 'text-slate-300'
+            ]"
+          >
+            {{ step.title }}
+          </span>
         </div>
       </div>
-  
-      <!-- Step Content -->
-      <form @submit.prevent="handleSubmit" class="space-y-6">
-        <!-- Step 1: Basic Information -->
-        <div v-if="currentStep === 0" class="space-y-6">
-          <div class="text-center mb-6">
-            <h3 class="text-lg font-semibold text-gray-900">Basic Product Information</h3>
-            <p class="text-sm text-gray-600">Enter the essential details of your product</p>
+    </div>
+
+    <!-- Step Content -->
+    <form @submit.prevent="handleSubmit" class="space-y-8">
+      <!-- Step 1: Base Product Data -->
+      <div v-if="currentStep === 0" class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <header class="mb-8">
+          <h3 class="text-xl font-bold text-slate-900 mb-1">Product Fundamentals</h3>
+          <p class="text-sm text-slate-500">Define the core attributes and pricing of your marketplace asset.</p>
+        </header>
+
+        <div class="space-y-4">
+          <AnimatedInput
+            v-model="form.name"
+            id="productName"
+            label="Product Title"
+            type="text"
+            required
+            position="top"
+          />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+            <SelectInput
+              v-model="form.category"
+              label="Product Category"
+              :options="categoryOptions"
+              position="middle"
+            />
+            <AnimatedInput
+              v-model="form.author"
+              id="productAuthor"
+              label="Author / Contributor"
+              type="text"
+              required
+              position="middle"
+            />
           </div>
-  
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Product Name *
-              </label>
-              <input
-                v-model="form.name"
-                type="text"
-                required
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="Enter product name..."
-              />
-            </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Category *
-              </label>
-              <select
-                v-model="form.category"
-                required
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-              >
-                <option value="">Select category</option>
-                <option value="books">Books</option>
-                <option value="courses">Courses</option>
-                <option value="ebooks">E-books</option>
-                <option value="audiobooks">Audiobooks</option>
-                <option value="software">Software</option>
-                <option value="templates">Templates</option>
-              </select>
-            </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Author *
-              </label>
-              <input
-                v-model="form.author"
-                type="text"
-                required
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="Enter author name..."
-              />
-            </div>
-  
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Description *
-              </label>
-              <textarea
-                v-model="form.description"
-                rows="4"
-                required
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none"
-                placeholder="Provide a detailed description of your product..."
-              ></textarea>
-            </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Price *
-              </label>
-              <input
-                v-model.number="form.price"
-                type="number"
-                required
-                min="0"
-                step="0.01"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="0.00"
-              />
-            </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Original Price
-              </label>
-              <input
-                v-model.number="form.originalPrice"
-                type="number"
-                min="0"
-                step="0.01"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="0.00"
-              />
-            </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Stock Quantity *
-              </label>
-              <input
-                v-model.number="form.stock"
-                type="number"
-                required
-                min="0"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="0"
-              />
-            </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Status
-              </label>
-              <select
-                v-model="form.status"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-              >
-                <option value="draft">Draft</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-          </div>
-  
-          <div class="flex items-center space-x-6">
-            <label class="flex items-center">
+          <AnimatedInput
+            v-model="form.description"
+            id="productDesc"
+            label="Product Narrative / Description"
+            type="textarea"
+            :rows="5"
+            required
+            position="bottom"
+          />
+        </div>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-slate-50">
+          <AnimatedInput
+            v-model="form.price"
+            id="productPrice"
+            label="Sales Price (₦)"
+            type="number"
+            required
+          />
+          <AnimatedInput
+            v-model="form.originalPrice"
+            id="productOrigPrice"
+            label="Regular Price (₦)"
+            type="number"
+          />
+          <AnimatedInput
+            v-model="form.stock"
+            id="productStock"
+            label="Stock Level"
+            type="number"
+            required
+          />
+        </section>
+
+        <section class="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-8">
+          <label class="flex items-center group cursor-pointer">
+            <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#033958] transition-colors">
               <input
                 v-model="form.isDigital"
                 type="checkbox"
-                class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                class="absolute opacity-0 w-full h-full cursor-pointer z-10"
               />
-              <span class="ml-2 text-sm text-slate-700">Digital Product</span>
-            </label>
-          </div>
-        </div>
-  
-        <!-- Step 2: Category-Specific Details -->
-        <div v-if="currentStep === 1" class="space-y-6">
-          <div class="text-center mb-6">
-            <h3 class="text-lg font-semibold text-gray-900">Product Details</h3>
-            <p class="text-sm text-gray-600">Add category-specific information</p>
-          </div>
-  
-          <!-- Book-specific fields -->
-          <div v-if="form.category === 'books'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                ISBN
-              </label>
-              <input
-                v-model="form.isbn"
-                type="text"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="978-123-456-789-0"
-              />
+              <div v-if="form.isDigital" class="w-2.5 h-2.5 bg-[#033958] rounded-sm"></div>
             </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Publisher
-              </label>
-              <input
+            <span class="ml-3 text-[10px] font-bold text-slate-700">Digital asset</span>
+          </label>
+
+          <SelectInput
+            v-model="form.status"
+            label="Marketplace Status"
+            :options="[
+              {label:'Draft',value:'draft'},
+              {label:'Active',value:'active'},
+              {label:'Inactive',value:'inactive'}
+            ]"
+            class="flex-1"
+          />
+        </section>
+      </div>
+
+      <!-- Step 2: Technical Specifications -->
+      <div v-if="currentStep === 1" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <header class="mb-8">
+          <h3 class="text-xl font-bold text-slate-900 mb-1">Technical Inventory</h3>
+          <p class="text-sm text-slate-500">Detailed specifications tailored to the product category.</p>
+        </header>
+
+        <!-- Book-specific fields -->
+        <div v-if="form.category === 'books' || form.category === 'ebooks'" class="space-y-4">
+          <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Bibliographic details</h4>
+          <div class="space-y-4">
+            <AnimatedInput
+              v-model="form.isbn"
+              id="productIsbn"
+              label="ISBN Identifier"
+              type="text"
+              position="top"
+            />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+              <AnimatedInput
                 v-model="form.publisher"
+                id="productPublisher"
+                label="Publisher Name"
                 type="text"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="Publisher name..."
+                position="middle"
               />
-            </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Publication Date
-              </label>
-              <input
+              <AnimatedInput
                 v-model="form.publicationDate"
+                id="productPubDate"
+                label="Release Date"
                 type="date"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                position="middle"
               />
             </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Pages
-              </label>
-              <input
-                v-model.number="form.pages"
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+              <AnimatedInput
+                v-model="form.pages"
+                id="productPages"
+                label="Page Count"
                 type="number"
-                min="1"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="Number of pages"
+                position="bottom"
               />
-            </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Weight (kg)
-              </label>
-              <input
-                v-model.number="form.weight"
+              <AnimatedInput
+                v-model="form.weight"
+                id="productWeight"
+                label="Shipping Weight (kg)"
                 type="number"
-                min="0"
-                step="0.01"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="0.00"
+                position="bottom"
               />
-            </div>
-          </div>
-  
-          <!-- Course-specific fields -->
-          <div v-if="form.category === 'courses'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Duration (hours)
-              </label>
-              <input
-                v-model.number="form.duration"
-                type="number"
-                min="1"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="Course duration in hours"
-              />
-            </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Instructor
-              </label>
-              <input
-                v-model="form.instructor"
-                type="text"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="Instructor name..."
-              />
-            </div>
-  
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Video URL
-              </label>
-              <input
-                v-model="form.videoUrl"
-                type="url"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="https://example.com/video.mp4"
-              />
-            </div>
-          </div>
-  
-          <!-- Dimensions (for physical products) -->
-          <div v-if="!form.isDigital" class="space-y-4">
-            <h4 class="font-medium text-slate-900">Dimensions (cm)</h4>
-            <div class="grid grid-cols-3 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-slate-700 mb-2">
-                  Length
-                </label>
-                <input
-                  v-model.number="form.dimensions.length"
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                  placeholder="0.0"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-slate-700 mb-2">
-                  Width
-                </label>
-                <input
-                  v-model.number="form.dimensions.width"
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                  placeholder="0.0"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-slate-700 mb-2">
-                  Height
-                </label>
-                <input
-                  v-model.number="form.dimensions.height"
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                  placeholder="0.0"
-                />
-              </div>
             </div>
           </div>
         </div>
-  
-        <!-- Step 3: Media and Features -->
-        <div v-if="currentStep === 2" class="space-y-6">
-          <div class="text-center mb-6">
-            <h3 class="text-lg font-semibold text-gray-900">Media & Features</h3>
-            <p class="text-sm text-gray-600">Add images, features, and digital content</p>
+
+        <!-- Course-specific fields -->
+        <div v-if="form.category === 'courses'" class="space-y-4">
+          <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Academy details</h4>
+          <div class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+              <AnimatedInput
+                v-model="form.duration"
+                id="productDuration"
+                label="Total Course Hours"
+                type="number"
+                position="top"
+              />
+              <AnimatedInput
+                v-model="form.instructor"
+                id="productInstructor"
+                label="Primary Instructor"
+                type="text"
+                position="top"
+              />
+            </div>
+            <AnimatedInput
+              v-model="form.videoUrl"
+              id="productVideoUrl"
+              label="Introductory Video URL"
+              type="url"
+              position="bottom"
+            />
           </div>
-  
-          <!-- Main Image -->
+        </div>
+
+        <!-- Dimensions (for physical products) -->
+        <div v-if="!form.isDigital" class="pt-6 border-t border-slate-50">
+          <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Logistics / dimensions (cm)</h4>
+          <div class="grid grid-cols-3 gap-0">
+            <AnimatedInput v-model="form.dimensions.length" id="dimLength" label="Length" type="number" position="middle" />
+            <AnimatedInput v-model="form.dimensions.width" id="dimWidth" label="Width" type="number" position="middle" />
+            <AnimatedInput v-model="form.dimensions.height" id="dimHeight" label="Height" type="number" position="middle" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Brand Assets & Delivery -->
+      <div v-if="currentStep === 2" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <header class="mb-8">
+          <h3 class="text-xl font-bold text-slate-900 mb-1">Showcase & Fulfillment</h3>
+          <p class="text-sm text-slate-500">Upload high-fidelity product imagery and delivery endpoints.</p>
+        </header>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">
-              Main Product Image *
-            </label>
+            <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Hero asset (cover)</h4>
             <ImageUpload
               v-model="form.imageUrl"
               :multiple="false"
               folder="products"
+              class="rounded-3xl border border-slate-100"
             />
           </div>
-  
-          <!-- Image Gallery -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">
-              Image Gallery
-            </label>
+            <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Asset portfolio</h4>
             <ImageUpload
               v-model="form.imageGallery"
               :multiple="true"
               folder="products"
+              class="rounded-3xl border border-slate-100"
             />
           </div>
-  
-          <!-- Features -->
+        </section>
+
+        <!-- Digital Delivery -->
+        <section v-if="form.isDigital" class="pt-6 border-t border-slate-50">
+          <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Fulfillment linkage</h4>
+          <div class="space-y-4">
+            <AnimatedInput v-model="form.downloadUrl" id="dlUrl" label="Secured Download Gateway (URL)" type="url" position="top" />
+            <AnimatedInput v-model="form.previewUrl" id="prevUrl" label="Public Asset Preview (URL)" type="url" position="bottom" />
+          </div>
+        </section>
+
+        <!-- Features & Tags -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-slate-50">
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">
-              Product Features
-            </label>
-            <div class="space-y-2">
-              <div
-                v-for="(feature, index) in form.features"
-                :key="index"
-                class="flex items-center space-x-2"
-              >
-                <input
-                  v-model="form.features[index]"
-                  type="text"
-                  class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                  placeholder="Enter feature..."
-                />
-                <button
-                  v-if="form.features.length > 1"
-                  @click="removeFeature(index)"
-                  type="button"
-                  class="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                >
-                  <Trash2 class="w-4 h-4" />
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-[10px] font-bold text-slate-400 px-1">Core features</h4>
+              <button @click="addFeature" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add</button>
+            </div>
+            <div class="space-y-3">
+              <div v-for="(feature, index) in form.features" :key="index" class="flex items-center group">
+                <div class="flex-1">
+                  <AnimatedInput v-model="form.features[index]" :id="'feat-'+index" label="Feature Description" />
+                </div>
+                <button v-if="form.features.length > 1" @click="removeFeature(index)" class="ml-2 p-3 text-slate-300 hover:text-red-500 transition-colors">
+                  <Icon name="heroicons:trash" class="w-5 h-5" />
                 </button>
               </div>
-              <button
-                @click="addFeature"
-                type="button"
-                class="inline-flex items-center px-3 py-2 text-sm text-indigo-600 hover:text-indigo-700 transition-colors"
-              >
-                <Plus class="w-4 h-4 mr-1" />
-                Add Feature
-              </button>
             </div>
           </div>
-  
-          <!-- Tags -->
+
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">
-              Tags
-            </label>
-            <input
+            <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Search keywords (tags)</h4>
+            <AnimatedInput
               v-model="tagsInput"
+              id="productTags"
+              label="Comma separated keywords"
               type="text"
-              class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-              placeholder="Enter tags separated by commas"
               @input="updateTags"
             />
-            <div v-if="form.tags.length" class="flex flex-wrap gap-2 mt-2">
-              <span
-                v-for="tag in form.tags"
-                :key="tag"
-                class="inline-flex items-center px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm"
-              >
+            <div v-if="form.tags.length" class="flex flex-wrap gap-2 mt-4">
+              <span v-for="tag in form.tags" :key="tag" class="px-3 py-1 bg-slate-50 text-slate-600 text-[10px] font-bold rounded-full border border-slate-100 flex items-center">
                 {{ tag }}
-                <button
-                  @click="removeTag(tag)"
-                  type="button"
-                  class="ml-1 text-indigo-600 hover:text-indigo-800 transition-colors"
-                >
-                  <X class="w-3 h-3" />
+                <button @click="removeTag(tag)" class="ml-2 hover:text-red-500 transition-colors">
+                  <Icon name="heroicons:x-mark" class="w-3 h-3" />
                 </button>
               </span>
             </div>
           </div>
-  
-          <!-- Digital Content URLs -->
-          <div v-if="form.isDigital" class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Download URL
-              </label>
-              <input
-                v-model="form.downloadUrl"
-                type="url"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="https://example.com/download/file.pdf"
-              />
-            </div>
-  
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-2">
-                Preview URL
-              </label>
-              <input
-                v-model="form.previewUrl"
-                type="url"
-                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="https://example.com/preview/file.pdf"
-              />
-            </div>
-          </div>
-        </div>
-  
-        <!-- Step 4: Review -->
-        <div v-if="currentStep === 3" class="space-y-6">
-          <div class="text-center mb-6">
-            <h3 class="text-lg font-semibold text-gray-900">Review & Submit</h3>
-            <p class="text-sm text-gray-600">Review your product details before submitting</p>
-          </div>
-  
-          <div class="bg-slate-50 rounded-xl p-6 space-y-4">
-            <div>
-              <h4 class="font-semibold text-slate-900 mb-2">Product Overview</h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span class="text-slate-600">Name:</span>
-                  <span class="ml-2 font-medium">{{ form.name }}</span>
-                </div>
-                <div>
-                  <span class="text-slate-600">Category:</span>
-                  <span class="ml-2 font-medium">{{ form.category }}</span>
-                </div>
-                <div>
-                  <span class="text-slate-600">Author:</span>
-                  <span class="ml-2 font-medium">{{ form.author }}</span>
-                </div>
-                <div>
-                  <span class="text-slate-600">Price:</span>
-                  <span class="ml-2 font-medium">₦{{ formatPrice(form.price) }}</span>
-                </div>
-                <div>
-                  <span class="text-slate-600">Stock:</span>
-                  <span class="ml-2 font-medium">{{ form.stock }}</span>
-                </div>
-                <div>
-                  <span class="text-slate-600">Status:</span>
-                  <span class="ml-2 font-medium">{{ form.status }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between pt-6 border-t border-slate-200">
-          <div>
-            <button
-              v-if="currentStep > 0"
-              @click="previousStep"
-              type="button"
-              class="px-6 py-3 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-all duration-200 inline-flex items-center space-x-2"
-            >
-              <ChevronLeft class="w-4 h-4" />
-              <span>Previous</span>
-            </button>
-          </div>
-  
-          <div class="flex space-x-3">
-            <button
-              @click="$emit('cancel')"
-              type="button"
-              class="px-6 py-3 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-all duration-200"
-            >
-              Cancel
-            </button>
-            
-            <button
-              v-if="currentStep < steps.length - 1"
-              @click="nextStep"
-              type="button"
-              class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:from-indigo-700 hover:to-blue-700 transition-all duration-200 inline-flex items-center space-x-2"
-            >
-              <span>Next</span>
-              <ChevronRight class="w-4 h-4" />
-            </button>
-            
-            <button
-              v-else
-              type="submit"
-              :disabled="isSubmitting"
-              class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:from-indigo-700 hover:to-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center space-x-2"
-            >
-              <Loader2 v-if="isSubmitting" class="w-4 h-4 animate-spin" />
-              <span>{{ product ? 'Update' : 'Create' }} Product</span>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { reactive, ref, watchEffect, computed } from 'vue'
-  import {
-    Check, Plus, Trash2, ChevronLeft, ChevronRight, Loader2, X
-  } from 'lucide-vue-next'
-  import { useCreateProduct } from "@/composables/modules/products/useCreateProduct"
-  import { useUpdateProduct } from "@/composables/modules/products/useUpdateProduct"
-  import { useCustomToast } from '@/composables/core/useCustomToast'
-  
-  interface Props {
-    product?: any
-  }
-  
-  const props = defineProps<Props>()
-  const emit = defineEmits(['saved', 'cancel'])
-  
-  const currentStep = ref(0)
-  const tagsInput = ref('')
-  
-  const steps = [
-    { title: 'Basic Info', description: 'Product details' },
-    { title: 'Details', description: 'Category-specific' },
-    { title: 'Media', description: 'Images & features' },
-    { title: 'Review', description: 'Final review' }
-  ]
-  
-  // Composables
-  const {
-    loading: createLoading,
-    error: createError,
-    success: createSuccess,
-    product: createdProduct,
-    createProduct: performCreateProduct,
-    resetState: resetCreateState
-  } = useCreateProduct()
-  
-  const {
-    loading: updateLoading,
-    error: updateError,
-    success: updateSuccess,
-    product: updatedProduct,
-    updateProduct: performUpdateProduct,
-    resetState: resetUpdateState
-  } = useUpdateProduct()
-  
-  const form = reactive({
-    name: '',
-    description: '',
-    category: '',
-    author: '',
-    price: 0,
-    originalPrice: 0,
-    stock: 0,
-    status: 'draft',
-    availability: 'available',
-    isDigital: false,
-    imageUrl: '',
-    imageGallery: [] as string[],
-    features: [''],
-    tags: [] as string[],
-    // Book-specific
-    isbn: '',
-    publisher: '',
-    publicationDate: '',
-    pages: 0,
-    weight: 0,
-    dimensions: {
-      length: 0,
-      width: 0,
-      height: 0
-    },
-    // Course-specific
-    duration: 0,
-    instructor: '',
-    videoUrl: '',
-    // Digital content
-    downloadUrl: '',
-    previewUrl: ''
-  })
-  
-  // Initialize form with product data if editing
-  watchEffect(() => {
-    if (props.product) {
-      Object.assign(form, {
-        name: props.product.name || '',
-        description: props.product.description || '',
-        category: props.product.category || '',
-        author: props.product.author || '',
-        price: props.product.price || 0,
-        originalPrice: props.product.originalPrice || 0,
-        stock: props.product.stock || 0,
-        status: props.product.status || 'draft',
-        availability: props.product.availability || 'available',
-        isDigital: props.product.isDigital || false,
-        imageUrl: props.product.imageUrl || '',
-        imageGallery: props.product.imageGallery || [],
-        features: props.product.features?.length ? props.product.features : [''],
-        tags: props.product.tags || [],
-        isbn: props.product.isbn || '',
-        publisher: props.product.publisher || '',
-        publicationDate: props.product.publicationDate ? new Date(props.product.publicationDate).toISOString().split('T')[0] : '',
-        pages: props.product.pages || 0,
-        weight: props.product.weight || 0,
-        dimensions: props.product.dimensions || { length: 0, width: 0, height: 0 },
-        duration: props.product.duration || 0,
-        instructor: props.product.instructor || '',
-        videoUrl: props.product.videoUrl || '',
-        downloadUrl: props.product.downloadUrl || '',
-        previewUrl: props.product.previewUrl || ''
-      })
-      tagsInput.value = props.product.tags?.join(', ') || ''
-    }
-  })
-  
-  // Navigation methods
-  const nextStep = () => {
-    if (currentStep.value < steps.length - 1) {
-      currentStep.value++
-    }
-  }
-  
-  const previousStep = () => {
-    if (currentStep.value > 0) {
-      currentStep.value--
-    }
-  }
-  
-  // Array management methods
-  const addFeature = () => form.features.push('')
-  const removeFeature = (index: number) => form.features.splice(index, 1)
-  
-  const updateTags = () => {
-    form.tags = tagsInput.value
-      .split(',')
-      .map(tag => tag.trim())
-      .filter(tag => tag.length > 0)
-  }
-  
-  const removeTag = (tagToRemove: string) => {
-    form.tags = form.tags.filter(tag => tag !== tagToRemove)
-    tagsInput.value = form.tags.join(', ')
-  }
-  
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-NG').format(price)
-  }
-  
-  const { showToast } = useCustomToast()
+        </section>
+      </div>
 
-  const handleSubmit = async () => {
-    if (!form.name.trim() || !form.category.trim() || !form.author.trim() || !form.description.trim()) {
-      showToast({ title: "Validation Error", message: "Name, Category, Author, and Description are required.", toastType: "error" });
-      return;
-    }
-    if (form.price <= 0) {
-      showToast({ title: "Validation Error", message: "Price must be greater than zero.", toastType: "error" });
-      return;
-    }
-    isSubmitting.value = true
-    try {
-      // Clean up arrays and prepare data
-      const cleanedForm = {
-        ...form,
-        features: form.features.filter(feature => feature.trim()),
-        publicationDate: form.publicationDate ? new Date(form.publicationDate).toISOString() : undefined
-      }
-      
-      if (props.product) {
-        await performUpdateProduct(props.product._id, cleanedForm)
-        if (updateSuccess.value) {
-          emit('saved')
-        }
-      } else {
-        await performCreateProduct(cleanedForm)
-        if (createSuccess.value) {
-          emit('saved')
-        }
-      }
-    } finally {
-      isSubmitting.value = false
-    }
+      <!-- Step 4: Final Review -->
+      <div v-if="currentStep === 3" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <header class="mb-8 text-center text-slate-900 font-bold tracking-tight">
+          <h3 class="text-xl">Marketplace compliance</h3>
+        </header>
+
+        <div class="bg-[#1A1A1B09] rounded-3xl p-8 border border-slate-100 space-y-8">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="space-y-1">
+              <span class="text-[9px] font-bold text-slate-400">Inventory status</span>
+              <p class="text-sm font-bold text-slate-900">{{ form.stock }} Units Reserved</p>
+            </div>
+            <div class="space-y-1">
+              <span class="text-[9px] font-bold text-slate-400">Public pricing</span>
+              <p class="text-sm font-bold text-slate-900">₦{{ formatPrice(form.price) }}</p>
+            </div>
+            <div class="space-y-1">
+              <span class="text-[9px] font-bold text-slate-400">Asset type</span>
+              <p class="text-sm font-bold text-slate-900">{{ form.isDigital ? 'Digital' : 'Physical' }} Marketplace</p>
+            </div>
+            <div class="space-y-1">
+              <span class="text-[9px] font-bold text-slate-400">Launch configuration</span>
+              <p :class="['text-sm font-bold capitalize', form.status === 'active' ? 'text-emerald-600' : 'text-slate-400']">{{ form.status }}</p>
+            </div>
+          </div>
+
+          <div class="p-6 bg-white rounded-2xl border border-slate-100 ">
+            <h4 class="text-sm font-bold text-slate-900 mb-2">{{ form.name }}</h4>
+            <p class="text-sm text-slate-500 ">{{ form.author }} · {{ form.category }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Footer -->
+      <div class="flex items-center justify-between pt-8 border-t border-slate-100">
+        <button
+          v-if="currentStep > 0"
+          @click="previousStep"
+          type="button"
+          class="px-8 py-3 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors inline-flex items-center space-x-2"
+        >
+          <Icon name="heroicons:arrow-left" class="w-4 h-4" />
+          <span>Previous</span>
+        </button>
+        <div v-else></div>
+
+        <div class="flex items-center space-x-4">
+          <button
+            @click="$emit('cancel')"
+            type="button"
+            class="px-6 py-3 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
+          >
+            Discard
+          </button>
+          
+          <button
+            v-if="currentStep < steps.length - 1"
+            @click="nextStep"
+            type="button"
+            class="px-10 py-3 bg-[#033958] text-white text-sm font-bold rounded-xl hover:bg-[#022a41] transition-all active:scale-95 inline-flex items-center space-x-2"
+          >
+            <span>Continue</span>
+            <Icon name="heroicons:arrow-right" class="w-4 h-4" />
+          </button>
+          
+          <button
+            v-else
+            type="submit"
+            :disabled="isSubmitting"
+            class="px-12 py-3 bg-[#033958] text-white text-sm font-bold rounded-xl hover:bg-[#022a41] transition-all active:scale-95 disabled:opacity-50 inline-flex items-center space-x-3"
+          >
+            <div v-if="isSubmitting" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+            <span>{{ product ? 'Update product' : 'Create product' }}</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { reactive, ref, watchEffect, computed } from 'vue'
+import { useCreateProduct } from "@/composables/modules/products/useCreateProduct"
+import { useUpdateProduct } from "@/composables/modules/products/useUpdateProduct"
+import { useCustomToast } from '@/composables/core/useCustomToast'
+import AnimatedInput from '@/components/ui/AnimatedInput.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
+import ImageUpload from '@/components/ImageUpload.vue'
+import Icon from '@/components/Icon.vue'
+import { ProductCategory, ProductStatus, ProductAvailability } from '@/api_factory/modules/products'
+  
+interface Props {
+  product?: any
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits(['saved', 'cancel'])
+
+const currentStep = ref(0)
+const tagsInput = ref('')
+
+const steps = [
+  { title: 'Core', description: 'Base attributes' },
+  { title: 'Technical', description: 'Specifications' },
+  { title: 'Display', description: 'Assests & Fulfillment' },
+  { title: 'Review', description: 'Marketplace Sync' }
+]
+
+const categoryOptions = [
+  {label:'Books',value:'books'},
+  {label:'Courses',value:'courses'},
+  {label:'E-books',value:'ebooks'},
+  {label:'Audiobooks',value:'audiobooks'},
+  {label:'Software',value:'software'},
+  {label:'Templates',value:'templates'}
+]
+
+// Composables
+const {
+  loading: createLoading,
+  success: createSuccess,
+  createProduct: performCreateProduct
+} = useCreateProduct()
+
+const {
+  loading: updateLoading,
+  success: updateSuccess,
+  updateProduct: performUpdateProduct
+} = useUpdateProduct()
+
+const form = reactive({
+  name: '',
+  description: '',
+  category: '',
+  author: '',
+  price: 0,
+  originalPrice: 0,
+  stock: 0,
+  status: 'draft',
+  availability: 'available',
+  isDigital: false,
+  imageUrl: '',
+  imageGallery: [] as string[],
+  features: [''],
+  tags: [] as string[],
+  isbn: '',
+  publisher: '',
+  publicationDate: '',
+  pages: 0,
+  weight: 0,
+  dimensions: {
+    length: 0,
+    width: 0,
+    height: 0
+  },
+  duration: 0,
+  instructor: '',
+  videoUrl: '',
+  downloadUrl: '',
+  previewUrl: ''
+})
+
+watchEffect(() => {
+  if (props.product) {
+    Object.assign(form, {
+      name: props.product.name || '',
+      description: props.product.description || '',
+      category: props.product.category || '',
+      author: props.product.author || '',
+      price: props.product.price || 0,
+      originalPrice: props.product.originalPrice || 0,
+      stock: props.product.stock || 0,
+      status: props.product.status || 'draft',
+      availability: props.product.availability || 'available',
+      isDigital: props.product.isDigital || false,
+      imageUrl: props.product.imageUrl || '',
+      imageGallery: props.product.imageGallery || [],
+      features: props.product.features?.length ? [...props.product.features] : [''],
+      tags: props.product.tags || [],
+      isbn: props.product.isbn || '',
+      publisher: props.product.publisher || '',
+      publicationDate: props.product.publicationDate ? new Date(props.product.publicationDate).toISOString().split('T')[0] : '',
+      pages: props.product.pages || 0,
+      weight: props.product.weight || 0,
+      dimensions: props.product.dimensions ? { ...props.product.dimensions } : { length: 0, width: 0, height: 0 },
+      duration: props.product.duration || 0,
+      instructor: props.product.instructor || '',
+      videoUrl: props.product.videoUrl || '',
+      downloadUrl: props.product.downloadUrl || '',
+      previewUrl: props.product.previewUrl || ''
+    })
+    tagsInput.value = props.product.tags?.join(', ') || ''
   }
-  
-  const isSubmitting = computed(() => createLoading.value || updateLoading.value)
-  </script>
-  
+})
+
+const nextStep = () => {
+  if (currentStep.value < steps.length - 1) currentStep.value++
+}
+
+const previousStep = () => {
+  if (currentStep.value > 0) currentStep.value--
+}
+
+const addFeature = () => form.features.push('')
+const removeFeature = (index: number) => form.features.splice(index, 1)
+
+const updateTags = () => {
+  form.tags = tagsInput.value.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
+}
+
+const removeTag = (tagToRemove: string) => {
+  form.tags = form.tags.filter(tag => tag !== tagToRemove)
+  tagsInput.value = form.tags.join(', ')
+}
+
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('en-NG').format(price)
+}
+
+const { showToast } = useCustomToast()
+
+const handleSubmit = async () => {
+  if (!form.name.trim() || !form.category.trim() || !form.author.trim() || !form.description.trim()) {
+    showToast({ title: "Validation Error", message: "Key details are required.", toastType: "error" });
+    return;
+  }
+  try {
+    const cleanedForm = {
+      ...form,
+      category: form.category as ProductCategory,
+      status: form.status as ProductStatus,
+      availability: form.availability as ProductAvailability,
+      features: form.features.filter(feature => feature.trim()),
+      publicationDate: form.publicationDate ? new Date(form.publicationDate) : undefined
+    }
+    
+    if (props.product) {
+      await performUpdateProduct(props.product.id || props.product._id, cleanedForm)
+      if (updateSuccess.value) emit('saved')
+    } else {
+      await performCreateProduct(cleanedForm)
+      if (createSuccess.value) emit('saved')
+    }
+  } catch (error) {
+    console.error('Submit failed:', error)
+  }
+}
+
+const isSubmitting = computed(() => createLoading.value || updateLoading.value)
+</script>

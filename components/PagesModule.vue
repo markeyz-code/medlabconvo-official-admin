@@ -1,134 +1,186 @@
 <template>
-  <div class="mt-8 flow-root">
-    <div v-if="loading" class="flex justify-center py-10">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-    </div>
-    
-    <div v-else-if="error" class="bg-red-50 p-4 rounded-md">
-      <p class="text-red-700 text-sm">{{ error }}</p>
-    </div>
-    
-    <div v-else class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-        <div class="sm:flex sm:items-center sm:justify-between mb-4 px-4 sm:px-0">
-          <div>
-             <!-- Optional search/filter area -->
-          </div>
-          <button @click="openCreateModal" type="button" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
-             Create Page Record
-          </button>
-        </div>
-
-        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-          <table class="min-w-full divide-y divide-gray-300">
-            <thead class="bg-gray-50">
-              <tr>
-                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Page Key</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Title</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Sections</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Last Updated</th>
-                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                  <span class="sr-only">Actions</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
-              <tr v-for="page in cmsPages" :key="page.key">
-                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ page.key }}</td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ page.title }}</td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ page.data?.sections?.length || 0 }} sections</td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ new Date(page.updatedAt || Date.now()).toLocaleDateString() }}</td>
-                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                  <button @click="openEditModal(page)" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
-                  <button @click="handleDelete(page.key)" class="text-red-600 hover:text-red-900">Delete</button>
-                </td>
-              </tr>
-              <tr v-if="!cmsPages.length">
-                <td colspan="5" class="py-10 text-center text-sm text-gray-500">No CMS pages found. Create one.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+  <div class="space-y-10 animate-in fade-in duration-700">
+    <!-- Header Actions -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+      <div class="flex flex-col space-y-1">
+        <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Website content</h2>
+        <p class="text-sm font-bold text-slate-400">Manage static pages and website sections</p>
       </div>
+      <button
+        @click="openCreateModal"
+        class="w-full sm:w-auto px-8 py-3.5 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
+      >
+        <Icon name="heroicons:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+        <span class="font-bold text-sm">Create page</span>
+      </button>
+    </div>
+
+    <!-- Page Grid List -->
+    <div v-if="loading" class="flex flex-col items-center justify-center py-24 space-y-4">
+      <div class="w-12 h-12 rounded-full border-4 border-slate-50 border-t-[#033958] animate-spin"></div>
+      <p class="text-sm font-bold text-slate-400 animate-pulse">Loading content...</p>
+    </div>
+
+    <div v-else-if="cmsPages.length" class="bg-white rounded-[32px] border border-slate-100 overflow-hidden shadow-sm">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-slate-50/50 border-b border-slate-100/50 hidden md:table-row">
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Page Identity</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Sections</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Environment</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Last Modified</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+          <tr 
+            v-for="page in cmsPages" 
+            :key="page.key" 
+            class="group hover:bg-[#033958]/[0.02] transition-colors duration-300"
+          >
+            <!-- Page Identity -->
+            <td class="px-6 py-5">
+              <div class="flex items-center space-x-4">
+                <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-[#033958]/40 group-hover:bg-[#033958]/10 group-hover:text-[#033958] transition-colors">
+                  <Icon name="heroicons:window" class="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900 leading-tight group-hover:text-[#033958] transition-colors">{{ page.title }}</h3>
+                  <span class="text-[10px] font-bold text-slate-400 mt-1 inline-block bg-slate-100 px-2 py-0.5 rounded">{{ page.key }}</span>
+                </div>
+              </div>
+            </td>
+            
+            <!-- Sections -->
+            <td class="px-6 py-5 hidden md:table-cell">
+              <div class="flex items-center space-x-2">
+                <Icon name="heroicons:rectangle-stack" class="w-4 h-4 text-slate-300" />
+                <span class="text-sm font-bold text-slate-600">{{ page.data?.sections?.length || 0 }}</span>
+              </div>
+            </td>
+
+            <!-- Environment (Currently always active) -->
+            <td class="px-6 py-5 hidden md:table-cell">
+              <span class="inline-flex items-center space-x-1.5 bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full text-[10px] font-black tracking-wider uppercase">
+                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                <span>Production</span>
+              </span>
+            </td>
+
+            <!-- Last Modified -->
+            <td class="px-6 py-5 hidden md:table-cell">
+              <span class="text-xs font-semibold text-slate-400">{{ new Date(page.updatedAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }}</span>
+            </td>
+
+            <!-- Actions -->
+            <td class="px-6 py-5">
+              <div class="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <button @click="openEditModal(page)" class="p-2.5 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/10 rounded-xl transition-all" title="Edit Content">
+                  <Icon name="heroicons:pencil" class="w-4 h-4" />
+                </button>
+                <button @click="handleDeleteConfirm(page.key)" class="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all" title="Delete Page">
+                  <Icon name="heroicons:trash" class="w-4 h-4" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div v-else class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-[40px] border border-dashed border-slate-200">
+      <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mb-6">
+        <Icon name="heroicons:window" class="w-12 h-12 text-slate-100" />
+      </div>
+      <h3 class="text-xl font-bold text-slate-900 tracking-tight">No pages found</h3>
+      <p class="text-sm text-slate-500 mb-8 max-w-sm text-center leading-relaxed font-medium">Create a new page to manage its content and sections.</p>
+      <button
+        @click="openCreateModal"
+        class="px-10 py-4 bg-[#033958] text-white rounded-2xl hover:bg-[#022a41] transition-all font-bold text-sm"
+      >
+        Create first page
+      </button>
     </div>
 
     <!-- Slide-over for Edit/Create -->
-    <CoreSlideOver :isOpen="isSlideOverOpen" :title="isEditing ? 'Edit CMS Page' : 'Create CMS Page'" @close="closeSlideOver">
-      <form @submit.prevent="handleSubmit" class="space-y-6 pt-6 pb-20">
-        <div>
-          <label for="key" class="block text-sm font-medium text-gray-900">Page Key</label>
-          <div class="mt-1">
-            <input type="text" id="key" v-model="form.key" :disabled="isEditing" required
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="e.g. about_page" />
+    <SlideOver v-model="isSlideOverOpen" :title="isEditing ? 'Edit page' : 'Create page'" size="lg">
+      <div class="p-8 pb-32">
+        <form @submit.prevent="handleSubmit" class="space-y-10">
+          <!-- Identity Section -->
+          <div class="space-y-4">
+            <h4 class="text-sm font-bold text-[#033958] px-1">Page details</h4>
+            <div class="space-y-4">
+              <AnimatedInput
+                v-model="form.key"
+                id="pageKey"
+                label="Page unique key"
+                type="text"
+                :disabled="isEditing"
+                required
+                position="top"
+              />
+              <AnimatedInput
+                v-model="form.title"
+                id="pageTitle"
+                label="Page title"
+                type="text"
+                required
+                position="bottom"
+              />
+            </div>
           </div>
-          <p class="mt-1 text-xs text-gray-500">Unique identifier for this page content (cannot be changed after creation).</p>
-        </div>
 
-        <div>
-          <label for="title" class="block text-sm font-medium text-gray-900">Title</label>
-          <div class="mt-1">
-            <input type="text" id="title" v-model="form.title" required
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="e.g. About Us Page Settings" />
+          <!-- Sections Management -->
+          <div class="space-y-6">
+            <div class="flex items-center justify-between px-1">
+              <h4 class="text-sm font-bold text-[#033958]">Page sections</h4>
+              <button type="button" @click="addSection" class="text-[#033958] text-sm font-bold hover:underline decoration-2 underline-offset-4">Add section</button>
+            </div>
+
+            <div v-if="form.data.sections.length === 0" class="flex flex-col items-center justify-center p-12 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+              <p class="text-sm font-bold text-slate-400">No sections added</p>
+            </div>
+
+            <div v-for="(section, index) in form.data.sections" :key="index" class="group relative bg-[#1A1A1B05] rounded-[32px] p-8 border border-slate-100 hover:border-[#033958]/20 transition-all duration-300">
+              <!-- Inline Controls -->
+              <div class="absolute -top-3 right-6 flex items-center bg-white rounded-xl border border-slate-100 p-1">
+                <button type="button" @click="removeSection(index)" class="p-1.5 text-slate-300 hover:text-red-500 transition-colors">
+                  <Icon name="heroicons:trash" class="w-4 h-4" />
+                </button>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <AnimatedInput v-model="section.id" :id="'sec-id-'+index" label="Section identifier" type="text" />
+                <AnimatedInput v-model="section.title" :id="'sec-title-'+index" label="Section title" type="text" />
+                <div class="flex items-center gap-4">
+                  <div class="flex-1">
+                    <AnimatedInput v-model="section.order" :id="'sec-order-'+index" label="Order" type="number" />
+                  </div>
+                  <label class="flex items-center group cursor-pointer pt-4">
+                    <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#033958] transition-colors">
+                      <input type="checkbox" v-model="section.isVisible" class="absolute opacity-0 w-full h-full cursor-pointer z-10" />
+                      <div v-if="section.isVisible" class="w-2.5 h-2.5 bg-[#033958] rounded-sm"></div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              
+              <AnimatedInput v-model="section.content" :id="'sec-content-'+index" label="Section content" type="textarea" :rows="6" />
+            </div>
           </div>
-        </div>
 
-        <div class="border-t border-gray-200 mt-6 pt-6 mb-4 flex justify-between items-center">
-            <h3 class="text-lg font-medium text-gray-900">Page Sections</h3>
-            <button type="button" @click="addSection" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
-              Add Section
+          <!-- Submission Layer -->
+          <div class="fixed bottom-0 left-0 right-0 p-8 bg-white/80 backdrop-blur-md border-t border-slate-100 flex justify-end gap-4 z-20">
+            <button type="button" @click="closeSlideOver" class="px-8 py-3 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors">Cancel</button>
+            <button type="submit" :disabled="isSaving" class="px-12 py-3 bg-[#033958] text-white text-sm font-bold rounded-xl hover:bg-[#022a41] transition-all active:scale-95 disabled:opacity-50 inline-flex items-center space-x-3">
+              <div v-if="isSaving" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+              <span>{{ isEditing ? 'Save changes' : 'Create page' }}</span>
             </button>
-        </div>
-
-        <div v-for="(section, index) in form.data.sections" :key="index" class="border rounded-md p-4 bg-gray-50 space-y-4 mb-4 relative">
-          <button type="button" @click="removeSection(index)" class="absolute top-2 right-2 text-gray-400 hover:text-red-500">
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-          </button>
-          
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-medium text-gray-700">Section ID / Key</label>
-              <input type="text" v-model="section.id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g. identity" />
-            </div>
-            <div>
-              <label class="block text-xs font-medium text-gray-700">Display Title</label>
-              <input type="text" v-model="section.title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g. Identity & Mindset" />
-            </div>
-            <div>
-              <label class="block text-xs font-medium text-gray-700">Position / Order</label>
-              <input type="number" v-model="section.order" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-            </div>
-            <div class="flex items-end">
-              <label class="flex items-center space-x-2 text-sm text-gray-700 pb-2">
-                <input type="checkbox" v-model="section.isVisible" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                <span>Is Visible</span>
-              </label>
-            </div>
           </div>
-          <div>
-            <label class="block text-xs font-medium text-gray-700">Content</label>
-            <textarea v-model="section.content" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Text or HTML content..."></textarea>
-          </div>
-        </div>
-
-        <div v-if="form.data.sections.length === 0" class="text-sm text-gray-500 text-center py-4 bg-gray-50 rounded-md border border-dashed">
-            No sections added yet. Click "Add Section" to create one.
-        </div>
-
-        <div class="flex justify-end gap-3 border-t border-gray-200 mt-6 pt-6">
-          <button type="button" @click="closeSlideOver"
-            class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 w-full sm:w-auto">
-            Cancel
-          </button>
-          <button type="submit" :disabled="isSaving"
-            class="flex justify-center flex-1 rounded-md border border-transparent bg-indigo-600 border-indigo-600 py-2.5 px-6 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 w-full sm:w-auto">
-            <span v-if="!isSaving">{{ isEditing ? 'Save Changes' : 'Create Page' }}</span>
-            <div v-else class="h-5 w-5 rounded-full border-t-2 border-white animate-spin"></div>
-          </button>
-        </div>
-      </form>
-    </CoreSlideOver>
+        </form>
+      </div>
+    </SlideOver>
   </div>
 </template>
 
@@ -137,11 +189,17 @@ import { ref, onMounted } from 'vue'
 import { useGetCms } from '@/composables/modules/cms/useGetCms'
 import { useUpsertCms } from '@/composables/modules/cms/useUpsertCms'
 import { useDeleteCms } from '@/composables/modules/cms/useDeleteCms'
-import type { CmsDocument, UpsertCmsPayload, CmsSection } from '@/api_factory/modules/cms'
+import { useCustomToast } from '@/composables/core/useCustomToast'
+import type { CmsDocument, UpsertCmsPayload } from '@/api_factory/modules/cms'
+import Icon from '@/components/Icon.vue'
+import AnimatedInput from '@/components/ui/AnimatedInput.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
+import SlideOver from '@/components/SlideOver.vue'
 
-const { loading, error, cmsPages, getAllCms } = useGetCms()
+const { loading, cmsPages, getAllCms } = useGetCms()
 const { loading: isSaving, upsertCms } = useUpsertCms()
-const { loading: isDeleting, deleteCms } = useDeleteCms()
+const { deleteCms } = useDeleteCms()
+const { showToast } = useCustomToast()
 
 const isSlideOverOpen = ref(false)
 const isEditing = ref(false)
@@ -149,9 +207,7 @@ const isEditing = ref(false)
 const form = ref<UpsertCmsPayload>({
   key: '',
   title: '',
-  data: {
-    sections: []
-  }
+  data: { sections: [] }
 })
 
 onMounted(() => {
@@ -160,13 +216,7 @@ onMounted(() => {
 
 const openCreateModal = () => {
   isEditing.value = false
-  form.value = {
-    key: '',
-    title: '',
-    data: {
-      sections: []
-    }
-  }
+  form.value = { key: '', title: '', data: { sections: [] } }
   isSlideOverOpen.value = true
 }
 
@@ -175,9 +225,7 @@ const openEditModal = (page: CmsDocument) => {
   form.value = {
     key: page.key,
     title: page.title,
-    data: {
-      sections: JSON.parse(JSON.stringify(page.data?.sections || []))
-    }
+    data: { sections: JSON.parse(JSON.stringify(page.data?.sections || [])) }
   }
   isSlideOverOpen.value = true
 }
@@ -203,6 +251,7 @@ const removeSection = (index: number) => {
 const handleSubmit = async () => {
   try {
     await upsertCms(form.value)
+    showToast({ title: 'Success', message: 'Page updated successfully', toastType: 'success' })
     closeSlideOver()
     getAllCms()
   } catch (err) {
@@ -210,10 +259,11 @@ const handleSubmit = async () => {
   }
 }
 
-const handleDelete = async (key: string) => {
-  if (confirm('Are you sure you want to delete this CMS page? This will break any frontend views relying on this key.')) {
+const handleDeleteConfirm = async (key: string) => {
+  if (confirm('Are you sure you want to delete this page?')) {
     try {
       await deleteCms(key)
+      showToast({ title: 'Removed', message: 'Page successfully deleted', toastType: 'success' })
       getAllCms()
     } catch (err) {
       console.error(err)

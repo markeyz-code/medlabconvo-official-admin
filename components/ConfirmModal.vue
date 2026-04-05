@@ -26,7 +26,7 @@
             >
               <div
                 v-if="modelValue"
-                class="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                class="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white  rounded-2xl"
               >
                 <div class="flex gap-y-6 flex-col items-center mb-4">
                   <div class="flex-shrink-0 w-10 h-10 mx-auto bg-red-100 rounded-full flex items-center justify-center">
@@ -38,7 +38,7 @@
                 </div>
   
                 <div class="mb-6">
-                  <p class="text-sm text-center text-gray-500">{{ message }}</p>
+                  <p class="text-sm text-center text-gray-900">{{ message }}</p>
                 </div>
   
                 <div class="flex justify-between space-x-3">

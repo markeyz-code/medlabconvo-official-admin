@@ -29,7 +29,7 @@
               <span class="font-medium text-indigo-600 hover:text-indigo-700">Click to upload</span>
               or drag and drop
             </p>
-            <p class="text-xs text-gray-500 mt-1">CSV files only</p>
+            <p class="text-sm text-gray-900 mt-1">CSV files only</p>
           </div>
         </div>
   
@@ -42,7 +42,7 @@
           <FileText class="mx-auto h-12 w-12 text-green-600" />
           <div class="mt-4">
             <p class="text-sm font-medium text-gray-900">{{ selectedFile.name }}</p>
-            <p class="text-xs text-gray-500">{{ formatFileSize(selectedFile.size) }}</p>
+            <p class="text-sm text-gray-900">{{ formatFileSize(selectedFile.size) }}</p>
           </div>
         </div>
       </div>
@@ -74,11 +74,11 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Author</th>
-                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-900 ">Name</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-900 ">Category</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-900 ">Author</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-900 ">Price</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-900 ">Stock</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -91,7 +91,7 @@
               </tr>
             </tbody>
           </table>
-          <div v-if="previewData.length > 5" class="px-4 py-2 text-sm text-gray-500 bg-gray-50 text-center">
+          <div v-if="previewData.length > 5" class="px-4 py-2 text-sm text-gray-900 bg-gray-50 text-center">
             +{{ previewData.length - 5 }} more products
           </div>
         </div>

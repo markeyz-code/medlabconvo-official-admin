@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex text-gray-900 bg-white">
+  <div class="h-screen overflow-hidden flex text-gray-900 bg-white">
     <!-- Left: Image Cover -->
     <div class="hidden lg:flex lg:w-1/2 relative bg-[#033958] overflow-hidden items-end p-12">
       <img src="@/assets/img/auth-bg.png" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay" />
@@ -22,8 +22,8 @@
           <Icon name="heroicons:shield-check" class="w-10 h-10 text-[#3BAB22]" />
         </div>
         
-        <h2 class="text-3xl font-extrabold text-[#033958] mb-4 tracking-tight">Security Code</h2>
-        <p class="text-gray-500 mb-10 font-medium">
+        <h2 class="text-2xl font-extrabold text-[#033958] mb-4 tracking-tight">Security Code</h2>
+        <p class="text-gray-900 mb-10 font-medium">
           We've sent a 6-digit verification code to <br/>
           <span class="text-[#033958] font-bold">{{ email }}</span>
         </p>
@@ -49,7 +49,7 @@
         </button>
 
         <div class="mt-8 text-center pt-8 border-t border-gray-100">
-          <p class="text-gray-500 text-sm font-medium">
+          <p class="text-gray-900 text-sm font-medium">
             Didn't receive the code?
             <button 
               @click="resendOtp" 

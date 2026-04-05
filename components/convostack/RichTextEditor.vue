@@ -1,5 +1,5 @@
 <template>
-  <div class="rich-text-editor border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-400 transition-all">
+  <div class="rich-text-editor border border-slate-300 rounded-xl overflow-hidden bg-white focus-within:ring-2 focus-within:ring-[#033958]/20 focus-within:border-[#033958] transition-all">
     <!-- Toolbar -->
     <div v-if="editor" class="flex flex-wrap items-center gap-1 px-3 py-2 border-b border-slate-100 bg-slate-50/80 backdrop-blur-md sticky top-0 z-10">
       <!-- Text Style -->
@@ -7,8 +7,8 @@
         <button type="button" @click="editor.chain().focus().toggleBold().run()" :class="btnClass(editor.isActive('bold'))" title="Bold">
           <Icon name="heroicons:bold" class="w-4 h-4" />
         </button>
-        <button type="button" @click="editor.chain().focus().toggleItalic().run()" :class="btnClass(editor.isActive('italic'))" title="Italic">
-          <Icon name="heroicons:italic" class="w-4 h-4" />
+        <button type="button" @click="editor.chain().focus().toggle().run()" :class="btnClass(editor.isActive(''))" title="">
+          <Icon name="heroicons:" class="w-4 h-4" />
         </button>
         <button type="button" @click="editor.chain().focus().toggleUnderline().run()" :class="btnClass(editor.isActive('underline'))" title="Underline">
           <Icon name="heroicons:underline" class="w-4 h-4" />
@@ -147,7 +147,7 @@ const setLink = () => {
 .ProseMirror p { margin: 0.5em 0; }
 .ProseMirror ul { list-style: disc; padding-left: 1.5em; }
 .ProseMirror ol { list-style: decimal; padding-left: 1.5em; }
-.ProseMirror blockquote { border-left: 3px solid #6366f1; padding-left: 1em; margin: 1em 0; color: #64748b; font-style: italic; }
+.ProseMirror blockquote { border-left: 3px solid #6366f1; padding-left: 1em; margin: 1em 0; color: #64748b; font-style: ; }
 .ProseMirror pre { background: #1e293b; color: #e2e8f0; border-radius: 0.5rem; padding: 1em; font-family: monospace; font-size: 0.875rem; overflow-x: auto; }
 .ProseMirror code { background: #f1f5f9; padding: 0.15em 0.3em; border-radius: 0.25rem; font-size: 0.875rem; }
 .ProseMirror hr { border: none; border-top: 2px solid #e2e8f0; margin: 1.5em 0; }

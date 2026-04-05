@@ -1,30 +1,26 @@
+import { GATEWAY_ENDPOINT_WITH_AUTH } from "../axios.config"
+
 export const roles_api = {
     $_get_roles: () => {
-        const { $axios } = useApiFactory()
-        return $axios.get('/roles')
+        return GATEWAY_ENDPOINT_WITH_AUTH.get('/roles')
     },
     $_get_role: (id: string) => {
-        const { $axios } = useApiFactory()
-        return $axios.get(`/roles/${id}`)
+        return GATEWAY_ENDPOINT_WITH_AUTH.get(`/roles/${id}`)
     },
     $_create_role: (payload: any) => {
-        const { $axios } = useApiFactory()
-        return $axios.post('/roles', payload)
+        return GATEWAY_ENDPOINT_WITH_AUTH.post('/roles', payload)
     },
     $_update_role: (id: string, payload: any) => {
-        const { $axios } = useApiFactory()
-        return $axios.put(`/roles/${id}`, payload)
+        return GATEWAY_ENDPOINT_WITH_AUTH.put(`/roles/${id}`, payload)
     },
     $_delete_role: (id: string) => {
-        const { $axios } = useApiFactory()
-        return $axios.delete(`/roles/${id}`)
+        return GATEWAY_ENDPOINT_WITH_AUTH.delete(`/roles/${id}`)
     },
     $_get_permissions: () => {
-        const { $axios } = useApiFactory()
-        return $axios.get('/roles/permissions')
+        return GATEWAY_ENDPOINT_WITH_AUTH.get('/roles/permissions')
     },
     $_create_permission: (payload: any) => {
-        const { $axios } = useApiFactory()
-        return $axios.post('/roles/permissions', payload)
+        return GATEWAY_ENDPOINT_WITH_AUTH.post('/roles/permissions', payload)
     }
 }
+

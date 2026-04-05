@@ -87,13 +87,13 @@
                   <h4 class="text-sm font-medium text-gray-900 truncate">
                     {{ episode.title }}
                   </h4>
-                  <p class="text-sm text-gray-500">
+                  <p class="text-sm text-gray-900">
                     S{{ episode.season }}E{{ episode.episode }} • {{ episode.duration }}m
                   </p>
                   <div class="flex items-center mt-1">
                     <span
                       :class="[
-                        'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium',
+                        'inline-flex items-center px-2 py-1 rounded-full text-sm font-medium',
                         episode.isActive
                           ? 'bg-green-100 text-green-800'
                           : 'bg-gray-100 text-gray-800'
@@ -107,7 +107,7 @@
             </div>
             <div v-else class="text-center py-8">
               <Icon name="lucide:podcast" class="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p class="text-gray-500">No episodes found</p>
+              <p class="text-gray-900">No episodes found</p>
             </div>
           </div>
         </div>
@@ -133,12 +133,12 @@
                 class="flex justify-between items-center"
               >
                 <span class="text-sm font-medium text-gray-900">{{ tag }}</span>
-                <span class="text-sm text-gray-500">{{ idx }}</span>
+                <span class="text-sm text-gray-900">{{ idx }}</span>
               </div>
             </div>
             <div v-else class="text-center py-8">
               <Icon name="lucide:tag" class="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p class="text-gray-500">No tags found</p>
+              <p class="text-gray-900">No tags found</p>
             </div>
           </div>
         </div>

@@ -1,135 +1,138 @@
 <template>
-  <div class="space-y-6">
-    <!-- Header Actions -->
-    <div class="flex justify-between items-center">
-      <div class="flex items-center space-x-4">
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search subscriptions..."
-          class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <select
-          v-model="statusFilter"
-          class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        >
-          <option value="">All Status</option>
-          <option value="active">Active</option>
-          <option value="unsubscribed">Unsubscribed</option>
-        </select>
+  <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <!-- Action Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-8 rounded-[2rem] border border-slate-100">
+      <div class="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
+        <div class="w-full md:w-80">
+          <AnimatedInput
+            v-model="searchQuery"
+            id="search-subscriptions"
+            label="Search subscribers"
+            type="text"
+          />
+        </div>
+        <div class="w-full md:w-64">
+          <SelectInput
+            v-model="statusFilter"
+            label="Filter status"
+            :options="statusOptions"
+          />
+        </div>
       </div>
-      <div class="flex items-center space-x-3">
+
+      <div class="flex items-center gap-4 w-full md:w-auto">
         <button
           @click="exportSubscriptions"
-          class="px-4 py-2 bg-black text-white rounded-lg  transition-all duration-200 flex items-center space-x-2"
+          class="flex-1 md:flex-none px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
-          <Icon name="heroicons:arrow-down-tray" class="w-4 h-4" />
-          <span>Export</span>
+          <Icon name="heroicons:arrow-down-tray" class="w-4 h-4 group-hover:translate-y-1 transition-transform" />
+          <span>Export CSV</span>
         </button>
         <button
           @click="refreshSubscriptions"
-          class="px-4 py-2 bg-black text-white rounded-lg  transition-all duration-200 flex items-center space-x-2"
+          class="flex-1 md:flex-none px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
-          <Icon name="heroicons:arrow-path" class="w-4 h-4" />
+          <Icon name="heroicons:arrow-path" class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
           <span>Refresh</span>
         </button>
       </div>
     </div>
 
-    <!-- Subscriptions Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+    <!-- Subscriptions Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="bg-white rounded-[2rem] border border-slate-100 p-8 hover:border-slate-200 transition-all duration-500 group">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-600">Total Subscribers</p>
-            <p class="text-2xl font-bold text-slate-900 mt-1">{{ totalSubscribers }}</p>
+            <p class="text-sm font-bold text-slate-400 mb-2">Total audience</p>
+            <p class="text-4xl font-bold text-slate-900 tracking-tighter">{{ totalSubscribers }}</p>
           </div>
-          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-            <Icon name="heroicons:users" class="w-6 h-6 text-blue-600" />
+          <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:bg-[#033958] group-hover:text-white transition-colors duration-500 border border-slate-100">
+            <Icon name="heroicons:users" class="w-8 h-8" />
           </div>
         </div>
       </div>
       
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <div class="bg-white rounded-[2rem] border border-slate-100 p-8 hover:border-emerald-100 transition-all duration-500 group">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-600">Active Subscriptions</p>
-            <p class="text-2xl font-bold text-slate-900 mt-1">{{ activeSubscriptions }}</p>
+            <p class="text-sm font-bold text-slate-400 mb-2">Active subscribers</p>
+            <p class="text-4xl font-bold text-emerald-600 tracking-tighter">{{ activeSubscriptions }}</p>
           </div>
-          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-            <Icon name="heroicons:check-circle" class="w-6 h-6 text-green-600" />
+          <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-500 border border-emerald-100">
+            <Icon name="heroicons:check-badge" class="w-8 h-8" />
           </div>
         </div>
       </div>
       
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <div class="bg-white rounded-[2rem] border border-slate-100 p-8 hover:border-blue-100 transition-all duration-500 group">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-600">This Month</p>
-            <p class="text-2xl font-bold text-slate-900 mt-1">{{ thisMonthSubscriptions }}</p>
+            <p class="text-sm font-bold text-slate-400 mb-2">New this month</p>
+            <p class="text-4xl font-bold text-blue-600 tracking-tighter">{{ thisMonthSubscriptions }}</p>
           </div>
-          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-            <Icon name="heroicons:calendar" class="w-6 h-6 text-purple-600" />
+          <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500 border border-blue-100">
+            <Icon name="heroicons:chart-bar" class="w-8 h-8" />
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Subscriptions Table -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead class="bg-slate-50 border-b border-slate-200">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Subscribed</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Source</th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+    <!-- Subscriptions Ledger -->
+    <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden relative">
+       <!-- Loading Overlay -->
+      <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center">
+        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
+        <span class="text-sm font-bold text-[#033958]">Loading records...</span>
+      </div>
+
+      <div class="overflow-x-auto text-sm">
+        <table class="w-full text-left border-separate border-spacing-0">
+          <thead>
+            <tr class="bg-slate-50/50 text-sm font-bold text-slate-400">
+              <th class="px-10 py-6 border-b border-slate-100">Email address</th>
+              <th class="px-10 py-6 border-b border-slate-100">Status</th>
+              <th class="px-10 py-6 border-b border-slate-100">Joined date</th>
+              <th class="px-10 py-6 border-b border-slate-100">Source</th>
+              <th class="px-10 py-6 text-right border-b border-slate-100">Actions</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-slate-200">
-            <tr v-for="subscription in filteredSubscriptions" :key="subscription._id" class="hover:bg-slate-50 transition-colors">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <div class="w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
-                    <Icon name="heroicons:envelope" class="w-4 h-4 text-white" />
-                  </div>
-                  <div class="ml-3">
-                    <div class="text-sm font-medium text-slate-900">{{ subscription.email }}</div>
-                  </div>
+          <tbody class="divide-y divide-slate-50">
+            <tr v-for="subscription in filteredSubscriptions" :key="subscription._id" class="group hover:bg-slate-50/50 transition-all duration-300">
+              <td class="px-10 py-8 whitespace-nowrap text-slate-700 font-medium">
+                {{ subscription.email }}
+              </td>
+              <td class="px-10 py-8 whitespace-nowrap uppercase">
+                <div class="flex items-center space-x-3">
+                  <div :class="['w-2 h-2 rounded-full', subscription.isActive ? 'bg-emerald-500' : 'bg-rose-500']"></div>
+                  <span :class="['text-sm font-bold', subscription.isActive ? 'text-emerald-700' : 'text-rose-700']">
+                    {{ subscription.isActive ? 'Active' : 'Unsubscribed' }}
+                  </span>
                 </div>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span :class="[
-                  'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-                  subscription.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                ]">
-                  {{ subscription.isActive ? 'Active' : 'Unsubscribed' }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+              <td class="px-10 py-8 whitespace-nowrap text-slate-500 font-medium font-sans">
                 {{ formatDate(subscription.createdAt) }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                {{ subscription.source || 'Website' }}
+              <td class="px-10 py-8 whitespace-nowrap">
+                 <span class="px-3 py-1.5 bg-slate-50 text-slate-500 border border-slate-100 rounded-lg text-sm font-bold">
+                  {{ subscription.source || 'Website' }}
+                 </span>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div class="flex items-center justify-end space-x-2">
+              <td class="px-10 py-8 whitespace-nowrap text-right">
+                <div class="flex items-center justify-end space-x-2 text-slate-400">
                   <button
                     v-if="subscription.isActive"
                     @click="unsubscribeUser(subscription.email)"
-                    class="text-orange-600 hover:text-orange-900 p-1 rounded hover:bg-orange-50"
-                    title="Unsubscribe"
+                    class="p-2 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition-all"
+                    title="Unsubscribe user"
                   >
-                    <Icon name="heroicons:no-symbol" class="w-4 h-4" />
+                    <Icon name="heroicons:no-symbol" class="w-5 h-5" />
                   </button>
                   <button
                     @click="deleteSubscription(subscription._id)"
-                    class="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50"
-                    title="Delete"
+                    class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
+                    title="Delete record"
                   >
-                    <Icon name="heroicons:trash" class="w-4 h-4" />
+                    <Icon name="heroicons:trash" class="w-5 h-5" />
                   </button>
                 </div>
               </td>
@@ -138,15 +141,13 @@
         </table>
       </div>
       
-      <!-- Loading State -->
-      <div v-if="loading" class="flex items-center justify-center py-12">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-      
       <!-- Empty State -->
-      <div v-else-if="filteredSubscriptions.length === 0" class="text-center py-12">
-        <Icon name="heroicons:newspaper" class="w-12 h-12 text-slate-400 mx-auto mb-4" />
-        <p class="text-slate-500">No subscriptions found</p>
+      <div v-if="!loading && filteredSubscriptions.length === 0" class="py-32 text-center bg-slate-50/30">
+        <div class="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
+          <Icon name="heroicons:newspaper" class="w-10 h-10 text-slate-100" />
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No records found</h3>
+        <p class="text-slate-400 text-sm font-medium max-w-[280px] mx-auto leading-relaxed">No subscriber identities found in the database.</p>
       </div>
     </div>
   </div>
@@ -157,53 +158,55 @@ import { ref, onMounted, computed } from 'vue'
 import { useGetSubscriptions } from '@/composables/modules/subscriptions/useGetSubscriptions'
 import { useUnsubscribe } from '@/composables/modules/subscriptions/useUnsubscribe'
 import { useSoftDeleteSubscription } from '@/composables/modules/subscriptions/useSoftDeleteSubscription'
+import AnimatedInput from '@/components/ui/AnimatedInput.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
+import Icon from '@/components/Icon.vue'
 
 // Composables
 const { subscriptions, loading, getSubscriptions } = useGetSubscriptions()
 const { unsubscribe } = useUnsubscribe()
 const { softDeleteSubscription } = useSoftDeleteSubscription()
 
-// Reactive data
+// State
 const searchQuery = ref('')
 const statusFilter = ref('')
 
-// Load subscriptions on mount
-onMounted(() => {
-  getSubscriptions()
-})
+const statusOptions = [
+  { label: 'All status', value: '' },
+  { label: 'Active', value: 'active' },
+  { label: 'Unsubscribed', value: 'unsubscribed' }
+]
+
+// Hooks
+onMounted(() => { getSubscriptions() })
 
 // Computed
 const filteredSubscriptions = computed(() => {
-  let filtered = subscriptions.value
-
+  let filtered = (subscriptions.value || []) as any[]
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(subscription => 
       subscription.email?.toLowerCase().includes(query)
     )
   }
-
   if (statusFilter.value) {
     filtered = filtered.filter(subscription => 
       statusFilter.value === 'active' ? subscription.isActive : !subscription.isActive
     )
   }
-
   return filtered
 })
 
-const totalSubscribers = computed(() => subscriptions.value.length)
-const activeSubscriptions = computed(() => subscriptions.value.filter(s => s.isActive).length)
+const totalSubscribers = computed(() => subscriptions.value?.length || 0)
+const activeSubscriptions = computed(() => (subscriptions.value || []).filter(s => s.isActive).length)
 const thisMonthSubscriptions = computed(() => {
   const thisMonth = new Date()
   thisMonth.setDate(1)
-  return subscriptions.value.filter(s => new Date(s.createdAt) >= thisMonth).length
+  return (subscriptions.value || []).filter(s => s.createdAt && new Date(s.createdAt) >= thisMonth).length
 })
 
 // Methods
-const refreshSubscriptions = () => {
-  getSubscriptions()
-}
+const refreshSubscriptions = () => { getSubscriptions() }
 
 const unsubscribeUser = async (email: string) => {
   if (confirm(`Are you sure you want to unsubscribe ${email}?`)) {
@@ -211,18 +214,18 @@ const unsubscribeUser = async (email: string) => {
       await unsubscribe(email)
       await getSubscriptions()
     } catch (error) {
-      console.error('Error unsubscribing user:', error)
+      console.error('Unsubscribe failed:', error)
     }
   }
 }
 
 const deleteSubscription = async (subscriptionId: string) => {
-  if (confirm('Are you sure you want to delete this subscription?')) {
+  if (confirm('Are you sure you want to delete this subscription record?')) {
     try {
       await softDeleteSubscription(subscriptionId)
       await getSubscriptions()
     } catch (error) {
-      console.error('Error deleting subscription:', error)
+      console.error('Deletion failed:', error)
     }
   }
 }
@@ -230,10 +233,10 @@ const deleteSubscription = async (subscriptionId: string) => {
 const exportSubscriptions = () => {
   const csvContent = [
     ['Email', 'Status', 'Subscribed Date', 'Source'],
-    ...filteredSubscriptions.value.map(sub => [
+    ...(filteredSubscriptions.value || []).map(sub => [
       sub.email,
       sub.isActive ? 'Active' : 'Unsubscribed',
-      formatDate(sub.createdAt),
+      formatDate(sub.createdAt || ''),
       sub.source || 'Website'
     ])
   ].map(row => row.join(',')).join('\n')
@@ -242,12 +245,13 @@ const exportSubscriptions = () => {
   const url = window.URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = 'subscriptions.csv'
+  a.download = `medlab_subscriptions_${new Date().toISOString().split('T')[0]}.csv`
   a.click()
   window.URL.revokeObjectURL(url)
 }
 
 const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString()
+  if (!date) return 'N/A'
+  return new Date(date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
 }
 </script>

@@ -2,95 +2,96 @@
   <div class="space-y-6">
     <!-- Header Actions -->
     <div class="flex justify-between items-center">
-      <div class="flex items-center space-x-4">
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search forms..."
-          class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <select
-          v-model="statusFilter"
-          class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        >
-          <option value="">All Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
+      <div class="flex items-center space-x-6 flex-1 max-w-2xl">
+        <div class="flex-1">
+          <AnimatedInput
+            v-model="searchQuery"
+            id="formSearch"
+            label="Search forms"
+            type="text"
+          />
+        </div>
+        <div class="w-64">
+          <SelectInput
+            v-model="statusFilter"
+            label="Filter by status"
+            :options="[
+              { label: 'All status', value: '' },
+              { label: 'Active', value: 'active' },
+              { label: 'Inactive', value: 'inactive' }
+            ]"
+          />
+        </div>
       </div>
       <button
         @click="openCreateModal"
-        class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-lg hover:from-cyan-700 hover:to-blue-700 transition-all duration-200 flex items-center space-x-2"
+        class="px-10 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-3"
       >
-        <Icon name="heroicons:plus" class="w-4 h-4" />
+        <Plus class="w-4 h-4" />
         <span>Create Form</span>
       </button>
     </div>
 
     <!-- Forms Table -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden">
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-slate-200">
+        <table class="min-w-full divide-y divide-slate-100 text-sm">
           <thead class="bg-slate-50">
             <tr>
-              <th scope="col" class="px-6 py-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
                 Title
               </th>
-              <th scope="col" class="px-6 py-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
                 Description
               </th>
-              <th scope="col" class="px-6 py-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
                 Status
               </th>
-              <th scope="col" class="px-6 py-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
                 Fields
               </th>
-              <th scope="col" class="px-6 py-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
                 Submissions
               </th>
-              <th scope="col" class="px-6 py-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
                 Form URL
               </th>
-              <th scope="col" class="px-6 py-6 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
                 Created
               </th>
-              <th scope="col" class="px-6 py-6 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+              <th scope="col" class="px-6 py-5 text-right font-bold text-slate-400">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-slate-200">
+          <tbody class="bg-white divide-y divide-slate-50">
             <tr
               v-for="form in filteredForms"
               :key="form._id"
-              class="hover:bg-slate-50 transition-colors duration-150"
+              class="hover:bg-slate-50/50 transition-colors duration-150"
             >
               <!-- Title -->
-              <td class="px-6 py-6 whitespace-nowrap">
-                <div class="flex items-center">
-                  <!-- <Icon name="heroicons:clipboard-document-list" class="w-5 h-5 text-cyan-600 mr-2" /> -->
-                  <div class="text-sm font-medium text-slate-900">{{ form.title }}</div>
-                </div>
+              <td class="px-6 py-5 whitespace-nowrap">
+                <div class="font-bold text-slate-900">{{ form.title }}</div>
               </td>
 
               <!-- Description -->
-              <td class="px-6 py-6">
-                <div class="text-sm text-slate-600 max-w-xs truncate" :title="form.description">
+              <td class="px-6 py-5">
+                <div class="text-slate-500 max-w-xs truncate" :title="form.description">
                   {{ form.description }}
                 </div>
               </td>
 
               <!-- Status -->
-              <td class="px-6 py-6 whitespace-nowrap">
+              <td class="px-6 py-5 whitespace-nowrap">
                 <button
                   @click="toggleFormStatus(form)"
                   :disabled="togglingFormId === form._id"
                   :class="[
-                    'px-3 py-1  inline-flex items-center text-xs leading-5 font-semibold rounded-full transition-all duration-200 cursor-pointer',
-                    form.isActive ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200',
+                    'px-3 py-1 inline-flex items-center text-sm font-bold rounded-full transition-all duration-200',
+                    form.isActive ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200',
                     togglingFormId === form._id ? 'opacity-50 cursor-not-allowed' : ''
                   ]"
-                  :title="`Click to ${form.isActive ? 'deactivate' : 'activate'}`"
                 >
                   <span v-if="togglingFormId === form._id" class="mr-1">
                     <svg class="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -103,67 +104,66 @@
               </td>
 
               <!-- Fields Count -->
-              <td class="px-6 py-6 whitespace-nowrap">
-                <div class="text-sm text-slate-900 text-center">{{ form.fields?.length || 0 }}</div>
+              <td class="px-6 py-5 whitespace-nowrap">
+                <div class="text-slate-700 font-medium">{{ form.fields?.length || 0 }}</div>
               </td>
 
               <!-- Submissions Count -->
-              <td class="px-6 py-6 whitespace-nowrap">
-                <div class="text-sm text-slate-900 text-center">{{ form.submissionsCount || 0 }}</div>
+              <td class="px-6 py-5 whitespace-nowrap">
+                <div class="text-slate-700 font-medium">{{ form.submissionsCount || 0 }}</div>
               </td>
 
               <!-- Form URL -->
-              <td class="px-6 py-6">
+              <td class="px-6 py-5">
                 <div class="flex items-center space-x-2">
                   <a 
                     :href="`https://www.medlabconvo.com/forms/submit/${form?.accessToken}`"
                     target="_blank"
-                    class="text-sm text-blue-600 hover:text-blue-800 hover:underline truncate max-w-[200px]"
+                    class="text-blue-600 hover:underline truncate max-w-[150px] font-medium"
                     :title="`https://www.medlabconvo.com/forms/submit/${form?.accessToken}`"
                   >
-                    /forms/submit/{{ form?.accessToken?.substring(0, 8) }}...
+                    ...{{ form?.accessToken?.substring(form?.accessToken?.length - 8) }}
                   </a>
                   <button
                     @click.stop="copyFormUrl(form)"
                     :class="[
-                      'p-1.5 rounded transition-all duration-200 flex items-center justify-center',
+                      'p-1.5 rounded-lg transition-all duration-200',
                       copiedFormId === form._id 
                         ? 'text-green-600 bg-green-50' 
-                        : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+                        : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
                     ]"
-                    :title="copiedFormId === form._id ? 'Copied!' : 'Copy URL to clipboard'"
                   >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" viewBox="0 0 256 256"><path d="M184,64H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H184a8,8,0,0,0,8-8V72A8,8,0,0,0,184,64Zm-8,144H48V80H176ZM224,40V184a8,8,0,0,1-16,0V48H72a8,8,0,0,1,0-16H216A8,8,0,0,1,224,40Z"></path></svg>
+                    <Icon name="heroicons:document-duplicate" class="w-4 h-4" />
                   </button>
                 </div>
               </td>
 
               <!-- Created Date -->
-              <td class="px-6 py-6 whitespace-nowrap">
-                <div class="text-sm text-slate-500">{{ formatDate(form.createdAt) }}</div>
+              <td class="px-6 py-5 whitespace-nowrap text-slate-500 font-medium">
+                {{ formatDate(form.createdAt) }}
               </td>
 
               <!-- Actions -->
-              <td class="px-6 py-6 whitespace-nowrap text-right text-sm font-medium">
-                <div class="flex items-center justify-end space-x-2">
+              <td class="px-6 py-5 whitespace-nowrap text-right">
+                <div class="flex items-center justify-end space-x-1 text-slate-400">
                   <button
                     @click="editForm(form, 'edit')"
-                    class="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50"
-                    title="Edit Form"
+                    class="p-2 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                    title="Edit form"
                   >
                     <Icon name="heroicons:pencil" class="w-4 h-4" />
                   </button>
                   <button
                     @click="viewSubmissions(form)"
-                    class="text-green-600 hover:text-green-800 p-1 rounded hover:bg-green-50"
-                    title="View Submissions"
+                    class="p-2 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
+                    title="View submissions"
                   >
                     <Icon name="heroicons:eye" class="w-4 h-4" />
                   </button>
                   <button
                     @click="deleteForm(form._id)"
-                    class="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
-                    title="Delete Form"
+                    class="p-2 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                    title="Delete form"
                   >
                     <Icon name="heroicons:trash" class="w-4 h-4" />
                   </button>
@@ -177,13 +177,13 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex items-center justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#033958]"></div>
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="filteredForms?.length === 0" class="text-center py-12 bg-white rounded-xl shadow-sm border border-slate-200">
-      <Icon name="heroicons:clipboard-document-list" class="w-12 h-12 text-slate-400 mx-auto mb-4" />
-      <p class="text-slate-500">No forms found</p>
+    <div v-else-if="filteredForms?.length === 0" class="text-center py-20 bg-white rounded-3xl border border-slate-100">
+      <Icon name="heroicons:clipboard-document-list" class="w-12 h-12 text-slate-200 mx-auto mb-4" />
+      <p class="text-slate-400 font-medium">No forms found matching your criteria</p>
     </div>
 
     <!-- Create/Edit Form Modal -->
@@ -214,13 +214,16 @@ import { useCreateForm } from '@/composables/modules/forms/useCreateForm'
 import { useUpdateForm } from '@/composables/modules/forms/useUpdateForm'
 import { useSoftDeleteForm } from '@/composables/modules/forms/useSoftDeleteForm'
 import { useCustomToast } from "@/composables/core/useCustomToast"
+import AnimatedInput from '@/components/ui/AnimatedInput.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
+import { Plus } from 'lucide-vue-next'
 
 // Composables
 const { forms, loading, getForms } = useGetForms()
 const { createForm } = useCreateForm()
 const { updateForm } = useUpdateForm()
 const { softDeleteForm } = useSoftDeleteForm()
-  const { showToast } = useCustomToast()
+const { showToast } = useCustomToast()
 
 // Reactive data
 const searchQuery = ref('')
@@ -228,7 +231,7 @@ const statusFilter = ref('')
 const showModal = ref(false)
 const showSubmissionsModal = ref(false)
 const mode = ref<'create' | 'edit'>('create') 
-const selectedForm = ref(null)
+const selectedForm = ref<any>(null)
 const copiedFormId = ref<string | null>(null)
 const togglingFormId = ref<string | null>(null)
 
@@ -239,7 +242,7 @@ onMounted(() => {
 
 // Computed
 const filteredForms = computed(() => {
-  let filtered = forms.value
+  let filtered = (forms.value as any[]) || []
 
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
@@ -289,7 +292,6 @@ const closeSubmissionsModal = () => {
 const handleSaveForm = async (formData: any) => {
   try {
     if (selectedForm.value && mode.value === 'edit') {
-      // Create a clean copy of formData without MongoDB _id fields
       const cleanedFormData = {
         ...formData,
         fields: formData.fields?.map((field: any) => {
@@ -298,7 +300,6 @@ const handleSaveForm = async (formData: any) => {
         })
       }
       
-      // Remove MongoDB-specific fields that shouldn't be sent in update
       delete cleanedFormData._id
       delete cleanedFormData.createdAt
       delete cleanedFormData.updatedAt
@@ -318,20 +319,6 @@ const handleSaveForm = async (formData: any) => {
   }
 }
 
-// const handleSaveForm = async (formData: any) => {
-//   try {
-//     if (selectedForm.value && mode.value === 'edit') {
-//       await updateForm(selectedForm.value._id, formData)
-//     } else {
-//       await createForm(formData)
-//     }
-//     await getForms()
-//     closeModal()
-//   } catch (error) {
-//     console.error('Error saving form:', error)
-//   }
-// }
-
 const deleteForm = async (formId: string) => {
   if (confirm('Are you sure you want to delete this form?')) {
     try {
@@ -344,6 +331,7 @@ const deleteForm = async (formId: string) => {
 }
 
 const formatDate = (date: string) => {
+  if (!date) return 'N/A'
   return new Date(date).toLocaleDateString()
 }
 
@@ -352,54 +340,36 @@ const copyFormUrl = async (form: any) => {
     const formUrl = `https://www.medlabconvo.com/forms/submit/${form.accessToken}`
     await navigator.clipboard.writeText(formUrl)
     
-    // Show success feedback
     copiedFormId.value = form._id
-            showToast({
-          title: "Success",
-          message: "Form URL copied to clipboard",
-          toastType: "success",
-          duration: 3000,
-        })
+    showToast({
+      title: "Success",
+      message: "Form URL copied to clipboard",
+      toastType: "success",
+      duration: 3000,
+    })
     
-    // Reset after 2 seconds
     setTimeout(() => {
       copiedFormId.value = null
     }, 2000)
   } catch (error) {
     console.error('Error copying URL:', error)
-    alert('Failed to copy URL. Please try again.')
   }
 }
 
 const toggleFormStatus = async (form: any) => {
-  // Prevent multiple simultaneous toggles
   if (togglingFormId.value === form._id) {
     return
   }
 
   try {
     togglingFormId.value = form._id
-    
-    // Create updated form data with toggled status
     const updatedFormData = {
-      // ...form,
       isActive: !form.isActive
     }
-    
-    // Remove MongoDB specific fields that shouldn't be sent in update
-    // delete updatedFormData._id
-    // delete updatedFormData.createdAt
-    // delete updatedFormData.updatedAt
-    // delete updatedFormData.__v
-    
-    // Call the update composable
     await updateForm(form._id, updatedFormData)
-    
-    // Refresh the forms list to reflect the change
     await getForms()
   } catch (error) {
     console.error('Error toggling form status:', error)
-    alert('Failed to update form status. Please try again.')
   } finally {
     togglingFormId.value = null
   }

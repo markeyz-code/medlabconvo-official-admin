@@ -6,7 +6,7 @@
           :for="inputId"
           :class="[
             'absolute transition-all duration-300 ease-in-out pointer-events-none z-10',
-            isFocused || modelValue ? 'text-xs text-gray-500 left-3 top-2' : 'text-base text-gray-500 left-3 top-1/2 transform -translate-y-1/2'
+            isFocused || modelValue ? 'text-sm text-gray-900 left-3 top-2' : 'text-base text-gray-900 left-3 top-1/2 transform -translate-y-1/2'
           ]"
         >
           {{ label }}
@@ -16,8 +16,8 @@
         <div
           @click="toggleDropdown"
           :class="[
-            'w-full py-4 pt-6 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent flex justify-between items-center cursor-pointer',
-            'focus:outline-none focus:ring-1 focus:ring-[#3BAB22] focus:border-[#3BAB22] transition-all duration-300',
+            'w-full py-4 pt-6 px-4 bg-white border border-slate-200 flex justify-between items-center cursor-pointer',
+            'focus:outline-none focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] transition-all duration-300 font-medium text-slate-900 rounded-2xl shadow-sm',
             roundedClasses,
             disabled ? 'opacity-50 cursor-not-allowed' : '',
             (hasError || (errorMessage && showError)) ? 'ring-1 ring-red-500 border-red-500' : ''
@@ -47,7 +47,7 @@
         <!-- Dropdown -->
         <div
           v-if="showDropdown"
-          class="absolute z-50 mt-1 w-full bg-white shadow-xl rounded-md overflow-hidden border border-gray-100"
+          class="absolute z-50 mt-1 w-full bg-white  rounded-md overflow-hidden border border-gray-100"
         >
           <!-- Search Input -->
           <div class="p-2 border-b-[0.5px]  sticky top-0 bg-white">
@@ -91,7 +91,7 @@
             <!-- No results message -->
             <div 
               v-if="filteredOptions.length === 0" 
-              class="p-4 text-center text-sm text-gray-500"
+              class="p-4 text-center text-sm text-gray-900"
             >
               No results found for "{{ searchQuery }}"
             </div>
@@ -117,9 +117,9 @@
   
   // Props
   interface Props {
-    modelValue?: string | number
+    modelValue?: string | number | boolean
     label: string
-    options?: Array<string | { label?: string, value?: string, name?: string, code?: string, [key: string]: any }>
+    options?: Array<string | number | boolean | { label?: string, value?: string | number | boolean, name?: string, code?: string, [key: string]: any }>
     placeholder?: string
     disabled?: boolean
     errorMessage?: string
@@ -146,7 +146,7 @@
   
   // Emits
   const emit = defineEmits<{
-    (e: 'update:modelValue', value: string | number): void
+    (e: 'update:modelValue', value: string | number | boolean): void
   }>()
   
   // Refs
@@ -175,14 +175,14 @@
   
   const selectOption = (option: any) => {
     // Support multiple formats: string, { value }, { code }, { name }
-    let val: string | number
-    if (typeof option === 'string') {
+    let val: string | number | boolean
+    if (typeof option === 'string' || typeof option === 'number' || typeof option === 'boolean') {
       val = option
-    } else if (option.value) {
+    } else if (option.value !== undefined) {
       val = option.value
-    } else if (option.code) {
+    } else if (option.code !== undefined) {
       val = option.code
-    } else if (option.name) {
+    } else if (option.name !== undefined) {
       val = option.name
     } else {
       val = option
@@ -195,14 +195,14 @@
   }
   
   const getLabel = (option: any): string => {
-    if (typeof option === 'string') return option
+    if (typeof option === 'string' || typeof option === 'number' || typeof option === 'boolean') return String(option)
     // Support multiple label formats
-    return option.label || option.name || option.value || option.code || String(option)
+    return option.label || option.name || (option.value !== undefined ? String(option.value) : '') || option.code || String(option)
   }
   
-  const getValue = (option: any): string | number => {
-    if (typeof option === 'string') return option
-    return option.value || option.code || option.name || option
+  const getValue = (option: any): string | number | boolean => {
+    if (typeof option === 'string' || typeof option === 'number' || typeof option === 'boolean') return option
+    return option.value !== undefined ? option.value : (option.code || option.name || option)
   }
   
   const selectedLabel = computed(() => {

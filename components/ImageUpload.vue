@@ -25,7 +25,7 @@
               <span class="font-medium text-indigo-600 hover:text-indigo-700">Click to upload</span>
               or drag and drop
             </p>
-            <p class="text-xs text-slate-500 mt-1">PNG, JPG, GIF up to 10MB each</p>
+            <p class="text-sm text-slate-500 mt-1">PNG, JPG, GIF up to 10MB each</p>
           </div>
         </div>
   

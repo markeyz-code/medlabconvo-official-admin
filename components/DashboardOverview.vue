@@ -1,114 +1,126 @@
 <template>
   <div class="space-y-10 animate-in fade-in duration-700">
-    <!-- Welcome Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-slate-200">
-      <div>
-        <h1 class="text-4xl font-black text-slate-900 tracking-tight mb-2">Platform Intelligence Hub</h1>
-        <p class="text-slate-500 font-medium text-lg antialiased">Real-time operational overview and cross-departmental analytics for MedLabConvo.</p>
-      </div>
-      <div class="flex items-center space-x-3">
-        <button 
-          @click="refreshData"
-          class="flex items-center space-x-2 px-5 py-2.5 bg-white border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm group"
-        >
-          <Icon name="heroicons:arrow-path" :class="['w-5 h-5 text-slate-400 group-hover:rotate-180 transition-transform duration-500', loadingActivities ? 'animate-spin' : '']" />
-          <span>Sync Data</span>
-        </button>
-      </div>
-    </div>
-
     <!-- KPI Metrics Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-5">
       <NuxtLink
         v-for="stat in allStats"
         :key="stat.title"
         :to="stat.link"
-        class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#033958]/20 transition-all group overflow-hidden relative"
+        class="bg-white rounded-2xl p-5 border border-slate-100 hover:border-[#033958]/20 transition-all group overflow-hidden relative"
       >
-        <div class="flex justify-between items-start mb-6">
-          <div :class="['p-3 rounded-xl ring-1 ring-inset', stat.bgColor]">
-            <Icon :name="stat.icon" :class="['w-6 h-6', stat.textColor]" />
+        <div class="flex justify-between items-start mb-4">
+          <div :class="['p-2.5 rounded-xl ring-1 ring-inset', stat.bgColor]">
+            <Icon :name="stat.icon" :class="['w-5 h-5', stat.textColor]" />
           </div>
-          <span :class="['text-[10px] font-black px-2 py-1 rounded uppercase tracking-wider', stat.changeColor]">
-            {{ stat.change }}
-          </span>
         </div>
         <div>
-          <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">{{ stat.title }}</p>
-          <h3 class="text-3xl font-black text-slate-900 tracking-tight">{{ stat.value }}</h3>
+          <p class="text-slate-400 text-xs font-semibold mb-1">{{ stat.title }}</p>
+          <h3 class="text-2xl font-bold text-slate-900 tracking-tight">{{ stat.value }}</h3>
         </div>
-        <!-- Subtle accent border on hover -->
-        <div class="absolute bottom-0 left-0 w-full h-1 bg-transparent group-hover:bg-[#3BAB22] transition-all duration-300"></div>
+        <div class="absolute bottom-0 left-0 w-full h-0.5 bg-transparent group-hover:bg-[#033958] transition-all duration-300"></div>
       </NuxtLink>
     </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-10">
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
       <!-- Activity Feed -->
-      <div class="xl:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+      <div class="xl:col-span-2 bg-white rounded-2xl border border-slate-100 overflow-hidden">
+        <div class="p-6 border-b border-slate-50 flex items-center justify-between">
           <div>
-            <h3 class="text-xl font-black text-slate-900 tracking-tight">Audit Trail</h3>
-            <p class="text-slate-500 text-sm font-medium">Monitoring the last 8 administrative actions across the platform.</p>
+            <h3 class="text-base font-bold text-slate-900">Recent activity</h3>
+            <p class="text-slate-400 text-sm font-medium">Last 8 administrative actions</p>
           </div>
-          <Icon name="heroicons:finger-print" class="w-8 h-8 text-slate-300" />
+          <Icon name="heroicons:finger-print" class="w-6 h-6 text-slate-200" />
         </div>
         
-        <div class="divide-y divide-slate-100 max-h-[520px] overflow-y-auto custom-scrollbar">
+        <div class="divide-y divide-slate-50 max-h-[440px] overflow-y-auto custom-scrollbar">
           <div
             v-for="activity in (recentActivities as any)"
             :key="activity._id"
-            class="p-6 flex items-start space-x-5 hover:bg-slate-50 transition-colors"
+            class="px-6 py-4 flex items-start space-x-4 hover:bg-slate-50/50 transition-colors"
           >
-            <div :class="['w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm', getActivityBg(activity.action)]">
-              <Icon :name="getActivityIcon(activity.action)" class="w-6 h-6 text-white" />
+            <div :class="['w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0', getActivityBg(activity.action)]">
+              <Icon :name="getActivityIcon(activity.action)" class="w-4 h-4 text-white" />
             </div>
             <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-4 mb-2">
-                <p class="text-slate-900 font-bold text-sm truncate uppercase tracking-tight">
-                  <span class="text-blue-600 bg-blue-50 px-2 py-0.5 rounded mr-2">{{ activity.action }}</span>
+              <div class="flex items-center justify-between gap-4 mb-1">
+                <p class="text-slate-900 font-semibold text-sm truncate">
+                  <span class="text-[#033958] bg-blue-50 px-1.5 py-0.5 rounded text-xs mr-1.5">{{ activity.action }}</span>
                   {{ activity.resource?.replace('_', ' ') || 'system item' }}
                 </p>
-                <span class="text-[10px] font-black text-slate-400 whitespace-nowrap">{{ formatRelativeTime(activity.createdAt) }}</span>
+                <span class="text-xs font-medium text-slate-400 whitespace-nowrap">{{ formatRelativeTime(activity.createdAt) }}</span>
               </div>
-              <p class="text-slate-500 text-sm leading-relaxed font-medium antialiased">
+              <p class="text-slate-400 text-xs leading-relaxed font-medium">
                 {{ formatActivityDescription(activity) }}
               </p>
             </div>
           </div>
           
-          <div v-if="!recentActivities?.length" class="py-20 text-center">
-            <Icon name="heroicons:inbox" class="w-16 h-16 text-slate-200 mx-auto mb-4" />
-            <p class="text-slate-400 font-bold tracking-tight">No recent administrative logs found.</p>
+          <div v-if="!recentActivities?.length" class="py-16 text-center">
+            <Icon name="heroicons:inbox" class="w-12 h-12 text-slate-200 mx-auto mb-3" />
+            <p class="text-slate-400 font-medium text-sm">No recent activity</p>
           </div>
         </div>
         
-        <NuxtLink to="/dashboard/audit" class="block w-full py-5 text-center bg-slate-50 text-[#033958] font-black text-xs uppercase tracking-widest hover:bg-[#033958] hover:text-white transition-all border-t border-slate-100">
-          View Detailed Audit History
+        <NuxtLink to="/dashboard/audit" class="block w-full py-4 text-center text-[#033958] font-semibold text-sm hover:bg-slate-50 transition-all border-t border-slate-50">
+          View all audit logs
         </NuxtLink>
       </div>
 
-      <!-- Quick Action Panel -->
+      <!-- Right Column -->
       <div class="space-y-6">
-        <div class="bg-[#033958] rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden group">
-          <div class="absolute -right-8 -top-8 w-40 h-40 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-all duration-700"></div>
-          <h3 class="text-2xl font-black mb-4 relative z-10">Invite New Collaborator</h3>
-          <p class="text-blue-100/70 text-sm font-medium mb-8 leading-relaxed relative z-10">Expand your team's capabilities by inviting new members with specific roles and departmental permissions.</p>
-          <NuxtLink to="/dashboard/users" class="inline-flex items-center px-6 py-3 bg-[#3BAB22] text-white rounded-xl font-bold text-sm shadow-xl hover:bg-[#2d851a] transition-all group relative z-10">
-            <span>Initiate Invitation</span>
-            <Icon name="heroicons:paper-airplane" class="ml-2 w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+        <!-- Invite Card -->
+        <div class="bg-[#033958] rounded-2xl p-6 text-white relative overflow-hidden group">
+          <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-all duration-700"></div>
+          <h3 class="text-lg font-bold mb-3 relative z-10">Invite collaborator</h3>
+          <p class="text-blue-100/70 text-sm font-medium mb-6 leading-relaxed relative z-10">Expand your team by inviting new members with specific roles.</p>
+          <NuxtLink to="/dashboard/users" class="inline-flex items-center px-5 py-2.5 bg-[#3BAB22] text-white rounded-xl font-semibold text-sm hover:bg-[#2d851a] transition-all group/btn relative z-10">
+            <span>Send invitation</span>
+            <Icon name="heroicons:paper-airplane" class="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
           </NuxtLink>
         </div>
 
-        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
-          <h3 class="text-xl font-black text-slate-900 tracking-tight mb-6">Service Health</h3>
-          <div class="space-y-4">
-            <div v-for="service in ['API Gateway', 'Core Database', 'Mail Service', 'Storage']" :key="service" class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
-              <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">{{ service }}</span>
-              <div class="flex items-center space-x-2">
-                <span class="text-[10px] font-black text-green-600 uppercase">Operational</span>
-                <div class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-sm shadow-green-200"></div>
+        <!-- Content Distribution Chart -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6">
+          <h3 class="text-base font-bold text-slate-900 mb-5">Content distribution</h3>
+          <div class="space-y-3">
+            <div v-for="item in contentDistribution" :key="item.label" class="group">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-semibold text-slate-500">{{ item.label }}</span>
+                <span class="text-xs font-bold text-slate-900">{{ item.count }}</span>
+              </div>
+              <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div 
+                  :style="{ width: item.percentage + '%' }" 
+                  :class="['h-full rounded-full transition-all duration-700 group-hover:opacity-80', item.color]"
+                ></div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Monthly Activity Sparkline -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6">
+          <div class="flex items-center justify-between mb-5">
+            <h3 class="text-base font-bold text-slate-900">Activity trend</h3>
+            <span class="text-xs font-medium text-slate-400">Last 7 days</span>
+          </div>
+          <div class="flex items-end justify-between gap-1.5 h-24">
+            <div 
+              v-for="(bar, i) in weeklyActivity" 
+              :key="i" 
+              class="flex-1 rounded-md transition-all duration-300 hover:opacity-80 cursor-default relative group/bar"
+              :style="{ height: bar.height + '%' }"
+              :class="bar.isToday ? 'bg-[#033958]' : 'bg-slate-200'"
+            >
+              <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-opacity text-[10px] font-bold text-slate-600 whitespace-nowrap">
+                {{ bar.count }}
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-between mt-2">
+            <span v-for="(bar, i) in weeklyActivity" :key="'label-' + i" class="text-[10px] font-medium text-slate-400 flex-1 text-center">
+              {{ bar.day }}
+            </span>
           </div>
         </div>
       </div>
@@ -129,6 +141,7 @@ import { useGetProducts } from '@/composables/modules/products/useGetProducts'
 import { useGetPrograms } from '@/composables/modules/programs/useGetPrograms'
 import { useGetForms } from '@/composables/modules/forms/useGetForms'
 import { useGetAuditLogs } from '@/composables/modules/audit/useGetAuditLogs'
+import { useGetConvoStacks } from '@/composables/modules/convostack/useGetConvoStacks'
 
 const { users, getUsers } = useGetUsers()
 const { enquiries, getEnquiries } = useGetEnquiries()
@@ -141,30 +154,85 @@ const { products, getProducts } = useGetProducts()
 const { programs, getPrograms } = useGetPrograms()
 const { forms, getForms } = useGetForms()
 const { auditLogs, loading: loadingActivities, getAuditLogs } = useGetAuditLogs()
+const { publications: convoStacks, getPublications: getConvoStacks } = useGetConvoStacks()
 
+// Real stats from actual API data
 const allStats = computed(() => [
-  { title: 'Users DB', value: users?.value?.length || 0, change: '+4.2%', icon: 'heroicons:users', bgColor: 'bg-blue-50 ring-blue-100', textColor: 'text-blue-600', changeColor: 'bg-green-50 text-green-700', link: '/dashboard/users' },
-  { title: 'Teams', value: teamMembers?.value?.length || 0, change: '+1.5%', icon: 'heroicons:user-group', bgColor: 'bg-indigo-50 ring-indigo-100', textColor: 'text-indigo-600', changeColor: 'bg-green-50 text-green-700', link: '/dashboard/teams' },
-  { title: 'Inbound', value: enquiries?.value?.length || 0, change: '-2.1%', icon: 'heroicons:chat-bubble-left-right', bgColor: 'bg-emerald-50 ring-emerald-100', textColor: 'text-emerald-600', changeColor: 'bg-slate-50 text-slate-700', link: '/dashboard/enquiries' },
-  { title: 'Inventory', value: products?.value?.length || 0, change: 'Stable', icon: 'heroicons:shopping-bag', bgColor: 'bg-amber-50 ring-amber-100', textColor: 'text-amber-600', changeColor: 'bg-slate-50 text-slate-700', link: '/dashboard/products' },
-  { title: 'Programs', value: programs?.value?.length || 0, change: '+8%', icon: 'heroicons:academic-cap', bgColor: 'bg-rose-50 ring-rose-100', textColor: 'text-rose-600', changeColor: 'bg-green-50 text-green-700', link: '/dashboard/programs' },
-  { title: 'Audit Logs', value: auditLogs?.value?.length || 0, change: 'Active', icon: 'heroicons:finger-print', bgColor: 'bg-slate-50 ring-slate-100', textColor: 'text-slate-600', changeColor: 'bg-blue-50 text-blue-700', link: '/dashboard/audit' }
+  { title: 'Users', value: users?.value?.length || 0, icon: 'heroicons:users', bgColor: 'bg-blue-50 ring-blue-100', textColor: 'text-blue-600', link: '/dashboard/users' },
+  { title: 'Teams', value: teamMembers?.value?.length || 0, icon: 'heroicons:user-group', bgColor: 'bg-indigo-50 ring-indigo-100', textColor: 'text-indigo-600', link: '/dashboard/teams' },
+  { title: 'Subscribers', value: subscriptions?.value?.length || 0, icon: 'heroicons:envelope', bgColor: 'bg-emerald-50 ring-emerald-100', textColor: 'text-emerald-600', link: '/dashboard/subscriptions' },
+  { title: 'Enquiries', value: enquiries?.value?.length || 0, icon: 'heroicons:chat-bubble-left-right', bgColor: 'bg-amber-50 ring-amber-100', textColor: 'text-amber-600', link: '/dashboard/enquiries' },
+  { title: 'Publications', value: publications?.value?.length || 0, icon: 'heroicons:document-text', bgColor: 'bg-purple-50 ring-purple-100', textColor: 'text-purple-600', link: '/dashboard/publications' },
+  { title: 'Blogs', value: blogs?.value?.length || 0, icon: 'heroicons:newspaper', bgColor: 'bg-sky-50 ring-sky-100', textColor: 'text-sky-600', link: '/dashboard/blogs' },
+  { title: 'LabCast', value: labcasts?.value?.length || 0, icon: 'heroicons:microphone', bgColor: 'bg-pink-50 ring-pink-100', textColor: 'text-pink-600', link: '/dashboard/labcast' },
+  { title: 'ConvoStack', value: convoStacks?.value?.length || 0, icon: 'heroicons:book-open', bgColor: 'bg-teal-50 ring-teal-100', textColor: 'text-teal-600', link: '/dashboard/convostack' },
+  { title: 'Products', value: products?.value?.length || 0, icon: 'heroicons:archive-box', bgColor: 'bg-orange-50 ring-orange-100', textColor: 'text-orange-600', link: '/dashboard/products' },
+  { title: 'Programs', value: programs?.value?.length || 0, icon: 'heroicons:academic-cap', bgColor: 'bg-rose-50 ring-rose-100', textColor: 'text-rose-600', link: '/dashboard/programs' },
+  { title: 'Forms', value: forms?.value?.length || 0, icon: 'heroicons:clipboard-document-list', bgColor: 'bg-cyan-50 ring-cyan-100', textColor: 'text-cyan-600', link: '/dashboard/forms' },
+  { title: 'Audit logs', value: auditLogs?.value?.length || 0, icon: 'heroicons:finger-print', bgColor: 'bg-slate-50 ring-slate-200', textColor: 'text-slate-600', link: '/dashboard/audit' },
 ])
+
+// Content distribution bar chart based on real data
+const contentDistribution = computed(() => {
+  const items = [
+    { label: 'Publications', count: publications?.value?.length || 0, color: 'bg-purple-500' },
+    { label: 'Blogs', count: blogs?.value?.length || 0, color: 'bg-sky-500' },
+    { label: 'LabCast episodes', count: labcasts?.value?.length || 0, color: 'bg-pink-500' },
+    { label: 'ConvoStack', count: convoStacks?.value?.length || 0, color: 'bg-teal-500' },
+    { label: 'Programs', count: programs?.value?.length || 0, color: 'bg-rose-500' },
+    { label: 'Products', count: products?.value?.length || 0, color: 'bg-orange-500' },
+  ]
+  const maxCount = Math.max(...items.map(i => i.count), 1)
+  return items.map(item => ({
+    ...item,
+    percentage: Math.round((item.count / maxCount) * 100)
+  }))
+})
+
+// Weekly activity chart derived from audit logs by day
+const weeklyActivity = computed(() => {
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  const todayIndex = new Date().getDay() // 0=Sun
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  
+  // Count audit logs per day of week from the last 7 days
+  const dayCounts: Record<string, number> = {}
+  days.forEach(d => dayCounts[d] = 0)
+  
+  const now = new Date()
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+  
+  ;(auditLogs?.value || []).forEach((log: any) => {
+    const logDate = new Date(log.createdAt)
+    if (logDate >= sevenDaysAgo) {
+      const dayName = dayNames[logDate.getDay()]
+      if (dayName in dayCounts) {
+        dayCounts[dayName]++
+      }
+    }
+  })
+
+  const maxCount = Math.max(...Object.values(dayCounts), 1)
+  const todayName = dayNames[todayIndex]
+  
+  return days.map(day => ({
+    day,
+    count: dayCounts[day],
+    height: Math.max((dayCounts[day] / maxCount) * 100, 8), // minimum 8% visibility
+    isToday: day === todayName,
+  }))
+})
 
 const recentActivities = computed(() => auditLogs?.value?.slice(0, 8) || [])
 
-const refreshData = async () => {
-  await Promise.all([getUsers(), getEnquiries(), getSubscriptions(), getBlogs(), getTeamMembers(), getPublications(), getLabCasts(), getProducts(), getPrograms(), getForms(), getAuditLogs()])
-}
-
 const getActivityBg = (action: string) => {
-  const map = { create: 'bg-green-500', update: 'bg-[#033958]', delete: 'bg-rose-500', login: 'bg-[#3BAB22]', logout: 'bg-slate-400' }
-  return map[action as keyof typeof map] || 'bg-slate-500'
+  const map: Record<string, string> = { create: 'bg-green-500', update: 'bg-[#033958]', delete: 'bg-rose-500', login: 'bg-[#3BAB22]', logout: 'bg-slate-400' }
+  return map[action] || 'bg-slate-500'
 }
 
 const getActivityIcon = (action: string) => {
-  const map = { create: 'heroicons:plus-circle', update: 'heroicons:arrow-path', delete: 'heroicons:trash', login: 'heroicons:key', logout: 'heroicons:lock-closed' }
-  return map[action as keyof typeof map] || 'heroicons:information-circle'
+  const map: Record<string, string> = { create: 'heroicons:plus-circle', update: 'heroicons:arrow-path', delete: 'heroicons:trash', login: 'heroicons:key', logout: 'heroicons:lock-closed' }
+  return map[action] || 'heroicons:information-circle'
 }
 
 const formatActivityDescription = (activity: any) => {
@@ -180,6 +248,14 @@ const formatRelativeTime = (date: string) => {
   if (diff < 1440) return `${Math.floor(diff / 60)}h`
   return `${Math.floor(diff / 1440)}d`
 }
+
+onMounted(async () => {
+  await Promise.all([
+    getUsers(), getEnquiries(), getSubscriptions(), getBlogs(), 
+    getTeamMembers(), getPublications(), getLabCasts(), getProducts(), 
+    getPrograms(), getForms(), getAuditLogs(), getConvoStacks()
+  ])
+})
 </script>
 
 <style scoped>

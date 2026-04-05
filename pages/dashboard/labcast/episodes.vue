@@ -26,7 +26,7 @@
               <input
                 v-model="searchQuery"
                 type="text"
-                placeholder="Search episodes..."
+               
                 class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 @input="debouncedSearch"
               />
@@ -112,7 +112,7 @@
         <div v-else class="p-12 text-center">
           <Icon name="lucide:podcast" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h3 class="text-lg font-medium text-gray-900 mb-2">No episodes found</h3>
-          <p class="text-gray-500 mb-6">Get started by creating your first episode.</p>
+          <p class="text-gray-900 mb-6">Get started by creating your first episode.</p>
           <button
             @click="showCreateModal = true"
             class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"

@@ -1,12 +1,12 @@
 <template>
-  <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+  <div class="">
     <!-- Page header -->
-    <div class="sm:flex sm:justify-between sm:items-center mb-8">
+    <!-- <div class="sm:flex sm:justify-between sm:items-center mb-8">
       <div class="mb-4 sm:mb-0">
-        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">Roles Ledger ✨</h1>
-        <p class="text-slate-500 font-medium text-sm mt-1">Manage system identities, access contours, and assign aggregated operational privileges.</p>
+        <h1 class="text-2xl md:text-2xl text-slate-800 font-bold">Roles ✨</h1>
+        <p class="text-slate-500 font-medium text-sm mt-1">Manage user roles and assign permissions.</p>
       </div>
-    </div>
+    </div> -->
 
     <!-- Core component -->
     <RolesModule />

@@ -20,7 +20,7 @@
       <div 
         v-if="isOpen"
         v-click-outside="() => isOpen = false"
-        class="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
+        class="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg  overflow-hidden"
       >
         <div class="max-h-60 overflow-y-auto">
           <button

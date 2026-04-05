@@ -21,16 +21,16 @@
           <table class="w-full">
             <thead class="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Email</th>
+                <th class="px-4 py-3 text-left text-sm font-medium text-slate-500 ">Date</th>
+                <th class="px-4 py-3 text-left text-sm font-medium text-slate-500 ">Email</th>
                 <th
                   v-for="field in form.fields"
                   :key="field.id"
-                  class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase"
+                  class="px-4 py-3 text-left text-sm font-medium text-slate-500 "
                 >
                   {{ field.label }}
                 </th>
-                <th class="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase">Actions</th>
+                <th class="px-4 py-3 text-right text-sm font-medium text-slate-500 ">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-200">

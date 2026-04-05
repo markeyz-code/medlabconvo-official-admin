@@ -24,7 +24,7 @@
           >
             <div
               v-if="modelValue"
-              class="relative w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden"
+              class="relative w-full max-w-5xl bg-white rounded-3xl  overflow-hidden"
             >
               <!-- Header with Gradient -->
               <div class="relative bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 px-8 py-6">
@@ -79,7 +79,7 @@
                             type="text"
                             required
                             class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
-                            placeholder="Enter an engaging episode title..."
+                           
                           />
                           <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
                         </div>
@@ -96,7 +96,7 @@
                             required
                             rows="4"
                             class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white resize-none group-hover:border-gray-300"
-                            placeholder="Describe what this episode is about..."
+                           
                           ></textarea>
                           <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
                         </div>
@@ -216,7 +216,7 @@
                                 <p class="text-sm font-medium text-gray-700">
                                   <span class="text-blue-600">Click to upload</span> or drag and drop
                                 </p>
-                                <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
+                                <p class="text-sm text-gray-900 mt-1">PNG, JPG, GIF up to 10MB</p>
                               </div>
                             </div>
 
@@ -289,7 +289,7 @@
                                 <p class="text-sm font-medium text-gray-700">
                                   <span class="text-green-600">Click to upload</span> or drag and drop
                                 </p>
-                                <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
+                                <p class="text-sm text-gray-900 mt-1">PNG, JPG, GIF up to 10MB</p>
                               </div>
                             </div>
 
@@ -404,7 +404,7 @@
                             v-model="form.guest"
                             type="text"
                             class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-purple-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
-                            placeholder="Guest name (optional)"
+                           
                           />
                           <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"  xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M168,56a8,8,0,0,1,8-8h16V32a8,8,0,0,1,16,0V48h16a8,8,0,0,1,0,16H208V80a8,8,0,0,1-16,0V64H176A8,8,0,0,1,168,56Zm62.56,54.68a103.92,103.92,0,1,1-85.24-85.24,8,8,0,0,1-2.64,15.78A88.07,88.07,0,0,0,40,128a87.62,87.62,0,0,0,22.24,58.41A79.66,79.66,0,0,1,98.3,157.66a48,48,0,1,1,59.4,0,79.66,79.66,0,0,1,36.06,28.75A87.62,87.62,0,0,0,216,128a88.85,88.85,0,0,0-1.22-14.68,8,8,0,1,1,15.78-2.64ZM128,152a32,32,0,1,0-32-32A32,32,0,0,0,128,152Zm0,64a87.57,87.57,0,0,0,53.92-18.5,64,64,0,0,0-107.84,0A87.57,87.57,0,0,0,128,216Z"></path></svg>
                           <!-- <Icon name="lucide:user-plus" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /> -->
@@ -420,7 +420,7 @@
                             v-model="form.guestTitle"
                             type="text"
                             class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-purple-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
-                            placeholder="Guest title/profession"
+                           
                           />
                           <svg xmlns="http://www.w3.org/2000/svg" width="32" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M216,56H176V48a24,24,0,0,0-24-24H104A24,24,0,0,0,80,48v8H40A16,16,0,0,0,24,72V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56ZM96,48a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM216,72v41.61A184,184,0,0,1,128,136a184.07,184.07,0,0,1-88-22.38V72Zm0,128H40V131.64A200.19,200.19,0,0,0,128,152a200.25,200.25,0,0,0,88-20.37V200ZM104,112a8,8,0,0,1,8-8h32a8,8,0,0,1,0,16H112A8,8,0,0,1,104,112Z"></path></svg>
                           <!-- <Icon name="lucide:briefcase" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /> -->
@@ -449,7 +449,7 @@
                             v-model="form.spotifyUrl"
                             type="url"
                             class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-green-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
-                            placeholder="https://open.spotify.com/episode/..."
+                           
                           />
                           <div class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
                             <!-- <Icon name="lucide:music" class="w-3 h-3 text-white" /> -->
@@ -467,7 +467,7 @@
                             v-model="form.appleUrl"
                             type="url"
                             class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:0 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
-                            placeholder="https://podcasts.apple.com/..."
+                           
                           />
                           <div class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-gray-800 rounded-full flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-white" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M201.89,54.66A103.43,103.43,0,0,0,128.79,24H128A104,104,0,0,0,24,128v56a24,24,0,0,0,24,24H64a24,24,0,0,0,24-24V144a24,24,0,0,0-24-24H40.36A88,88,0,0,1,128,40h.67a87.71,87.71,0,0,1,87,80H192a24,24,0,0,0-24,24v40a24,24,0,0,0,24,24h16a24,24,0,0,0,24-24V128A103.41,103.41,0,0,0,201.89,54.66ZM64,136a8,8,0,0,1,8,8v40a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V136Zm152,48a8,8,0,0,1-8,8H192a8,8,0,0,1-8-8V144a8,8,0,0,1,8-8h24Z"></path></svg>
@@ -498,7 +498,7 @@
                             v-model="tagsInput"
                             type="text"
                             class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-teal-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
-                            placeholder="Enter tags separated by commas (e.g., technology, AI, research)"
+                           
                             @input="updateTags"
                           />
                           <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M243.31,136,144,36.69A15.86,15.86,0,0,0,132.69,32H40a8,8,0,0,0-8,8v92.69A15.86,15.86,0,0,0,36.69,144L136,243.31a16,16,0,0,0,22.63,0l84.68-84.68a16,16,0,0,0,0-22.63Zm-96,96L48,132.69V48h84.69L232,147.31ZM96,84A12,12,0,1,1,84,72,12,12,0,0,1,96,84Z"></path></svg>

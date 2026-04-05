@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex text-gray-900 bg-white">
+  <div class="h-screen overflow-hidden flex text-gray-900 bg-white">
     <!-- Left: Image Cover -->
     <div class="hidden lg:flex lg:w-1/2 relative bg-[#033958] overflow-hidden items-end p-12">
       <img src="@/assets/img/auth-bg.png" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay" />
@@ -18,8 +18,8 @@
     <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 md:p-16 lg:p-24 overflow-y-auto">
       <div class="w-full max-w-[440px]">
         
-        <h2 class="text-3xl font-extrabold text-[#033958] mb-2 tracking-tight">Welcome Back</h2>
-        <p class="text-gray-500 mb-10 font-medium">Log in to your admin dashboard.</p>
+        <h2 class="text-2xl font-extrabold text-[#033958] mb-2 tracking-tight">Welcome Back</h2>
+        <p class="text-gray-900 mb-10 font-medium">Log in to your admin dashboard.</p>
 
         <!-- Login Form -->
         <form @submit.prevent="handleLogin" class="space-y-6">
@@ -55,7 +55,7 @@
                 type="checkbox"
                 class="custom-checkbox"
               />
-              <span class="ml-2 text-sm text-gray-500 group-hover:text-gray-700 transition-colors font-medium">Remember me</span>
+              <span class="ml-2 text-sm text-gray-900 group-hover:text-gray-700 transition-colors font-medium">Remember me</span>
             </label>
             <NuxtLink to="/forgot-password" class="text-sm text-[#033958] hover:text-[#044a73] font-bold transition-colors underline-offset-4 hover:underline">
               Forgot Password?
@@ -86,7 +86,7 @@
         </form>
 
         <div class="mt-10 text-center pt-8 border-t border-gray-100">
-          <p class="text-gray-500 font-medium text-sm">
+          <p class="text-gray-900 font-medium text-sm">
             Don't have an account?
             <NuxtLink to="/signup" class="text-[#3BAB22] hover:text-[#2d851a] font-bold underline-offset-4 hover:underline transition-all ml-1">
               Join here

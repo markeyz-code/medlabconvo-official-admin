@@ -28,7 +28,7 @@
           </div>
         </div>
         
-        <h1 class="text-3xl font-bold text-slate-900 mb-2">
+        <h1 class="text-2xl font-bold text-slate-900 mb-2">
           {{ program.title }}
         </h1>
         <p class="text-lg text-indigo-600 font-medium mb-4">{{ program.category }}</p>
@@ -158,9 +158,9 @@
             >
               <div class="flex items-center space-x-2">
                 <span class="text-sm font-medium text-slate-700">{{ field.label }}</span>
-                <span v-if="field.required" class="text-red-500 text-xs">*</span>
+                <span v-if="field.required" class="text-red-500 text-sm">*</span>
               </div>
-              <span class="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">{{ field.type }}</span>
+              <span class="text-sm text-slate-500 bg-slate-200 px-2 py-1 rounded">{{ field.type }}</span>
             </div>
             <div v-if="program.formFields.length > 5" class="text-center py-2">
               <span class="text-sm text-slate-500">+{{ program.formFields.length - 5 }} more fields</span>

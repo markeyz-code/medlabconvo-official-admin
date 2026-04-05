@@ -9,7 +9,7 @@
           type="text"
           required
           class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-          placeholder="Enter form title..."
+         
         />
       </div>
       
@@ -50,7 +50,7 @@
           <Icon name="heroicons:x-mark" class="w-4 h-4" />
         </button>
       </div>
-      <p class="mt-1 text-xs text-slate-500">
+      <p class="mt-1 text-sm text-slate-500">
         {{ form.programId ? 'This form will be linked to the selected program' : 'This form will be a standalone form' }}
       </p>
     </div>
@@ -61,7 +61,7 @@
         v-model="form.description"
         rows="3"
         class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-        placeholder="Form description..."
+       
       ></textarea>
     </div>
 
@@ -71,7 +71,7 @@
         v-model="form.instructions"
         rows="2"
         class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-        placeholder="Instructions for form users..."
+       
       ></textarea>
     </div>
 
@@ -79,7 +79,7 @@
     <div class="col-span-full">
       <label class="block text-sm font-medium text-slate-700 mb-2">Form Banner (Optional)</label>
       <ImageUpload v-model="form.bannerImage" />
-      <p class="mt-1 text-xs text-slate-500">
+      <p class="mt-1 text-sm text-slate-500">
         Upload a promotional banner or poster to be displayed beautifully at the top of the form.
       </p>
     </div>
@@ -123,7 +123,7 @@
                 type="text"
                 required
                 class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                placeholder="Field label..."
+               
               />
             </div>
             
@@ -153,7 +153,7 @@
                 v-model="field.placeholder"
                 type="text"
                 class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                placeholder="Field placeholder..."
+               
               />
             </div>
             
@@ -175,7 +175,7 @@
               v-model="field.description"
               type="text"
               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-              placeholder="Help text for this field..."
+             
             />
           </div>
 
@@ -192,7 +192,7 @@
                   v-model="field.options[optionIndex]"
                   type="text"
                   class="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                  placeholder="Option text..."
+                 
                 />
                 <button
                   @click="removeOption(field, optionIndex)"
@@ -223,7 +223,7 @@
         v-model="form.successMessage"
         type="text"
         class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-        placeholder="Thank you for your submission!"
+       
       />
     </div>
 
@@ -234,7 +234,7 @@
         v-model="form.redirectUrl"
         type="url"
         class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-        placeholder="https://example.com/thank-you"
+       
       />
     </div>
 

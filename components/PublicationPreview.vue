@@ -19,7 +19,7 @@
           </button> -->
         </div>
         
-        <h1 class="text-3xl font-bold text-slate-900 mb-4">
+        <h1 class="text-2xl font-bold text-slate-900 mb-4">
           {{ publication.title }}
         </h1>
         

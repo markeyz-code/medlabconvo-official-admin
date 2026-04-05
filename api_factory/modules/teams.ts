@@ -6,29 +6,18 @@ export type Profile = {
   url: string
 }
 
-export type Publication = {
-  title: string
-  authors: string
-  year: number
-  journal: string
-  doi?: string
-  pubLink?: string
-  doiLink?: string
-}
-
 export type TeamMember = {
-  id?: string
+  id?: string // slug
   _id?: string
   image?: string
   name: string
-  initials: string
+  roleCategory: string
   title: string
-  isActive?: boolean
   position: number
   profiles: Profile[]
   bio: string
-  methods?: string[]
-  publications?: Publication[]
+  achievements: string[]
+  isDeleted?: boolean
   createdAt?: string
   updatedAt?: string
 }
@@ -36,52 +25,40 @@ export type TeamMember = {
 export type CreateTeamMemberData = {
   image?: string
   name: string
-  initials: string
+  roleCategory: string
   title: string
-  isActive?: boolean
   position: number
   profiles: Profile[]
   bio: string
-  methods?: string[]
-  publications?: Publication[]
+  achievements: string[]
 }
 
 export type UpdateTeamMemberData = Partial<CreateTeamMemberData>
 
 // API Factory
 export const teams_api = {
-  $_create_team_member: async (memberData: CreateTeamMemberData) => {
-    const url = `/teams`
-    return GATEWAY_ENDPOINT.post(url, memberData)
+  $_create_member: async (memberData: CreateTeamMemberData) => {
+    return GATEWAY_ENDPOINT.post('/teams', memberData)
   },
 
-  $_get_team_members: async () => {
-    const url = `/teams`
-    return GATEWAY_ENDPOINT.get(url)
+  $_get_members: async () => {
+    return GATEWAY_ENDPOINT.get('/teams')
   },
 
-  $_get_team_member: async (memberId: string) => {
-    const url = `/teams/${memberId}`
-    return GATEWAY_ENDPOINT.get(url)
+  $_get_member: async (id: string) => {
+    return GATEWAY_ENDPOINT.get(`/teams/${id}`)
   },
 
-  $_update_team_member: async (memberId: string, memberData: UpdateTeamMemberData) => {
-    const url = `/teams/${memberId}`
-    return GATEWAY_ENDPOINT.patch(url, memberData)
+  $_update_member: async (id: string, memberData: UpdateTeamMemberData) => {
+    return GATEWAY_ENDPOINT.patch(`/teams/${id}`, memberData)
   },
 
-  $_soft_delete_team_member: async (memberId: string) => {
-    const url = `/teams/${memberId}/soft`
+  $_delete_member: async (id: string, hard: boolean = false) => {
+    const url = `/teams/${id}/${hard ? 'hard' : 'soft'}`
     return GATEWAY_ENDPOINT.delete(url)
   },
 
-  $_hard_delete_team_member: async (memberId: string) => {
-    const url = `/teams/${memberId}/hard`
-    return GATEWAY_ENDPOINT.delete(url)
-  },
-
-  $_restore_team_member: async (memberId: string) => {
-    const url = `/teams/${memberId}/restore`
-    return GATEWAY_ENDPOINT.patch(url)
+  $_restore_member: async (id: string) => {
+    return GATEWAY_ENDPOINT.patch(`/teams/${id}/restore`)
   },
 }

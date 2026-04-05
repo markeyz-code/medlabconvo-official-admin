@@ -19,7 +19,7 @@
         
         <div
           v-if="showCountryDropdown"
-          class="absolute top-full left-0 right-0 mt-1 bg-white border-[0.5px] border-gray-25 rounded-lg shadow-xl z-50 max-h-64 overflow-y-auto"
+          class="absolute top-full left-0 right-0 mt-1 bg-white border-[0.5px] border-gray-25 rounded-lg  z-50 max-h-64 overflow-y-auto"
         >
           <input
             v-model="countrySearchQuery"

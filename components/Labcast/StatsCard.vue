@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white rounded-lg shadow-sm border  p-6">
+    <div class="bg-white rounded-lg  border  p-6">
       <div class="flex items-center">
         <div :class="[
           'flex-shrink-0 p-3 rounded-lg',
@@ -14,7 +14,7 @@
           </div>
           <div v-else>
             <p class="text-2xl font-semibold text-gray-900">{{ value }}</p>
-            <p class="text-sm text-gray-500">{{ title }}</p>
+            <p class="text-sm text-gray-900">{{ title }}</p>
           </div>
         </div>
       </div>

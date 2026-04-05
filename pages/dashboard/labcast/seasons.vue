@@ -35,7 +35,7 @@
               {{ season.episodeCount }} {{ season.episodeCount === 1 ? 'episode' : 'episodes' }}
             </p>
             
-            <div class="flex items-center text-sm text-gray-500">
+            <div class="flex items-center text-sm text-gray-900">
               <Icon name="lucide:calendar" class="w-4 h-4 mr-1" />
               <span>Season {{ season.season }}</span>
             </div>
@@ -46,7 +46,7 @@
       <div v-else class="text-center py-12">
         <Icon name="lucide:layers" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
         <h3 class="text-lg font-medium text-gray-900 mb-2">No seasons found</h3>
-        <p class="text-gray-500">Create your first episode to get started.</p>
+        <p class="text-gray-900">Create your first episode to get started.</p>
       </div>
   
       <!-- Season Episodes Modal -->
@@ -98,13 +98,13 @@
                   <h4 class="text-sm font-medium text-gray-900 truncate">
                     {{ episode.title }}
                   </h4>
-                  <p class="text-sm text-gray-500">
+                  <p class="text-sm text-gray-900">
                     Episode {{ episode.episode }} • {{ episode.duration }}m
                   </p>
                   <div class="flex items-center mt-1">
                     <span
                       :class="[
-                        'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium',
+                        'inline-flex items-center px-2 py-1 rounded-full text-sm font-medium',
                         episode.isActive
                           ? 'bg-green-100 text-green-800'
                           : 'bg-gray-100 text-gray-800'
@@ -127,7 +127,7 @@
   
             <div v-else class="text-center py-8">
               <Icon name="lucide:podcast" class="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p class="text-gray-500">No episodes found for this season</p>
+              <p class="text-gray-900">No episodes found for this season</p>
             </div>
           </div>
         </div>

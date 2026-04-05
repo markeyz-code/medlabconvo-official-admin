@@ -9,7 +9,7 @@
   >
     <span
       :class="[
-        'inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-transform duration-200 ease-in-out',
+        'inline-block h-5 w-5 transform rounded-full bg-white  transition-transform duration-200 ease-in-out',
         modelValue ? 'translate-x-6' : 'translate-x-1'
       ]"
     />

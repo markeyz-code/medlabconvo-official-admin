@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex text-gray-900 bg-white">
+  <div class="h-screen overflow-hidden flex text-gray-900 bg-white">
     <!-- Left: Image Cover -->
     <div class="hidden lg:flex lg:w-1/2 relative bg-[#033958] overflow-hidden items-end p-12">
       <img src="@/assets/img/auth-bg.png" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay" />
@@ -18,8 +18,8 @@
     <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 md:p-16 lg:p-24 overflow-y-auto">
       <div class="w-full max-w-[440px]">
         
-        <h2 class="text-3xl font-extrabold text-[#033958] mb-4 tracking-tight">Create New Password</h2>
-        <p class="text-gray-500 mb-8 font-medium">
+        <h2 class="text-2xl font-extrabold text-[#033958] mb-4 tracking-tight">Create New Password</h2>
+        <p class="text-gray-900 mb-8 font-medium">
           Enter the 6-digit code sent to <span class="text-[#033958] font-bold">{{ email }}</span> and create your new password.
         </p>
 
@@ -71,7 +71,7 @@
         </form>
         
         <div class="mt-8 text-center">
-            <NuxtLink to="/forgot-password" class="text-sm font-medium text-gray-500 hover:text-[#033958] transition-colors">
+            <NuxtLink to="/forgot-password" class="text-sm font-medium text-gray-900 hover:text-[#033958] transition-colors">
               Wrong email or need a new code? Try again
             </NuxtLink>
         </div>

@@ -1,445 +1,364 @@
 <template>
-  <div class="">
-    <!-- Progress Steps -->
-    <div class="mb-8">
-  <!-- Desktop Layout -->
-  <!-- Mobile Layout -->
-  <div class="">
-    <div class="flex flex-wrap gap-4">
-      <div
-        v-for="(step, index) in steps"
-        :key="index"
-        class="flex items-center min-w-0"
-      >
+  <div class="animate-in slide-in-from-right duration-500">
+    <!-- Step Indicator -->
+    <div class="mb-10">
+      <div class="flex items-center justify-between px-2">
         <div
-          :class="[
-            'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200',
-            currentStep > index
-              ? 'bg-indigo-600 text-white'
-              : currentStep === index
-              ? 'bg-indigo-100 text-indigo-600 border-2 border-indigo-600'
-              : 'bg-gray-100 text-gray-400'
-          ]"
+          v-for="(step, index) in steps"
+          :key="index"
+          class="flex flex-col items-center relative flex-1"
         >
-          <Check v-if="currentStep > index" class="w-4 h-4" />
-          <span v-else>{{ index + 1 }}</span>
+          <!-- Line -->
+          <div 
+            v-if="index < steps.length - 1"
+            class="absolute top-4 left-1/2 w-full h-[1px] bg-slate-100 -z-10"
+          >
+            <div 
+              class="h-full bg-[#033958] transition-all duration-500"
+              :style="{ width: currentStep > index ? '100%' : '0%' }"
+            ></div>
+          </div>
+
+          <div
+            @click="currentStep = index <= maxStepReached ? index : currentStep"
+            :class="[
+              'w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 cursor-pointer',
+              currentStep === index 
+                ? 'bg-[#033958] text-white ring-4 ring-[#033958]/10' 
+                : currentStep > index 
+                ? 'bg-green-500 text-white' 
+                : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-slate-100'
+            ]"
+          >
+            <Icon v-if="currentStep > index" name="heroicons:check" class="w-5 h-5" />
+            <span v-else>{{ index + 1 }}</span>
+          </div>
+          <span
+            :class="[
+              'mt-3 text-[11px] font-bold transition-colors duration-500',
+              currentStep >= index ? 'text-[#033958]' : 'text-slate-300'
+            ]"
+          >
+            {{ step.title }}
+          </span>
         </div>
-        <span
-          :class="[
-            'ml-2 text-sm font-medium whitespace-nowrap',
-            currentStep >= index ? 'text-indigo-600' : 'text-gray-400'
-          ]"
-        >
-          {{ step.title }}
-        </span>
       </div>
     </div>
-  </div>
-</div>
 
     <!-- Step Content -->
-    <form @submit.prevent="handleSubmit" class="space-y-6">
+    <form @submit.prevent="handleSubmit" class="space-y-8">
       <!-- Step 1: Basic Information -->
-      <div v-if="currentStep === 0" class="space-y-6">
-        <div class="text-center mb-6">
-          <h3 class="text-lg font-semibold text-gray-900">Basic Program Information</h3>
-          <p class="text-sm text-gray-600">Let's start with the essential details of your program</p>
-        </div>
+      <div v-if="currentStep === 0" class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <header class="mb-8">
+          <h3 class="text-xl font-bold text-slate-900 mb-1">Basic details</h3>
+          <p class="text-sm text-slate-500">Enter the core information for this program.</p>
+        </header>
 
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            Program Title *
-          </label>
-          <input
+        <div class="space-y-4">
+          <AnimatedInput
             v-model="form.title"
+            id="programTitle"
+            label="Program title"
             type="text"
             required
-            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-            placeholder="Enter program title..."
+            position="top"
           />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            Category *
-          </label>
-          <select
-            v-model="form.category"
-            required
-            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-          >
-            <option value="">Select category</option>
-            <option value="Technology Training">Technology Training</option>
-            <option value="Business Development">Business Development</option>
-            <option value="Design & Creative">Design & Creative</option>
-            <option value="Marketing & Sales">Marketing & Sales</option>
-            <option value="Data Science">Data Science</option>
-            <option value="Healthcare">Healthcare</option>
-            <option value="Education">Education</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            Description *
-          </label>
-          <textarea
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+            <SelectInput
+              v-model="form.category"
+              label="Category"
+              :options="categoryOptions"
+              position="middle"
+            />
+            <AnimatedInput
+              v-model="form.duration"
+              id="programDuration"
+              label="Duration (e.g. 12 weeks)"
+              type="text"
+              required
+              position="middle"
+            />
+          </div>
+          <AnimatedInput
             v-model="form.description"
-            rows="6"
+            id="programDesc"
+            label="Description"
+            type="textarea"
+            :rows="6"
             required
-            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none"
-            placeholder="Provide a detailed description of your program..."
-          ></textarea>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            Duration *
-          </label>
-          <input
-            v-model="form.duration"
-            type="text"
-            required
-            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-            placeholder="e.g., 4 months, 12 weeks, 6 sessions"
+            position="bottom"
           />
         </div>
 
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            Application Form (Internal)
-          </label>
-          <select
-            v-model="form.formId"
-            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-          >
-            <option value="">No link to internal form</option>
-            <option v-for="f in forms" :key="f.id" :value="f.id">
-              {{ f.title }}
-            </option>
-          </select>
-          <p class="mt-1 text-xs text-gray-500">Select a standalone form to link to this program.</p>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            External Form Link (Optional)
-          </label>
-          <input
-            v-model="form.externalFormLink"
-            type="url"
-            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-            placeholder="https://forms.gle/..."
-          />
-          <p class="mt-1 text-xs text-gray-500">If provided, "Apply Now" will redirect to this link instead of the linked internal form.</p>
-        </div>
+        <section class="pt-6 border-t border-slate-50">
+          <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Registration settings</h4>
+          <div class="space-y-4">
+            <SelectInput
+              v-model="form.formId"
+              label="Connect internal form (optional)"
+              :options="formOptions"
+            />
+            <AnimatedInput
+              v-model="form.externalFormLink"
+              id="programExtLink"
+              label="External registration link"
+              type="url"
+            />
+          </div>
+        </section>
       </div>
 
-      <!-- Step 2: Program Details -->
-      <div v-if="currentStep === 1" class="space-y-6">
-        <div class="text-center mb-6">
-          <h3 class="text-lg font-semibold text-gray-900">Program Details</h3>
-          <p class="text-sm text-gray-600">Define the focus areas, outcomes, and responsibilities</p>
-        </div>
+      <!-- Step 2: Curriculum & Focus -->
+      <div v-if="currentStep === 1" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <header class="mb-8">
+          <h3 class="text-xl font-bold text-slate-900 mb-1">Curriculum design</h3>
+          <p class="text-sm text-slate-500">Detail the focus and outcomes of this program.</p>
+        </header>
 
         <!-- Focus Areas -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            Focus Areas
-          </label>
-          <div class="space-y-2">
+        <section>
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="text-sm font-bold text-slate-400 px-1">Specific focus areas</h4>
+            <button @click="addFocusArea" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add area</button>
+          </div>
+          <div class="space-y-3">
             <div
               v-for="(area, index) in form.focusAreas"
               :key="index"
-              class="flex items-center space-x-2"
+              class="flex items-center group"
             >
-              <input
-                v-model="form.focusAreas[index]"
-                type="text"
-                class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="Enter focus area..."
-              />
+              <div class="flex-1">
+                <AnimatedInput
+                  v-model="form.focusAreas[index]"
+                  :id="'area-'+index"
+                  label="Area title"
+                />
+              </div>
               <button
                 v-if="form.focusAreas.length > 1"
                 @click="removeFocusArea(index)"
                 type="button"
-                class="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                class="ml-2 p-3 text-slate-300 hover:text-red-500 transition-colors"
               >
-                <Trash2 class="w-4 h-4" />
+                <Icon name="heroicons:trash" class="w-5 h-5" />
               </button>
             </div>
-            <button
-              @click="addFocusArea"
-              type="button"
-              class="inline-flex items-center px-3 py-2 text-sm text-indigo-600 hover:text-indigo-700 transition-colors"
-            >
-              <Plus class="w-4 h-4 mr-1" />
-              Add Focus Area
-            </button>
           </div>
-        </div>
+        </section>
 
         <!-- Outcomes -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            Learning Outcomes
-          </label>
-          <div class="space-y-2">
+        <section>
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="text-sm font-bold text-slate-400 px-1">Learning outcomes</h4>
+            <button @click="addOutcome" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add outcome</button>
+          </div>
+          <div class="space-y-3">
             <div
               v-for="(outcome, index) in form.outcomes"
               :key="index"
-              class="flex items-center space-x-2"
+              class="flex items-center group"
             >
-              <input
-                v-model="form.outcomes[index]"
-                type="text"
-                class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="Enter learning outcome..."
-              />
+              <div class="flex-1">
+                <AnimatedInput
+                  v-model="form.outcomes[index]"
+                  :id="'outcome-'+index"
+                  label="Outcome description"
+                />
+              </div>
               <button
                 v-if="form.outcomes.length > 1"
                 @click="removeOutcome(index)"
                 type="button"
-                class="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                class="ml-2 p-3 text-slate-300 hover:text-red-500 transition-colors"
               >
-                <Trash2 class="w-4 h-4" />
+                <Icon name="heroicons:trash" class="w-5 h-5" />
               </button>
             </div>
-            <button
-              @click="addOutcome"
-              type="button"
-              class="inline-flex items-center px-3 py-2 text-sm text-indigo-600 hover:text-indigo-700 transition-colors"
-            >
-              <Plus class="w-4 h-4 mr-1" />
-              Add Outcome
-            </button>
           </div>
-        </div>
+        </section>
 
         <!-- Key Responsibilities -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            Key Responsibilities
-          </label>
-          <div class="space-y-2">
+        <section>
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="text-sm font-bold text-slate-400 px-1">Participant expectations</h4>
+            <button @click="addResponsibility" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add expectation</button>
+          </div>
+          <div class="space-y-3">
             <div
               v-for="(responsibility, index) in form.keyResponsibilities"
               :key="index"
-              class="flex items-center space-x-2"
+              class="flex items-center group"
             >
-              <input
-                v-model="form.keyResponsibilities[index]"
-                type="text"
-                class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                placeholder="Enter key responsibility..."
-              />
+              <div class="flex-1">
+                <AnimatedInput
+                  v-model="form.keyResponsibilities[index]"
+                  :id="'resp-'+index"
+                  label="Expectation"
+                />
+              </div>
               <button
                 v-if="form.keyResponsibilities.length > 1"
                 @click="removeResponsibility(index)"
                 type="button"
-                class="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                class="ml-2 p-3 text-slate-300 hover:text-red-500 transition-colors"
               >
-                <Trash2 class="w-4 h-4" />
+                <Icon name="heroicons:trash" class="w-5 h-5" />
               </button>
             </div>
-            <button
-              @click="addResponsibility"
-              type="button"
-              class="inline-flex items-center px-3 py-2 text-sm text-indigo-600 hover:text-indigo-700 transition-colors"
-            >
-              <Plus class="w-4 h-4 mr-1" />
-              Add Responsibility
-            </button>
           </div>
-        </div>
+        </section>
       </div>
 
-      <!-- Step 3: Images and Highlights -->
-      <div v-if="currentStep === 2" class="space-y-6">
-        <div class="text-center mb-6">
-          <h3 class="text-lg font-semibold text-gray-900">Images & Highlights</h3>
-          <p class="text-sm text-gray-600">Add visual content and program highlights</p>
-        </div>
+      <!-- Step 3: Visual Assets & Highlights -->
+      <div v-if="currentStep === 2" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <header class="mb-8">
+          <h3 class="text-xl font-bold text-slate-900 mb-1">Visual assets</h3>
+          <p class="text-sm text-slate-500">Upload media and add key highlights for this program.</p>
+        </header>
 
-        <!-- Main Image Upload -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            Main Program Image
-          </label>
-          <ImageUpload
-            v-model="form.image"
-            :multiple="false"
-            folder="programs"
-            class="mb-4"
-          />
-        </div>
-
-        <!-- Additional Images -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            Additional Images
-          </label>
-          <ImageUpload
-            v-model="form.images"
-            :multiple="true"
-            folder="programs"
-            class="mb-4"
-          />
-        </div>
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Cover image</h4>
+            <ImageUpload
+              v-model="form.image"
+              :multiple="false"
+              folder="programs"
+              class="rounded-3xl border border-slate-100"
+            />
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Additional images (optional)</h4>
+            <ImageUpload
+              v-model="form.images"
+              :multiple="true"
+              folder="programs"
+              class="rounded-3xl border border-slate-100"
+            />
+          </div>
+        </section>
 
         <!-- Highlights -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            Program Highlights
-          </label>
-          <div class="space-y-4">
+        <section>
+          <div class="flex items-center justify-between mb-6">
+            <h4 class="text-sm font-bold text-slate-400 px-1">Program highlights</h4>
+            <button @click="addHighlight" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add highlight</button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div
               v-for="(highlight, index) in form.highlights"
               :key="index"
-              class="p-4 border border-slate-200 rounded-lg space-y-3"
+              class="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4 relative group"
             >
-              <div class="flex items-center justify-between">
-                <h4 class="font-medium text-slate-900">Highlight {{ index + 1 }}</h4>
-                <button
-                  v-if="form.highlights.length > 1"
-                  @click="removeHighlight(index)"
-                  type="button"
-                  class="p-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
-                >
-                  <Trash2 class="w-4 h-4" />
-                </button>
-              </div>
-              <input
+              <button
+                v-if="form.highlights.length > 1"
+                @click="removeHighlight(index)"
+                type="button"
+                class="absolute top-4 right-4 p-2 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+              >
+                <Icon name="heroicons:trash" class="w-4 h-4" />
+              </button>
+              
+              <AnimatedInput
                 v-model="highlight.title"
-                type="text"
-                placeholder="Highlight title..."
-                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                label="Highlight title"
+                placeholder="e.g. industry certification"
+                position="top"
               />
-              <textarea
+              <AnimatedInput
                 v-model="highlight.description"
-                rows="2"
-                placeholder="Highlight description..."
-                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none"
-              ></textarea>
+                type="textarea"
+                :rows="2"
+                label="Short description"
+                position="bottom"
+              />
             </div>
-            <button
-              @click="addHighlight"
-              type="button"
-              class="inline-flex items-center px-3 py-2 text-sm text-indigo-600 hover:text-indigo-700 transition-colors"
-            >
-              <Plus class="w-4 h-4 mr-1" />
-              Add Highlight
-            </button>
+          </div>
+        </section>
+      </div>
+
+      <!-- Step 4: Finalization -->
+      <div v-if="currentStep === 3" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <header class="mb-8 text-center">
+          <h3 class="text-xl font-bold text-slate-900 mb-1">Review program</h3>
+          <p class="text-sm text-slate-500">Double check your program settings before publishing.</p>
+        </header>
+
+        <div class="bg-[#1A1A1B09] rounded-3xl p-8 border border-slate-100 space-y-6">
+          <div class="grid grid-cols-2 gap-8">
+            <div>
+              <span class="text-sm font-bold text-slate-400">Title</span>
+              <p class="text-sm font-bold text-slate-900 mt-1">{{ form.title }}</p>
+            </div>
+            <div>
+              <span class="text-sm font-bold text-slate-400">Category</span>
+              <p class="text-sm font-bold text-slate-900 mt-1">{{ form.category }}</p>
+            </div>
+            <div>
+              <span class="text-sm font-bold text-slate-400">Duration</span>
+              <p class="text-sm font-bold text-slate-900 mt-1">{{ form.duration }}</p>
+            </div>
+            <div>
+              <span class="text-sm font-bold text-slate-400">Components</span>
+              <p class="text-sm font-bold text-slate-900 mt-1">
+                {{ form.focusAreas.filter(a => a).length }} areas · 
+                {{ form.outcomes.filter(o => o).length }} outcomes
+              </p>
+            </div>
+          </div>
+          
+          <div class="pt-6 border-t border-slate-100">
+            <SelectInput
+              v-model="form.status"
+              label="Visibility"
+              :options="[
+                { label: 'Draft (hidden)', value: 'draft' },
+                { label: 'Active (public)', value: 'active' }
+              ]"
+            />
           </div>
         </div>
       </div>
 
-      <!-- Step 4: Review -->
-      <div v-if="currentStep === 3" class="space-y-6">
-        <div class="text-center mb-6">
-          <h3 class="text-lg font-semibold text-gray-900">Review & Submit</h3>
-          <p class="text-sm text-gray-600">Review your program details before submitting</p>
-        </div>
+      <!-- Footer Navigation -->
+      <div class="flex items-center justify-between pt-8 border-t border-slate-100">
+        <button
+          v-if="currentStep > 0"
+          @click="previousStep"
+          type="button"
+          class="px-8 py-3 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors inline-flex items-center space-x-2"
+        >
+          <Icon name="heroicons:arrow-left" class="w-4 h-4" />
+          <span>Previous</span>
+        </button>
+        <div v-else></div>
 
-        <div class="bg-slate-50 rounded-xl p-6 space-y-4">
-          <div>
-            <h4 class="font-semibold text-slate-900 mb-2">Program Overview</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div>
-                <span class="text-slate-600">Title:</span>
-                <span class="ml-2 font-medium">{{ form.title }}</span>
-              </div>
-              <div>
-                <span class="text-slate-600">Category:</span>
-                <span class="ml-2 font-medium">{{ form.category }}</span>
-              </div>
-              <div>
-                <span class="text-slate-600">Duration:</span>
-                <span class="ml-2 font-medium">{{ form.duration }}</span>
-              </div>
-              <div v-if="form.formId">
-                <span class="text-slate-600">Linked Form:</span>
-                <span class="ml-2 font-medium text-indigo-600">{{ forms.find(f => f.id === form.formId)?.title || 'Selected Form' }}</span>
-              </div>
-              <div v-if="form.externalFormLink">
-                <span class="text-slate-600">External Link:</span>
-                <span class="ml-2 font-medium text-blue-600 truncate inline-block max-w-[150px] align-bottom">{{ form.externalFormLink }}</span>
-              </div>
-              <div>
-                <span class="text-slate-600">Focus Areas:</span>
-                <span class="ml-2 font-medium">{{ form.focusAreas.filter(a => a).length }}</span>
-              </div>
-              <div>
-                <span class="text-slate-600">Outcomes:</span>
-                <span class="ml-2 font-medium">{{ form.outcomes.filter(o => o).length }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex items-center space-x-4">
-          <label class="flex items-center">
-            <input
-              v-model="form.status"
-              type="radio"
-              value="draft"
-              class="text-indigo-600 focus:ring-indigo-500"
-            />
-            <span class="ml-2 text-sm text-slate-700">Save as Draft</span>
-          </label>
-          <label class="flex items-center">
-            <input
-              v-model="form.status"
-              type="radio"
-              value="active"
-              class="text-indigo-600 focus:ring-indigo-500"
-            />
-            <span class="ml-2 text-sm text-slate-700">Publish Program</span>
-          </label>
-        </div>
-      </div>
-
-      <!-- Navigation Buttons -->
-      <div class="flex justify-between pt-6 border-t border-slate-200">
-        <div>
+        <div class="flex justify-end space-x-6">
           <button
-            v-if="currentStep > 0"
-            @click="previousStep"
             type="button"
-            class="px-6 py-3 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-all duration-200 inline-flex items-center space-x-2"
-          >
-            <ChevronLeft class="w-4 h-4" />
-            <span>Previous</span>
-          </button>
-        </div>
-
-        <div class="flex space-x-3">
-          <button
             @click="$emit('cancel')"
-            type="button"
-            class="px-6 py-3 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-all duration-200"
+            class="text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
           >
-            Cancel
+            Discard
           </button>
           
           <button
             v-if="currentStep < steps.length - 1"
-            @click="nextStep"
             type="button"
-            class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:from-indigo-700 hover:to-blue-700 transition-all duration-200 inline-flex items-center space-x-2"
+            @click="nextStep"
+            class="px-10 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-3"
           >
-            <span>Next</span>
-            <ChevronRight class="w-4 h-4" />
+            <span>Continue</span>
+            <Icon name="heroicons:arrow-right" class="w-4 h-4" />
           </button>
           
           <button
             v-else
             type="submit"
             :disabled="isSubmitting"
-            class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:from-indigo-700 hover:to-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center space-x-2"
+            class="px-10 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-3"
           >
-            <Loader2 v-if="isSubmitting" class="w-4 h-4 animate-spin" />
-            <span>{{ program ? 'Update' : 'Create' }} Program</span>
+            <div v-if="isSubmitting" class="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white"></div>
+            <span>{{ program ? 'Update Program' : 'Publish Program' }}</span>
           </button>
         </div>
       </div>
@@ -448,12 +367,13 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watchEffect } from 'vue'
-import {
-  Check, Plus, Trash2, ChevronLeft, ChevronRight, Loader2
-} from 'lucide-vue-next'
+import { reactive, ref, watchEffect, computed } from 'vue'
 import { useCustomToast } from '@/composables/core/useCustomToast'
+import AnimatedInput from '@/components/ui/AnimatedInput.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
 import { useGetForms } from '@/composables/modules/forms/useGetForms'
+import ImageUpload from '@/components/ImageUpload.vue'
+import Icon from '@/components/Icon.vue'
 
 interface Props {
   program?: any
@@ -463,13 +383,24 @@ const props = defineProps<Props>()
 const emit = defineEmits(['save', 'cancel'])
 
 const currentStep = ref(0)
+const maxStepReached = ref(0)
 const isSubmitting = ref(false)
 
 const steps = [
-  { title: 'Basic Info', description: 'Program details' },
-  { title: 'Details', description: 'Focus & outcomes' },
-  { title: 'Media', description: 'Images & highlights' },
-  { title: 'Review', description: 'Final review' }
+  { title: 'Core info', description: 'Basic details' },
+  { title: 'Curriculum', description: 'Learning path' },
+  { title: 'Media', description: 'Visual assets' },
+  { title: 'Review', description: 'Final check' }
+]
+
+const categoryOptions = [
+  {label:'Technology training',value:'Technology Training'},
+  {label:'Business development',value:'Business Development'},
+  {label:'Design & creative',value:'Design & Creative'},
+  {label:'Marketing & sales',value:'Marketing & Sales'},
+  {label:'Data science',value:'Data Science'},
+  {label:'Healthcare',value:'Healthcare'},
+  {label:'Education',value:'Education'}
 ]
 
 const form = reactive({
@@ -488,8 +419,18 @@ const form = reactive({
   status: 'draft'
 })
 
-const { forms, loading: loadingForms, getForms } = useGetForms()
+const { forms, getForms } = useGetForms()
 getForms()
+
+const formOptions = computed(() => {
+  const options = [{ label: 'Select internal form', value: '' }]
+  if (forms.value) {
+    forms.value.forEach((f: any) => {
+      options.push({ label: f.title || 'Untitled form', value: f.id || f._id })
+    })
+  }
+  return options
+})
 
 // Initialize form with program data if editing
 watchEffect(() => {
@@ -499,35 +440,17 @@ watchEffect(() => {
       category: props.program.category || '',
       description: props.program.description || '',
       duration: props.program.duration || '',
-      focusAreas: props.program.focusAreas?.length ? props.program.focusAreas : [''],
-      outcomes: props.program.outcomes?.length ? props.program.outcomes : [''],
-      keyResponsibilities: props.program.keyResponsibilities?.length ? props.program.keyResponsibilities : [''],
+      focusAreas: props.program.focusAreas?.length ? [...props.program.focusAreas] : [''],
+      outcomes: props.program.outcomes?.length ? [...props.program.outcomes] : [''],
+      keyResponsibilities: props.program.keyResponsibilities?.length ? [...props.program.keyResponsibilities] : [''],
       image: props.program.image || '',
       images: props.program.images || [],
-      highlights: props.program.highlights?.length ? props.program.highlights : [{ title: '', description: '' }],
+      highlights: props.program.highlights?.length ? props.program.highlights.map((h: any) => ({...h})) : [{ title: '', description: '' }],
       formId: props.program.form?._id || props.program.form || '',
       externalFormLink: props.program.externalFormLink || '',
       status: props.program.status || 'draft'
     })
-  } else {
-    // Reset form for new program
-    Object.assign(form, {
-      title: '',
-      category: '',
-      description: '',
-      duration: '',
-      focusAreas: [''],
-      outcomes: [''],
-      keyResponsibilities: [''],
-      image: '',
-      images: [],
-      highlights: [{ title: '', description: '' }],
-      formTitle: '',
-      formInstructions: '',
-      formFields: [],
-      externalFormLink: '',
-      status: 'draft'
-    })
+    maxStepReached.value = 3
   }
 })
 
@@ -535,6 +458,9 @@ watchEffect(() => {
 const nextStep = () => {
   if (currentStep.value < steps.length - 1) {
     currentStep.value++
+    if (currentStep.value > maxStepReached.value) {
+      maxStepReached.value = currentStep.value
+    }
   }
 }
 
@@ -566,7 +492,6 @@ const handleSubmit = async () => {
   }
   isSubmitting.value = true
   try {
-    // Clean up arrays
     const cleanedForm = {
       ...form,
       focusAreas: form.focusAreas.filter(area => area.trim()),

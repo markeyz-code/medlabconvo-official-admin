@@ -5,7 +5,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="space-y-1">
-              <h1 class="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+              <h1 class="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
                 Episodes
               </h1>
               <p class="text-gray-600">Manage your LabCast episodes with style</p>
@@ -26,7 +26,7 @@
 
       <div class="space-y-8">
         <!-- Enhanced Filters Section -->
-        <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 hover:shadow-xl transition-all duration-300">
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/20 p-6 hover:shadow-xl transition-all duration-300">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             <!-- Search with Animation -->
             <div class="relative group">
@@ -39,7 +39,7 @@
                 <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Search by title, description..."
+                 
                   class="pl-10 pr-4 w-full py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-200 placeholder-gray-400"
                   @input="debouncedSearch"
                 />
@@ -214,7 +214,7 @@
                     />
                   </div>
                   <!-- Season/Episode Badge -->
-                  <div class="absolute -bottom-1 -right-1 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-medium text-gray-800 border border-gray-200">
+                  <div class="absolute -bottom-1 -right-1 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-sm font-medium text-gray-800 border border-gray-200">
                     S{{ episode.season }}E{{ episode.episode }}
                   </div>
                 </div>
@@ -227,7 +227,7 @@
                       {{ episode.title }}
                     </h3>
                     <span :class="[
-                      'flex-shrink-0 px-2 py-1 rounded-full text-xs font-medium',
+                      'flex-shrink-0 px-2 py-1 rounded-full text-sm font-medium',
                       episode.isActive 
                         ? 'bg-green-100 text-green-800 border border-green-200' 
                         : 'bg-gray-100 text-gray-800 border border-gray-200'
@@ -242,7 +242,7 @@
                   </p>
 
                   <!-- Meta Information -->
-                  <div class="flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-3">
+                  <div class="flex flex-wrap items-center gap-3 text-sm text-gray-900 mb-3">
                     <div class="flex items-center gap-1">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" width="32" height="32" fill="currentColor" viewBox="0 0 256 256">
                         <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path>
@@ -348,7 +348,7 @@
                   <img :src="episode.image" class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                   <div class="absolute top-4 right-4 flex gap-2">
                     <span :class="[
-                      'px-3 py-1 rounded-full text-xs font-semibold',
+                      'px-3 py-1 rounded-full text-sm font-semibold',
                       episode.isActive 
                         ? 'bg-green-100 text-green-800 border border-green-200' 
                         : 'bg-gray-100 text-gray-800 border border-gray-200'
@@ -375,7 +375,7 @@
                   </div>
 
 
-                  <div class="flex items-center justify-between text-sm text-gray-500">
+                  <div class="flex items-center justify-between text-sm text-gray-900">
                     <div class="flex items-center gap-4">
                       <div class="flex items-center gap-1">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg>
@@ -579,7 +579,7 @@
                       </span>
                     </div>
                     
-                    <h1 class="text-3xl font-bold text-gray-900">{{ previewingEpisode.title }}</h1>
+                    <h1 class="text-2xl font-bold text-gray-900">{{ previewingEpisode.title }}</h1>
                     <p class="text-gray-600 text-lg leading-relaxed">{{ previewingEpisode.description }}</p>
                   </div>
   
