@@ -15,7 +15,7 @@
           to="/dashboard/leadership/create"
           class="flex-1 sm:flex-none px-10 py-5 bg-[#033958] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.25em] hover:bg-[#022a41] transition-all flex items-center justify-center space-x-3 shadow-2xl active:scale-95"
         >
-          <Icon name="heroicons:plus-circle" class="w-5 h-5" />
+          <Icon name="lucide:plus-circle" class="w-5 h-5" />
           <span>Add Visionary</span>
         </NuxtLink>
       </div>
@@ -56,7 +56,7 @@
 
       <div v-if="!loading && filteredMembers.length === 0" class="py-40 text-center">
         <div class="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-8">
-           <Icon name="heroicons:user-group" class="w-12 h-12 text-slate-200" />
+           <Icon name="lucide:users-round" class="w-12 h-12 text-slate-200" />
         </div>
         <h3 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Registry is Empty</h3>
         <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-2">No leaders match your current filters.</p>
@@ -78,7 +78,7 @@
               <div class="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shadow-md transform group-hover:scale-110 transition-transform">
                  <img v-if="member.image" :src="member.image" class="w-full h-full object-cover" />
                  <div v-else class="w-full h-full flex items-center justify-center text-slate-300">
-                    <Icon name="heroicons:user" class="w-8 h-8" />
+                    <Icon name="lucide:user" class="w-8 h-8" />
                  </div>
               </div>
             </td>
@@ -103,14 +103,14 @@
                     class="p-3 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-xl border border-slate-100 transition-all shadow-sm"
                     title="Edit Dossier"
                   >
-                    <Icon name="heroicons:pencil-square" class="w-5 h-5" />
+                    <Icon name="lucide:square-pen" class="w-5 h-5" />
                   </NuxtLink>
                   <button 
                     @click="handleDelete(member._id!)" 
                     class="p-3 text-slate-200 hover:text-rose-600 hover:bg-rose-50 rounded-xl border border-slate-100 transition-all shadow-sm"
                     title="Purge Link"
                   >
-                    <Icon name="heroicons:trash" class="w-5 h-5" />
+                    <Icon name="lucide:trash-2" class="w-5 h-5" />
                   </button>
                </div>
             </td>

@@ -133,7 +133,7 @@
                         : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
                     ]"
                   >
-                    <Icon name="heroicons:document-duplicate" class="w-4 h-4" />
+                    <Icon name="lucide:copy" class="w-4 h-4" />
                   </button>
                 </div>
               </td>
@@ -151,21 +151,21 @@
                     class="p-2 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
                     title="Edit form"
                   >
-                    <Icon name="heroicons:pencil" class="w-4 h-4" />
+                    <Icon name="lucide:pencil" class="w-4 h-4" />
                   </button>
                   <button
                     @click="viewSubmissions(form)"
                     class="p-2 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
                     title="View submissions"
                   >
-                    <Icon name="heroicons:eye" class="w-4 h-4" />
+                    <Icon name="lucide:eye" class="w-4 h-4" />
                   </button>
                   <button
                     @click="deleteForm(form._id)"
                     class="p-2 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                     title="Delete form"
                   >
-                    <Icon name="heroicons:trash" class="w-4 h-4" />
+                    <Icon name="lucide:trash-2" class="w-4 h-4" />
                   </button>
                 </div>
               </td>
@@ -182,7 +182,7 @@
 
     <!-- Empty State -->
     <div v-else-if="filteredForms?.length === 0" class="text-center py-20 bg-white rounded-3xl border border-slate-100">
-      <Icon name="heroicons:clipboard-document-list" class="w-12 h-12 text-slate-200 mx-auto mb-4" />
+      <Icon name="lucide:clipboard-list" class="w-12 h-12 text-slate-200 mx-auto mb-4" />
       <p class="text-slate-400 font-medium">No forms found matching your criteria</p>
     </div>
 

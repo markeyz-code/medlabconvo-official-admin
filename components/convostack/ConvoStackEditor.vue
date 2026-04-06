@@ -4,7 +4,7 @@
     <div class="sticky top-0 z-10 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
       <div class="flex items-center space-x-4">
         <button @click="$emit('cancel')" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all">
-          <Icon name="heroicons:x-mark" class="w-5 h-5" />
+          <Icon name="lucide:x" class="w-5 h-5" />
         </button>
         <div>
           <h2 class="text-lg font-bold text-slate-900">{{ publication ? 'Edit Publication' : 'New Publication' }}</h2>
@@ -28,7 +28,7 @@
               : 'bg-slate-100 text-slate-400 cursor-not-allowed'
           ]"
         >
-          <Icon name="heroicons:check" class="w-4 h-4" />
+          <Icon name="lucide:check" class="w-4 h-4" />
           <span>{{ publication ? 'Save changes' : 'Publish' }}</span>
         </button>
       </div>
@@ -53,7 +53,7 @@
           </div>
           <div v-else class="relative rounded-3xl border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50 hover:border-[#033958] transition-all aspect-[21/9] flex flex-col items-center justify-center cursor-pointer group/upload" @click="triggerCoverUpload">
             <div class="p-4 bg-slate-50 rounded-2xl group-hover/upload:bg-slate-100 transition-colors mb-4">
-              <Icon name="heroicons:photo" class="w-12 h-12 text-slate-300 group-hover/upload:text-[#033958] transition-colors" />
+              <Icon name="lucide:image" class="w-12 h-12 text-slate-300 group-hover/upload:text-[#033958] transition-colors" />
             </div>
             <p class="text-sm font-bold text-slate-500">Upload cover image</p>
             <p class="text-sm text-slate-400 mt-2 font-medium">Recommended: landscape (21:9)</p>
@@ -62,25 +62,71 @@
         </div>
 
         <!-- Document Header (Substack Style) -->
-        <div class="bg-white rounded-3xl p-10 md:p-14 border border-slate-100 shadow-sm space-y-4 relative overflow-hidden">
-          <input
-            v-model="form.title"
-            type="text"
-            class="w-full text-4xl md:text-5xl font-black text-slate-900 bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight tracking-tight block"
-            style="all: unset; display: block; width: 100%; font-size: 2.5rem; font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; color: #0f172a;"
-          />
+        <div class="bg-white rounded-3xl p-10 md:p-14 border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] mb-2 block ml-1">Main Title</label>
+            <input
+              v-model="form.title"
+              type="text"
+              placeholder="Enter your main title..."
+              class="w-full text-4xl md:text-5xl font-black text-slate-900 bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight tracking-tight block"
+              style="all: unset; display: block; width: 100%; font-size: 2.5rem; font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; color: #0f172a;"
+            />
+          </div>
+          
+          <div class="pt-4 border-t border-slate-50">
+            <label class="text-[10px] font-bold text-[#27628C] uppercase tracking-[0.1em] mb-2 block ml-1">Substack Quality Subtitle</label>
+            <input
+              v-model="form.subtitle"
+              type="text"
+              placeholder="Add a compelling subtitle..."
+              class="w-full text-xl md:text-2xl font-bold text-[#27628C] bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight block italic"
+              style="all: unset; display: block; width: 100%; font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: #27628C; font-style: italic;"
+            />
+          </div>
+
+          <div class="pt-4 border-t border-slate-50">
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] mb-2 block ml-1">Excerpt (SEO Summary)</label>
+            <textarea
+              v-model="form.excerpt"
+              rows="2"
+              placeholder="A brief summary for previews and search engines..."
+              class="w-full text-lg md:text-xl font-medium text-slate-500 bg-transparent border-none outline-none resize-none focus:ring-0 p-0 m-0 block leading-relaxed"
+              style="all: unset; display: block; width: 100%; font-size: 1.25rem; font-weight: 500; line-height: 1.6; color: #64748b; height: 3.2rem;"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Substack Raw HTML Integration (High Fidelity) -->
+        <div class="bg-[#033958]/5 rounded-3xl p-8 border border-[#033958]/10 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white shadow-lg">
+                <Icon name="lucide:code-2" class="w-5 h-5" />
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-slate-900 leading-tight">Substack High-Fidelity Content</h4>
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Input Raw HTML (Overwrites Block Engine)</p>
+              </div>
+            </div>
+            <div v-if="form.bodyHtml" class="flex items-center bg-green-50 text-green-600 px-3 py-1.5 rounded-full text-[10px] font-bold border border-green-100">
+              <Icon name="lucide:check-circle-2" class="w-3 h-3 mr-1.5" />
+              ACTIVE
+            </div>
+          </div>
           <textarea
-            v-model="form.excerpt"
-            rows="2"
-            class="w-full text-lg md:text-xl font-medium text-slate-500 bg-transparent border-none outline-none resize-none focus:ring-0 p-0 m-0 block leading-relaxed"
-            style="all: unset; display: block; width: 100%; font-size: 1.25rem; font-weight: 500; line-height: 1.6; color: #64748b; height: 3.2rem;"
+            v-model="form.bodyHtml"
+            rows="6"
+            placeholder="Paste your Substack body_html here to preserve exact formatting, image galleries, and buttons..."
+            class="w-full p-6 bg-white border border-slate-200 rounded-2xl text-sm font-mono text-slate-600 focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-inner"
           ></textarea>
+          <p class="text-[10px] text-slate-400 font-medium">Note: If this field contains data, the standard content block engine below will be ignored on the user-facing side.</p>
         </div>
 
         <!-- Content Blocks -->
         <div class="space-y-8 relative">
           <div v-if="form.contentBlocks.length === 0" class="text-center py-20 bg-white rounded-3xl border border-slate-100">
-            <Icon name="heroicons:document-plus" class="w-16 h-16 text-slate-200 mx-auto mb-4" />
+            <Icon name="lucide:file-plus" class="w-16 h-16 text-slate-200 mx-auto mb-4" />
             <h3 class="text-lg font-bold text-slate-400">Start your publication</h3>
             <p class="text-sm text-slate-300 mt-2 font-medium">Add your first content block below to begin</p>
           </div>
@@ -92,10 +138,10 @@
           >
             <!-- Block Controls (Sleeker) -->
             <div class="absolute -top-4 right-8 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center space-x-1 bg-white rounded-2xl  border border-slate-100 p-1.5 z-10">
-              <button v-if="index > 0" @click="moveBlock(index, -1)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors"><Icon name="heroicons:chevron-up" class="w-4 h-4" /></button>
-              <button v-if="index < form.contentBlocks.length - 1" @click="moveBlock(index, 1)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors"><Icon name="heroicons:chevron-down" class="w-4 h-4" /></button>
+              <button v-if="index > 0" @click="moveBlock(index, -1)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors"><Icon name="lucide:chevron-up" class="w-4 h-4" /></button>
+              <button v-if="index < form.contentBlocks.length - 1" @click="moveBlock(index, 1)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors"><Icon name="lucide:chevron-down" class="w-4 h-4" /></button>
               <div class="w-px h-4 bg-slate-100 mx-1"></div>
-              <button @click="removeBlock(index)" class="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"><Icon name="heroicons:trash" class="w-4 h-4" /></button>
+              <button @click="removeBlock(index)" class="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"><Icon name="lucide:trash-2" class="w-4 h-4" /></button>
             </div>
 
             <!-- Block Type Label -->
@@ -109,12 +155,12 @@
                 block.type === 'quote' ? 'bg-pink-100 text-pink-600' :
                 'bg-slate-100 text-slate-600'
               ]">
-                <Icon v-if="block.type === 'text'" name="heroicons:document-text" class="w-4 h-4" />
-                <Icon v-if="block.type === 'image'" name="heroicons:photo" class="w-4 h-4" />
-                <Icon v-if="block.type === 'video'" name="heroicons:video-camera" class="w-4 h-4" />
-                <Icon v-if="block.type === 'audio'" name="heroicons:musical-note" class="w-4 h-4" />
-                <Icon v-if="block.type === 'quote'" name="heroicons:chat-bubble-bottom-center-text" class="w-4 h-4" />
-                <Icon v-if="block.type === 'divider'" name="heroicons:minus" class="w-4 h-4" />
+                <Icon v-if="block.type === 'text'" name="lucide:file-text" class="w-4 h-4" />
+                <Icon v-if="block.type === 'image'" name="lucide:image" class="w-4 h-4" />
+                <Icon v-if="block.type === 'video'" name="lucide:video" class="w-4 h-4" />
+                <Icon v-if="block.type === 'audio'" name="lucide:music" class="w-4 h-4" />
+                <Icon v-if="block.type === 'quote'" name="lucide:quote" class="w-4 h-4" />
+                <Icon v-if="block.type === 'divider'" name="lucide:minus" class="w-4 h-4" />
               </div>
               <span class="text-[10px] font-bold text-slate-400 capitalize">{{ block.type }} block</span>
             </div>
@@ -138,7 +184,7 @@
               </div>
               <div v-else class="border-2 border-dashed border-slate-200 rounded-2xl p-16 flex flex-col items-center justify-center bg-slate-50/50 cursor-pointer hover:bg-white hover:border-[#033958] transition-all group/inner" @click="triggerBlockImageUpload(index)">
                 <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-4 group-hover/inner:scale-110 transition-transform">
-                  <Icon name="heroicons:photo" class="w-8 h-8 text-slate-300" />
+                  <Icon name="lucide:image" class="w-8 h-8 text-slate-300" />
                 </div>
                 <span class="text-sm text-slate-400 font-bold">Add image</span>
               </div>
@@ -149,7 +195,7 @@
             <!-- Video Block -->
             <div v-if="block.type === 'video'" class="space-y-6">
               <div class="relative">
-                <Icon name="heroicons:link" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
+                <Icon name="lucide:link" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
                 <input v-model="block.content" type="text" class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
               </div>
               <div v-if="block.content && isEmbeddableVideo(block.content)" class="rounded-2xl overflow-hidden  aspect-video bg-black">
@@ -161,7 +207,7 @@
             <!-- Quote Block -->
             <div v-if="block.type === 'quote'" class="space-y-6">
               <div class="relative">
-                <Icon name="heroicons:chat-bubble-left-right" class="absolute -left-2 -top-2 w-10 h-10 text-indigo-100 -z-0" />
+                <Icon name="lucide:message-square" class="absolute -left-2 -top-2 w-10 h-10 text-indigo-100 -z-0" />
                 <textarea
                   v-model="block.content"
                   rows="3"
@@ -181,12 +227,12 @@
           <!-- Add Block Toolbar (Floating or Bottom) -->
           <div class="sticky bottom-8 z-10 flex justify-center">
             <div class="flex items-center space-x-2 bg-white/80 backdrop-blur-xl p-2 rounded-3xl  border border-white/50 ring-1 ring-slate-200/50">
-              <button @click="addBlock('text')" class="p-3 text-blue-600 hover:bg-blue-50 rounded-2xl transition-all" title="Add Text"><Icon name="heroicons:document-text" class="w-6 h-6" /></button>
-              <button @click="addBlock('image')" class="p-3 text-green-600 hover:bg-green-50 rounded-2xl transition-all" title="Add Image"><Icon name="heroicons:photo" class="w-6 h-6" /></button>
-              <button @click="addBlock('video')" class="p-3 text-purple-600 hover:bg-purple-50 rounded-2xl transition-all" title="Add Video"><Icon name="heroicons:video-camera" class="w-6 h-6" /></button>
-              <button @click="addBlock('quote')" class="p-3 text-pink-600 hover:bg-pink-50 rounded-2xl transition-all" title="Add Quote"><Icon name="heroicons:chat-bubble-bottom-center-text" class="w-6 h-6" /></button>
+              <button @click="addBlock('text')" class="p-3 text-blue-600 hover:bg-blue-50 rounded-2xl transition-all" title="Add Text"><Icon name="lucide:file-text" class="w-6 h-6" /></button>
+              <button @click="addBlock('image')" class="p-3 text-green-600 hover:bg-green-50 rounded-2xl transition-all" title="Add Image"><Icon name="lucide:image" class="w-6 h-6" /></button>
+              <button @click="addBlock('video')" class="p-3 text-purple-600 hover:bg-purple-50 rounded-2xl transition-all" title="Add Video"><Icon name="lucide:video" class="w-6 h-6" /></button>
+              <button @click="addBlock('quote')" class="p-3 text-pink-600 hover:bg-pink-50 rounded-2xl transition-all" title="Add Quote"><Icon name="lucide:quote" class="w-6 h-6" /></button>
               <div class="w-px h-6 bg-slate-200 mx-1"></div>
-              <button @click="addBlock('divider')" class="p-3 text-slate-400 hover:bg-slate-100 rounded-2xl transition-all" title="Add Divider"><Icon name="heroicons:minus" class="w-6 h-6" /></button>
+              <button @click="addBlock('divider')" class="p-3 text-slate-400 hover:bg-slate-100 rounded-2xl transition-all" title="Add Divider"><Icon name="lucide:minus" class="w-6 h-6" /></button>
             </div>
           </div>
         </div>
@@ -195,7 +241,7 @@
         <div class="bg-white rounded-2xl border border-slate-200 p-8 space-y-8">
           <div class="flex items-center space-x-4 text-slate-900">
             <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center">
-              <Icon name="heroicons:cog-8-tooth" class="w-6 h-6" />
+              <Icon name="lucide:settings" class="w-6 h-6" />
             </div>
             <h3 class="text-xl font-bold tracking-tight">Publication settings</h3>
           </div>
@@ -215,7 +261,7 @@
           <div class="p-6 bg-blue-50/50 rounded-[32px] border border-blue-100/50 flex items-center justify-between group/news">
             <div class="flex items-center space-x-4">
               <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover/news:scale-110 transition-transform">
-                <Icon name="heroicons:envelope" class="w-6 h-6 text-blue-600" />
+                <Icon name="lucide:mail" class="w-6 h-6 text-blue-600" />
               </div>
               <div>
                 <h4 class="text-sm font-bold text-slate-900">Push to Newsletter</h4>
@@ -241,7 +287,7 @@
             <div v-if="form.authors.length" class="flex flex-wrap gap-2 mt-3">
               <span v-for="(author, i) in form.authors" :key="i" class="px-3 py-1.5 bg-blue-50 text-[#033958] text-[10px] font-bold rounded-full border border-blue-100 flex items-center space-x-2">
                 <span>{{ author }}</span>
-                <button @click="form.authors.splice(i, 1); authorsInput = form.authors.join(', ')" class="hover:text-rose-500 transition-colors"><Icon name="heroicons:x-mark" class="w-3 h-3" /></button>
+                <button @click="form.authors.splice(i, 1); authorsInput = form.authors.join(', ')" class="hover:text-rose-500 transition-colors"><Icon name="lucide:x" class="w-3 h-3" /></button>
               </span>
             </div>
           </div>
@@ -253,7 +299,7 @@
             <div v-if="form.tags.length" class="flex flex-wrap gap-2 mt-3">
               <span v-for="(tag, i) in form.tags" :key="i" class="px-3 py-1.5 bg-slate-50 text-slate-700 text-[10px] font-bold rounded-full border border-slate-200 flex items-center space-x-2">
                 <span>{{ tag }}</span>
-                <button @click="form.tags.splice(i, 1); tagsInput = form.tags.join(', ')" class="hover:text-rose-500 transition-colors"><Icon name="heroicons:x-mark" class="w-3 h-3" /></button>
+                <button @click="form.tags.splice(i, 1); tagsInput = form.tags.join(', ')" class="hover:text-rose-500 transition-colors"><Icon name="lucide:x" class="w-3 h-3" /></button>
               </span>
             </div>
           </div>
@@ -266,6 +312,14 @@
             <div class="space-y-2">
               <label class="text-xs font-semibold text-slate-500 ml-1">Meta description</label>
               <textarea v-model="form.metaDescription" rows="3" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none resize-none transition-all shadow-sm"></textarea>
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-slate-500 ml-1">Canonical URL (for Substack migration)</label>
+              <input v-model="form.canonicalUrl" type="url" placeholder="https://yourblog.substack.com/p/slug" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-slate-500 ml-1">Substack External ID</label>
+              <input v-model.number="form.substackId" type="number" readonly class="w-full px-5 py-3.5 bg-slate-100 border border-slate-200 rounded-xl text-sm font-medium text-slate-400 cursor-not-allowed outline-none transition-all shadow-sm" />
             </div>
           </div>
         </div>
@@ -297,6 +351,7 @@ const blockUploading = reactive<Record<number, boolean>>({})
 
 const form = reactive({
   title: '',
+  subtitle: '',
   excerpt: '',
   coverImage: '',
   contentBlocks: [] as { type: string; content: string; caption: string }[],
@@ -307,7 +362,10 @@ const form = reactive({
   metaTitle: '',
   metaDescription: '',
   authors: [] as string[],
-  sendAsNewsletter: false
+  sendAsNewsletter: false,
+  bodyHtml: '',
+  substackId: null as number | null,
+  canonicalUrl: ''
 })
 
 const tagsInput = ref('')
@@ -326,6 +384,7 @@ watchEffect(() => {
   if (props.publication) {
     Object.assign(form, {
       title: props.publication.title || '',
+      subtitle: props.publication.subtitle || '',
       excerpt: props.publication.excerpt || '',
       coverImage: props.publication.coverImage || '',
       contentBlocks: (props.publication.contentBlocks || []).map((b: any) => ({ ...b })),
@@ -336,7 +395,10 @@ watchEffect(() => {
       metaTitle: props.publication.metaTitle || '',
       metaDescription: props.publication.metaDescription || '',
       authors: props.publication.authors || [],
-      sendAsNewsletter: false // Default to false even on edit
+      sendAsNewsletter: false, // Default to false even on edit
+      bodyHtml: props.publication.bodyHtml || '',
+      substackId: props.publication.substackId || null,
+      canonicalUrl: props.publication.canonicalUrl || ''
     })
     tagsInput.value = (props.publication.tags || []).join(', ')
     authorsInput.value = (props.publication.authors || []).join(', ')

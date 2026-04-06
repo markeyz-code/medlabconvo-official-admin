@@ -19,7 +19,7 @@
       <div class="w-full max-w-[440px]">
         
         <div class="w-20 h-20 bg-[#eff6ff] rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-blue-50">
-          <Icon name="heroicons:key" class="w-10 h-10 text-[#033958]" />
+          <Icon name="lucide:key-round" class="w-10 h-10 text-[#033958]" />
         </div>
         
         <h2 class="text-2xl font-extrabold text-[#033958] mb-4 tracking-tight">Forgot Password?</h2>
@@ -38,7 +38,7 @@
 
           <transition name="shake">
             <div v-if="error" class="bg-red-50 border border-red-100 rounded-xl p-3 flex items-center space-x-3">
-              <Icon name="heroicons:exclamation-circle" class="w-5 h-5 text-red-500" />
+              <Icon name="lucide:alert-circle" class="w-5 h-5 text-red-500" />
               <span class="text-red-800 text-sm font-medium">{{ error }}</span>
             </div>
           </transition>

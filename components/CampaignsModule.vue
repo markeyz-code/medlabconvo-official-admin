@@ -7,7 +7,7 @@
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-8 rounded-[2rem] border border-slate-100">
         <div class="flex items-center gap-6">
           <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-[#27628C]">
-            <Icon name="heroicons:megaphone" class="w-8 h-8" />
+            <Icon name="lucide:megaphone" class="w-8 h-8" />
           </div>
           <div>
             <h2 class="text-2xl font-black text-slate-900 tracking-tight">Campaign Analytics</h2>
@@ -19,7 +19,7 @@
           @click="startBuilding"
           class="px-8 py-4 bg-gray-900 text-white rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all flex items-center gap-3 shadow-xl shadow-gray-900/10 group"
         >
-          <Icon name="heroicons:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform" />
+          <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform" />
           <span>New Campaign</span>
         </button>
       </div>
@@ -86,7 +86,7 @@
           <div v-if="!loading && campaigns.length === 0" class="py-32 text-center bg-slate-50/10">
             <div class="w-32 h-32 bg-white rounded-[3rem] flex items-center justify-center mx-auto mb-8 border border-slate-200 shadow-sm relative">
                <div class="absolute inset-0 bg-[#27628B]/5 rounded-full blur-2xl"></div>
-               <Icon name="heroicons:envelope-open" class="w-14 h-14 text-slate-100 relative z-10" />
+               <Icon name="lucide:mail-open" class="w-14 h-14 text-slate-100 relative z-10" />
             </div>
             <h3 class="text-2xl font-black text-slate-900 mb-4 tracking-tight">Zero Campaigns Detected</h3>
             <p class="text-slate-400 text-sm font-bold max-w-sm mx-auto leading-relaxed">Your message queue is currently empty. Initiate your first marketing blast to begin engaging with the community.</p>

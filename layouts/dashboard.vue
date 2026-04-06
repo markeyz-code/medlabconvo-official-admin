@@ -62,7 +62,7 @@
           @click="showLogoutModal = true"
           class="w-full flex items-center px-4 py-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-all font-medium text-sm group border border-red-100"
         >
-          <Icon name="heroicons:arrow-right-on-rectangle" class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          <Icon name="lucide:log-out" class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           <span class="ml-3 font-semibold text-sm">Sign out</span>
         </button>
       </div>
@@ -80,14 +80,14 @@
             @click="toggleSidebar"
             class="lg:hidden p-2 rounded-lg hover:bg-slate-50 text-slate-600"
           >
-            <Icon name="heroicons:bars-3" class="w-6 h-6" />
+            <Icon name="lucide:menu" class="w-6 h-6" />
           </button>
           
           <div>
             <h1 class="text-xl font-medium text-slate-900 leading-tight">{{ currentPageTitle }}</h1>
             <div class="flex items-center text-sm text-slate-500 mt-0.5 font-medium ">
               <span>Admin</span>
-              <Icon name="heroicons:chevron-right" class="w-3 h-3 mx-2 opacity-50" />
+              <Icon name="lucide:chevron-right" class="w-3 h-3 mx-2 opacity-50" />
               <span class="text-blue-600">{{ currentPageTitle }}</span>
             </div>
           </div>
@@ -144,7 +144,7 @@
     <Modal v-model="showLogoutModal" title="Security Confirmation" size="sm">
       <div class="p-6">
         <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Icon name="heroicons:exclamation-triangle" class="w-8 h-8 text-red-600" />
+          <Icon name="lucide:alert-triangle" class="w-8 h-8 text-red-600" />
         </div>
         <div class="text-center mb-10">
           <h3 class="text-xl font-medium text-slate-900 mb-2 tracking-tight">Ready to leave?</h3>
@@ -230,26 +230,26 @@ const showLogoutModal = ref(false)
 
 // Navigation items
 const navigationItems = computed(() => [
-  { name: 'Dashboard', path: '/dashboard', icon: 'heroicons:squares-2x2', badge: null },
-  { name: 'Users', path: '/dashboard/users', icon: 'heroicons:users', badge: users.value?.length },
-  { name: 'Teams', path: '/dashboard/teams', icon: 'heroicons:user-group', badge: teamMembers.value?.length },
-  { name: 'Enquiries', path: '/dashboard/enquiries', icon: 'heroicons:chat-bubble-left-right', badge: enquiries.value?.length },
-  { name: 'Subscriptions', path: '/dashboard/subscriptions', icon: 'heroicons:envelope', badge: subscriptions.value?.length },
-  { name: 'Campaigns', path: '/dashboard/campaigns', icon: 'heroicons:paper-airplane', badge: null },
-  { name: 'Publications', path: '/dashboard/publications', icon: 'heroicons:document-text', badge: publications.value?.length },
-  { name: 'LabCast', path: '/dashboard/labcast', icon: 'heroicons:microphone', badge: labcasts.value?.length },
-  { name: 'Inventory', path: '/dashboard/products', icon: 'heroicons:archive-box', badge: products.value?.length },
-  { name: 'Programs', path: '/dashboard/programs', icon: 'heroicons:academic-cap', badge: programs.value?.length },
-  { name: 'Blogs', path: '/dashboard/blogs', icon: 'heroicons:newspaper', badge: blogs.value?.length },
-  { name: 'Forms', path: '/dashboard/forms', icon: 'heroicons:clipboard-document-list', badge: forms.value?.length },
-  { name: 'Content', path: '/dashboard/convostack', icon: 'heroicons:book-open', badge: null },
-  { name: 'CMS', path: '/dashboard/cms', icon: 'heroicons:document-duplicate', badge: null },
+  { name: 'Dashboard', path: '/dashboard', icon: 'lucide:layout-grid', badge: null },
+  { name: 'Users', path: '/dashboard/users', icon: 'lucide:users', badge: users.value?.length },
+  { name: 'Teams', path: '/dashboard/teams', icon: 'lucide:users-2', badge: teamMembers.value?.length },
+  { name: 'Enquiries', path: '/dashboard/enquiries', icon: 'lucide:messages-square', badge: enquiries.value?.length },
+  { name: 'Subscriptions', path: '/dashboard/subscriptions', icon: 'lucide:mail', badge: subscriptions.value?.length },
+  { name: 'Campaigns', path: '/dashboard/campaigns', icon: 'lucide:send', badge: null },
+  { name: 'Publications', path: '/dashboard/publications', icon: 'lucide:file-text', badge: publications.value?.length },
+  { name: 'LabCast', path: '/dashboard/labcast', icon: 'lucide:mic', badge: labcasts.value?.length },
+  { name: 'Inventory', path: '/dashboard/products', icon: 'lucide:archive', badge: products.value?.length },
+  { name: 'Programs', path: '/dashboard/programs', icon: 'lucide:graduation-cap', badge: programs.value?.length },
+  { name: 'Blogs', path: '/dashboard/blogs', icon: 'lucide:newspaper', badge: blogs.value?.length },
+  { name: 'Forms', path: '/dashboard/forms', icon: 'lucide:clipboard-list', badge: forms.value?.length },
+  { name: 'Content', path: '/dashboard/convostack', icon: 'lucide:book-open', badge: null },
+  { name: 'CMS', path: '/dashboard/cms', icon: 'lucide:copy', badge: null },
   
   // Separator / Section for Access Control
   { name: 'divider', path: '', icon: '', badge: null, type: 'divider' },
-  { name: 'Roles', path: '/dashboard/access-control/roles', icon: 'heroicons:shield-check', badge: null },
-  { name: 'Permissions', path: '/dashboard/access-control/permissions', icon: 'heroicons:key', badge: null },
-  { name: 'Audit Logs', path: '/dashboard/audit', icon: 'heroicons:finger-print', badge: auditLogs.value?.length },
+  { name: 'Roles', path: '/dashboard/access-control/roles', icon: 'lucide:shield-check', badge: null },
+  { name: 'Permissions', path: '/dashboard/access-control/permissions', icon: 'lucide:key', badge: null },
+  { name: 'Audit Logs', path: '/dashboard/audit', icon: 'lucide:fingerprint', badge: auditLogs.value?.length },
 ])
 
 const currentPageTitle = computed(() => {

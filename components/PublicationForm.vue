@@ -104,7 +104,7 @@
             
             <div v-if="!imageUploading" class="contents text-center">
               <div class="w-16 h-16 bg-white rounded-2xl  flex items-center justify-center text-slate-300 group-hover:text-[#033958] transition-colors">
-                <Icon name="heroicons:photo" class="w-8 h-8" />
+                <Icon name="lucide:image" class="w-8 h-8" />
               </div>
               <div>
                 <p class="text-sm font-bold text-slate-700">Drop supporting imagery here</p>
@@ -134,7 +134,7 @@
                 type="button"
                 class="absolute inset-0 bg-red-600/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm"
               >
-                <Icon name="heroicons:trash" class="w-6 h-6" />
+                <Icon name="lucide:trash-2" class="w-6 h-6" />
               </button>
             </div>
           </div>

@@ -14,7 +14,6 @@
         <div class="w-full sm:w-64">
           <SelectInput
             v-model="statusFilter"
-            label="Filter by status"
             :options="[
               { label: 'All status', value: '' },
               { label: 'Draft', value: 'draft' },
@@ -411,7 +410,21 @@ const handleDeleteConfirm = async () => {
   }
 }
 
-const handleSaveProgram = async (programData: any) => {
+// const handleSaveProgram = async (programData: any) => {
+//   try {
+//     if (selectedProgram.value) {
+//       await updateProgram(selectedProgram.value._id, programData)
+//     } else {
+//       await createProgram(programData)
+//     }
+//     await getPrograms()
+//     closeModal()
+//   } catch (error) {
+//     console.error('Error saving program:', error)
+//   }
+// }
+
+const handleSaveProgram = async (programData: any, done: () => void) => {
   try {
     if (selectedProgram.value) {
       await updateProgram(selectedProgram.value._id, programData)
@@ -422,6 +435,9 @@ const handleSaveProgram = async (programData: any) => {
     closeModal()
   } catch (error) {
     console.error('Error saving program:', error)
+    // showToast({ title: 'Error', message: 'Failed to save program.', toastType: 'error' })
+  } finally {
+    done()  // 👈 always stop the spinner, whether success or failure
   }
 }
 

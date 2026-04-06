@@ -29,7 +29,7 @@
         @click="openEditor(null)"
         class="w-full lg:w-auto px-8 py-3.5 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
       >
-        <Icon name="heroicons:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+        <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
         <span class="font-bold text-sm">New publication</span>
       </button>
     </div>
@@ -68,7 +68,7 @@
                 <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-200">
                   <img v-if="pub.coverImage" :src="pub.coverImage" class="w-full h-full object-cover" />
                   <div v-else class="w-full h-full flex items-center justify-center">
-                    <Icon name="heroicons:document-text" class="w-5 h-5 text-slate-300" />
+                    <Icon name="lucide:file-text" class="w-5 h-5 text-slate-300" />
                   </div>
                 </div>
                 <div class="min-w-0">
@@ -101,9 +101,9 @@
             <!-- Metrics -->
             <td class="px-4 py-4 hidden md:table-cell">
               <div class="flex items-center space-x-3 text-xs text-slate-500">
-                <span class="flex items-center space-x-1"><Icon name="heroicons:eye" class="w-3.5 h-3.5 text-slate-300" /><span>{{ pub.viewCount || 0 }}</span></span>
-                <span class="flex items-center space-x-1"><Icon name="heroicons:heart" class="w-3.5 h-3.5 text-slate-300" /><span>{{ pub.likesCount || 0 }}</span></span>
-                <span class="flex items-center space-x-1"><Icon name="heroicons:chat-bubble-left-right" class="w-3.5 h-3.5 text-slate-300" /><span>{{ pub.commentsCount || 0 }}</span></span>
+                <span class="flex items-center space-x-1"><Icon name="lucide:eye" class="w-3.5 h-3.5 text-slate-300" /><span>{{ pub.viewCount || 0 }}</span></span>
+                <span class="flex items-center space-x-1"><Icon name="lucide:heart" class="w-3.5 h-3.5 text-slate-300" /><span>{{ pub.likesCount || 0 }}</span></span>
+                <span class="flex items-center space-x-1"><Icon name="lucide:message-square" class="w-3.5 h-3.5 text-slate-300" /><span>{{ pub.commentsCount || 0 }}</span></span>
               </div>
             </td>
             <!-- Date -->
@@ -114,17 +114,17 @@
             <td class="px-4 py-4">
               <div class="flex items-center justify-end space-x-1">
                 <button @click="openComments(pub)" class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all relative group/commentbtn" title="View comments">
-                  <Icon name="heroicons:chat-bubble-left-right" class="w-4 h-4" />
+                  <Icon name="lucide:message-square" class="w-4 h-4" />
                   <span v-if="pub.commentsCount > 0" class="absolute top-0 right-0 -mt-1 -mr-1 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></span>
                 </button>
                 <button @click="openEditor(pub)" class="p-2 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-lg transition-all" title="Edit">
-                  <Icon name="heroicons:pencil" class="w-4 h-4" />
+                  <Icon name="lucide:pencil" class="w-4 h-4" />
                 </button>
                 <button @click="copyPublicLink(pub)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Copy link">
-                  <Icon name="heroicons:link" class="w-4 h-4" />
+                  <Icon name="lucide:link" class="w-4 h-4" />
                 </button>
                 <button @click="confirmDelete(pub)" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
-                  <Icon name="heroicons:trash" class="w-4 h-4" />
+                  <Icon name="lucide:trash-2" class="w-4 h-4" />
                 </button>
               </div>
             </td>
@@ -142,7 +142,7 @@
     <!-- Empty State -->
     <div v-else-if="filteredPublications.length === 0" class="flex flex-col items-center justify-center py-24 bg-white rounded-[40px] border border-dashed border-slate-200">
       <div class="w-24 h-24 bg-slate-50 rounded-3xl flex items-center justify-center mb-6">
-        <Icon name="heroicons:sparkles" class="w-12 h-12 text-slate-200" />
+        <Icon name="lucide:sparkles" class="w-12 h-12 text-slate-200" />
       </div>
       <h3 class="text-2xl font-bold text-slate-900 tracking-tight">No publications found</h3>
       <p class="text-sm text-slate-500 mb-8 max-w-sm text-center leading-relaxed">Your publication archive is currently empty. Start by creating your first post.</p>
@@ -159,7 +159,7 @@
     <Modal v-model="showDeleteModal" title="Archive Purge Confirmation" size="sm">
       <div class="p-8 text-center space-y-6">
         <div class="w-20 h-20 bg-red-50 rounded-[30px] flex items-center justify-center mx-auto text-red-500">
-          <Icon name="heroicons:trash" class="w-10 h-10" />
+          <Icon name="lucide:trash-2" class="w-10 h-10" />
         </div>
         <div>
           <h3 class="text-xl font-bold text-slate-900">Purge publication?</h3>
@@ -189,7 +189,7 @@
               <p class="text-xs font-semibold text-slate-400 mt-1 truncate max-w-[280px]">On: {{ selectedPublicationForComments?.title }}</p>
             </div>
             <button @click="closeComments" class="p-2.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-all">
-              <Icon name="heroicons:x-mark" class="w-5 h-5" />
+              <Icon name="lucide:x" class="w-5 h-5" />
             </button>
           </div>
 
@@ -201,7 +201,7 @@
             
             <div v-else-if="comments.length === 0" class="flex flex-col items-center justify-center h-full text-center px-4">
               <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
-                <Icon name="heroicons:chat-bubble-oval-left-ellipsis" class="w-8 h-8 text-slate-300" />
+                <Icon name="lucide:message-circle" class="w-8 h-8 text-slate-300" />
               </div>
               <h4 class="text-base font-bold text-slate-700">No Comments Yet</h4>
               <p class="text-xs text-slate-400 font-medium mt-1">This publication hasn't sparked any discourse.</p>
@@ -276,10 +276,10 @@ onMounted(() => {
 })
 
 const convoStats = computed(() => [
-  { title: 'Total publications', value: publications.value?.length || 0, icon: 'heroicons:command-line', color: 'text-blue-600', bg: 'bg-blue-50' },
-  { title: 'Live records', value: (publications.value || []).filter((p: any) => p.status === 'published').length, icon: 'heroicons:check-badge', color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  { title: 'In incubation', value: (publications.value || []).filter((p: any) => p.status === 'draft').length, icon: 'heroicons:beaker', color: 'text-amber-600', bg: 'bg-amber-50' },
-  { title: 'Total views', value: (publications.value || []).reduce((sum: number, p: any) => sum + (p.viewCount || 0), 0), icon: 'heroicons:signal', color: 'text-indigo-600', bg: 'bg-indigo-50' }
+  { title: 'Total publications', value: publications.value?.length || 0, icon: 'lucide:terminal', color: 'text-blue-600', bg: 'bg-blue-50' },
+  { title: 'Live records', value: (publications.value || []).filter((p: any) => p.status === 'published').length, icon: 'lucide:badge-check', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  { title: 'In incubation', value: (publications.value || []).filter((p: any) => p.status === 'draft').length, icon: 'lucide:beaker', color: 'text-amber-600', bg: 'bg-amber-50' },
+  { title: 'Total views', value: (publications.value || []).reduce((sum: number, p: any) => sum + (p.viewCount || 0), 0), icon: 'lucide:signal', color: 'text-indigo-600', bg: 'bg-indigo-50' }
 ])
 
 const filteredPublications = computed(() => {
@@ -297,8 +297,8 @@ const filteredPublications = computed(() => {
 })
 
 const openEditor = (pub: any) => {
-  if (pub && pub._id) {
-    router.push(`/dashboard/convostack/${pub._id}`)
+  if (pub && pub.slug) {
+    router.push(`/dashboard/convostack/${pub.slug}`)
   } else {
     router.push('/dashboard/convostack/create')
   }

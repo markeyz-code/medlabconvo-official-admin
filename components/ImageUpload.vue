@@ -1,76 +1,65 @@
 <template>
-    <div class="space-y-4">
-      <!-- Upload Area -->
-      <div
-        @click="triggerUpload"
-        @dragover.prevent="handleDragOver"
-        @dragleave.prevent="handleDragLeave"
-        @drop.prevent="handleDrop"
-        class="relative border-2 border-dashed border-slate-300 rounded-xl p-8 hover:border-indigo-400 transition-all duration-200 cursor-pointer group"
-        :class="{ 'border-indigo-500 bg-indigo-50': dragOver }"
-      >
-        <input
-          ref="fileInput"
-          type="file"
-          accept="image/*"
-          :multiple="multiple"
-          class="hidden"
-          @change="handleFileUpload"
-        />
-        
-        <div v-if="!uploading" class="text-center">
-          <ImageIcon class="mx-auto h-12 w-12 text-slate-400 group-hover:text-indigo-500 transition-colors" />
-          <div class="mt-4">
-            <p class="text-sm text-slate-600">
-              <span class="font-medium text-indigo-600 hover:text-indigo-700">Click to upload</span>
-              or drag and drop
-            </p>
-            <p class="text-sm text-slate-500 mt-1">PNG, JPG, GIF up to 10MB each</p>
-          </div>
-        </div>
-  
-        <div v-else class="text-center">
-          <Loader2 class="mx-auto h-8 w-8 text-indigo-600 animate-spin" />
-          <p class="mt-2 text-sm text-slate-600">Uploading...</p>
-        </div>
+  <!-- Root fills whatever container the parent gives it -->
+  <div class="relative w-full h-full">
+
+    <!-- SINGLE MODE: image already set → fill container with preview -->
+    <div v-if="!props.multiple && imageUrls.length" class="w-full h-full group relative">
+      <img
+        :src="imageUrls[0]"
+        alt="Uploaded"
+        class="w-full h-full object-cover"
+      />
+      <!-- hover overlay: replace / remove -->
+      <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+        <button type="button" @click="triggerUpload"
+          class="p-1.5 bg-white rounded-full text-slate-700 hover:bg-slate-100 transition-colors">
+          <ImageIcon class="w-4 h-4" />
+        </button>
+        <button type="button" @click="removeImage(0)"
+          class="p-1.5 bg-white rounded-full text-red-500 hover:bg-red-50 transition-colors">
+          <X class="w-4 h-4" />
+        </button>
       </div>
-  
-      <!-- Image Previews -->
-      <div v-if="imageUrls.length" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        <TransitionGroup
-          enter-active-class="transition-all duration-300 ease-out"
-          enter-from-class="opacity-0 scale-95"
-          enter-to-class="opacity-100 scale-100"
-          leave-active-class="transition-all duration-200 ease-in"
-          leave-from-class="opacity-100 scale-100"
-          leave-to-class="opacity-0 scale-95"
-          tag="div"
-          class="contents"
-        >
-          <div
-            v-for="(url, index) in imageUrls"
-            :key="url"
-            class="relative group"
-          >
-            <div class="aspect-square rounded-lg overflow-hidden border-2 border-slate-200 group-hover:border-indigo-300 transition-colors">
-              <img
-                :src="url"
-                :alt="`Image ${index + 1}`"
-                class="w-full h-full object-cover"
-              />
-            </div>
-            <button
-              @click="removeImage(index)"
-              type="button"
-              class="absolute -top-2 -right-2 p-1.5 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors opacity-0 group-hover:opacity-100 transform scale-90 group-hover:scale-100"
-            >
-              <X class="w-4 h-4" />
-            </button>
-          </div>
-        </TransitionGroup>
+      <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFileUpload" />
+    </div>
+
+    <!-- UPLOAD AREA: no image yet (single), or always shown (multiple) -->
+    <div
+      v-else
+      @click="triggerUpload"
+      @dragover.prevent="handleDragOver"
+      @dragleave.prevent="handleDragLeave"
+      @drop.prevent="handleDrop"
+      class="w-full h-full min-h-[8rem] border-2 border-dashed border-slate-300 rounded-[inherit]
+             flex flex-col items-center justify-center gap-2 cursor-pointer
+             hover:border-indigo-400 transition-all group"
+      :class="{ 'border-indigo-500 bg-indigo-50': dragOver }"
+    >
+      <input ref="fileInput" type="file" accept="image/*" :multiple="multiple" class="hidden" @change="handleFileUpload" />
+
+      <template v-if="!uploading">
+        <ImageIcon class="w-8 h-8 text-slate-400 group-hover:text-indigo-500 transition-colors" />
+        <span class="text-xs text-slate-500 text-center px-2">Click to upload</span>
+      </template>
+      <Loader2 v-else class="w-7 h-7 text-indigo-600 animate-spin" />
+    </div>
+
+    <!-- MULTIPLE MODE grid (rendered below the dropzone) -->
+    <div v-if="props.multiple && imageUrls.length" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-3">
+      <div v-for="(url, index) in imageUrls" :key="url" class="relative group/item">
+        <div class="aspect-square rounded-lg overflow-hidden border-2 border-slate-200 group-hover/item:border-indigo-300 transition-colors">
+          <img :src="url" :alt="`Image ${index + 1}`" class="w-full h-full object-cover" />
+        </div>
+        <button @click="removeImage(index)" type="button"
+          class="absolute -top-2 -right-2 p-1.5 bg-red-600 text-white rounded-full hover:bg-red-700
+                 opacity-0 group-hover/item:opacity-100 scale-90 group-hover/item:scale-100 transition-all">
+          <X class="w-3 h-3" />
+        </button>
       </div>
     </div>
-  </template>
+
+  </div>
+</template>
   
   <script setup lang="ts">
   import { ref, computed, watch } from 'vue'
@@ -102,17 +91,34 @@ import { useSingleUploadFile } from '@/composables/core/useSingleUpload'
 const { singleUploadFile, loading: uploadingSingle, uploadResponse: singleUploadResponse } = useSingleUploadFile()
   
   // Computed
-  const imageUrls = computed(() => {
-    const rawValues = props.multiple 
-      ? (Array.isArray(props.modelValue) ? props.modelValue : [])
-      : (props.modelValue ? [props.modelValue] : [])
+  // const imageUrls = computed(() => {
+  //   const rawValues = props.multiple 
+  //     ? (Array.isArray(props.modelValue) ? props.modelValue : [])
+  //     : (props.modelValue ? [props.modelValue] : [])
 
-    return rawValues.map(val => {
-      if (typeof val === 'string') return val
-      if (val && typeof val === 'object' && 'url' in val) return (val as any).url
-      return ''
-    }).filter(url => !!url)
-  })
+  //   return rawValues.map(val => {
+  //     if (typeof val === 'string') return val
+  //     if (val && typeof val === 'object' && 'url' in val) return (val as any).url
+  //     return ''
+  //   }).filter(url => !!url)
+  // })
+
+  const imageUrls = computed(() => {
+  const extractUrl = (val: any): string => {
+    if (!val) return ''
+    if (typeof val === 'string') return val
+    if (typeof val === 'object') {
+      return val.url || val.secure_url || val.fileUrl || ''
+    }
+    return ''
+  }
+
+  const raw = props.multiple
+    ? (Array.isArray(props.modelValue) ? props.modelValue : [props.modelValue])
+    : [props.modelValue]
+
+  return raw.map(extractUrl).filter(Boolean)
+})
   
   // Methods
   const triggerUpload = () => {
@@ -137,27 +143,51 @@ const { singleUploadFile, loading: uploadingSingle, uploadResponse: singleUpload
     }
   }
   
-  const uploadFiles = async (files: File[]) => {
-    try {
-      uploading.value = true
+  // const uploadFiles = async (files: File[]) => {
+  //   try {
+  //     uploading.value = true
       
-      if (props.multiple) {
-        const uploadPromises = files.map(file => singleUploadFile(file))
-        const responses = await Promise.all(uploadPromises)
-        const newUrls = responses.map(response => response.url)
-        const currentUrls = Array.isArray(props.modelValue) ? props.modelValue : []
-        emit('update:modelValue', [...currentUrls, ...newUrls])
-      } else {
-        const response = await singleUploadFile(files[0])
-        emit('update:modelValue', response.url)
-      }
-    } catch (error) {
-      console.error('Upload failed:', error)
-    } finally {
-      uploading.value = false
-    }
-  }
+  //     if (props.multiple) {
+  //       const uploadPromises = files.map(file => singleUploadFile(file))
+  //       const responses = await Promise.all(uploadPromises)
+  //       const newUrls = responses.map(response => response.url)
+  //       const currentUrls = Array.isArray(props.modelValue) ? props.modelValue : []
+  //       emit('update:modelValue', [...currentUrls, ...newUrls])
+  //     } else {
+  //       const response = await singleUploadFile(files[0])
+  //       emit('update:modelValue', response.url)
+  //     }
+  //   } catch (error) {
+  //     console.error('Upload failed:', error)
+  //   } finally {
+  //     uploading.value = false
+  //   }
+  // }
   
+  const uploadFiles = async (files: File[]) => {
+  try {
+    uploading.value = true
+
+    if (props.multiple) {
+      const responses = await Promise.all(files.map(file => singleUploadFile(file)))
+      const newUrls = responses
+        .map(r => r?.url || r?.secure_url || r?.fileUrl || '')
+        .filter(Boolean)
+      const currentUrls = Array.isArray(props.modelValue) ? props.modelValue : []
+      emit('update:modelValue', [...currentUrls, ...newUrls])
+    } else {
+      const response = await singleUploadFile(files[0])
+      const url = response?.url || response?.secure_url || response?.fileUrl || ''
+      emit('update:modelValue', url)
+    }
+  } catch (error) {
+    console.error('Upload failed:', error)
+  } finally {
+    uploading.value = false
+  }
+}
+
+
   const removeImage = (index: number) => {
     if (props.multiple) {
       const currentUrls = Array.isArray(props.modelValue) ? props.modelValue : []

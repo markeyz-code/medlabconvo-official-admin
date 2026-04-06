@@ -28,7 +28,7 @@
         @click="openCreateModal"
         class="w-full md:w-auto px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3  hover: group"
       >
-        <Icon name="heroicons:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+        <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
         <span class="font-bold text-sm">New program</span>
       </button>
     </div>
@@ -46,7 +46,7 @@
             class="absolute inset-0 bg-gradient-to-br from-[#033958]/5 to-transparent group-hover:scale-110 transition-transform duration-700"
           ></div>
           <div class="absolute inset-0 flex items-center justify-center">
-            <Icon name="heroicons:academic-cap" class="w-12 h-12 text-[#033958]/10 group-hover:text-[#033958]/20 transition-colors duration-500" />
+            <Icon name="lucide:graduation-cap" class="w-12 h-12 text-[#033958]/10 group-hover:text-[#033958]/20 transition-colors duration-500" />
           </div>
           
           <!-- Status Badge Overlay -->
@@ -71,20 +71,20 @@
                 @click="editProgram(program)"
                 class="p-2 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-lg transition-all"
               >
-                <Icon name="heroicons:pencil" class="w-4 h-4" />
+                <Icon name="lucide:pencil" class="w-4 h-4" />
               </button>
               <button
                 @click="getRegistrationLink(program.id)"
                 class="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
                 title="Registration Link"
               >
-                <Icon name="heroicons:link" class="w-4 h-4" />
+                <Icon name="lucide:link" class="w-4 h-4" />
               </button>
               <button
                 @click="deleteProgram(program.id)"
                 class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
               >
-                <Icon name="heroicons:trash" class="w-4 h-4" />
+                <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -109,7 +109,7 @@
 
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2 text-slate-400">
-              <Icon name="heroicons:calendar" class="w-4 h-4" />
+              <Icon name="lucide:calendar" class="w-4 h-4" />
               <span class="text-sm font-bold">{{ formatDate(program.createdAt) }}</span>
             </div>
             <button 
@@ -135,7 +135,7 @@
     <!-- Empty State -->
     <div v-else-if="filteredPrograms.length === 0" class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
       <div class="w-20 h-20 bg-white rounded-2xl  flex items-center justify-center mb-6">
-        <Icon name="heroicons:academic-cap" class="w-10 h-10 text-slate-300" />
+        <Icon name="lucide:graduation-cap" class="w-10 h-10 text-slate-300" />
       </div>
       <h3 class="text-xl font-bold text-slate-900 mb-2">No programs found</h3>
       <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed">Your educational portfolio is empty or doesn't match the search.</p>
@@ -163,7 +163,7 @@
       <div v-if="registrationLink" class="p-8 space-y-6">
         <div class="flex flex-col items-center text-center space-y-2">
           <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 mb-2">
-            <Icon name="heroicons:link" class="w-8 h-8" />
+            <Icon name="lucide:link" class="w-8 h-8" />
           </div>
           <h3 class="text-xl font-bold text-slate-900">Registration Link Generated</h3>
           <p class="text-sm text-slate-500">Share this link with potential applicants to let them apply for this program.</p>
@@ -182,7 +182,7 @@
               class="p-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all "
               title="Copy"
             >
-              <Icon name="heroicons:clipboard" class="w-5 h-5" />
+              <Icon name="lucide:copy" class="w-5 h-5" />
             </button>
           </div>
         </div>

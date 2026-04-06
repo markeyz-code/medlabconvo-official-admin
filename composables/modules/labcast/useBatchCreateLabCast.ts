@@ -27,6 +27,7 @@ export const useBatchCreateLabCast = () => {
         labcastData.value = response.data
         showToast({
                   title: "Success",
+                  message: "LabCast episodes created successfully",
                   toastType: "success",
                 });
         }

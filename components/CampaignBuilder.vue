@@ -4,7 +4,7 @@
     <!-- Header with Back Button -->
     <div class="flex items-center justify-between">
       <button @click="$emit('close')" class="flex items-center gap-2 text-slate-400 font-bold text-xs uppercase tracking-widest hover:text-slate-900 transition-colors group">
-        <Icon name="heroicons:arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        <Icon name="lucide:arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
         Back to Campaigns
       </button>
       <h2 class="text-xl font-black text-slate-900 tracking-tight">Craft New Campaign</h2>
@@ -157,7 +157,7 @@
       >
         <span v-if="!loading">{{ form.deliveryType === 'immediate' ? 'Send Campaign' : 'Schedule Campaign' }}</span>
         <div v-else class="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-        <Icon v-if="!loading" name="heroicons:paper-airplane" class="w-4 h-4 -rotate-45" />
+        <Icon v-if="!loading" name="lucide:send" class="w-4 h-4 -rotate-45" />
       </button>
     </div>
 

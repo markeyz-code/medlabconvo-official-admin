@@ -15,7 +15,7 @@
         v-else
         class="w-full h-full flex items-center justify-center"
       >
-        <Icon name="heroicons:package" class="w-16 h-16 text-[#033958]/10 group-hover:text-[#033958]/20 transition-colors duration-500" />
+        <Icon name="lucide:package" class="w-16 h-16 text-[#033958]/10 group-hover:text-[#033958]/20 transition-colors duration-500" />
       </div>
       
       <!-- Badges Overlay -->
@@ -29,7 +29,7 @@
           {{ product.status }}
         </span>
         <span v-if="product.isDigital" class="px-3 py-1.5 text-[10px] font-bold rounded-full bg-[#033958]/10 text-[#033958] border border-[#033958]/20 backdrop-blur-md inline-flex items-center space-x-1">
-          <Icon name="heroicons:cloud-arrow-down" class="w-3 h-3" />
+          <Icon name="lucide:download-cloud" class="w-3 h-3" />
           <span>Digital product</span>
         </span>
       </div>
@@ -57,10 +57,10 @@
           </h3>
           <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <button @click="editProduct" class="p-2 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-lg transition-all">
-              <Icon name="heroicons:pencil" class="w-4 h-4" />
+              <Icon name="lucide:pencil" class="w-4 h-4" />
             </button>
             <button @click="deleteProduct" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all">
-              <Icon name="heroicons:trash" class="w-4 h-4" />
+              <Icon name="lucide:trash-2" class="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -90,11 +90,11 @@
           <span class="text-[9px] font-bold text-slate-400">Engagement</span>
           <div class="flex items-center justify-end space-x-3 mt-1 text-slate-500">
             <span class="flex items-center space-x-1">
-              <Icon name="heroicons:eye" class="w-3 h-3" />
+              <Icon name="lucide:eye" class="w-3 h-3" />
               <span class="text-[10px] font-bold">{{ product.viewCount || 0 }}</span>
             </span>
             <span class="flex items-center space-x-1">
-              <Icon name="heroicons:shopping-bag" class="w-3 h-3" />
+              <Icon name="lucide:shopping-bag" class="w-3 h-3" />
               <span class="text-[10px] font-bold">{{ product.salesCount || 0 }}</span>
             </span>
           </div>
@@ -115,13 +115,13 @@
             :disabled="product.stock <= 0"
             class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 disabled:opacity-30 transition-all border border-slate-100"
           >
-            <Icon name="heroicons:minus" class="w-4 h-4" />
+            <Icon name="lucide:minus" class="w-4 h-4" />
           </button>
           <button 
             @click="updateStock(1)"
             class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-green-500 hover:bg-green-50 transition-all border border-slate-100"
           >
-            <Icon name="heroicons:plus" class="w-4 h-4" />
+            <Icon name="lucide:plus" class="w-4 h-4" />
           </button>
         </div>
       </div>

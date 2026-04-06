@@ -19,7 +19,7 @@
         <!-- Status: Error -->
         <div v-else-if="inviteError" class="bg-rose-50 rounded-3xl p-10 border border-rose-100 flex flex-col items-center text-center animate-in zoom-in-95 duration-500">
           <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-            <Icon name="heroicons:exclamation-triangle" class="w-8 h-8 text-rose-600" />
+            <Icon name="lucide:alert-triangle" class="w-8 h-8 text-rose-600" />
           </div>
           <h2 class="text-xl font-black text-slate-900 mb-4  tracking-tight">Access Restricted</h2>
           <p class="text-slate-600 font-medium tracking-tight antialiased mb-8 leading-relaxed">{{ inviteError }}</p>
@@ -91,7 +91,7 @@
                   @click="showPassword = !showPassword"
                   class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-[#033958] transition-colors"
                 >
-                  <Icon :name="showPassword ? 'heroicons:eye-slash' : 'heroicons:eye'" class="w-5 h-5" />
+                  <Icon :name="showPassword ? 'lucide:eye-off' : 'lucide:eye'" class="w-5 h-5" />
                 </button>
               </div>
               <p class="text-[9px] font-bold text-slate-400  tracking-tight ml-1">Must be at least 6 characters long</p>
@@ -132,7 +132,7 @@
       
       <!-- Quote Overlay -->
       <div class="absolute bottom-20 left-16 right-16 text-white p-10 border-l border-white/20 backdrop-blur-sm bg-white/5 rounded-r-3xl animate-in fade-in slide-in-from-right-10 duration-1000 delay-300">
-        <Icon name="heroicons:chat-bubble-bottom-center-text" class="w-10 h-10 text-[#3BAB22] mb-6 opacity-80" />
+        <Icon name="lucide:quote" class="w-10 h-10 text-[#3BAB22] mb-6 opacity-80" />
         <h3 class="text-2xl font-black tracking-tight mb-4 leading-tight lowercase first-letter: ">Empowering the medical conversation through modern technology and collaborative research.</h3>
         <div class="flex items-center space-x-4">
           <div class="w-10 h-px bg-white/30"></div>

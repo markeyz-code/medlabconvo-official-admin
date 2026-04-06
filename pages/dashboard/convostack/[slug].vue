@@ -6,7 +6,7 @@
     </div>
     
     <div v-else-if="!publication && !loading" class="flex flex-col items-center justify-center min-h-[60vh]">
-      <Icon name="heroicons:document-magnifying-glass" class="w-20 h-20 text-slate-300 mb-4" />
+      <Icon name="lucide:file-search" class="w-20 h-20 text-slate-300 mb-4" />
       <h3 class="text-xl font-bold text-slate-900">Publication not found</h3>
       <button @click="onCancel" class="mt-6 px-6 py-3 bg-slate-100 font-bold text-slate-600 rounded-xl hover:bg-slate-200 transition-all">Go back</button>
     </div>
@@ -24,7 +24,7 @@
 import { ref, onMounted } from 'vue'
 import { definePageMeta, useRouter, useRoute } from '#imports'
 import ConvoStackEditor from '@/components/convostack/ConvoStackEditor.vue'
-import { useGetConvoStacks } from '@/composables/modules/convostack/useGetConvoStacks'
+import { convostack_api } from '@/api_factory/modules/convostack'
 
 definePageMeta({
   layout: 'dashboard',
@@ -33,19 +33,16 @@ definePageMeta({
 
 const router = useRouter()
 const route = useRoute()
-const publicatioId = route.params.id as string
+const slug = route.params.slug as string
 
-const { getPublications, publications } = useGetConvoStacks()
 const loading = ref(true)
 const publication = ref<any>(null)
 
 onMounted(async () => {
   loading.value = true
   try {
-    await getPublications()
-    if (publications.value && Array.isArray(publications.value)) {
-       publication.value = publications.value.find((p: any) => p._id === publicatioId)
-    }
+    const response = await convostack_api.$_get_publication_by_slug(slug)
+    publication.value = response.data
   } catch (error) {
     console.error('Failed to load publication for editing', error)
   } finally {

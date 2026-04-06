@@ -19,10 +19,10 @@ export const useGetLabCastStats = () => {
         const response = await labcast_api.$_get_stats()
         if ([200, 201].includes(response?.status)) {
         stats.value = response.data
-        showToast({
-                  title: "Success",
-                  toastType: "success",
-                });
+        // showToast({
+        //           title: "Success",
+        //           toastType: "success",
+        //         });
         }
         return response.data
       } catch (err: any) {

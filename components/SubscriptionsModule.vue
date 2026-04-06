@@ -25,14 +25,14 @@
           @click="exportSubscriptions"
           class="flex-1 md:flex-none px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
-          <Icon name="heroicons:arrow-down-tray" class="w-4 h-4 group-hover:translate-y-1 transition-transform" />
+          <Icon name="lucide:download" class="w-4 h-4 group-hover:translate-y-1 transition-transform" />
           <span>Export CSV</span>
         </button>
         <button
           @click="refreshSubscriptions"
           class="flex-1 md:flex-none px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
-          <Icon name="heroicons:arrow-path" class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+          <Icon name="lucide:refresh-cw" class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
           <span>Refresh</span>
         </button>
       </div>
@@ -47,7 +47,7 @@
             <p class="text-4xl font-bold text-slate-900 tracking-tighter">{{ totalSubscribers }}</p>
           </div>
           <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:bg-[#033958] group-hover:text-white transition-colors duration-500 border border-slate-100">
-            <Icon name="heroicons:users" class="w-8 h-8" />
+            <Icon name="lucide:users" class="w-8 h-8" />
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
             <p class="text-4xl font-bold text-emerald-600 tracking-tighter">{{ activeSubscriptions }}</p>
           </div>
           <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-500 border border-emerald-100">
-            <Icon name="heroicons:check-badge" class="w-8 h-8" />
+            <Icon name="lucide:badge-check" class="w-8 h-8" />
           </div>
         </div>
       </div>
@@ -71,7 +71,7 @@
             <p class="text-4xl font-bold text-blue-600 tracking-tighter">{{ thisMonthSubscriptions }}</p>
           </div>
           <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500 border border-blue-100">
-            <Icon name="heroicons:chart-bar" class="w-8 h-8" />
+            <Icon name="lucide:bar-chart-3" class="w-8 h-8" />
           </div>
         </div>
       </div>
@@ -125,14 +125,14 @@
                     class="p-2 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition-all"
                     title="Unsubscribe user"
                   >
-                    <Icon name="heroicons:no-symbol" class="w-5 h-5" />
+                    <Icon name="lucide:ban" class="w-5 h-5" />
                   </button>
                   <button
                     @click="deleteSubscription(subscription._id)"
                     class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                     title="Delete record"
                   >
-                    <Icon name="heroicons:trash" class="w-5 h-5" />
+                    <Icon name="lucide:trash-2" class="w-5 h-5" />
                   </button>
                 </div>
               </td>
@@ -144,7 +144,7 @@
       <!-- Empty State -->
       <div v-if="!loading && filteredSubscriptions.length === 0" class="py-32 text-center bg-slate-50/30">
         <div class="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-          <Icon name="heroicons:newspaper" class="w-10 h-10 text-slate-100" />
+          <Icon name="lucide:newspaper" class="w-10 h-10 text-slate-100" />
         </div>
         <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No records found</h3>
         <p class="text-slate-400 text-sm font-medium max-w-[280px] mx-auto leading-relaxed">No subscriber identities found in the database.</p>

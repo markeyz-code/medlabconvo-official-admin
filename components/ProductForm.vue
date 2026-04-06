@@ -30,7 +30,7 @@
                 : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-slate-100'
             ]"
           >
-            <Icon v-if="currentStep > index" name="heroicons:check" class="w-5 h-5" />
+            <Icon v-if="currentStep > index" name="lucide:check" class="w-5 h-5" />
             <span v-else>{{ index + 1 }}</span>
           </div>
           <span
@@ -283,7 +283,7 @@
                   <AnimatedInput v-model="form.features[index]" :id="'feat-'+index" label="Feature Description" />
                 </div>
                 <button v-if="form.features.length > 1" @click="removeFeature(index)" class="ml-2 p-3 text-slate-300 hover:text-red-500 transition-colors">
-                  <Icon name="heroicons:trash" class="w-5 h-5" />
+                  <Icon name="lucide:trash-2" class="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -302,7 +302,7 @@
               <span v-for="tag in form.tags" :key="tag" class="px-3 py-1 bg-slate-50 text-slate-600 text-[10px] font-bold rounded-full border border-slate-100 flex items-center">
                 {{ tag }}
                 <button @click="removeTag(tag)" class="ml-2 hover:text-red-500 transition-colors">
-                  <Icon name="heroicons:x-mark" class="w-3 h-3" />
+                  <Icon name="lucide:x" class="w-3 h-3" />
                 </button>
               </span>
             </div>
@@ -351,7 +351,7 @@
           type="button"
           class="px-8 py-3 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors inline-flex items-center space-x-2"
         >
-          <Icon name="heroicons:arrow-left" class="w-4 h-4" />
+          <Icon name="lucide:arrow-left" class="w-4 h-4" />
           <span>Previous</span>
         </button>
         <div v-else></div>
@@ -372,7 +372,7 @@
             class="px-10 py-3 bg-[#033958] text-white text-sm font-bold rounded-xl hover:bg-[#022a41] transition-all active:scale-95 inline-flex items-center space-x-2"
           >
             <span>Continue</span>
-            <Icon name="heroicons:arrow-right" class="w-4 h-4" />
+            <Icon name="lucide:arrow-right" class="w-4 h-4" />
           </button>
           
           <button

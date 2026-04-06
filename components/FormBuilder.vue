@@ -47,7 +47,7 @@
           class="px-3 py-2 text-slate-600 hover:text-slate-800 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
           title="Clear program selection"
         >
-          <Icon name="heroicons:x-mark" class="w-4 h-4" />
+          <Icon name="lucide:x" class="w-4 h-4" />
         </button>
       </div>
       <p class="mt-1 text-sm text-slate-500">
@@ -93,7 +93,7 @@
           type="button"
           class="px-3 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors flex items-center space-x-2"
         >
-          <Icon name="heroicons:plus" class="w-4 h-4" />
+          <Icon name="lucide:plus" class="w-4 h-4" />
           <span>Add Field</span>
         </button>
       </div>
@@ -111,7 +111,7 @@
               type="button"
               class="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
             >
-              <Icon name="heroicons:trash" class="w-4 h-4" />
+              <Icon name="lucide:trash-2" class="w-4 h-4" />
             </button>
           </div>
 
@@ -199,7 +199,7 @@
                   type="button"
                   class="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
                 >
-                  <Icon name="heroicons:x-mark" class="w-4 h-4" />
+                  <Icon name="lucide:x" class="w-4 h-4" />
                 </button>
               </div>
               <button
@@ -207,7 +207,7 @@
                 type="button"
                 class="text-cyan-600 hover:text-cyan-800 text-sm flex items-center space-x-1"
               >
-                <Icon name="heroicons:plus" class="w-4 h-4" />
+                <Icon name="lucide:plus" class="w-4 h-4" />
                 <span>Add Option</span>
               </button>
             </div>

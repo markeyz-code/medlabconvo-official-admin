@@ -11,7 +11,7 @@
     >
       <span class="text-gray-700">{{ selectedLabel }}</span>
       <Icon 
-        name="heroicons:chevron-down" 
+        name="lucide:chevron-down" 
         :class="['w-5 h-5 text-gray-400 transition-transform', isOpen && 'rotate-180']" 
       />
     </button>

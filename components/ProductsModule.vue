@@ -26,14 +26,14 @@
           @click="showBatchModal = true"
           class="flex-1 md:flex-none px-6 py-3 border border-slate-200 text-slate-900 rounded-xl hover:bg-slate-50 transition-all font-bold text-sm flex items-center justify-center space-x-2"
         >
-          <Icon name="heroicons:arrow-up-tray" class="w-5 h-4" />
+          <Icon name="lucide:upload" class="w-5 h-4" />
           <span>Batch Import</span>
         </button>
         <button
           @click="openCreateModal"
           class="flex-1 md:flex-none px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
         >
-          <Icon name="heroicons:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+          <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
           <span class="font-bold text-sm">Add Product</span>
         </button>
       </div>
@@ -90,7 +90,7 @@
     <!-- Empty State -->
     <div v-else class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
       <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mb-6">
-        <Icon name="heroicons:shopping-bag" class="w-10 h-10 text-slate-100" />
+        <Icon name="lucide:shopping-bag" class="w-10 h-10 text-slate-100" />
       </div>
       <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No products found</h3>
       <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Your inventory is currently empty. Add your first product to get started.</p>
@@ -111,14 +111,14 @@
           :disabled="currentPageNumber === 1"
           class="p-2 text-slate-400 hover:text-slate-900 disabled:opacity-20 transition-colors"
         >
-          <Icon name="heroicons:arrow-left" class="w-5 h-5" />
+          <Icon name="lucide:arrow-left" class="w-5 h-5" />
         </button>
         <button 
           @click="changePage(currentPageNumber + 1)"
           :disabled="currentPageNumber * perPage >= totalProductCount"
           class="p-2 text-slate-400 hover:text-slate-900 disabled:opacity-20 transition-colors"
         >
-          <Icon name="heroicons:arrow-right" class="w-5 h-5" />
+          <Icon name="lucide:arrow-right" class="w-5 h-5" />
         </button>
       </div>
     </div>
@@ -143,7 +143,7 @@
     <Modal v-model="showDeleteModal" title="Delete product" size="sm">
       <div class="p-8 text-center space-y-6">
         <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mx-auto">
-          <Icon name="heroicons:exclamation-triangle" class="w-8 h-8" />
+          <Icon name="lucide:alert-triangle" class="w-8 h-8" />
         </div>
         <div>
           <h3 class="text-lg font-bold text-slate-900">Delete product?</h3>
@@ -224,10 +224,10 @@ const quickFilters = [
 ]
 
 const productStatsList = computed(() => [
-  { title: 'Total products', value: products.value?.length || 0, icon: 'heroicons:command-line', color: 'text-blue-600', bg: 'bg-blue-50' },
-  { title: 'In stock', value: inStockProducts.value?.length || 0, icon: 'heroicons:check-badge', color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  { title: 'Out of stock', value: outOfStockProducts.value?.length || 0, icon: 'heroicons:exclamation-circle', color: 'text-rose-600', bg: 'bg-rose-50' },
-  { title: 'Total sales', value: stats.value?.totalSales || 0, icon: 'heroicons:rocket-launch', color: 'text-indigo-600', bg: 'bg-indigo-50' }
+  { title: 'Total products', value: products.value?.length || 0, icon: 'lucide:terminal', color: 'text-blue-600', bg: 'bg-blue-50' },
+  { title: 'In stock', value: inStockProducts.value?.length || 0, icon: 'lucide:badge-check', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  { title: 'Out of stock', value: outOfStockProducts.value?.length || 0, icon: 'lucide:alert-circle', color: 'text-rose-600', bg: 'bg-rose-50' },
+  { title: 'Total sales', value: stats.value?.totalSales || 0, icon: 'lucide:rocket', color: 'text-indigo-600', bg: 'bg-indigo-50' }
 ])
 
 const currentProducts = computed(() => {

@@ -25,7 +25,7 @@
           @click="refreshEnquiries"
           class="flex-1 md:flex-none px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
-          <Icon name="heroicons:arrow-path" class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+          <Icon name="lucide:refresh-cw" class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
           <span>Refresh</span>
         </button>
       </div>
@@ -38,7 +38,7 @@
 
     <div v-else-if="filteredEnquiries.length === 0" class="py-32 text-center bg-white rounded-[2.5rem] border border-slate-100">
       <div class="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-        <Icon name="heroicons:envelope-open" class="w-10 h-10 text-slate-100" />
+        <Icon name="lucide:mail-open" class="w-10 h-10 text-slate-100" />
       </div>
       <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No enquiries found</h3>
       <p class="text-slate-400 text-sm font-medium max-w-[280px] mx-auto leading-relaxed">No active enquiries or support tickets found in the database.</p>
@@ -68,7 +68,7 @@
         <div class="space-y-4 mb-8">
           <div class="flex items-center gap-2">
             <div class="px-3 py-1 bg-[#033958]/5 text-[#033958] text-[10px] font-black uppercase tracking-widest rounded-lg">
-              <Icon name="heroicons:phone" class="w-3 h-3 inline mr-1" />
+              <Icon name="lucide:phone" class="w-3 h-3 inline mr-1" />
               {{ enquiry.phoneNumber }}
             </div>
           </div>
@@ -77,7 +77,7 @@
         
         <div class="flex items-center justify-between pt-6 border-t border-slate-50">
           <div class="flex items-center space-x-2 text-sm font-bold text-slate-400">
-            <Icon name="heroicons:calendar" class="w-3.5 h-3.5" />
+            <Icon name="lucide:calendar" class="w-3.5 h-3.5" />
             <span>{{ formatDate(enquiry.createdAt) }}</span>
           </div>
           
@@ -87,10 +87,10 @@
               class="p-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
               title="Delete enquiry"
             >
-              <Icon name="heroicons:trash" class="w-5 h-5" />
+              <Icon name="lucide:trash-2" class="w-5 h-5" />
             </button>
             <div class="p-2 text-blue-400 bg-blue-50 rounded-xl">
-              <Icon name="heroicons:chevron-right" class="w-5 h-5" />
+              <Icon name="lucide:chevron-right" class="w-5 h-5" />
             </div>
           </div>
         </div>
@@ -137,7 +137,7 @@
             <p class="text-sm font-bold">{{ formatDetailedDate(selectedEnquiry.createdAt) }}</p>
           </div>
           <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/10">
-            <Icon name="heroicons:clock" class="w-6 h-6" />
+            <Icon name="lucide:clock" class="w-6 h-6" />
           </div>
         </div>
         

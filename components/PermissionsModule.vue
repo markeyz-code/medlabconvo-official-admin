@@ -18,7 +18,7 @@
           @click="openCreateModal"
           class="flex-1 md:flex-none px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
-          <Icon name="heroicons:plus-circle" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
+          <Icon name="lucide:plus-circle" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
           <span>Create Permission</span>
         </button>
       </div>
@@ -68,7 +68,7 @@
       <!-- Empty State -->
       <div v-if="!loading && filteredPermissions.length === 0" class="py-32 text-center bg-slate-50/30">
         <div class="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-          <Icon name="heroicons:key" class="w-10 h-10 text-slate-100" />
+          <Icon name="lucide:key" class="w-10 h-10 text-slate-100" />
         </div>
         <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No permissions found</h3>
         <p class="text-slate-400 text-sm font-medium max-w-[240px] mx-auto leading-relaxed">The system is currently using default access controls.</p>
@@ -105,7 +105,7 @@
           <label class="block text-sm font-bold text-slate-400 ml-1">Generated permission string</label>
           <div class="relative group">
             <div class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#3BAB22] transition-colors">
-              <Icon name="heroicons:tag" class="w-5 h-5" />
+              <Icon name="lucide:tag" class="w-5 h-5" />
             </div>
             <input
               v-model="form.name"
@@ -115,7 +115,7 @@
             />
           </div>
           <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400 ml-1">
-            <Icon name="heroicons:information-circle" class="w-4 h-4" />
+            <Icon name="lucide:info" class="w-4 h-4" />
             This identifier is automatically created from your resource and action.
           </div>
         </div>

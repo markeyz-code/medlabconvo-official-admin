@@ -22,10 +22,10 @@ export const useGetActiveEpisodes = () => {
         if ([200, 201].includes(response?.status)) {
         episodes.value = response.data.data || response.data
         totalCount.value = response.data.total || response.data.length
-        showToast({
-                  title: "Success",
-                  toastType: "success",
-                });
+        // showToast({
+        //           title: "Success",
+        //           toastType: "success",
+        //         });
         }
         return response.data
       } catch (err: any) {

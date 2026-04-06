@@ -16,7 +16,7 @@
         </span>
       </div>
       <Icon 
-        name="heroicons:chevron-down" 
+        name="lucide:chevron-down" 
         :class="['w-5 h-5 text-slate-400 transition-transform duration-300', isOpen && 'rotate-180']" 
       />
     </button>
@@ -36,7 +36,7 @@
         <!-- Search -->
         <div class="p-4 border-b border-slate-100 group">
           <div class="relative">
-            <Icon name="heroicons:magnifying-glass" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-blue-500 transition-colors" />
+            <Icon name="lucide:search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-blue-500 transition-colors" />
             <input
               v-model="search"
               type="text"

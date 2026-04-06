@@ -25,14 +25,14 @@
           @click="showInviteModal = true"
           class="flex-1 md:flex-none px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
-          <Icon name="heroicons:paper-airplane" class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          <Icon name="lucide:send" class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           <span>Invite User</span>
         </button>
         <button
           @click="openCreateModal"
           class="flex-1 md:flex-none px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
-          <Icon name="heroicons:plus" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
+          <Icon name="lucide:plus" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
           <span>Add User</span>
         </button>
       </div>
@@ -92,14 +92,14 @@
                     class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-xl transition-all"
                     title="Edit user"
                   >
-                    <Icon name="heroicons:pencil" class="w-5 h-5" />
+                    <Icon name="lucide:pencil" class="w-5 h-5" />
                   </button>
                   <button
                     @click="deleteUser(user._id)"
                     class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                     title="Delete user"
                   >
-                    <Icon name="heroicons:trash" class="w-5 h-5" />
+                    <Icon name="lucide:trash-2" class="w-5 h-5" />
                   </button>
                 </div>
               </td>
@@ -111,7 +111,7 @@
       <!-- Empty State -->
       <div v-if="!loading && filteredUsers.length === 0" class="py-32 text-center bg-slate-50/30">
         <div class="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-          <Icon name="heroicons:users" class="w-10 h-10 text-slate-100" />
+          <Icon name="lucide:users" class="w-10 h-10 text-slate-100" />
         </div>
         <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No users found</h3>
         <p class="text-slate-400 text-sm font-medium max-w-[280px] mx-auto leading-relaxed">No administrative users found in the current directory.</p>
@@ -124,7 +124,7 @@
         <div class="bg-slate-50 p-8 rounded-[2rem] border border-slate-100">
           <div class="flex items-start gap-4">
              <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white flex-shrink-0">
-               <Icon name="heroicons:shield-check" class="w-6 h-6" />
+               <Icon name="lucide:shield-check" class="w-6 h-6" />
              </div>
              <div>
                <p class="text-[#033958] text-sm font-bold uppercase tracking-widest mb-3">Invitation protocol</p>
@@ -157,7 +157,7 @@
             @click="copyInviteLink"
             class="flex-shrink-0 px-8 py-4 bg-emerald-600 text-white rounded-2xl font-bold text-sm hover:bg-emerald-700 transition-all flex items-center space-x-3 active:scale-95"
           >
-            <Icon :name="copied ? 'heroicons:check-badge' : 'heroicons:clipboard-document-check'" class="w-4 h-4" />
+            <Icon :name="copied ? 'lucide:badge-check' : 'lucide:clipboard-check'" class="w-4 h-4" />
             <span>{{ copied ? 'Link copied' : 'Copy link' }}</span>
           </button>
         </div>

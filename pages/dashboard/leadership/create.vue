@@ -5,7 +5,7 @@
       <div class="space-y-2">
         <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
            <NuxtLink to="/dashboard/leadership" class="hover:text-[#033958] transition-colors">Registry</NuxtLink>
-           <Icon name="heroicons:chevron-right" class="w-3 h-3" />
+           <Icon name="lucide:chevron-right" class="w-3 h-3" />
            <span class="text-slate-900">New Visionary</span>
         </div>
         <h1 class="text-4xl font-black text-slate-900 tracking-tighter uppercase ">Initialize Leader Profile</h1>
@@ -33,7 +33,7 @@
            <div class="relative aspect-square rounded-[3.5rem] bg-slate-50 border-4 border-dashed border-slate-100 overflow-hidden group">
               <img v-if="form.image" :src="form.image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div v-else class="absolute inset-0 flex flex-col items-center justify-center text-slate-200">
-                 <Icon name="heroicons:user" class="w-20 h-20 mb-4" />
+                 <Icon name="lucide:user" class="w-20 h-20 mb-4" />
                  <span class="text-[9px] font-black uppercase tracking-widest">No Visual Selected</span>
               </div>
               <input type="file" @change="handleImageUpload" class="absolute inset-0 opacity-0 cursor-pointer z-10" />
@@ -103,11 +103,11 @@
                    <AnimatedInput v-model="form.achievements[idx]" :id="'ach-'+idx" label="Specific outcome or award" type="text" />
                  </div>
                  <button @click="removeAchievement(idx)" class="p-4 text-slate-200 hover:text-rose-500 transition-colors">
-                    <Icon name="heroicons:trash" class="w-5 h-5" />
+                    <Icon name="lucide:trash-2" class="w-5 h-5" />
                  </button>
               </div>
               <div v-if="!form.achievements.length" class="py-20 border-2 border-dashed border-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-200">
-                 <Icon name="heroicons:sparkles" class="w-12 h-12 mb-4" />
+                 <Icon name="lucide:sparkles" class="w-12 h-12 mb-4" />
                  <p class="text-[10px] font-black uppercase tracking-widest">No milestones recorded yet.</p>
               </div>
            </div>
@@ -138,11 +138,11 @@
                  />
                  <AnimatedInput v-model="profile.url" :id="'prof-'+idx" label="Access URL" type="text" />
                  <button @click="removeProfile(idx)" class="absolute -top-3 -right-3 w-8 h-8 bg-white text-slate-200 hover:text-rose-500 rounded-full border border-slate-100 shadow-xl flex items-center justify-center">
-                    <Icon name="heroicons:x-mark" class="w-4 h-4" />
+                    <Icon name="lucide:x" class="w-4 h-4" />
                  </button>
               </div>
               <div v-if="!form.profiles.length" class="md:col-span-2 py-20 border-2 border-dashed border-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-200">
-                 <Icon name="heroicons:globe-alt" class="w-12 h-12 mb-4" />
+                 <Icon name="lucide:globe" class="w-12 h-12 mb-4" />
                  <p class="text-[10px] font-black uppercase tracking-widest">No social footprints initialized.</p>
               </div>
            </div>

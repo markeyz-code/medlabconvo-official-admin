@@ -76,11 +76,11 @@
               @click="showSheet = true"
               class="px-8 py-4 bg-white text-[#033958] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-50 transition-all flex items-center space-x-3 active:scale-95 shadow-2xl shadow-blue-900/40"
             >
-              <Icon name="heroicons:sparkles" class="w-4 h-4" />
+              <Icon name="lucide:sparkles" class="w-4 h-4" />
               <span>Trigger Protocol Sheet</span>
             </button>
           </div>
-          <Icon name="heroicons:squares-plus" class="absolute -bottom-10 -right-10 w-48 h-48 text-white/5 opacity-0 group-hover:opacity-10 transition-opacity duration-700" />
+          <Icon name="lucide:plus-square" class="absolute -bottom-10 -right-10 w-48 h-48 text-white/5 opacity-0 group-hover:opacity-10 transition-opacity duration-700" />
         </div>
 
         <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6 flex flex-col justify-center">
@@ -112,7 +112,7 @@
           <div class="flex items-center justify-between">
             <span class="text-2xl font-black text-slate-900 tracking-tighter">99.8%</span>
             <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
-              <Icon name="heroicons:check-circle" class="w-6 h-6" />
+              <Icon name="lucide:check-circle-2" class="w-6 h-6" />
             </div>
           </div>
         </div>
@@ -122,7 +122,7 @@
           <div class="flex items-center justify-between">
             <span class="text-2xl font-black text-slate-900 tracking-tighter">1,204</span>
             <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
-              <Icon name="heroicons:arrow-trending-up" class="w-6 h-6" />
+              <Icon name="lucide:trending-up" class="w-6 h-6" />
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@
                 <div class="flex items-center justify-between">
                   <span class="text-2xl font-black text-white tracking-tighter">ACTIVE</span>
                   <div class="w-10 h-10 bg-white/10 text-white rounded-lg flex items-center justify-center backdrop-blur-sm">
-                    <Icon name="heroicons:shield-exclamation" class="w-6 h-6" />
+                    <Icon name="lucide:shield-alert" class="w-6 h-6" />
                   </div>
                 </div>
              </div>
@@ -145,7 +145,7 @@
           <div class="flex items-center justify-between">
             <span class="text-2xl font-black text-slate-900 tracking-tighter">ZERO</span>
             <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-lg flex items-center justify-center">
-               <Icon name="heroicons:no-symbol" class="w-6 h-6" />
+               <Icon name="lucide:ban" class="w-6 h-6" />
             </div>
           </div>
         </div>
@@ -157,7 +157,7 @@
       <div class="p-8 space-y-10">
          <div class="bg-slate-50 p-8 rounded-[2rem] border border-slate-100 flex flex-col items-center justify-center space-y-4">
             <div class="w-16 h-16 bg-[#033958] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-900/40">
-              <Icon name="heroicons:cube" class="w-8 h-8" />
+              <Icon name="lucide:box" class="w-8 h-8" />
             </div>
             <p class="text-sm font-black text-slate-900 uppercase tracking-tight">Context Retention Protocol</p>
             <p class="text-sm text-slate-400 font-bold uppercase tracking-widest text-center leading-relaxed">This sheet allows users to modify data without losing their current scroll position in the background list.</p>
@@ -177,7 +177,7 @@
     <Modal v-model="showModal" title="Security Confirmation" size="sm">
       <div class="p-8 space-y-8 text-center">
         <div class="w-20 h-20 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto ring-8 ring-rose-50/50">
-          <Icon name="heroicons:exclamation-triangle" class="w-10 h-10" />
+          <Icon name="lucide:alert-triangle" class="w-10 h-10" />
         </div>
         <div class="space-y-3">
           <h3 class="text-xl font-black text-slate-900 uppercase tracking-tight">Irreversible Action</h3>

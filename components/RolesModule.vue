@@ -18,7 +18,7 @@
           @click="openCreateModal"
           class="flex-1 md:flex-none px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
-          <Icon name="heroicons:plus" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
+          <Icon name="lucide:plus" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
           <span>Create role</span>
         </button>
       </div>
@@ -73,14 +73,14 @@
                     class="p-2 hover:text-[#033958] hover:bg-[#033958]/5 rounded-xl transition-all"
                     title="Edit role"
                   >
-                    <Icon name="heroicons:pencil-square" class="w-5 h-5" />
+                    <Icon name="lucide:square-pen" class="w-5 h-5" />
                   </button>
                   <button
                     @click="confirmDelete(role._id)"
                     class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                     title="Delete role"
                   >
-                    <Icon name="heroicons:trash" class="w-5 h-5" />
+                    <Icon name="lucide:trash-2" class="w-5 h-5" />
                   </button>
                 </div>
               </td>
@@ -92,7 +92,7 @@
       <!-- Empty State -->
       <div v-if="!loading && filteredRoles.length === 0" class="py-32 text-center bg-slate-50/30">
         <div class="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-          <Icon name="heroicons:shield-check" class="w-10 h-10 text-slate-100" />
+          <Icon name="lucide:shield-check" class="w-10 h-10 text-slate-100" />
         </div>
         <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No roles found</h3>
         <p class="text-slate-400 text-sm font-medium max-w-[240px] mx-auto leading-relaxed">No administrative roles found in the database.</p>

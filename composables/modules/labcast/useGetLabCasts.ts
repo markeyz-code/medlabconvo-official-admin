@@ -24,10 +24,10 @@ export const useGetLabCasts = () => {
         labcasts.value = response.data.data || response.data
         totalCount.value = response.data.total || response.data.length
         currentPage.value = queryParams?.page || 1
-        showToast({
-          title: "Success",
-          toastType: "success",
-        });
+        // showToast({
+        //   title: "Success",
+        //   toastType: "success",
+        // });
       }
       return response.data
     } catch (err: any) {

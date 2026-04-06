@@ -26,14 +26,14 @@
           @click="showBatchModal = true"
           class="flex-1 md:flex-none px-6 py-3 border border-slate-200 text-slate-900 rounded-xl hover:bg-slate-50 transition-all font-bold text-sm flex items-center justify-center space-x-2"
         >
-          <Icon name="heroicons:arrow-up-tray" class="w-5 h-4" />
+          <Icon name="lucide:upload" class="w-5 h-4" />
           <span>Batch upload</span>
         </button>
         <button
           @click="openCreateModal"
           class="flex-1 md:flex-none px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
         >
-          <Icon name="heroicons:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+          <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
           <span class="font-bold text-sm">New Episode</span>
         </button>
       </div>
@@ -66,7 +66,7 @@
         <div class="relative h-48 bg-slate-50 overflow-hidden">
           <div class="absolute inset-0 bg-gradient-to-br from-[#033958]/5 to-transparent group-hover:scale-110 transition-transform duration-700"></div>
           <div class="absolute inset-0 flex items-center justify-center">
-            <Icon name="heroicons:microphone" class="w-12 h-12 text-slate-100 group-hover:text-slate-200 transition-colors duration-500" />
+            <Icon name="lucide:mic" class="w-12 h-12 text-slate-100 group-hover:text-slate-200 transition-colors duration-500" />
           </div>
           <div class="absolute top-4 left-4">
             <span class="px-3 py-1 bg-white/80 backdrop-blur-md text-[10px] font-bold rounded-full border border-slate-100">
@@ -80,15 +80,15 @@
           
           <div class="flex items-center justify-between pt-4 border-t border-slate-50">
             <div class="flex items-center space-x-2 text-slate-400">
-              <Icon name="heroicons:clock" class="w-4 h-4" />
+              <Icon name="lucide:clock" class="w-4 h-4" />
               <span class="text-[10px] font-bold">{{ episode.duration || '00:00' }}</span>
             </div>
             <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <button @click="editEpisode(episode)" class="p-2 text-slate-400 hover:text-[#033958] hover:bg-slate-50 rounded-lg">
-                <Icon name="heroicons:pencil" class="w-4 h-4" />
+                <Icon name="lucide:pencil" class="w-4 h-4" />
               </button>
               <button @click="deleteConfirm(episode)" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg">
-                <Icon name="heroicons:trash" class="w-4 h-4" />
+                <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -99,7 +99,7 @@
     <!-- Empty State -->
     <div v-else class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-[40px] border border-dashed border-slate-200">
       <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mb-6">
-        <Icon name="heroicons:microphone" class="w-10 h-10 text-slate-100" />
+        <Icon name="lucide:mic" class="w-10 h-10 text-slate-100" />
       </div>
       <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No episodes found</h3>
       <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Your podcast library is currently empty. Upload your first episode to get started.</p>
@@ -190,10 +190,10 @@ const seasonOptions = computed(() => {
 })
 
 const labcastStatsList = computed(() => [
-  { title: 'Total episodes', value: stats.value?.totalEpisodes || 0, icon: 'heroicons:microphone', color: 'text-blue-600', bg: 'bg-blue-50' },
-  { title: 'Total seasons', value: seasons.value?.length || 0, icon: 'heroicons:list-bullet', color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  { title: 'Total listeners', value: (stats.value as any)?.totalPlays || 0, icon: 'heroicons:user-group', color: 'text-indigo-600', bg: 'bg-indigo-50' },
-  { title: 'Avg. duration', value: stats.value?.averageDuration || '00:00', icon: 'heroicons:clock', color: 'text-amber-600', bg: 'bg-amber-50' }
+  { title: 'Total episodes', value: stats.value?.totalEpisodes || 0, icon: 'lucide:mic', color: 'text-blue-600', bg: 'bg-blue-50' },
+  { title: 'Total seasons', value: seasons.value?.length || 0, icon: 'lucide:list', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  { title: 'Total listeners', value: (stats.value as any)?.totalPlays || 0, icon: 'lucide:users', color: 'text-indigo-600', bg: 'bg-indigo-50' },
+  { title: 'Avg. duration', value: stats.value?.averageDuration || '00:00', icon: 'lucide:clock', color: 'text-amber-600', bg: 'bg-amber-50' }
 ])
 
 const debouncedSearch = useDebounceFn(() => {

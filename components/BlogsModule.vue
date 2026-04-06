@@ -27,7 +27,7 @@
         @click="openCreateModal"
         class="w-full md:w-auto px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
       >
-        <Icon name="heroicons:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+        <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
         <span class="font-bold text-sm">Create post</span>
       </button>
     </div>
@@ -45,7 +45,7 @@
             class="absolute inset-0 bg-gradient-to-br from-[#033958]/5 to-transparent group-hover:scale-110 transition-transform duration-700"
           ></div>
           <div class="absolute inset-0 flex items-center justify-center">
-            <Icon name="heroicons:photo" class="w-16 h-16 text-slate-100 group-hover:text-slate-200 transition-colors duration-500" />
+            <Icon name="lucide:image" class="w-16 h-16 text-slate-100 group-hover:text-slate-200 transition-colors duration-500" />
           </div>
           
           <!-- Status Badge Overlay -->
@@ -68,13 +68,13 @@
                 @click="editBlog(blog)"
                 class="p-2 text-slate-400 hover:text-[#033958] hover:bg-slate-50 rounded-lg transition-all"
               >
-                <Icon name="heroicons:pencil" class="w-4 h-4" />
+                <Icon name="lucide:pencil" class="w-4 h-4" />
               </button>
               <button
                 @click="deleteBlog(blog.id)"
                 class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
               >
-                <Icon name="heroicons:trash" class="w-4 h-4" />
+                <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -89,7 +89,7 @@
           <div class="flex items-center justify-between pt-5 border-t border-slate-50">
             <div class="flex items-center space-x-4">
               <div class="flex items-center space-x-1.5 text-slate-400">
-                <Icon name="heroicons:eye" class="w-4 h-4" />
+                <Icon name="lucide:eye" class="w-4 h-4" />
                 <span class="text-sm font-bold">{{ blog.viewCount || 0 }}</span>
               </div>
               <div v-if="blog.category" class="px-2 py-0.5 bg-slate-50 text-slate-400 text-[10px] font-bold rounded border border-slate-100">
@@ -116,7 +116,7 @@
     <!-- Empty State -->
     <div v-else-if="filteredBlogs.length === 0" class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
       <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mb-6">
-        <Icon name="heroicons:document-text" class="w-10 h-10 text-slate-100" />
+        <Icon name="lucide:file-text" class="w-10 h-10 text-slate-100" />
       </div>
       <h3 class="text-xl font-bold text-slate-900 mb-2">No blog posts found</h3>
       <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Create a new blog post to display content on the website.</p>

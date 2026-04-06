@@ -29,7 +29,7 @@
             <h3 class="text-base font-bold text-slate-900">Recent activity</h3>
             <p class="text-slate-400 text-sm font-medium">Last 8 administrative actions</p>
           </div>
-          <Icon name="heroicons:finger-print" class="w-6 h-6 text-slate-200" />
+          <Icon name="lucide:fingerprint" class="w-6 h-6 text-slate-200" />
         </div>
         
         <div class="divide-y divide-slate-50 max-h-[440px] overflow-y-auto custom-scrollbar">
@@ -56,7 +56,7 @@
           </div>
           
           <div v-if="!recentActivities?.length" class="py-16 text-center">
-            <Icon name="heroicons:inbox" class="w-12 h-12 text-slate-200 mx-auto mb-3" />
+            <Icon name="lucide:inbox" class="w-12 h-12 text-slate-200 mx-auto mb-3" />
             <p class="text-slate-400 font-medium text-sm">No recent activity</p>
           </div>
         </div>
@@ -75,7 +75,7 @@
           <p class="text-blue-100/70 text-sm font-medium mb-6 leading-relaxed relative z-10">Expand your team by inviting new members with specific roles.</p>
           <NuxtLink to="/dashboard/users" class="inline-flex items-center px-5 py-2.5 bg-[#3BAB22] text-white rounded-xl font-semibold text-sm hover:bg-[#2d851a] transition-all group/btn relative z-10">
             <span>Send invitation</span>
-            <Icon name="heroicons:paper-airplane" class="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+            <Icon name="lucide:send" class="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
           </NuxtLink>
         </div>
 
@@ -158,18 +158,18 @@ const { publications: convoStacks, getPublications: getConvoStacks } = useGetCon
 
 // Real stats from actual API data
 const allStats = computed(() => [
-  { title: 'Users', value: users?.value?.length || 0, icon: 'heroicons:users', bgColor: 'bg-blue-50 ring-blue-100', textColor: 'text-blue-600', link: '/dashboard/users' },
-  { title: 'Teams', value: teamMembers?.value?.length || 0, icon: 'heroicons:user-group', bgColor: 'bg-indigo-50 ring-indigo-100', textColor: 'text-indigo-600', link: '/dashboard/teams' },
-  { title: 'Subscribers', value: subscriptions?.value?.length || 0, icon: 'heroicons:envelope', bgColor: 'bg-emerald-50 ring-emerald-100', textColor: 'text-emerald-600', link: '/dashboard/subscriptions' },
-  { title: 'Enquiries', value: enquiries?.value?.length || 0, icon: 'heroicons:chat-bubble-left-right', bgColor: 'bg-amber-50 ring-amber-100', textColor: 'text-amber-600', link: '/dashboard/enquiries' },
-  { title: 'Publications', value: publications?.value?.length || 0, icon: 'heroicons:document-text', bgColor: 'bg-purple-50 ring-purple-100', textColor: 'text-purple-600', link: '/dashboard/publications' },
-  { title: 'Blogs', value: blogs?.value?.length || 0, icon: 'heroicons:newspaper', bgColor: 'bg-sky-50 ring-sky-100', textColor: 'text-sky-600', link: '/dashboard/blogs' },
-  { title: 'LabCast', value: labcasts?.value?.length || 0, icon: 'heroicons:microphone', bgColor: 'bg-pink-50 ring-pink-100', textColor: 'text-pink-600', link: '/dashboard/labcast' },
-  { title: 'ConvoStack', value: convoStacks?.value?.length || 0, icon: 'heroicons:book-open', bgColor: 'bg-teal-50 ring-teal-100', textColor: 'text-teal-600', link: '/dashboard/convostack' },
-  { title: 'Products', value: products?.value?.length || 0, icon: 'heroicons:archive-box', bgColor: 'bg-orange-50 ring-orange-100', textColor: 'text-orange-600', link: '/dashboard/products' },
-  { title: 'Programs', value: programs?.value?.length || 0, icon: 'heroicons:academic-cap', bgColor: 'bg-rose-50 ring-rose-100', textColor: 'text-rose-600', link: '/dashboard/programs' },
-  { title: 'Forms', value: forms?.value?.length || 0, icon: 'heroicons:clipboard-document-list', bgColor: 'bg-cyan-50 ring-cyan-100', textColor: 'text-cyan-600', link: '/dashboard/forms' },
-  { title: 'Audit logs', value: auditLogs?.value?.length || 0, icon: 'heroicons:finger-print', bgColor: 'bg-slate-50 ring-slate-200', textColor: 'text-slate-600', link: '/dashboard/audit' },
+  { title: 'Users', value: users?.value?.length || 0, icon: 'lucide:users', bgColor: 'bg-blue-50 ring-blue-100', textColor: 'text-blue-600', link: '/dashboard/users' },
+  { title: 'Teams', value: teamMembers?.value?.length || 0, icon: 'lucide:users-round', bgColor: 'bg-indigo-50 ring-indigo-100', textColor: 'text-indigo-600', link: '/dashboard/teams' },
+  { title: 'Subscribers', value: subscriptions?.value?.length || 0, icon: 'lucide:mail', bgColor: 'bg-emerald-50 ring-emerald-100', textColor: 'text-emerald-600', link: '/dashboard/subscriptions' },
+  { title: 'Enquiries', value: enquiries?.value?.length || 0, icon: 'lucide:message-square', bgColor: 'bg-amber-50 ring-amber-100', textColor: 'text-amber-600', link: '/dashboard/enquiries' },
+  { title: 'Publications', value: publications?.value?.length || 0, icon: 'lucide:file-text', bgColor: 'bg-purple-50 ring-purple-100', textColor: 'text-purple-600', link: '/dashboard/publications' },
+  { title: 'Blogs', value: blogs?.value?.length || 0, icon: 'lucide:newspaper', bgColor: 'bg-sky-50 ring-sky-100', textColor: 'text-sky-600', link: '/dashboard/blogs' },
+  { title: 'LabCast', value: labcasts?.value?.length || 0, icon: 'lucide:mic', bgColor: 'bg-pink-50 ring-pink-100', textColor: 'text-pink-600', link: '/dashboard/labcast' },
+  { title: 'ConvoStack', value: convoStacks?.value?.length || 0, icon: 'lucide:book-open', bgColor: 'bg-teal-50 ring-teal-100', textColor: 'text-teal-600', link: '/dashboard/convostack' },
+  { title: 'Products', value: products?.value?.length || 0, icon: 'lucide:archive', bgColor: 'bg-orange-50 ring-orange-100', textColor: 'text-orange-600', link: '/dashboard/products' },
+  { title: 'Programs', value: programs?.value?.length || 0, icon: 'lucide:graduation-cap', bgColor: 'bg-rose-50 ring-rose-100', textColor: 'text-rose-600', link: '/dashboard/programs' },
+  { title: 'Forms', value: forms?.value?.length || 0, icon: 'lucide:clipboard-list', bgColor: 'bg-cyan-50 ring-cyan-100', textColor: 'text-cyan-600', link: '/dashboard/forms' },
+  { title: 'Audit logs', value: auditLogs?.value?.length || 0, icon: 'lucide:fingerprint', bgColor: 'bg-slate-50 ring-slate-200', textColor: 'text-slate-600', link: '/dashboard/audit' },
 ])
 
 // Content distribution bar chart based on real data
@@ -231,8 +231,8 @@ const getActivityBg = (action: string) => {
 }
 
 const getActivityIcon = (action: string) => {
-  const map: Record<string, string> = { create: 'heroicons:plus-circle', update: 'heroicons:arrow-path', delete: 'heroicons:trash', login: 'heroicons:key', logout: 'heroicons:lock-closed' }
-  return map[action] || 'heroicons:information-circle'
+  const map: Record<string, string> = { create: 'lucide:plus-circle', update: 'lucide:refresh-cw', delete: 'lucide:trash-2', login: 'lucide:key-round', logout: 'lucide:lock' }
+  return map[action] || 'lucide:info'
 }
 
 const formatActivityDescription = (activity: any) => {

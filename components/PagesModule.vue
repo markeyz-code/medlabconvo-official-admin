@@ -10,7 +10,7 @@
         @click="openCreateModal"
         class="w-full sm:w-auto px-8 py-3.5 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
       >
-        <Icon name="heroicons:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+        <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
         <span class="font-bold text-sm">Create page</span>
       </button>
     </div>
@@ -42,7 +42,7 @@
             <td class="px-6 py-5">
               <div class="flex items-center space-x-4">
                 <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-[#033958]/40 group-hover:bg-[#033958]/10 group-hover:text-[#033958] transition-colors">
-                  <Icon name="heroicons:window" class="w-5 h-5" />
+                  <Icon name="lucide:layout" class="w-5 h-5" />
                 </div>
                 <div>
                   <h3 class="text-sm font-bold text-slate-900 leading-tight group-hover:text-[#033958] transition-colors">{{ page.title }}</h3>
@@ -54,7 +54,7 @@
             <!-- Sections -->
             <td class="px-6 py-5 hidden md:table-cell">
               <div class="flex items-center space-x-2">
-                <Icon name="heroicons:rectangle-stack" class="w-4 h-4 text-slate-300" />
+                <Icon name="lucide:layers" class="w-4 h-4 text-slate-300" />
                 <span class="text-sm font-bold text-slate-600">{{ page.data?.sections?.length || 0 }}</span>
               </div>
             </td>
@@ -76,10 +76,10 @@
             <td class="px-6 py-5">
               <div class="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <button @click="openEditModal(page)" class="p-2.5 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/10 rounded-xl transition-all" title="Edit Content">
-                  <Icon name="heroicons:pencil" class="w-4 h-4" />
+                  <Icon name="lucide:pencil" class="w-4 h-4" />
                 </button>
                 <button @click="handleDeleteConfirm(page.key)" class="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all" title="Delete Page">
-                  <Icon name="heroicons:trash" class="w-4 h-4" />
+                  <Icon name="lucide:trash-2" class="w-4 h-4" />
                 </button>
               </div>
             </td>
@@ -91,7 +91,7 @@
     <!-- Empty State -->
     <div v-else class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-[40px] border border-dashed border-slate-200">
       <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mb-6">
-        <Icon name="heroicons:window" class="w-12 h-12 text-slate-100" />
+        <Icon name="lucide:layout" class="w-12 h-12 text-slate-100" />
       </div>
       <h3 class="text-xl font-bold text-slate-900 tracking-tight">No pages found</h3>
       <p class="text-sm text-slate-500 mb-8 max-w-sm text-center leading-relaxed font-medium">Create a new page to manage its content and sections.</p>
@@ -146,7 +146,7 @@
               <!-- Inline Controls -->
               <div class="absolute -top-3 right-6 flex items-center bg-white rounded-xl border border-slate-100 p-1">
                 <button type="button" @click="removeSection(index)" class="p-1.5 text-slate-300 hover:text-red-500 transition-colors">
-                  <Icon name="heroicons:trash" class="w-4 h-4" />
+                  <Icon name="lucide:trash-2" class="w-4 h-4" />
                 </button>
               </div>
 

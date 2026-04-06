@@ -5,13 +5,13 @@
       <!-- Text Style -->
       <div class="flex items-center space-x-1 bg-white/50 p-1 rounded-lg border border-slate-200/50 mr-1">
         <button type="button" @click="editor.chain().focus().toggleBold().run()" :class="btnClass(editor.isActive('bold'))" title="Bold">
-          <Icon name="heroicons:bold" class="w-4 h-4" />
+          <Icon name="lucide:bold" class="w-4 h-4" />
         </button>
-        <button type="button" @click="editor.chain().focus().toggle().run()" :class="btnClass(editor.isActive(''))" title="">
-          <Icon name="heroicons:" class="w-4 h-4" />
+        <button type="button" @click="editor.chain().focus().toggleItalic().run()" :class="btnClass(editor.isActive('italic'))" title="Italic">
+          <Icon name="lucide:italic" class="w-4 h-4" />
         </button>
         <button type="button" @click="editor.chain().focus().toggleUnderline().run()" :class="btnClass(editor.isActive('underline'))" title="Underline">
-          <Icon name="heroicons:underline" class="w-4 h-4" />
+          <Icon name="lucide:underline" class="w-4 h-4" />
         </button>
       </div>
 
@@ -26,7 +26,7 @@
 
       <div class="flex items-center space-x-1 bg-white/50 p-1 rounded-lg border border-slate-200/50 mr-1">
         <button type="button" @click="editor.chain().focus().toggleBulletList().run()" :class="btnClass(editor.isActive('bulletList'))" title="Bullets">
-          <Icon name="heroicons:list-bullet" class="w-4 h-4" />
+          <Icon name="lucide:list" class="w-4 h-4" />
         </button>
         <button type="button" @click="editor.chain().focus().toggleOrderedList().run()" :class="btnClass(editor.isActive('orderedList'))" title="Numbered List">
           <span class="text-[10px] font-black">1.</span>
@@ -35,19 +35,19 @@
 
       <div class="flex items-center space-x-1 bg-white/50 p-1 rounded-lg border border-slate-200/50 mr-1">
         <button type="button" @click="editor.chain().focus().toggleBlockquote().run()" :class="btnClass(editor.isActive('blockquote'))" title="Quote">
-          <Icon name="heroicons:chat-bubble-bottom-center-text" class="w-4 h-4" />
+          <Icon name="lucide:quote" class="w-4 h-4" />
         </button>
         <button type="button" @click="setLink" :class="btnClass(editor.isActive('link'))" title="Add Link">
-          <Icon name="heroicons:link" class="w-4 h-4" />
+          <Icon name="lucide:link" class="w-4 h-4" />
         </button>
       </div>
 
       <div class="flex items-center space-x-1 ml-auto">
         <button type="button" @click="editor.chain().focus().undo().run()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 transition-all" title="Undo">
-          <Icon name="heroicons:arrow-uturn-left" class="w-4 h-4" />
+          <Icon name="lucide:undo" class="w-4 h-4" />
         </button>
         <button type="button" @click="editor.chain().focus().redo().run()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 transition-all" title="Redo">
-          <Icon name="heroicons:arrow-uturn-right" class="w-4 h-4" />
+          <Icon name="lucide:redo" class="w-4 h-4" />
         </button>
       </div>
     </div>

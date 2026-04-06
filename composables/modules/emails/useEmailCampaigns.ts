@@ -1,24 +1,19 @@
 import { ref } from 'vue'
-import { useUser } from '@/composables/modules/auth/user'
+import { emails_api } from '@/api_factory/modules/emails'
 
 export const useEmailCampaigns = () => {
   const campaigns = ref<any[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
-  
-  const { token } = useUser()
-  const config = useRuntimeConfig()
-  const baseUrl = config.public.apiBase || 'https://medlab-api.onrender.com/api/v1'
 
   const getCampaigns = async () => {
     loading.value = true
     try {
-      const response = await fetch(`${baseUrl}/emails/campaigns`, {
-        headers: {
-          'Authorization': `Bearer ${token.value}`
-        }
-      })
-      campaigns.value = await response.json()
+      const response = await emails_api.$_get_campaigns()
+      if (response && [200, 201].includes(response.status)) {
+        campaigns.value = response.data
+      }
+      return response.data
     } catch (err: any) {
       error.value = err.message
     } finally {
@@ -29,15 +24,8 @@ export const useEmailCampaigns = () => {
   const createCampaign = async (data: any) => {
     loading.value = true
     try {
-      const response = await fetch(`${baseUrl}/emails/campaigns`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token.value}`
-        },
-        body: JSON.stringify(data)
-      })
-      return await response.json()
+      const response = await emails_api.$_create_campaign(data)
+      return response.data
     } catch (err: any) {
       error.value = err.message
     } finally {
@@ -48,13 +36,8 @@ export const useEmailCampaigns = () => {
   const sendCampaign = async (id: string) => {
     loading.value = true
     try {
-      const response = await fetch(`${baseUrl}/emails/campaigns/${id}/send`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token.value}`
-        }
-      })
-      return await response.json()
+      const response = await emails_api.$_send_campaign(id)
+      return response.data
     } catch (err: any) {
       error.value = err.message
     } finally {

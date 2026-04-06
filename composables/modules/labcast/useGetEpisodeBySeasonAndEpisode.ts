@@ -19,10 +19,10 @@ export const useGetEpisodeBySeasonAndEpisode = () => {
         const response = await labcast_api.$_get_episode_by_season_and_episode(season, episodeNumber)
         if ([200, 201].includes(response?.status)) {
         episode.value = response.data
-        showToast({
-                  title: "Success",
-                  toastType: "success",
-                });
+        // showToast({
+        //           title: "Success",
+        //           toastType: "success",
+        //         });
         }
         return response.data
       } catch (err: any) {

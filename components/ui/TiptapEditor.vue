@@ -3,16 +3,16 @@
     <!-- Toolbar -->
     <div v-if="editor" class="flex flex-wrap items-center gap-1.5 p-3 bg-slate-50/80 border-b border-slate-100 backdrop-blur-sm sticky top-0 z-20">
       <!-- History -->
-      <ToolbarButton @click="editor.chain().focus().undo().run()" :disabled="!editor.can().undo()" icon="heroicons:arrow-uturn-left" />
-      <ToolbarButton @click="editor.chain().focus().redo().run()" :disabled="!editor.can().redo()" icon="heroicons:arrow-uturn-right" />
+      <ToolbarButton @click="editor.chain().focus().undo().run()" :disabled="!editor.can().undo()" icon="lucide:undo" />
+      <ToolbarButton @click="editor.chain().focus().redo().run()" :disabled="!editor.can().redo()" icon="lucide:redo" />
       
       <div class="w-px h-6 bg-slate-200 mx-2"></div>
 
       <!-- Formatting -->
-      <ToolbarButton @click="editor.chain().focus().toggleBold().run()" :active="editor.isActive('bold')" icon="heroicons:bold" />
-      <ToolbarButton @click="editor.chain().focus().toggleItalic().run()" :active="editor.isActive('italic')" icon="heroicons:italic" />
-      <ToolbarButton @click="editor.chain().focus().toggleStrike().run()" :active="editor.isActive('strike')" icon="heroicons:strikethrough" />
-      <ToolbarButton @click="editor.chain().focus().toggleUnderline().run()" :active="editor.isActive('underline')" icon="heroicons:underline" />
+      <ToolbarButton @click="editor.chain().focus().toggleBold().run()" :active="editor.isActive('bold')" icon="lucide:bold" />
+      <ToolbarButton @click="editor.chain().focus().toggleItalic().run()" :active="editor.isActive('italic')" icon="lucide:italic" />
+      <ToolbarButton @click="editor.chain().focus().toggleStrike().run()" :active="editor.isActive('strike')" icon="lucide:strikethrough" />
+      <ToolbarButton @click="editor.chain().focus().toggleUnderline().run()" :active="editor.isActive('underline')" icon="lucide:underline" />
 
       <div class="w-px h-6 bg-slate-200 mx-2"></div>
 
@@ -24,15 +24,15 @@
       <div class="w-px h-6 bg-slate-200 mx-2"></div>
 
       <!-- Lists -->
-      <ToolbarButton @click="editor.chain().focus().toggleBulletList().run()" :active="editor.isActive('bulletList')" icon="heroicons:list-bullet" />
-      <ToolbarButton @click="editor.chain().focus().toggleOrderedList().run()" :active="editor.isActive('orderedList')" icon="heroicons:list-bullet" /> <!-- Use list icon but for ordered -->
-      <ToolbarButton @click="editor.chain().focus().toggleBlockquote().run()" :active="editor.isActive('blockquote')" icon="heroicons:chat-bubble-bottom-center-text" />
+      <ToolbarButton @click="editor.chain().focus().toggleBulletList().run()" :active="editor.isActive('bulletList')" icon="lucide:list" />
+      <ToolbarButton @click="editor.chain().focus().toggleOrderedList().run()" :active="editor.isActive('orderedList')" icon="lucide:list-ordered" /> <!-- Use list icon but for ordered -->
+      <ToolbarButton @click="editor.chain().focus().toggleBlockquote().run()" :active="editor.isActive('blockquote')" icon="lucide:quote" />
 
       <div class="w-px h-6 bg-slate-200 mx-2"></div>
 
       <!-- Links & Media -->
-      <ToolbarButton @click="setLink" :active="editor.isActive('link')" icon="heroicons:link" />
-      <ToolbarButton @click="triggerImageUpload" icon="heroicons:photo" />
+      <ToolbarButton @click="setLink" :active="editor.isActive('link')" icon="lucide:link" />
+      <ToolbarButton @click="triggerImageUpload" icon="lucide:image" />
 
       <div class="flex-1"></div>
 

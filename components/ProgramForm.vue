@@ -1,7 +1,9 @@
 <template>
   <div class="animate-in slide-in-from-right duration-500 p-6">
+    <!-- {{ program }} -->
     <!-- Step Indicator -->
     <div class="mb-10">
+
       <div class="flex items-center justify-between px-2">
         <div
           v-for="(step, index) in steps"
@@ -30,7 +32,7 @@
                 : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-slate-100'
             ]"
           >
-            <Icon v-if="currentStep > index" name="heroicons:check" class="w-5 h-5" />
+            <Icon v-if="currentStep > index" name="lucide:check" class="w-5 h-5" />
             <span v-else>{{ index + 1 }}</span>
           </div>
           <span
@@ -140,7 +142,7 @@
                 type="button"
                 class="ml-2 p-3 text-slate-300 hover:text-red-500 transition-colors"
               >
-                <Icon name="heroicons:trash" class="w-5 h-5" />
+                <Icon name="lucide:trash-2" class="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -171,7 +173,7 @@
                 type="button"
                 class="ml-2 p-3 text-slate-300 hover:text-red-500 transition-colors"
               >
-                <Icon name="heroicons:trash" class="w-5 h-5" />
+                <Icon name="lucide:trash-2" class="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -202,7 +204,7 @@
                 type="button"
                 class="ml-2 p-3 text-slate-300 hover:text-red-500 transition-colors"
               >
-                <Icon name="heroicons:trash" class="w-5 h-5" />
+                <Icon name="lucide:trash-2" class="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -255,7 +257,7 @@
                 type="button"
                 class="absolute top-4 right-4 p-2 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
               >
-                <Icon name="heroicons:trash" class="w-4 h-4" />
+                <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
               
               <AnimatedInput
@@ -280,6 +282,7 @@
       <div v-if="currentStep === 3" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <header class="mb-8">
           <h3 class="text-xl font-bold text-slate-900 mb-1">Scientific speakers & mentors</h3>
+           <!-- {{ form.speakers }} -->
           <p class="text-sm text-slate-500">Add experts and speakers for this program. You can add bios and avatars now or later.</p>
         </header>
 
@@ -290,7 +293,7 @@
               type="button"
               class="absolute top-6 right-6 p-2 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
             >
-              <Icon name="heroicons:trash" class="w-5 h-5" />
+              <Icon name="lucide:trash-2" class="w-5 h-5" />
             </button>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
@@ -298,11 +301,12 @@
               <div class="md:col-span-4 space-y-4">
                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Avatar</label>
                 <div class="relative w-32 h-32 mx-auto md:mx-0">
+                <!-- {{ speaker.image }} -->
                   <ImageUpload
                     v-model="speaker.image"
                     :multiple="false"
                     folder="speakers"
-                    class="rounded-full w-32 h-32 border-4 border-white shadow-xl overflow-hidden"
+                    class="rounded-full w-32 h-32 border-4 border-white shadow-xl overflow-hidden mx-auto md:mx-0"
                   />
                 </div>
               </div>
@@ -334,7 +338,7 @@
             type="button"
             class="w-full py-6 bg-white border-2 border-dashed border-slate-100 rounded-[2rem] text-slate-400 font-bold text-sm hover:border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center space-x-3"
           >
-            <Icon name="heroicons:plus-circle" class="w-6 h-6" />
+            <Icon name="lucide:plus-circle" class="w-6 h-6" />
             <span>Add expert speaker</span>
           </button>
         </section>
@@ -391,7 +395,7 @@
           type="button"
           class="px-8 py-3 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors inline-flex items-center space-x-2"
         >
-          <Icon name="heroicons:arrow-left" class="w-4 h-4" />
+          <Icon name="lucide:arrow-left" class="w-4 h-4" />
           <span>Previous</span>
         </button>
         <div v-else></div>
@@ -412,7 +416,7 @@
             class="px-10 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-3"
           >
             <span>Continue</span>
-            <Icon name="heroicons:arrow-right" class="w-4 h-4" />
+            <Icon name="lucide:arrow-right" class="w-4 h-4" />
           </button>
           
           <button
@@ -444,7 +448,11 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits(['save', 'cancel'])
+// const emit = defineEmits(['save', 'cancel'])
+const emit = defineEmits<{
+  (e: 'save', form: any, done: () => void): void
+  (e: 'cancel'): void
+}>()
 
 const currentStep = ref(0)
 const maxStepReached = ref(0)
@@ -555,50 +563,86 @@ const removeSpeaker = (index: number) => form.speakers.splice(index, 1)
 
 const { showToast } = useCustomToast()
 
+// const handleSubmit = async () => {
+//   if (!form.title.trim() || !form.category.trim() || !form.description.trim() || !form.duration.trim()) {
+//     showToast({ title: "Validation Error", message: "Title, Category, Description, and Duration are required.", toastType: "error" });
+//     return;
+//   }
+//   isSubmitting.value = true
+//   try {
+//     const extractUrl = (val: any) => {
+//       if (typeof val === 'string') return val
+//       if (val && typeof val === 'object') return val.url || val.secure_url || ''
+//       return ''
+//     }
+
+//     const cleanedForm = {
+//       ...form,
+//       image: extractUrl(form.image),
+//       images: form.images.map(extractUrl).filter(url => !!url),
+//       focusAreas: form.focusAreas.filter(area => area.trim()),
+//       outcomes: form.outcomes.filter(outcome => outcome.trim()),
+//       keyResponsibilities: form.keyResponsibilities.filter(resp => resp.trim()),
+//       highlights: form.highlights
+//         .filter(h => h.title.trim() || h.description.trim())
+//         .map(h => {
+//           const { _id, ...cleanHighlight } = h as any
+//           return {
+//             title: cleanHighlight.title,
+//             description: cleanHighlight.description
+//           }
+//         }),
+//       speakers: form.speakers
+//         .filter(s => s.name.trim() || s.bio.trim() || s.image)
+//         .map(s => {
+//           const { _id, ...cleanSpeaker } = s as any
+//           return {
+//             name: cleanSpeaker.name,
+//             bio: cleanSpeaker.bio,
+//             image: extractUrl(cleanSpeaker.image)
+//           }
+//         })
+//     }
+    
+//     await emit('save', cleanedForm)
+//   } finally {
+//     isSubmitting.value = false
+//   }
+// }
+
+// handleSubmit in the child form component
 const handleSubmit = async () => {
   if (!form.title.trim() || !form.category.trim() || !form.description.trim() || !form.duration.trim()) {
-    showToast({ title: "Validation Error", message: "Title, Category, Description, and Duration are required.", toastType: "error" });
-    return;
+    showToast({ title: "Validation Error", message: "Please fill in all required fields.", toastType: "error" })
+    return
   }
-  isSubmitting.value = true
-  try {
-    const extractUrl = (val: any) => {
-      if (typeof val === 'string') return val
-      if (val && typeof val === 'object') return val.url || val.secure_url || ''
-      return ''
-    }
 
-    const cleanedForm = {
-      ...form,
-      image: extractUrl(form.image),
-      images: form.images.map(extractUrl).filter(url => !!url),
-      focusAreas: form.focusAreas.filter(area => area.trim()),
-      outcomes: form.outcomes.filter(outcome => outcome.trim()),
-      keyResponsibilities: form.keyResponsibilities.filter(resp => resp.trim()),
-      highlights: form.highlights
-        .filter(h => h.title.trim() || h.description.trim())
-        .map(h => {
-          const { _id, ...cleanHighlight } = h as any
-          return {
-            title: cleanHighlight.title,
-            description: cleanHighlight.description
-          }
-        }),
-      speakers: form.speakers
-        .filter(s => s.name.trim() || s.bio.trim() || s.image)
-        .map(s => {
-          const { _id, ...cleanSpeaker } = s as any
-          return {
-            name: cleanSpeaker.name,
-            bio: cleanSpeaker.bio,
-            image: extractUrl(cleanSpeaker.image)
-          }
-        })
-    }
-    
-    await emit('save', cleanedForm)
-  } finally {
-    isSubmitting.value = false
+  isSubmitting.value = true  // 👈 spinner starts here
+
+  const extractUrl = (val: any) => {
+    if (typeof val === 'string') return val
+    if (val && typeof val === 'object') return val.url || val.secure_url || ''
+    return ''
   }
+
+  const cleanedForm = {
+    ...form,
+    image: extractUrl(form.image),
+    images: form.images.map(extractUrl).filter(Boolean),
+    focusAreas: form.focusAreas.filter((a: string) => a.trim()),
+    outcomes: form.outcomes.filter((o: string) => o.trim()),
+    keyResponsibilities: form.keyResponsibilities.filter((r: string) => r.trim()),
+    highlights: form.highlights
+      .filter((h: any) => h.title.trim() || h.description.trim())
+      .map(({ _id, ...h }: any) => ({ title: h.title, description: h.description })),
+    speakers: form.speakers
+      .filter((s: any) => s.name.trim() || s.bio.trim() || s.image)
+      .map(({ _id, ...s }: any) => ({ name: s.name, bio: s.bio, image: extractUrl(s.image) }))
+  }
+
+  // ✅ Pass done() — parent calls it when its async work finishes
+  emit('save', cleanedForm, () => {
+    isSubmitting.value = false  // 👈 spinner stops here, driven by parent
+  })
 }
 </script>

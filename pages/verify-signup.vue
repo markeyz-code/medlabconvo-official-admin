@@ -19,7 +19,7 @@
       <div class="w-full max-w-[440px]">
         
         <div class="w-20 h-20 bg-[#f0fdf4] rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-emerald-50">
-          <Icon name="heroicons:envelope-open" class="w-10 h-10 text-[#3BAB22]" />
+          <Icon name="lucide:mail-open" class="w-10 h-10 text-[#3BAB22]" />
         </div>
         
         <h2 class="text-2xl font-extrabold text-[#033958] mb-4 tracking-tight">Verify Your Email</h2>

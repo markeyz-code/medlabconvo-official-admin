@@ -49,7 +49,7 @@
         @click="refreshAuditLogs"
         class="w-full md:w-auto px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-3 active:scale-95"
       >
-        <Icon name="heroicons:arrow-path" class="w-4 h-4" />
+        <Icon name="lucide:refresh-cw" class="w-4 h-4" />
         <span>Refresh</span>
       </button>
     </div>
@@ -95,7 +95,7 @@
               <!-- Metadata -->
               <div v-if="log.metadata" class="flex flex-wrap items-center gap-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 <span v-if="log.metadata.ip" class="flex items-center">
-                  <Icon name="heroicons:globe-americas" class="w-3 h-3 mr-1" />
+                  <Icon name="lucide:globe" class="w-3 h-3 mr-1" />
                   {{ log.metadata.ip }}
                 </span>
                 <span v-if="log.metadata.method" class="px-1.5 py-0.5 bg-slate-50 rounded border border-slate-100">{{ log.metadata.method }}</span>
@@ -117,7 +117,7 @@
       <!-- Empty State -->
       <div v-else-if="filteredAuditLogs?.length === 0" class="text-center py-24">
         <div class="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-          <Icon name="heroicons:shield-check" class="w-10 h-10 text-slate-100" />
+          <Icon name="lucide:shield-check" class="w-10 h-10 text-slate-100" />
         </div>
         <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No activity found</h3>
         <p class="text-slate-400 text-sm font-medium">There are no records matching your search criteria.</p>
@@ -212,15 +212,15 @@ const getActionColor = (action: string) => {
 
 const getActionIcon = (action: string) => {
   const icons = {
-    create: 'heroicons:plus',
-    update: 'heroicons:pencil',
-    delete: 'heroicons:trash',
-    soft_delete: 'heroicons:archive-box',
-    restore: 'heroicons:arrow-path',
-    login: 'heroicons:arrow-right-on-rectangle',
-    logout: 'heroicons:arrow-left-on-rectangle'
+    create: 'lucide:plus',
+    update: 'lucide:pencil',
+    delete: 'lucide:trash-2',
+    soft_delete: 'lucide:archive',
+    restore: 'lucide:refresh-cw',
+    login: 'lucide:log-in',
+    logout: 'lucide:log-out'
   }
-  return icons[action as keyof typeof icons] || 'heroicons:information-circle'
+  return icons[action as keyof typeof icons] || 'lucide:info'
 }
 
 const getActionLabel = (action: string) => {

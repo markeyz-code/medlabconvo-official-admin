@@ -44,7 +44,7 @@
               @click="showPassword = !showPassword"
               class="absolute right-4 top-[22px] text-gray-400 hover:text-[#033958] transition-colors"
             >
-              <Icon :name="showPassword ? 'heroicons:eye-slash' : 'heroicons:eye'" class="w-5 h-5" />
+              <Icon :name="showPassword ? 'lucide:eye-off' : 'lucide:eye'" class="w-5 h-5" />
             </button>
           </div>
 
@@ -64,7 +64,7 @@
 
           <transition name="shake">
             <div v-if="error" class="bg-red-50 border border-red-100 rounded-xl p-3 flex items-center space-x-3">
-              <Icon name="heroicons:exclamation-circle" class="w-5 h-5 text-red-500" />
+              <Icon name="lucide:alert-circle" class="w-5 h-5 text-red-500" />
               <span class="text-red-800 text-sm font-medium">{{ error }}</span>
             </div>
           </transition>
@@ -80,7 +80,7 @@
             </div>
             <span v-else class="flex items-center justify-center">
               Sign In
-              <Icon name="heroicons:arrow-right" class="ml-2 w-5 h-5" />
+              <Icon name="lucide:arrow-right" class="ml-2 w-5 h-5" />
             </span>
           </button>
         </form>

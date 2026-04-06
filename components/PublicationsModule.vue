@@ -30,7 +30,7 @@
         @click="openCreateModal"
         class="w-full md:w-auto px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
       >
-        <Icon name="heroicons:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+        <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
         <span class="font-bold text-sm">New publication</span>
       </button>
     </div>
@@ -69,7 +69,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-6 border-t border-slate-50">
               <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400">
-                  <Icon name="heroicons:user" class="w-4 h-4" />
+                  <Icon name="lucide:user" class="w-4 h-4" />
                 </div>
                 <div class="flex flex-col">
                   <span class="text-[9px] font-bold text-slate-400">Authors</span>
@@ -79,7 +79,7 @@
               
               <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400">
-                  <Icon name="heroicons:book-open" class="w-4 h-4" />
+                  <Icon name="lucide:book-open" class="w-4 h-4" />
                 </div>
                 <div class="flex flex-col">
                   <span class="text-[9px] font-bold text-slate-400">Journal</span>
@@ -89,7 +89,7 @@
 
               <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400">
-                  <Icon name="heroicons:calendar" class="w-4 h-4" />
+                  <Icon name="lucide:calendar" class="w-4 h-4" />
                 </div>
                 <div class="flex flex-col">
                   <span class="text-[9px] font-bold text-slate-400">Date</span>
@@ -105,7 +105,7 @@
               class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-xl transition-all"
               title="Edit"
             >
-              <Icon name="heroicons:pencil" class="w-5 h-5" />
+              <Icon name="lucide:pencil" class="w-5 h-5" />
             </button>
             
             <button
@@ -114,7 +114,7 @@
               class="p-2 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition-all"
               title="Submit for review"
             >
-              <Icon name="heroicons:paper-airplane" class="w-5 h-5" />
+              <Icon name="lucide:send" class="w-5 h-5" />
             </button>
             
             <button
@@ -123,7 +123,7 @@
               class="p-2 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"
               title="Approve"
             >
-              <Icon name="heroicons:check" class="w-5 h-5" />
+              <Icon name="lucide:check" class="w-5 h-5" />
             </button>
             
             <button
@@ -132,7 +132,7 @@
               class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-xl transition-all"
               title="Publish"
             >
-              <Icon name="heroicons:cloud-arrow-up" class="w-5 h-5" />
+              <Icon name="lucide:upload-cloud" class="w-5 h-5" />
             </button>
             
             <button
@@ -140,7 +140,7 @@
               class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
               title="Delete"
             >
-              <Icon name="heroicons:trash" class="w-5 h-5" />
+              <Icon name="lucide:trash-2" class="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -156,7 +156,7 @@
     <!-- Empty State -->
     <div v-else-if="filteredPublications.length === 0" class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
       <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mb-6">
-        <Icon name="heroicons:beaker" class="w-10 h-10 text-slate-100" />
+        <Icon name="lucide:beaker" class="w-10 h-10 text-slate-100" />
       </div>
       <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No publications found</h3>
       <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Your research archive is currently empty. Start by adding a new publication.</p>

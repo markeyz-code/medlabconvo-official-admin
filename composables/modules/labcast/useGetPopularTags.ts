@@ -20,10 +20,10 @@ export const useGetPopularTags = () => {
         if ([200, 201].includes(response?.status)) {
         console.log(response, 'taggsss')
         tags.value = response.data
-        showToast({
-                  title: "Success",
-                  toastType: "success",
-                });
+        // showToast({
+        //           title: "Success",
+        //           toastType: "success",
+        //         });
         }
         return response.data
       } catch (err: any) {

@@ -15,7 +15,7 @@ export const useCreateTeamMember = () => {
     success.value = false
 
     try {
-      const response = await teams_api.$_create_team_member(memberPayload)
+      const response = await teams_api.$_create_member(memberPayload)
       if ([200, 201].includes(response?.status)) {
         success.value = true
         teamMemberData.value = response.data

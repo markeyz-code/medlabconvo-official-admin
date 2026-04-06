@@ -10,7 +10,7 @@
           @click="exportSubmissions"
           class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
         >
-          <Icon name="heroicons:arrow-down-tray" class="w-4 h-4" />
+          <Icon name="lucide:download" class="w-4 h-4" />
           <span>Export CSV</span>
         </button>
       </div>
@@ -53,7 +53,7 @@
                     @click="viewSubmission(submission)"
                     class="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50"
                   >
-                    <Icon name="heroicons:eye" class="w-4 h-4" />
+                    <Icon name="lucide:eye" class="w-4 h-4" />
                   </button>
                 </td>
               </tr>
@@ -63,7 +63,7 @@
   
         <!-- Empty State -->
         <div v-if="submissions.length === 0" class="text-center py-12">
-          <Icon name="heroicons:document-text" class="w-12 h-12 text-slate-400 mx-auto mb-4" />
+          <Icon name="lucide:file-text" class="w-12 h-12 text-slate-400 mx-auto mb-4" />
           <p class="text-slate-500">No submissions yet</p>
         </div>
       </div>
