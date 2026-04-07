@@ -178,7 +178,7 @@
             <div class="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
             <div class="absolute inset-0 border-4 border-[#033958] rounded-full border-t-transparent animate-spin"></div>
           </div>
-          <span class="text-slate-900 font-medium text-sm">Authenticating protocol...</span>
+          <span class="text-slate-900 font-medium text-sm">Loading...</span>
         </div>
       </div>
     </transition>
@@ -232,17 +232,16 @@ const showLogoutModal = ref(false)
 const navigationItems = computed(() => [
   { name: 'Dashboard', path: '/dashboard', icon: 'lucide:layout-grid', badge: null },
   { name: 'Users', path: '/dashboard/users', icon: 'lucide:users', badge: users.value?.length },
-  { name: 'Teams', path: '/dashboard/teams', icon: 'lucide:users-2', badge: teamMembers.value?.length },
+  { name: 'About Us', path: '/dashboard/teams', icon: 'lucide:users-2', badge: teamMembers.value?.length },
   { name: 'Enquiries', path: '/dashboard/enquiries', icon: 'lucide:messages-square', badge: enquiries.value?.length },
   { name: 'Subscriptions', path: '/dashboard/subscriptions', icon: 'lucide:mail', badge: subscriptions.value?.length },
   { name: 'Campaigns', path: '/dashboard/campaigns', icon: 'lucide:send', badge: null },
-  { name: 'Publications', path: '/dashboard/publications', icon: 'lucide:file-text', badge: publications.value?.length },
+  { name: 'Journo / Convo Stack', path: '/dashboard/publications', icon: 'lucide:file-text', badge: publications.value?.length },
   { name: 'LabCast', path: '/dashboard/labcast', icon: 'lucide:mic', badge: labcasts.value?.length },
   { name: 'Inventory', path: '/dashboard/products', icon: 'lucide:archive', badge: products.value?.length },
   { name: 'Programs', path: '/dashboard/programs', icon: 'lucide:graduation-cap', badge: programs.value?.length },
   { name: 'Blogs', path: '/dashboard/blogs', icon: 'lucide:newspaper', badge: blogs.value?.length },
   { name: 'Forms', path: '/dashboard/forms', icon: 'lucide:clipboard-list', badge: forms.value?.length },
-  { name: 'Content', path: '/dashboard/convostack', icon: 'lucide:book-open', badge: null },
   { name: 'CMS', path: '/dashboard/cms', icon: 'lucide:copy', badge: null },
   
   // Separator / Section for Access Control
@@ -264,14 +263,9 @@ const currentPageDescription = computed(() => {
     '/dashboard/enquiries': 'Respond to customer support tickets and enquiries.',
     '/dashboard/subscriptions': 'Manage your newsletter subscribers and mailing lists.',
     '/dashboard/campaigns': 'Design and send email campaigns to your audience.',
-    '/dashboard/teams': 'Manage internal teams and departmental memberships.',
+    '/dashboard/teams': 'Manage your team members, leadership profiles, and organizational structure.',
     '/dashboard/labcast': 'Manage your podcast episodes and labcast content.',
-    '/dashboard/publications': 'Manage research papers and academic publications.',
-    '/dashboard/programs': 'Manage academic courses and educational programs.',
-    '/dashboard/blogs': 'Create and manage blog posts and news articles.',
-    '/dashboard/products': 'Manage your digital products and inventory.',
-    '/dashboard/forms': 'Create and analyze custom data collection forms.',
-    '/dashboard/convostack': 'Create and publish rich content publications with your Substack-like editor.',
+    '/dashboard/publications': 'Manage research papers, academic publications, and rich content articles.',
     '/dashboard/cms': 'Manage all dynamic content and pages across your platform seamlessly.',
     '/dashboard/audit': 'View security logs and system activity history.',
     '/dashboard/access-control/roles': 'Define group-based permissions and system roles.',

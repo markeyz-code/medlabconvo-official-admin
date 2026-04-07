@@ -14,7 +14,6 @@
         <div class="w-full md:w-64">
           <SelectInput
             v-model="roleFilter"
-            label="Filter by role"
             :options="availableRoleOptions"
           />
         </div>
@@ -143,7 +142,6 @@
           />
           <SelectInput
             v-model="inviteForm.role"
-            label="Assigned role"
             :options="availableRoleOptions"
           />
         </div>

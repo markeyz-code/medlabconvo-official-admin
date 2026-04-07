@@ -159,13 +159,13 @@ const { publications: convoStacks, getPublications: getConvoStacks } = useGetCon
 // Real stats from actual API data
 const allStats = computed(() => [
   { title: 'Users', value: users?.value?.length || 0, icon: 'lucide:users', bgColor: 'bg-blue-50 ring-blue-100', textColor: 'text-blue-600', link: '/dashboard/users' },
-  { title: 'Teams', value: teamMembers?.value?.length || 0, icon: 'lucide:users-round', bgColor: 'bg-indigo-50 ring-indigo-100', textColor: 'text-indigo-600', link: '/dashboard/teams' },
+  { title: 'Leadership', value: teamMembers?.value?.length || 0, icon: 'lucide:users-round', bgColor: 'bg-indigo-50 ring-indigo-100', textColor: 'text-indigo-600', link: '/dashboard/teams' },
   { title: 'Subscribers', value: subscriptions?.value?.length || 0, icon: 'lucide:mail', bgColor: 'bg-emerald-50 ring-emerald-100', textColor: 'text-emerald-600', link: '/dashboard/subscriptions' },
   { title: 'Enquiries', value: enquiries?.value?.length || 0, icon: 'lucide:message-square', bgColor: 'bg-amber-50 ring-amber-100', textColor: 'text-amber-600', link: '/dashboard/enquiries' },
-  { title: 'Publications', value: publications?.value?.length || 0, icon: 'lucide:file-text', bgColor: 'bg-purple-50 ring-purple-100', textColor: 'text-purple-600', link: '/dashboard/publications' },
+  { title: 'Journo', value: publications?.value?.length || 0, icon: 'lucide:file-text', bgColor: 'bg-purple-50 ring-purple-100', textColor: 'text-purple-600', link: '/dashboard/publications' },
   { title: 'Blogs', value: blogs?.value?.length || 0, icon: 'lucide:newspaper', bgColor: 'bg-sky-50 ring-sky-100', textColor: 'text-sky-600', link: '/dashboard/blogs' },
   { title: 'LabCast', value: labcasts?.value?.length || 0, icon: 'lucide:mic', bgColor: 'bg-pink-50 ring-pink-100', textColor: 'text-pink-600', link: '/dashboard/labcast' },
-  { title: 'ConvoStack', value: convoStacks?.value?.length || 0, icon: 'lucide:book-open', bgColor: 'bg-teal-50 ring-teal-100', textColor: 'text-teal-600', link: '/dashboard/convostack' },
+  { title: 'Convo Stack', value: convoStacks?.value?.length || 0, icon: 'lucide:book-open', bgColor: 'bg-teal-50 ring-teal-100', textColor: 'text-teal-600', link: '/dashboard/convostack' },
   { title: 'Products', value: products?.value?.length || 0, icon: 'lucide:archive', bgColor: 'bg-orange-50 ring-orange-100', textColor: 'text-orange-600', link: '/dashboard/products' },
   { title: 'Programs', value: programs?.value?.length || 0, icon: 'lucide:graduation-cap', bgColor: 'bg-rose-50 ring-rose-100', textColor: 'text-rose-600', link: '/dashboard/programs' },
   { title: 'Forms', value: forms?.value?.length || 0, icon: 'lucide:clipboard-list', bgColor: 'bg-cyan-50 ring-cyan-100', textColor: 'text-cyan-600', link: '/dashboard/forms' },
@@ -175,10 +175,10 @@ const allStats = computed(() => [
 // Content distribution bar chart based on real data
 const contentDistribution = computed(() => {
   const items = [
-    { label: 'Publications', count: publications?.value?.length || 0, color: 'bg-purple-500' },
+    { label: 'Journo', count: publications?.value?.length || 0, color: 'bg-purple-500' },
     { label: 'Blogs', count: blogs?.value?.length || 0, color: 'bg-sky-500' },
     { label: 'LabCast episodes', count: labcasts?.value?.length || 0, color: 'bg-pink-500' },
-    { label: 'ConvoStack', count: convoStacks?.value?.length || 0, color: 'bg-teal-500' },
+    { label: 'Convo Stack', count: convoStacks?.value?.length || 0, color: 'bg-teal-500' },
     { label: 'Programs', count: programs?.value?.length || 0, color: 'bg-rose-500' },
     { label: 'Products', count: products?.value?.length || 0, color: 'bg-orange-500' },
   ]

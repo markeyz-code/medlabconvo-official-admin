@@ -15,7 +15,6 @@
         <div class="w-full sm:w-48">
           <SelectInput
             v-model="selectedSeason"
-            label="Season"
             :options="seasonOptions"
             @change="filterBySeason"
           />

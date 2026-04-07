@@ -14,7 +14,6 @@
         <div class="w-full md:w-64">
           <SelectInput
             v-model="statusFilter"
-            label="Filter status"
             :options="statusOptions"
           />
         </div>

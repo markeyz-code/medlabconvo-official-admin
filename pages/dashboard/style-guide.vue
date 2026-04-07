@@ -36,7 +36,6 @@
           <div class="space-y-6">
             <SelectInput 
               v-model="demoSelect" 
-              label="Functional Access Level" 
               :options="[
                 { label: 'SUPER ADMIN PROTOCOL', value: 'admin' },
                 { label: 'EXECUTIVE DIRECTORATE', value: 'exec' },

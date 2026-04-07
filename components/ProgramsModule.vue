@@ -14,7 +14,6 @@
         <div class="w-full sm:w-48">
           <SelectInput
             v-model="statusFilter"
-            label="Filter by Status"
             :options="[
               { label: 'All Status', value: '' },
               { label: 'Active', value: 'active' },

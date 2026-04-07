@@ -17,12 +17,15 @@
         />
       </div>
       <div>
-        <AnimatedInput
-          v-model="form.initials"
-          id="memberInitials"
-          label="Initials"
-          type="text"
-          required
+        <SelectInput 
+          v-model="form.roleCategory" 
+          label="Role Category"
+          :options="[
+            { label: 'Executive Board', value: 'Executive Board' },
+            { label: 'Management Team', value: 'Management Team' },
+            { label: 'Volunteer Committee', value: 'Volunteer Committee' },
+            { label: 'Advisory Council', value: 'Advisory Council' }
+          ]" 
         />
       </div>
     </div>
@@ -49,13 +52,13 @@
     </div>
 
     <div class="grid grid-cols-1 gap-8">
-      <AnimatedInput
-        v-model="form.bio"
-        id="memberBio"
-        label="Biography"
-        type="textarea"
-        :rows="5"
-      />
+      <div class="space-y-4">
+        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Biography</label>
+        <TiptapEditor
+          v-model="form.bio"
+          placeholder="Write a short bio for this team member..."
+        />
+      </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -77,16 +80,6 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-8">
-      <SelectInput
-        v-model="form.isActive"
-        label="Status"
-        :options="[
-          { label: 'Active', value: true },
-          { label: 'Inactive', value: false }
-        ]"
-      />
-    </div>
 
     <div class="flex justify-end space-x-6 pt-10 border-t border-slate-50">
       <button
@@ -112,6 +105,7 @@ import { useCustomToast } from '@/composables/core/useCustomToast'
 import ImageUpload from '@/components/ImageUpload.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
+import TiptapEditor from '@/components/ui/TiptapEditor.vue'
 
 interface Props {
   member?: any
@@ -122,14 +116,13 @@ const emit = defineEmits(['save', 'cancel'])
 
 const form = reactive({
   name: '',
-  initials: '',
   title: '',
+  roleCategory: 'Executive Board',
   position: 1,
   image: '',
   bio: '',
   linkedin: '',
-  twitter: '',
-  isActive: true
+  twitter: ''
 })
 
 watchEffect(() => {
@@ -144,26 +137,24 @@ watchEffect(() => {
     }
     Object.assign(form, {
       name: props.member.name || '',
-      initials: props.member.initials || '',
       title: props.member.title || '',
+      roleCategory: props.member.roleCategory || 'Executive Board',
       position: props.member.position ?? 1,
       image: props.member.image || '',
       bio: props.member.bio || '',
       linkedin: linked,
-      twitter: twitt,
-      isActive: props.member.isActive ?? true
+      twitter: twitt
     })
   } else {
     Object.assign(form, {
       name: '',
-      initials: '',
       title: '',
+      roleCategory: 'Executive Board',
       position: 1,
       image: '',
       bio: '',
       linkedin: '',
-      twitter: '',
-      isActive: true
+      twitter: ''
     })
   }
 })
@@ -171,8 +162,8 @@ watchEffect(() => {
 const { showToast } = useCustomToast()
 
 const handleSubmit = () => {
-  if (!form.name.trim() || !form.title.trim() || !form.bio.trim() || !form.initials.trim()) {
-    showToast({ title: "Validation Error", message: "Name, Initials, Title, and Bio are required.", toastType: "error" })
+  if (!form.name.trim() || !form.title.trim() || !form.bio.trim() || !form.roleCategory.trim()) {
+    showToast({ title: "Validation Error", message: "Name, Title, Role Category, and Bio are required.", toastType: "error" })
     return
   }
 
@@ -182,13 +173,12 @@ const handleSubmit = () => {
 
   const payload = {
     name: form.name,
-    initials: form.initials,
     title: form.title,
+    roleCategory: form.roleCategory,
     position: form.position,
     image: form.image,
     bio: form.bio,
-    profiles: profiles,
-    isActive: form.isActive
+    profiles: profiles
   }
 
   emit('save', payload)

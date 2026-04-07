@@ -14,7 +14,6 @@
         <div class="w-full md:w-48">
           <SelectInput
             v-model="actionFilter"
-            label="Action"
             :options="[
               { label: 'All actions', value: '' },
               { label: 'Create', value: 'create' },
@@ -30,7 +29,6 @@
         <div class="w-full md:w-48">
           <SelectInput
             v-model="resourceFilter"
-            label="Resource"
             :options="[
               { label: 'All resources', value: '' },
               { label: 'Users', value: 'user' },

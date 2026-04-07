@@ -14,7 +14,6 @@
         <div class="w-full sm:w-52">
           <SelectInput
             v-model="statusFilter"
-            label="Filter Status"
             :options="[
               { label: 'All Status', value: '' },
               { label: 'Draft', value: 'draft' },

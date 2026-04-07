@@ -55,7 +55,6 @@
           </div>
           <SelectInput
             v-model="form.category"
-            label="Scientific Domain"
             :options="categoryOptions"
             position="bottom"
           />

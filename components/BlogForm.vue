@@ -50,7 +50,6 @@
           <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Classification</h4>
           <SelectInput
             v-model="form.category"
-            label="Select Category"
             :options="categoryOptions"
           />
         </div>

@@ -4,37 +4,37 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
       <div class="space-y-2">
         <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
-           <NuxtLink to="/dashboard/leadership" class="hover:text-[#033958] transition-colors">Registry</NuxtLink>
+           <NuxtLink to="/dashboard/leadership" class="hover:text-[#033958] transition-colors">Team</NuxtLink>
            <Icon name="lucide:chevron-right" class="w-3 h-3" />
-           <span class="text-slate-900">New Visionary</span>
+           <span class="text-slate-900">New Member</span>
         </div>
-        <h1 class="text-4xl font-black text-slate-900 tracking-tighter uppercase ">Initialize Leader Profile</h1>
+        <h1 class="text-4xl font-black text-slate-900 tracking-tighter uppercase ">Add Team Member</h1>
       </div>
       
       <div class="flex items-center gap-4">
-        <button @click="$router.push('/dashboard/leadership')" class="px-8 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">Abort</button>
+        <button @click="$router.push('/dashboard/leadership')" class="px-8 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">Cancel</button>
         <button 
           @click="handleSubmit" 
           :disabled="submitting || !isFormValid"
           class="px-12 py-4 bg-[#033958] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.25em] shadow-2xl hover:bg-[#022a41] transition-all disabled:opacity-50 flex items-center gap-3"
         >
           <div v-if="submitting" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-          <span>Commit to Registry</span>
+          <span>Save Member</span>
         </button>
       </div>
     </div>
 
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-12">
-      <!-- Sidebar: Virtual Preview -->
+      <!-- Sidebar: Preview -->
       <div class="xl:col-span-1 space-y-8">
         <div class="bg-white rounded-[3rem] border border-slate-100 p-10 shadow-xl space-y-8 sticky top-10">
-           <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Identity Preview</label>
+           <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Preview</label>
            
            <div class="relative aspect-square rounded-[3.5rem] bg-slate-50 border-4 border-dashed border-slate-100 overflow-hidden group">
               <img v-if="form.image" :src="form.image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div v-else class="absolute inset-0 flex flex-col items-center justify-center text-slate-200">
                  <Icon name="lucide:user" class="w-20 h-20 mb-4" />
-                 <span class="text-[9px] font-black uppercase tracking-widest">No Visual Selected</span>
+                 <span class="text-[9px] font-black uppercase tracking-widest">No Photo Selected</span>
               </div>
               <input type="file" @change="handleImageUpload" class="absolute inset-0 opacity-0 cursor-pointer z-10" />
               <div v-if="uploading" class="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-20">
@@ -43,34 +43,34 @@
            </div>
 
            <div class="space-y-4">
-              <h3 class="text-3xl font-black text-slate-900 tracking-tighter uppercase ">{{ form.name || 'Visionary Name' }}</h3>
-              <p class="text-xs font-black text-[#033958] uppercase tracking-widest truncate">{{ form.title || 'Official Designation' }}</p>
+              <h3 class="text-3xl font-black text-slate-900 tracking-tighter uppercase ">{{ form.name || 'Member Name' }}</h3>
+              <p class="text-xs font-black text-[#033958] uppercase tracking-widest truncate">{{ form.title || 'Job Title' }}</p>
               <div class="inline-flex px-3 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-widest rounded-lg border border-emerald-100">
                  {{ form.roleCategory }}
               </div>
            </div>
 
            <p class="text-sm font-medium text-slate-400  leading-relaxed">
-             "{{ form.bio || 'Define the narrative of this leader. Their story inspires the next generation of lab professionals.' }}"
+             "{{ form.bio || 'Add a biography for this team member to showcase their expertise and contributions.' }}"
            </p>
         </div>
       </div>
 
-      <!-- Main Form: Detailed Dossier -->
+      <!-- Main Form -->
       <div class="xl:col-span-2 space-y-12">
-        <!-- Identity Section -->
+        <!-- Basic Information -->
         <section class="bg-white rounded-[3.5rem] p-10 md:p-14 border border-slate-100 shadow-2xl space-y-10">
            <div class="flex items-center gap-4">
               <div class="w-10 h-10 bg-[#033958] text-white rounded-xl flex items-center justify-center font-black ">01</div>
-              <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Foundational Identity</h2>
+              <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Basic Information</h2>
            </div>
 
            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <AnimatedInput v-model="form.name" id="name" label="Legal Full Name" type="text" required />
-              <AnimatedInput v-model="form.title" id="title" label="Official Designation (e.g. Executive Director)" type="text" required />
+              <AnimatedInput v-model="form.name" id="name" label="Full Name" type="text" required />
+              <AnimatedInput v-model="form.title" id="title" label="Job Title (e.g. Executive Director)" type="text" required />
               <SelectInput 
                 v-model="form.roleCategory" 
-                label="Governing Body" 
+                label="Role Category"
                 :options="[
                   { label: 'Executive Board', value: 'Executive Board' },
                   { label: 'Management Team', value: 'Management Team' },
@@ -78,29 +78,29 @@
                   { label: 'Advisory Council', value: 'Advisory Council' }
                 ]" 
               />
-              <AnimatedInput v-model="form.position" id="pos" label="Sort Rank (Lower = More Senior)" type="number" />
+              <AnimatedInput v-model="form.position" id="pos" label="Display Order (lower = higher priority)" type="number" />
            </div>
            
            <div class="space-y-4">
-              <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Professional Narrative (Bio)</label>
-              <AnimatedInput v-model="form.bio" id="bio" label="Define their story and legacy..." type="textarea" :rows="8" required />
+              <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Biography</label>
+              <AnimatedInput v-model="form.bio" id="bio" label="Write a short bio for this team member..." type="textarea" :rows="8" required />
            </div>
         </section>
 
-        <!-- Achievements Section -->
+        <!-- Achievements -->
         <section class="bg-white rounded-[3.5rem] p-10 md:p-14 border border-slate-100 shadow-2xl space-y-10">
            <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
                 <div class="w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center font-black ">02</div>
-                <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Impact Milestones</h2>
+                <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Achievements</h2>
               </div>
-              <button @click="addAchievement" class="text-[10px] font-black uppercase tracking-[0.2em] text-[#033958] hover:text-black">Add Streak</button>
+              <button @click="addAchievement" class="text-[10px] font-black uppercase tracking-[0.2em] text-[#033958] hover:text-black">Add Achievement</button>
            </div>
 
            <div class="space-y-6">
               <div v-for="(ach, idx) in form.achievements" :key="idx" class="flex items-center gap-4 group">
                  <div class="flex-1">
-                   <AnimatedInput v-model="form.achievements[idx]" :id="'ach-'+idx" label="Specific outcome or award" type="text" />
+                   <AnimatedInput v-model="form.achievements[idx]" :id="'ach-'+idx" label="Achievement or award" type="text" />
                  </div>
                  <button @click="removeAchievement(idx)" class="p-4 text-slate-200 hover:text-rose-500 transition-colors">
                     <Icon name="lucide:trash-2" class="w-5 h-5" />
@@ -108,26 +108,26 @@
               </div>
               <div v-if="!form.achievements.length" class="py-20 border-2 border-dashed border-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-200">
                  <Icon name="lucide:sparkles" class="w-12 h-12 mb-4" />
-                 <p class="text-[10px] font-black uppercase tracking-widest">No milestones recorded yet.</p>
+                 <p class="text-[10px] font-black uppercase tracking-widest">No achievements added yet.</p>
               </div>
            </div>
         </section>
 
-        <!-- Digital Footprints Section -->
+        <!-- Social Profiles -->
         <section class="bg-white rounded-[3.5rem] p-10 md:p-14 border border-slate-100 shadow-2xl space-y-10">
            <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
                 <div class="w-10 h-10 bg-blue-500 text-white rounded-xl flex items-center justify-center font-black ">03</div>
-                <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Digital Presence</h2>
+                <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Social Profiles</h2>
               </div>
-              <button @click="addProfile" class="text-[10px] font-black uppercase tracking-[0.2em] text-[#033958] hover:text-black">Add Connection</button>
+              <button @click="addProfile" class="text-[10px] font-black uppercase tracking-[0.2em] text-[#033958] hover:text-black">Add Profile</button>
            </div>
 
            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div v-for="(profile, idx) in form.profiles" :key="idx" class="relative bg-slate-50 p-6 rounded-[2.5rem] border border-slate-100 space-y-4">
                  <SelectInput 
                     v-model="profile.type" 
-                    label="Dimension" 
+                    label="Platform type"
                     :options="[
                       { label: 'LinkedIn', value: 'linkedin' },
                       { label: 'X (Twitter)', value: 'twitter' },
@@ -136,14 +136,14 @@
                       { label: 'Website', value: 'website' }
                     ]" 
                  />
-                 <AnimatedInput v-model="profile.url" :id="'prof-'+idx" label="Access URL" type="text" />
+                 <AnimatedInput v-model="profile.url" :id="'prof-'+idx" label="Profile URL" type="text" />
                  <button @click="removeProfile(idx)" class="absolute -top-3 -right-3 w-8 h-8 bg-white text-slate-200 hover:text-rose-500 rounded-full border border-slate-100 shadow-xl flex items-center justify-center">
                     <Icon name="lucide:x" class="w-4 h-4" />
                  </button>
               </div>
               <div v-if="!form.profiles.length" class="md:col-span-2 py-20 border-2 border-dashed border-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-200">
                  <Icon name="lucide:globe" class="w-12 h-12 mb-4" />
-                 <p class="text-[10px] font-black uppercase tracking-widest">No social footprints initialized.</p>
+                 <p class="text-[10px] font-black uppercase tracking-widest">No social profiles added yet.</p>
               </div>
            </div>
         </section>
@@ -194,9 +194,9 @@ const handleImageUpload = async (e: Event) => {
   try {
     const res = await uploadImage(file)
     form.image = res.url
-    showToast({ title: 'Visual Synced', message: 'Portrait uploaded successfully.', toastType: 'success' })
+    showToast({ title: 'Uploaded', message: 'Photo uploaded successfully.', toastType: 'success' })
   } catch (err) {
-    showToast({ title: 'Upload Failed', message: 'Failed to sync image.', toastType: 'error' })
+    showToast({ title: 'Upload Failed', message: 'Failed to upload photo.', toastType: 'error' })
   }
 }
 
@@ -210,10 +210,10 @@ const handleSubmit = async () => {
   submitting.value = true
   try {
     await teams_api.$_create_member(form)
-    showToast({ title: 'Profile Committed', message: 'Visionary added to the registry.', toastType: 'success' })
+    showToast({ title: 'Success', message: 'Team member added successfully.', toastType: 'success' })
     router.push('/dashboard/leadership')
   } catch (err) {
-    showToast({ title: 'Commit Failed', message: 'Protocol error during save.', toastType: 'error' })
+    showToast({ title: 'Error', message: 'Failed to save team member.', toastType: 'error' })
   } finally {
     submitting.value = false
   }
