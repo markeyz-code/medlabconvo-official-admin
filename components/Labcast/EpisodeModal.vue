@@ -11,7 +11,6 @@
       <div
         v-if="modelValue"
         class="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm"
-        @click.self="$emit('update:modelValue', false)"
       >
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
           <Transition

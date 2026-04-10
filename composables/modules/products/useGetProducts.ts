@@ -47,10 +47,6 @@ export const useGetProducts = () => {
     totalPages.value = 1
   }
 
-  // onMounted(() => {
-  //   getProducts()
-  // })
-
   return {
     loading,
     error,

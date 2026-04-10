@@ -112,6 +112,10 @@ const handleSubmit = () => {
     showToast({ title: "Validation Error", message: "Password is required for new users.", toastType: "error" });
     return;
   }
-  emit('save', { ...form })
+  const payload = { ...form }
+  if (props.user && !payload.password) {
+    delete payload.password
+  }
+  emit('save', payload)
 }
 </script>

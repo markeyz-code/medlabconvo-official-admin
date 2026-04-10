@@ -7,7 +7,6 @@
           <div 
             v-if="modelValue"
             class="slideover-backdrop" 
-            @click="close"
             aria-hidden="true"
           ></div>
         </transition>
@@ -47,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted, onUnmounted, computed } from 'vue'
+import { watch, onUnmounted, computed } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -82,19 +81,11 @@ const close = () => {
   emit('close')
 }
 
-const handleEscape = (e: KeyboardEvent) => {
-  if (e.key === 'Escape' && props.modelValue) {
-    close()
-  }
-}
-
 watch(() => props.modelValue, (isOpen) => {
   document.body.style.overflow = isOpen ? 'hidden' : ''
 })
 
-onMounted(() => document.addEventListener('keydown', handleEscape))
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleEscape)
   document.body.style.overflow = ''
 })
 </script>
@@ -193,6 +184,7 @@ onUnmounted(() => {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
+  padding: 16px;
 }
 
 .slideover-body::-webkit-scrollbar {

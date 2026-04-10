@@ -108,4 +108,19 @@ export const publications_api = {
     const url = `/publications/reorder`
     return GATEWAY_ENDPOINT.patch(url, payload)
   },
+
+  $_get_categories: async () => {
+    const url = `/journo/categories`
+    return GATEWAY_ENDPOINT.get(url)
+  },
+
+  $_create_category: async (categoryData: { name: string; description?: string }) => {
+    const url = `/journo/categories`
+    return GATEWAY_ENDPOINT.post(url, categoryData)
+  },
+
+  $_delete_category: async (id: string) => {
+    const url = `/journo/categories/${id}`
+    return GATEWAY_ENDPOINT.delete(url)
+  },
 }

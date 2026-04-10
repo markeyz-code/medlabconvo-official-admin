@@ -25,14 +25,25 @@
           />
         </div>
       </div>
-      <button
-        @click="openCreateModal"
-        class="w-full md:w-auto px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
-      >
-        <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
-        <span class="font-bold text-sm">New publication</span>
-      </button>
+      <div v-if="hasPermission('publications:create') || user?.role === 'editor'" class="flex items-center gap-4 w-full md:w-auto">
+        <button
+          @click="showCategoriesModal = true"
+          class="w-full md:w-auto px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 transition-all duration-300 flex items-center justify-center space-x-3 group"
+        >
+          <Icon name="lucide:layout-grid" class="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+          <span class="font-bold text-sm">Manage categories</span>
+        </button>
+        <button
+          @click="openCreateModal"
+          class="w-full md:w-auto px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
+        >
+          <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+          <span class="font-bold text-sm">New publication</span>
+        </button>
+      </div>
     </div>
+    
+    <ManageCategoriesModal v-model="showCategoriesModal" />
 
     <!-- Publications List -->
     <div class="space-y-6">
@@ -85,7 +96,7 @@
                   <span class="text-sm font-bold text-slate-700">{{ publication.journal || 'Universal Archive' }}</span>
                 </div>
               </div>
-
+ 
               <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400">
                   <Icon name="lucide:calendar" class="w-4 h-4" />
@@ -98,49 +109,33 @@
             </div>
           </div>
           
-          <div class="flex lg:flex-col items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-slate-400">
-            <button
-              @click="editPublication(publication)"
-              class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-xl transition-all"
-              title="Edit"
-            >
-              <Icon name="lucide:pencil" class="w-5 h-5" />
-            </button>
-            
-            <button
-              v-if="publication.status === 'draft'"
-              @click="submitForReview(publication.id)"
-              class="p-2 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition-all"
-              title="Submit for review"
-            >
-              <Icon name="lucide:send" class="w-5 h-5" />
-            </button>
-            
-            <button
-              v-if="publication.status === 'pending_review'"
-              @click="approvePublication(publication.id)"
-              class="p-2 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"
-              title="Approve"
-            >
-              <Icon name="lucide:check" class="w-5 h-5" />
-            </button>
-            
-            <button
-              v-if="publication.status === 'approved'"
-              @click="publishPublication(publication.id)"
-              class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-xl transition-all"
-              title="Publish"
-            >
-              <Icon name="lucide:upload-cloud" class="w-5 h-5" />
-            </button>
-            
-            <button
-              @click="deletePublication(publication.id)"
-              class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
-              title="Delete"
-            >
-              <Icon name="lucide:trash-2" class="w-5 h-5" />
-            </button>
+          <div v-if="hasPermission('publications:update')" class="flex lg:flex-col items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-slate-400 min-w-40 mr-4">
+            <div class="mb-2 w-full">
+              <SelectInput
+                :modelValue="publication.status"
+                @update:modelValue="val => updatePublicationStatus(publication, val)"
+                label="Status"
+                :options="statusOptions"
+                size="sm"
+              />
+            </div>
+            <div class="flex items-center gap-1">
+              <button
+                @click="editPublication(publication)"
+                class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-xl transition-all"
+                title="Edit details"
+              >
+                <Icon name="lucide:pencil" class="w-5 h-5" />
+              </button>
+              
+              <button
+                @click="deletePublication(publication.id)"
+                class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
+                title="Delete"
+              >
+                <Icon name="lucide:trash-2" class="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -169,13 +164,11 @@
 
     <!-- SlideOver for Edit/Create -->
     <SlideOver v-model="showModal" :title="selectedPublication ? 'Edit publication' : 'New publication'">
-      <div class="p-8">
-        <PublicationForm
-          :publication="selectedPublication"
-          @save="handleSavePublication"
-          @cancel="closeModal"
-        />
-      </div>
+      <PublicationForm
+        :publication="selectedPublication"
+        @save="handleSavePublication"
+        @cancel="closeModal"
+      />
     </SlideOver>
   </div>
 </template>
@@ -183,13 +176,16 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useGetPublications } from '@/composables/modules/publications/useGetPublications'
+import { useUser } from '@/composables/modules/auth/user'
 import { useCreatePublication } from '@/composables/modules/publications/useCreatePublication'
 import { useUpdatePublication } from '@/composables/modules/publications/useUpdatePublication'
 import { useSubmitForReview } from '@/composables/modules/publications/useSubmitPublicationForReview'
 import { useApprovePublication } from '@/composables/modules/publications/useApprovePublication'
 import { usePublishPublication } from '@/composables/modules/publications/usePublishPublication'
 import { useSoftDeletePublication } from '@/composables/modules/publications/useSoftDeletePublication'
+import { useRejectPublication } from '@/composables/modules/publications/useRejectPublication'
 import SlideOver from '@/components/SlideOver.vue'
+import ManageCategoriesModal from '@/components/ManageCategoriesModal.vue'
 import PublicationForm from '@/components/PublicationForm.vue'
 import Icon from '@/components/Icon.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
@@ -198,18 +194,29 @@ import Modal from '@/components/Modal.vue'
 
 // Composables
 const { publications, loading, getPublications } = useGetPublications()
+const { hasPermission, user } = useUser()
 const { createPublication } = useCreatePublication()
 const { updatePublication } = useUpdatePublication()
 const { submitForReview: submitForReviewAction } = useSubmitForReview()
 const { approvePublication: approvePublicationAction } = useApprovePublication()
 const { publishPublication: publishPublicationAction } = usePublishPublication()
 const { softDeletePublication } = useSoftDeletePublication()
+const { rejectPublication: rejectPublicationAction } = useRejectPublication()
 
-// Reactive data
+// reactive
+const showCategoriesModal = ref(false)
 const searchQuery = ref('')
 const statusFilter = ref('')
 const showModal = ref(false)
 const selectedPublication = ref<any>(null)
+
+const statusOptions = [
+  { label: 'Draft', value: 'draft' },
+  { label: 'Pending Review', value: 'pending_review' },
+  { label: 'Approved', value: 'approved' },
+  { label: 'Published', value: 'published' },
+  { label: 'Rejected', value: 'rejected' }
+]
 
 // Load publications on mount
 onMounted(() => {
@@ -237,6 +244,33 @@ const filteredPublications = computed(() => {
 })
 
 // Methods
+const updatePublicationStatus = async (publication: any, newStatus: string) => {
+  if (publication.status === newStatus) return
+  
+  try {
+    switch (newStatus) {
+      case 'pending_review':
+        await submitForReview(publication.id)
+        break
+      case 'approved':
+        await approvePublication(publication.id)
+        break
+      case 'published':
+        await publishPublication(publication.id)
+        break
+      case 'rejected':
+        await rejectPublication(publication.id)
+        break
+      default:
+        // For draft, we don't have a direct 'revert to draft' but we can use update
+        await updatePublication(publication.id, { ...publication, status: 'draft' })
+        await getPublications()
+    }
+  } catch (error) {
+    console.error('Status update failed:', error)
+  }
+}
+
 const openCreateModal = () => {
   selectedPublication.value = null
   showModal.value = true
@@ -290,6 +324,15 @@ const publishPublication = async (publicationId: string) => {
     await getPublications()
   } catch (error) {
     console.error('Error publishing publication:', error)
+  }
+}
+
+const rejectPublication = async (publicationId: string) => {
+  try {
+    await rejectPublicationAction(publicationId)
+    await getPublications()
+  } catch (error) {
+    console.error('Error rejecting publication:', error)
   }
 }
 

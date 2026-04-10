@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { 
   labcast_api, 
   type LabCast, 
@@ -45,10 +45,6 @@ export const useGetLabCasts = () => {
     totalCount.value = 0
     currentPage.value = 1
   }
-
-  onMounted(() => {
-    getLabCasts()
-  })
 
   return {
     loading,

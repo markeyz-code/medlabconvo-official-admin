@@ -27,10 +27,6 @@ export const useGetProductStats = () => {
     }
   }
 
-  onMounted(() => {
-    getStats()
-  })
-
   const resetState = () => {
     loading.value = false
     error.value = null

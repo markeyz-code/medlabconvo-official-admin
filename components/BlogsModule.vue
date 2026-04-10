@@ -129,13 +129,11 @@
 
     <!-- Create/Edit Blog SlideOver -->
     <SlideOver v-model="showModal" :title="selectedBlog ? 'Edit post' : 'Create post'">
-      <div class="p-8">
-        <BlogForm
+      <BlogForm
           :blog="selectedBlog"
           @save="handleSaveBlog"
           @cancel="closeModal"
         />
-      </div>
     </SlideOver>
 
   </div>

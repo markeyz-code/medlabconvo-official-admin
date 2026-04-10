@@ -21,6 +21,7 @@
 
       <div class="flex items-center gap-4 w-full md:w-auto">
         <button
+          v-if="hasPermission('users:write')"
           @click="showInviteModal = true"
           class="flex-1 md:flex-none px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
@@ -28,6 +29,7 @@
           <span>Invite User</span>
         </button>
         <button
+          v-if="hasPermission('users:write')"
           @click="openCreateModal"
           class="flex-1 md:flex-none px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
@@ -87,6 +89,7 @@
               <td class="px-10 py-8 whitespace-nowrap text-right">
                 <div class="flex items-center justify-end space-x-1 text-slate-400">
                   <button
+                    v-if="hasPermission('users:write')"
                     @click="editUser(user)"
                     class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-xl transition-all"
                     title="Edit user"
@@ -94,6 +97,7 @@
                     <Icon name="lucide:pencil" class="w-5 h-5" />
                   </button>
                   <button
+                    v-if="hasPermission('users:write')"
                     @click="deleteUser(user._id)"
                     class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                     title="Delete user"
@@ -193,6 +197,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useGetUsers } from '@/composables/modules/users/useGetUsers'
+import { useUser } from '@/composables/modules/auth/user'
 import { useCreateUser } from '@/composables/modules/users/useCreateUser'
 import { useUpdateUser } from '@/composables/modules/users/useUpdateUser'
 import { useSoftDeleteUser } from '@/composables/modules/users/useSoftDeleteUser'
@@ -241,6 +246,7 @@ const availableRoleOptions = computed(() => [
 
 // Composables
 const { users, loading, getUsers } = useGetUsers()
+const { hasPermission } = useUser()
 const { createUser } = useCreateUser()
 const { updateUser } = useUpdateUser()
 const { softDeleteUser } = useSoftDeleteUser()

@@ -1,144 +1,174 @@
 <template>
   <div class="min-h-screen bg-[#F8FAFC] font-sans text-slate-900">
-    <!-- Mobile Overlay -->
-    <div
-      v-if="sidebarOpen && isMobile"
-      class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 lg:hidden"
-      @click="closeSidebar"
-    ></div>
-
-    <!-- Navigation Sidebar -->
-    <aside 
-      class="fixed left-0 top-0 h-full w-64 bg-white text-slate-800 z-40 border-r border-slate-100 transition-all duration-300"
-      :class="[
-        isMobile && !sidebarOpen ? '-translate-x-full' : 'translate-x-0'
-      ]"
-    >
-      <!-- Logo Section -->
-      <div class="flex items-center h-20 px-6 border-b border-slate-50 mb-4">
-        <div class="flex items-center space-x-3 overflow-hidden">
-          <img src="@/assets/img/logo.jpeg" class="h-10 w-10 rounded-md ring-2 ring-slate-50" />
-          <span class="font-medium text-lg truncate text-slate-900">MedLabConvo</span>
-        </div>
-      </div>
-
-      <!-- Navigation Menu -->
-      <nav class="px-3 pb-20 space-y-1 overflow-y-auto max-h-[calc(100vh-80px)] custom-scrollbar">
-        <template v-for="item in navigationItems" :key="item.path || item.name">
-          <!-- Divider -->
-          <div v-if="item.type === 'divider'" class="py-4 px-4">
-            <div class="h-px bg-slate-100 w-full"></div>
-            <span class="text-sm font-medium text-slate-400 tracking-wider mt-3 block">Security & Access</span>
+    <!-- Access Denied State for Members -->
+    <div v-if="user?.role === 'member'" class="fixed inset-0 bg-white z-[100] flex items-center justify-center p-6 lg:p-10">
+      <div class="max-w-xl w-full text-center space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+        <div class="relative w-40 h-40 mx-auto group">
+          <div class="absolute inset-0 bg-red-100 rounded-[3rem] rotate-12 group-hover:rotate-0 transition-transform duration-700"></div>
+          <div class="absolute inset-0 bg-red-50 rounded-[3rem] -rotate-6 group-hover:rotate-0 transition-transform duration-700 delay-100"></div>
+          <div class="relative w-full h-full bg-white rounded-[3rem] border-2 border-red-100 flex items-center justify-center shadow-xl shadow-red-900/10">
+            <Icon name="lucide:shield-off" class="w-16 h-16 text-red-600" />
           </div>
+        </div>
 
-          <!-- Nav Link -->
-          <NuxtLink
-            v-else
-            :to="item.path"
-            :class="[
-              'group flex items-center px-4 py-3 rounded-xl transition-all duration-300 relative',
-              $route.path === item.path 
-                ? 'bg-[#033958] text-white' 
-                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
-            ]"
-            @click="isMobile && closeSidebar()"
-          >
-            <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110', $route.path === item.path ? 'text-white' : 'text-slate-400 group-hover:text-slate-900']" />
-            <span class="ml-4 font-medium text-sm tracking-tight">{{ item.name }}</span>
-            
-            <span 
-              v-if="item.badge && item.badge > 0" 
-              class="ml-auto px-2 py-0.5 text-sm font-medium rounded-lg bg-slate-100 text-slate-700"
-            >
-              {{ item.badge }}
-            </span>
-          </NuxtLink>
-        </template>
-      </nav>
+        <div class="space-y-4">
+          <h1 class="text-4xl font-bold text-slate-900 tracking-tight">Access Restricted</h1>
+          <p class="text-slate-500 text-lg font-medium leading-relaxed">
+            Members are not allowed access to the admin portal. Please reach out to the administrators to update your role.
+          </p>
+          <div class="pt-4 flex flex-col items-center gap-2">
+            <div class="px-4 py-2 bg-slate-50 rounded-full border border-slate-200 flex items-center gap-3">
+              <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Unauthorized Account</span>
+            </div>
+          </div>
+        </div>
 
-      <!-- Logout Section -->
-      <div class="absolute bottom-0 left-0 right-0 p-3 bg-white border-t border-slate-100">
-        <button
-          @click="showLogoutModal = true"
-          class="w-full flex items-center px-4 py-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-all font-medium text-sm group border border-red-100"
-        >
-          <Icon name="lucide:log-out" class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          <span class="ml-3 font-semibold text-sm">Sign out</span>
-        </button>
-      </div>
-    </aside>
-
-    <!-- Main Content Area -->
-    <main :class="[
-      'transition-all duration-300 min-h-screen flex flex-col',
-      isMobile ? 'ml-0' : 'ml-64'
-    ]">
-      <!-- Top Header -->
-      <header class="h-20 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-20">
-        <div class="flex items-center space-x-6">
+        <div class="pt-8">
           <button
-            @click="toggleSidebar"
-            class="lg:hidden p-2 rounded-lg hover:bg-slate-50 text-slate-600"
+            @click="confirmLogout"
+            class="px-12 py-4 bg-[#033958] text-white rounded-2xl font-bold hover:bg-[#022a41] hover:scale-105 transition-all duration-300 shadow-2xl shadow-[#033958]/20 flex items-center gap-3 mx-auto"
           >
-            <Icon name="lucide:menu" class="w-6 h-6" />
+            <Icon name="lucide:log-out" class="w-5 h-5" />
+            <span>Return to Portal</span>
           </button>
-          
-          <div>
-            <h1 class="text-xl font-medium text-slate-900 leading-tight">{{ currentPageTitle }}</h1>
-            <div class="flex items-center text-sm text-slate-500 mt-0.5 font-medium ">
-              <span>Admin</span>
-              <Icon name="lucide:chevron-right" class="w-3 h-3 mx-2 opacity-50" />
-              <span class="text-blue-600">{{ currentPageTitle }}</span>
-            </div>
-          </div>
         </div>
-        
-        <div class="flex items-center space-x-4">
-          <!-- Quick Action -->
-          <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-200">
-            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span class="text-sm font-medium text-slate-600">System Live</span>
-          </div>
-
-          <!-- Vertical Divider -->
-          <div class="w-px h-8 bg-slate-200 mx-2"></div>
-
-          <!-- User Profile -->
-          <div class="flex items-center space-x-3 pl-2">
-            <div class="text-right hidden sm:block">
-              <p class="text-sm font-medium text-slate-900 leading-none mb-1">{{ user?.firstName }} {{ user?.lastName }}</p>
-              <p class="text-sm font-medium text-blue-600 ">{{ user?.role?.replace('_', ' ') || 'Admin' }}</p>
-            </div>
-            <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white font-medium ring-4 ring-slate-50 border border-white/10">
-              {{ userInitials }}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <!-- Page Content Content -->
-      <div class="flex-1 p-6 md:p-8 lg:p-10 max-w-[1600px] mx-auto w-full">
-        <!-- Page Title Description -->
-        <div class="mb-10 pb-6 border-b border-slate-200 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-          <div>
-            <h2 class="text-2xl font-medium text-slate-900 mb-2 leading-tight tracking-tight">{{ currentPageTitle }}</h2>
-            <p class="text-slate-400 text-sm font-medium max-w-2xl leading-relaxed antialiased">{{ currentPageDescription }}</p>
-          </div>
-          <slot name="header-actions" />
-        </div>
-
-        <slot />
       </div>
-      
-      <!-- Footer -->
-      <!-- <footer class="py-6 px-10 border-t border-slate-200 text-slate-400 text-sm flex justify-between items-center bg-white">
-        <p>&copy; 2026 MedLabConvo Admin. All rights reserved.</p>
-        <div class="flex space-x-6 font-medium text-sm">
-          <a href="#" class="hover:text-blue-600 transition-colors">Support</a>
-          <a href="#" class="hover:text-blue-600 transition-colors">Documentation</a>
+    </div>
+
+    <!-- Authorized Content -->
+    <template v-else>
+      <!-- Mobile Overlay -->
+      <div
+        v-if="sidebarOpen && isMobile"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 lg:hidden"
+        @click="closeSidebar"
+      ></div>
+
+      <!-- Navigation Sidebar -->
+      <aside 
+        class="fixed left-0 top-0 h-full w-64 bg-white text-slate-800 z-40 border-r border-slate-100 transition-all duration-300"
+        :class="[
+          isMobile && !sidebarOpen ? '-translate-x-full' : 'translate-x-0'
+        ]"
+      >
+        <!-- Logo Section -->
+        <div class="flex items-center h-20 px-6 border-b border-slate-50 mb-4">
+          <div class="flex items-center space-x-3 overflow-hidden">
+            <img src="@/assets/img/logo.jpeg" class="h-10 w-10 rounded-md ring-2 ring-slate-50" />
+            <span class="font-medium text-lg truncate text-slate-900">MedLabConvo</span>
+          </div>
         </div>
-      </footer> -->
-    </main>
+
+        <!-- Navigation Menu -->
+        <nav class="px-3 pb-20 space-y-1 overflow-y-auto max-h-[calc(100vh-80px)] custom-scrollbar">
+          <template v-for="item in navigationItems" :key="item.path || item.name">
+            <!-- Divider -->
+            <div v-if="item.type === 'divider'" class="py-4 px-4">
+              <div class="h-px bg-slate-100 w-full"></div>
+              <span class="text-sm font-medium text-slate-400 tracking-wider mt-3 block">Security & Access</span>
+            </div>
+
+            <!-- Nav Link -->
+            <NuxtLink
+              v-else
+              :to="item.path"
+              :class="[
+                'group flex items-center px-4 py-3 rounded-xl transition-all duration-300 relative',
+                $route.path === item.path 
+                  ? 'bg-[#033958] text-white' 
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+              ]"
+              @click="isMobile && closeSidebar()"
+            >
+              <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110', $route.path === item.path ? 'text-white' : 'text-slate-400 group-hover:text-slate-900']" />
+              <span class="ml-4 font-medium text-sm tracking-tight">{{ item.name }}</span>
+              
+              <span 
+                v-if="item.badge && item.badge > 0" 
+                class="ml-auto px-2 py-0.5 text-sm font-medium rounded-lg bg-slate-100 text-slate-700"
+              >
+                {{ item.badge }}
+              </span>
+            </NuxtLink>
+          </template>
+        </nav>
+
+        <!-- Logout Section -->
+        <div class="absolute bottom-0 left-0 right-0 p-3 bg-white border-t border-slate-100">
+          <button
+            @click="showLogoutModal = true"
+            class="w-full flex items-center px-4 py-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-all font-medium text-sm group border border-red-100"
+          >
+            <Icon name="lucide:log-out" class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <span class="ml-3 font-semibold text-sm">Sign out</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main :class="[
+        'transition-all duration-300 min-h-screen flex flex-col',
+        isMobile ? 'ml-0' : 'ml-64'
+      ]">
+        <!-- Top Header -->
+        <header class="h-20 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-20">
+          <div class="flex items-center space-x-6">
+            <button
+              @click="toggleSidebar"
+              class="lg:hidden p-2 rounded-lg hover:bg-slate-50 text-slate-600"
+            >
+              <Icon name="lucide:menu" class="w-6 h-6" />
+            </button>
+            
+            <div>
+              <h1 class="text-xl font-medium text-slate-900 leading-tight">{{ currentPageTitle }}</h1>
+              <div class="flex items-center text-sm text-slate-500 mt-0.5 font-medium ">
+                <span>Admin</span>
+                <Icon name="lucide:chevron-right" class="w-3 h-3 mx-2 opacity-50" />
+                <span class="text-blue-600">{{ currentPageTitle }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex items-center space-x-4">
+            <!-- Quick Action -->
+            <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-200">
+              <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+              <span class="text-sm font-medium text-slate-600">System Live</span>
+            </div>
+
+            <!-- Vertical Divider -->
+            <div class="w-px h-8 bg-slate-200 mx-2"></div>
+
+            <!-- User Profile -->
+            <div class="flex items-center space-x-3 pl-2">
+              <div class="text-right hidden sm:block">
+                <p class="text-sm font-medium text-slate-900 leading-none mb-1">{{ user?.firstName }} {{ user?.lastName }}</p>
+                <p class="text-sm font-medium text-blue-600 ">{{ user?.role?.replace('_', ' ') || 'Admin' }}</p>
+              </div>
+              <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white font-medium ring-4 ring-slate-50 border border-white/10">
+                {{ userInitials }}
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Page Content Content -->
+        <div class="flex-1 p-6 md:p-8 lg:p-10 max-w-[1600px] mx-auto w-full">
+          <!-- Page Title Description -->
+          <div class="mb-10 pb-6 border-b border-slate-200 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-medium text-slate-900 mb-2 leading-tight tracking-tight">{{ currentPageTitle }}</h2>
+              <p class="text-slate-400 text-sm font-medium max-w-2xl leading-relaxed antialiased">{{ currentPageDescription }}</p>
+            </div>
+            <slot name="header-actions" />
+          </div>
+
+          <slot />
+        </div>
+      </main>
+    </template>
 
     <!-- Logout Confirmation Modal -->
     <Modal v-model="showLogoutModal" title="Security Confirmation" size="sm">
@@ -203,6 +233,8 @@ import { useGetProducts } from '@/composables/modules/products/useGetProducts'
 import { useGetPrograms } from '@/composables/modules/programs/useGetPrograms'
 import { useGetForms } from '@/composables/modules/forms/useGetForms'
 import { useGetAuditLogs } from '@/composables/modules/audit/useGetAuditLogs'
+import { useGetConvoStacks } from '@/composables/modules/convostack/useGetConvoStacks'
+import { roles_api } from '@/api_factory/modules/roles'
 
 // Composables
 const { users, getUsers } = useGetUsers()
@@ -216,6 +248,7 @@ const { products, getProducts } = useGetProducts()
 const { programs, getPrograms } = useGetPrograms()
 const { forms, getForms } = useGetForms()
 const { auditLogs, getAuditLogs } = useGetAuditLogs()
+const { publications: convoStacks, getPublications: getConvoStacks } = useGetConvoStacks()
 
 const router = useRouter()
 const route = useRoute()
@@ -229,27 +262,51 @@ const globalLoading = ref(false)
 const showLogoutModal = ref(false)
 
 // Navigation items
-const navigationItems = computed(() => [
-  { name: 'Dashboard', path: '/dashboard', icon: 'lucide:layout-grid', badge: null },
-  { name: 'Users', path: '/dashboard/users', icon: 'lucide:users', badge: users.value?.length },
-  { name: 'About Us', path: '/dashboard/teams', icon: 'lucide:users-2', badge: teamMembers.value?.length },
-  { name: 'Enquiries', path: '/dashboard/enquiries', icon: 'lucide:messages-square', badge: enquiries.value?.length },
-  { name: 'Subscriptions', path: '/dashboard/subscriptions', icon: 'lucide:mail', badge: subscriptions.value?.length },
-  { name: 'Campaigns', path: '/dashboard/campaigns', icon: 'lucide:send', badge: null },
-  { name: 'Journo / Convo Stack', path: '/dashboard/publications', icon: 'lucide:file-text', badge: publications.value?.length },
-  { name: 'LabCast', path: '/dashboard/labcast', icon: 'lucide:mic', badge: labcasts.value?.length },
-  { name: 'Inventory', path: '/dashboard/products', icon: 'lucide:archive', badge: products.value?.length },
-  { name: 'Programs', path: '/dashboard/programs', icon: 'lucide:graduation-cap', badge: programs.value?.length },
-  { name: 'Blogs', path: '/dashboard/blogs', icon: 'lucide:newspaper', badge: blogs.value?.length },
-  { name: 'Forms', path: '/dashboard/forms', icon: 'lucide:clipboard-list', badge: forms.value?.length },
-  { name: 'CMS', path: '/dashboard/cms', icon: 'lucide:copy', badge: null },
+const { hasPermission } = useUser()
+
+const RAW_NAVIGATION_ITEMS = [
+  { name: 'Dashboard', path: '/dashboard', icon: 'lucide:layout-grid', badge: null, permission: 'dashboard:view' },
+  { name: 'Users', path: '/dashboard/users', icon: 'lucide:users', badge: null, permission: 'users:read' },
+  { name: 'About Us', path: '/dashboard/teams', icon: 'lucide:users-2', badge: null, permission: 'teams:read' },
+  { name: 'Enquiries', path: '/dashboard/enquiries', icon: 'lucide:messages-square', badge: null, permission: 'enquiries:read' },
+  { name: 'Subscriptions', path: '/dashboard/subscriptions', icon: 'lucide:mail', badge: null, permission: 'subscriptions:read' },
+  { name: 'Campaigns', path: '/dashboard/campaigns', icon: 'lucide:send', badge: null, permission: 'campaigns:read' },
+  { name: 'Journo', path: '/dashboard/publications', icon: 'lucide:file-text', badge: null, permission: 'publications:read' },
+  { name: 'Convo Stack', path: '/dashboard/convostack', icon: 'lucide:book-open', badge: null, permission: 'convostack:read' },
+  { name: 'LabCast', path: '/dashboard/labcast', icon: 'lucide:mic', badge: null, permission: 'labcast:read' },
+  { name: 'Inventory', path: '/dashboard/products', icon: 'lucide:archive', badge: null, permission: 'products:read' },
+  { name: 'Programs', path: '/dashboard/programs', icon: 'lucide:graduation-cap', badge: null, permission: 'programs:read' },
+  { name: 'Blogs', path: '/dashboard/blogs', icon: 'lucide:newspaper', badge: null, permission: 'blogs:read' },
+  { name: 'Forms', path: '/dashboard/forms', icon: 'lucide:clipboard-list', badge: null, permission: 'forms:read' },
+  { name: 'CMS', path: '/dashboard/cms', icon: 'lucide:copy', badge: null, permission: 'cms:read' },
   
   // Separator / Section for Access Control
-  { name: 'divider', path: '', icon: '', badge: null, type: 'divider' },
-  { name: 'Roles', path: '/dashboard/access-control/roles', icon: 'lucide:shield-check', badge: null },
-  { name: 'Permissions', path: '/dashboard/access-control/permissions', icon: 'lucide:key', badge: null },
-  { name: 'Audit Logs', path: '/dashboard/audit', icon: 'lucide:fingerprint', badge: auditLogs.value?.length },
-])
+  { name: 'divider', path: '', icon: '', badge: null, type: 'divider', permission: 'roles:read' },
+  { name: 'Roles', path: '/dashboard/access-control/roles', icon: 'lucide:shield-check', badge: null, permission: 'roles:read' },
+  { name: 'Permissions', path: '/dashboard/access-control/permissions', icon: 'lucide:key', badge: null, permission: 'permissions:read' },
+  { name: 'Audit Logs', path: '/dashboard/audit', icon: 'lucide:fingerprint', badge: null, permission: 'audit:read' },
+]
+
+const navigationItems = computed(() => {
+  const itemsWithBadges = RAW_NAVIGATION_ITEMS.map(item => {
+    switch (item.name) {
+      case 'Users': return { ...item, badge: users.value?.length }
+      case 'About Us': return { ...item, badge: teamMembers.value?.length }
+      case 'Enquiries': return { ...item, badge: enquiries.value?.length }
+      case 'Subscriptions': return { ...item, badge: subscriptions.value?.length }
+      case 'Journo': return { ...item, badge: publications.value?.length }
+      case 'Convo Stack': return { ...item, badge: convoStacks.value?.length }
+      case 'LabCast': return { ...item, badge: labcasts.value?.length }
+      case 'Inventory': return { ...item, badge: products.value?.length }
+      case 'Programs': return { ...item, badge: programs.value?.length }
+      case 'Blogs': return { ...item, badge: blogs.value?.length }
+      case 'Forms': return { ...item, badge: forms.value?.length }
+      case 'Audit Logs': return { ...item, badge: auditLogs.value?.length }
+      default: return item
+    }
+  })
+  return itemsWithBadges.filter(item => !item.permission || hasPermission(item.permission))
+})
 
 const currentPageTitle = computed(() => {
   const item = navigationItems.value.find(item => item.path === route.path)
@@ -265,7 +322,8 @@ const currentPageDescription = computed(() => {
     '/dashboard/campaigns': 'Design and send email campaigns to your audience.',
     '/dashboard/teams': 'Manage your team members, leadership profiles, and organizational structure.',
     '/dashboard/labcast': 'Manage your podcast episodes and labcast content.',
-    '/dashboard/publications': 'Manage research papers, academic publications, and rich content articles.',
+    '/dashboard/publications': 'Manage research papers, academic publications, and Journo articles.',
+    '/dashboard/convostack': 'Manage and organize Convo Stack content and academic resources.',
     '/dashboard/cms': 'Manage all dynamic content and pages across your platform seamlessly.',
     '/dashboard/audit': 'View security logs and system activity history.',
     '/dashboard/access-control/roles': 'Define group-based permissions and system roles.',
@@ -309,20 +367,34 @@ onMounted(async () => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
   
+  // Sync permissions if super_admin
+  if (user.value?.role === 'super_admin') {
+    const perms = RAW_NAVIGATION_ITEMS
+      .map(item => item.permission)
+      .filter(p => !!p)
+    try {
+      await roles_api.$_sync_permissions(perms as string[])
+    } catch (e) {
+      console.error('Permission sync failed:', e)
+    }
+  }
+
+  const fetches: Promise<any>[] = []
+  if (hasPermission('users:read')) fetches.push(getUsers())
+  if (hasPermission('enquiries:read')) fetches.push(getEnquiries())
+  if (hasPermission('subscriptions:read')) fetches.push(getSubscriptions())
+  if (hasPermission('blogs:read')) fetches.push(getBlogs())
+  if (hasPermission('teams:read')) fetches.push(getTeamMembers())
+  if (hasPermission('publications:read')) fetches.push(getPublications())
+  if (hasPermission('labcast:read')) fetches.push(getLabCasts())
+  if (hasPermission('products:read')) fetches.push(getProducts())
+  if (hasPermission('programs:read')) fetches.push(getPrograms())
+  if (hasPermission('forms:read')) fetches.push(getForms())
+  if (hasPermission('audit:read')) fetches.push(getAuditLogs())
+  if (hasPermission('convostack:read')) fetches.push(getConvoStacks())
+
   try {
-    await Promise.all([
-      getUsers(),
-      getEnquiries(),
-      getSubscriptions(),
-      getBlogs(),
-      getTeamMembers(),
-      getPublications(),
-      getLabCasts(),
-      getProducts(),
-      getPrograms(),
-      getForms(),
-      getAuditLogs()
-    ])
+    await Promise.all(fetches)
   } catch (error) {
     console.error('Core data load failed:', error)
   }

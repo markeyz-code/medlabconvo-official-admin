@@ -21,6 +21,9 @@ export const roles_api = {
     },
     $_create_permission: (payload: any) => {
         return GATEWAY_ENDPOINT_WITH_AUTH.post('/roles/permissions', payload)
+    },
+    $_sync_permissions: (permissions: string[]) => {
+        return GATEWAY_ENDPOINT_WITH_AUTH.post('/roles/permissions/sync', { permissions })
     }
 }
 

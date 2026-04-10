@@ -112,7 +112,7 @@
 
     <!-- SlideOver for Create/Edit -->
     <SlideOver v-model="showModal" :title="editingEpisode ? 'Edit episode' : 'New episode'">
-      <div class="p-8 space-y-8">
+      <div class="space-y-8">
         <div class="grid grid-cols-2 gap-6">
           <AnimatedInput v-model="form.season" id="season" label="Season number" type="number" />
           <AnimatedInput v-model="form.episode" id="episode" label="Episode number" type="number" />

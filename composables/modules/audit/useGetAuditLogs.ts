@@ -33,9 +33,6 @@ export const useGetAuditLogs = () => {
     auditLogs.value = []
   }
 
-  onMounted(() => {
-    getAuditLogs()
-  })
 
   return {
     loading,

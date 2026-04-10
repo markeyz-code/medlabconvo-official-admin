@@ -53,11 +53,20 @@
               position="middle"
             />
           </div>
-          <SelectInput
-            v-model="form.category"
-            :options="categoryOptions"
-            position="bottom"
-          />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+            <SelectInput
+              v-model="form.category"
+              label="Select Category"
+              :options="categoryOptions"
+              position="middle"
+            />
+            <SelectInput
+              v-model="form.status"
+              label="Publication Status"
+              :options="statusOptions"
+              position="bottom"
+            />
+          </div>
         </div>
       </section>
 
@@ -162,9 +171,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watchEffect } from 'vue'
+import { reactive, ref, watchEffect, onMounted, computed } from 'vue'
 import { useSingleUploadFile } from '@/composables/core/useSingleUpload'
 import { useCustomToast } from '@/composables/core/useCustomToast'
+import { useCategories } from '@/composables/modules/publications/useCategories'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Icon from '@/components/Icon.vue'
@@ -177,14 +187,22 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits(['save', 'cancel'])
 
-const categoryOptions = [
-  {label:'Medical Laboratory Science',value:'Medical Laboratory Science'},
-  {label:'Research Article',value:'Research Article'},
-  {label:'Review Article',value:'Review Article'},
-  {label:'Case Study',value:'Case Study'},
-  {label:'Technical Report',value:'Technical Report'},
-  {label:'Editorial',value:'Editorial'},
-  {label:'Commentary',value:'Commentary'}
+const { categories, getCategories } = useCategories()
+
+onMounted(() => {
+  getCategories()
+})
+
+const categoryOptions = computed(() => {
+  return categories.value.map(c => ({ label: c.name, value: c.name }))
+})
+
+const statusOptions = [
+  { label: 'Draft', value: 'draft' },
+  { label: 'Pending Review', value: 'pending_review' },
+  { label: 'Approved', value: 'approved' },
+  { label: 'Published', value: 'published' },
+  { label: 'Rejected', value: 'rejected' }
 ]
 
 // Image upload composable
@@ -205,6 +223,7 @@ const form = reactive({
   doi: '',
   pubLink: '',
   category: '',
+  status: 'draft',
   images: [] as string[]
 })
 
@@ -219,6 +238,7 @@ watchEffect(() => {
       doi: props.publication.doi || props.publication.pubLink || '',
       pubLink: props.publication.pubLink || '',
       category: props.publication.category || '',
+      status: props.publication.status || 'draft',
       images: props.publication.images || []
     })
   }

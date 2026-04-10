@@ -4,7 +4,6 @@
       <div
         v-if="modelValue"
         class="modal-root"
-        @click.self="closeModal"
       >
         <transition name="modal-content">
           <div
@@ -65,17 +64,11 @@ const closeModal = () => {
   emit('update:modelValue', false)
 }
 
-const handleEscape = (e: KeyboardEvent) => {
-  if (e.key === 'Escape' && props.modelValue) closeModal()
-}
-
 watch(() => props.modelValue, (isOpen) => {
   document.body.style.overflow = isOpen ? 'hidden' : ''
 })
 
-onMounted(() => document.addEventListener('keydown', handleEscape))
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleEscape)
   document.body.style.overflow = ''
 })
 </script>
@@ -163,7 +156,9 @@ onUnmounted(() => {
 
 /* Body */
 .modal-body {
+  flex: 1;
   overflow-y: auto;
+  padding: 16px;
 }
 
 .modal-body::-webkit-scrollbar {

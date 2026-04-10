@@ -496,7 +496,6 @@
         <div
           v-if="showPreviewModal"
           class="fixed inset-0 z-50 flex items-center justify-center p-4"
-          @click.self="closePreviewModal"
         >
           <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"></div>
           <div class="relative bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100">
@@ -676,7 +675,6 @@
         <div
           v-if="showDeleteModal"
           class="fixed inset-0 z-50 flex items-center justify-center p-4"
-          @click.self="showDeleteModal = false"
         >
           <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"></div>
           <div class="relative bg-white rounded-3xl shadow-2xl max-w-md w-full transform transition-all duration-300 scale-100">

@@ -148,13 +148,11 @@
 
     <!-- SlideOver for Edit/Create -->
     <SlideOver v-model="showModal" :title="selectedProgram ? 'Edit Program' : 'New Program'">
-      <div class="p-8">
-        <ProgramForm
-          :program="selectedProgram"
-          @save="handleSaveProgram"
-          @cancel="closeModal"
-        />
-      </div>
+      <ProgramForm
+        :program="selectedProgram"
+        @save="handleSaveProgram"
+        @cancel="closeModal"
+      />
     </SlideOver>
 
     <!-- Registration Link Modal (Custom Premium Style) -->

@@ -8,8 +8,16 @@ const runtimeData = {
 };
 
 export const useUser = () => {
-  const tokenCookie = useCookie("token", { maxAge: 60 * 60 * 24 * 7 }); // 7 days
-  const userCookie = useCookie<any>("user", { maxAge: 60 * 60 * 24 * 7 });
+  const tokenCookie = useCookie("token", { 
+    maxAge: 60 * 60 * 24 * 7,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  }); 
+  const userCookie = useCookie<any>("user", { 
+    maxAge: 60 * 60 * 24 * 7,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  });
 
   const id = computed({
     get: () => runtimeData?.user?.value?.id ?? "",
@@ -68,6 +76,11 @@ export const useUser = () => {
     runtimeData.user.value = userCookie.value;
   }
 
+  const hasPermission = (permission: string) => {
+    const permissions = userCookie.value?.permissions || [];
+    return permissions.includes('*') || permissions.includes(permission);
+  };
+
   return {
     id,
     isLoggedIn,
@@ -77,6 +90,7 @@ export const useUser = () => {
     logOut,
     updateUser,
     setToken,
+    hasPermission,
     token: computed(() => tokenCookie.value || ""),
     user: computed(() => userCookie.value || {} as any),
   };
