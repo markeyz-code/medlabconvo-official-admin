@@ -7,7 +7,7 @@
         <template #actions>
           <button
             @click="showCreateModal = true"
-            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+            class="inline-flex items-center px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Icon name="lucide:plus" class="w-4 h-4 mr-2" />
             Add Episode
@@ -34,49 +34,44 @@
           </div>
   
           <!-- Season Filter -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Season</label>
-            <select
+          <div class="w-full">
+            <SelectInput
               v-model="selectedSeason"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              @change="applyFilters"
-            >
-              <option value="">All Seasons</option>
-              <option v-for="season in seasons" :key="season.season" :value="season.season">
-                Season {{ season.season }} ({{ season.episodeCount }} episodes)
-              </option>
-            </select>
+              label="Season"
+              :options="[{ label: 'All Seasons', value: '' }].concat(seasons?.map(s => ({ label: `Season ${s.season} (${s.episodeCount} episodes)`, value: s.season })) || [])"
+              @update:modelValue="applyFilters"
+            />
           </div>
   
           <!-- Status Filter -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-            <select
+          <div class="w-full">
+            <SelectInput
               v-model="selectedStatus"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              @change="applyFilters"
-            >
-              <option value="">All Status</option>
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
-            </select>
+              label="Status"
+              :options="[
+                { label: 'All Status', value: '' },
+                { label: 'Active', value: 'true' },
+                { label: 'Inactive', value: 'false' }
+              ]"
+              @update:modelValue="applyFilters"
+            />
           </div>
   
           <!-- Sort -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
-            <select
+          <div class="w-full">
+            <SelectInput
               v-model="sortBy"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              @change="applyFilters"
-            >
-              <option value="publishedAt:desc">Latest First</option>
-              <option value="publishedAt:asc">Oldest First</option>
-              <option value="title:asc">Title A-Z</option>
-              <option value="title:desc">Title Z-A</option>
-              <option value="season:desc">Season (High-Low)</option>
-              <option value="episode:desc">Episode (High-Low)</option>
-            </select>
+              label="Sort By"
+              :options="[
+                { label: 'Latest First', value: 'publishedAt:desc' },
+                { label: 'Oldest First', value: 'publishedAt:asc' },
+                { label: 'Title A-Z', value: 'title:asc' },
+                { label: 'Title Z-A', value: 'title:desc' },
+                { label: 'Season (High-Low)', value: 'season:desc' },
+                { label: 'Episode (High-Low)', value: 'episode:desc' }
+              ]"
+              @update:modelValue="applyFilters"
+            />
           </div>
         </div>
       </div>
@@ -115,7 +110,7 @@
           <p class="text-gray-900 mb-6">Get started by creating your first episode.</p>
           <button
             @click="showCreateModal = true"
-            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+            class="inline-flex items-center px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Icon name="lucide:plus" class="w-4 h-4 mr-2" />
             Add Episode

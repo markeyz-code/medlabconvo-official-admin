@@ -115,7 +115,6 @@ export type QueryProductParams = {
   publisher?: string
   instructor?: string
   isDigital?: boolean
-  inStock?: boolean
   sortBy?: string
   sortOrder?: 'asc' | 'desc'
 }
@@ -348,7 +347,7 @@ export const products_api = {
     const url = `/products`
     return GATEWAY_ENDPOINT.get(url, { 
       params: { 
-        inStock: true, 
+        availability: 'available', 
         limit 
       } 
     })

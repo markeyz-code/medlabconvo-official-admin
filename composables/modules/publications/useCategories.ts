@@ -47,11 +47,30 @@ export const useCategories = () => {
     }
   }
 
+  const updateCategory = async (id: string, payload: { name?: string; description?: string }) => {
+    loading.value = true
+    try {
+      const res = await (publications_api as any).$_update_category(id, payload)
+      const index = categories.value.findIndex(c => c._id === id)
+      if (index !== -1) {
+        categories.value[index] = res.data
+      }
+      showToast({ title: 'Success', message: 'Category updated successfully', toastType: 'success' })
+      return res.data
+    } catch (e: any) {
+      showToast({ title: 'Error', message: e.response?.data?.message || 'Failed to update category', toastType: 'error' })
+      return null
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     categories,
     loading,
     getCategories,
     createCategory,
+    updateCategory,
     deleteCategory
   }
 }

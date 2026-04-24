@@ -1,32 +1,30 @@
 <template>
   <Teleport to="body">
     <Transition
-      enter-active-class="transition-all duration-300 ease-out"
+      enter-active-class="transition-opacity duration-300 ease-out"
       enter-from-class="opacity-0"
       enter-to-class="opacity-100"
-      leave-active-class="transition-all duration-200 ease-in"
+      leave-active-class="transition-opacity duration-200 ease-in"
       leave-from-class="opacity-100"
       leave-to-class="opacity-0"
     >
+      <div v-if="modelValue" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" @click="$emit('update:modelValue', false)"></div>
+    </Transition>
+
+    <Transition
+      enter-active-class="transform transition-transform duration-500 ease-out"
+      enter-from-class="translate-x-full"
+      enter-to-class="translate-x-0"
+      leave-active-class="transform transition-transform duration-300 ease-in"
+      leave-from-class="translate-x-0"
+      leave-to-class="translate-x-full"
+    >
       <div
         v-if="modelValue"
-        class="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm"
+        class="fixed inset-y-0 right-0 z-50 w-full max-w-4xl bg-white shadow-2xl flex flex-col overflow-hidden"
       >
-        <div class="flex items-center justify-center min-h-screen px-4 py-8">
-          <Transition
-            enter-active-class="transition-all duration-300 ease-out"
-            enter-from-class="opacity-0 scale-95 translate-y-8"
-            enter-to-class="opacity-100 scale-100 translate-y-0"
-            leave-active-class="transition-all duration-200 ease-in"
-            leave-from-class="opacity-100 scale-100 translate-y-0"
-            leave-to-class="opacity-0 scale-95 translate-y-8"
-          >
-            <div
-              v-if="modelValue"
-              class="relative w-full max-w-5xl bg-white rounded-3xl  overflow-hidden"
-            >
               <!-- Header with Gradient -->
-              <div class="relative bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 px-8 py-6">
+              <div class="relative flex-shrink-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 px-8 py-6">
                 <div class="absolute inset-0 bg-black/10"></div>
                 <div class="relative flex items-center justify-between">
                   <div class="space-y-1">
@@ -55,7 +53,7 @@
               </div>
 
               <!-- Form Content -->
-              <div class="max-h-[calc(100vh-200px)] overflow-y-auto">
+              <div class="flex-1 overflow-y-auto">
                 <form @submit.prevent="handleSubmit" class="p-8 space-y-8">
                   <!-- Basic Information Section -->
                   <div class="space-y-6">
@@ -226,7 +224,7 @@
                               </div>
                               <p class="text-sm font-medium text-gray-700">Uploading thumbnail...</p>
                               <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full animate-pulse" style="width: 60%"></div>
+                                <div class="bg-primary h-2 rounded-full animate-pulse" style="width: 60%"></div>
                               </div>
                             </div>
 
@@ -236,11 +234,11 @@
                                 alt="Thumbnail preview"
                                 class="w-full h-48 object-cover rounded-xl"
                               />
-                              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 rounded-xl transition-all duration-200 flex items-center justify-center">
+                              <div class="absolute top-2 right-2 flex items-center justify-center">
                                 <button
                                   @click.stop="removeThumbnail"
                                   type="button"
-                                  class="opacity-0 group-hover:opacity-100 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-200 transform scale-90 hover:scale-100"
+                                  class="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-200 shadow-md"
                                 >
                                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>
                                   <!-- <Icon name="lucide:trash-2" class="w-4 h-4" /> -->
@@ -309,11 +307,11 @@
                                 alt="Episode cover preview"
                                 class="w-full h-48 object-cover rounded-xl"
                               />
-                              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 rounded-xl transition-all duration-200 flex items-center justify-center">
+                              <div class="absolute top-2 right-2 flex items-center justify-center">
                                 <button
                                   @click.stop="removeImage"
                                   type="button"
-                                  class="opacity-0 group-hover:opacity-100 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-200 transform scale-90 hover:scale-100"
+                                  class="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-200 shadow-md"
                                 >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" class="w-4 h-4" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>
                                   <!-- <Icon name="lucide:trash-2" class="w-4 h-4" /> -->
@@ -587,9 +585,6 @@
                 </form>
               </div>
             </div>
-          </Transition>
-        </div>
-      </div>
     </Transition>
   </Teleport>
 </template>

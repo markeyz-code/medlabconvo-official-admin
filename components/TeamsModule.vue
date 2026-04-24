@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-12 animate-in fade-in duration-700">
     <!-- Action Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8 bg-white p-10 rounded-[3rem] border border-slate-100 shadow-xl relative overflow-hidden">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8 bg-white p-10 rounded-xl border border-slate-300 relative overflow-hidden">
       <!-- Background Decor -->
       <div class="absolute right-0 top-0 w-64 h-64 bg-[#033958]/5 blur-3xl rounded-full"></div>
       
@@ -13,7 +13,7 @@
       <div class="relative z-10 flex items-center gap-4 w-full sm:w-auto">
         <button
           @click="openAddDrawer"
-          class="flex-1 sm:flex-none px-10 py-5 bg-[#033958] text-white rounded-2xl font-black text-[11px]  tracking-[0.25em] hover:bg-[#022a41] transition-all flex items-center justify-center space-x-3 shadow-2xl active:scale-95"
+          class="flex-1 sm:flex-none px-10 py-3 bg-[#033958] text-white rounded-2xl font-black text-[11px]  tracking-[0.25em] hover:bg-[#022a41] transition-all flex items-center justify-center space-x-3 -2xl active:scale-95"
         >
           <Icon name="lucide:plus-circle" class="w-5 h-5" />
           <span>Add Team Member</span>
@@ -50,7 +50,7 @@
       <!-- Loading Overlay -->
       <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
          <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
-         <span class="text-[10px] font-black  tracking-widest text-[#033958]">Loading members...</span>
+         <span class="text-sm font-black  tracking-widest text-[#033958]">Loading members...</span>
       </div>
 
       <div v-if="!loading && filteredMembers.length === 0" class="py-40 text-center">
@@ -64,17 +64,17 @@
       <table v-else class="w-full text-left border-collapse">
         <thead>
           <tr class="border-b border-slate-100">
-            <th class="px-10 py-8 text-[10px] font-black  tracking-widest text-slate-400">Photo</th>
-            <th class="px-10 py-8 text-[10px] font-black  tracking-widest text-slate-400">Name & Title</th>
-            <th class="px-10 py-8 text-[10px] font-black  tracking-widest text-slate-400">Category</th>
-            <th class="px-10 py-8 text-[10px] font-black  tracking-widest text-slate-400 text-center">Order</th>
-            <th class="px-10 py-8 text-[10px] font-black  tracking-widest text-slate-400 text-right">Actions</th>
+            <th class="px-10 py-8 text-sm font-black  tracking-widest text-slate-400">Photo</th>
+            <th class="px-10 py-8 text-sm font-black  tracking-widest text-slate-400">Name & Title</th>
+            <th class="px-10 py-8 text-sm font-black  tracking-widest text-slate-400">Category</th>
+            <th class="px-10 py-8 text-sm font-black  tracking-widest text-slate-400 text-center">Order</th>
+            <th class="px-10 py-8 text-sm font-black  tracking-widest text-slate-400 text-right">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
           <tr v-for="member in filteredMembers" :key="member._id" class="group hover:bg-slate-50/50 transition-colors">
             <td class="px-10 py-8">
-              <div class="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shadow-md transform group-hover:scale-110 transition-transform">
+              <div class="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 -md transform group-hover:scale-110 transition-transform">
                  <img v-if="member.image" :src="member.image" class="w-full h-full object-cover" />
                  <div v-else class="w-full h-full flex items-center justify-center text-slate-300">
                     <Icon name="lucide:user" class="w-8 h-8" />
@@ -84,7 +84,7 @@
             <td class="px-10 py-8">
                <div class="flex flex-col">
                   <span class="text-lg font-black text-slate-900   tracking-tighter">{{ member.name }}</span>
-                  <span class="text-[10px] font-bold text-[#033958]  tracking-widest">{{ member.title }}</span>
+                  <span class="text-sm font-bold text-[#033958]  tracking-widest">{{ member.title }}</span>
                </div>
             </td>
             <td class="px-10 py-8 text-center sm:text-left">
@@ -99,14 +99,14 @@
                <div class="flex items-center justify-end space-x-3 transition-all">
                   <button 
                     @click="openEditDrawer(member)"
-                    class="p-3 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-xl border border-slate-100 transition-all shadow-sm"
+                    class="p-3 text-[#033958] hover:bg-[#033958]/10 rounded-xl border border-slate-100 transition-all -sm"
                     title="Edit Member"
                   >
                     <Icon name="lucide:square-pen" class="w-5 h-5" />
                   </button>
                   <button 
                     @click="handleDelete(member._id!)" 
-                    class="p-3 text-slate-200 hover:text-rose-600 hover:bg-rose-50 rounded-xl border border-slate-100 transition-all shadow-sm"
+                    class="p-3 text-rose-500 hover:bg-rose-100 rounded-xl border border-slate-100 transition-all -sm"
                     title="Delete Member"
                   >
                     <Icon name="lucide:trash-2" class="w-5 h-5" />
@@ -122,7 +122,7 @@
     <ClientOnly>
       <SlideOver 
         v-model="showDrawer" 
-        size="lg"
+        size="full"
         :title="selectedMember ? 'Edit Team Member' : 'Add Team Member'"
       >
         <div class="p-8">
@@ -134,6 +134,15 @@
         </div>
       </SlideOver>
     </ClientOnly>
+
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete Member"
+      message="Are you sure you want to remove this team member? This action cannot be undone."
+      confirmText="Yes, Delete Member"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -146,6 +155,7 @@ import SelectInput from '@/components/ui/SelectInput.vue'
 import Icon from '@/components/Icon.vue'
 import SlideOver from '@/components/SlideOver.vue'
 import TeamMemberForm from '@/components/TeamMemberForm.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const { showToast } = useCustomToast()
 
@@ -156,6 +166,9 @@ const categoryFilter = ref('')
 
 const showDrawer = ref(false)
 const selectedMember = ref<TeamMember | null>(null)
+
+const showDeleteModal = ref(false)
+const memberIdToDelete = ref<string | null>(null)
 
 const fetchMembers = async () => {
   loading.value = true
@@ -209,15 +222,23 @@ const handleSave = async (payload: any) => {
   }
 }
 
-const handleDelete = async (id: string) => {
-  if (confirm('Are you sure you want to delete this team member?')) {
-    try {
-      await teams_api.$_delete_member(id)
-      showToast({ title: 'Deleted', message: 'Team member has been removed.', toastType: 'success' })
-      await fetchMembers()
-    } catch (e) {
-      showToast({ title: 'Error', message: 'Failed to delete team member.', toastType: 'error' })
-    }
+const handleDelete = (id: string) => {
+  memberIdToDelete.value = id
+  showDeleteModal.value = true
+}
+
+const executeDelete = async () => {
+  if (!memberIdToDelete.value) return
+  
+  try {
+    await teams_api.$_delete_member(memberIdToDelete.value)
+    showToast({ title: 'Deleted', message: 'Team member has been removed.', toastType: 'success' })
+    await fetchMembers()
+  } catch (e) {
+    showToast({ title: 'Error', message: 'Failed to delete team member.', toastType: 'error' })
+  } finally {
+    showDeleteModal.value = false
+    memberIdToDelete.value = null
   }
 }
 </script>

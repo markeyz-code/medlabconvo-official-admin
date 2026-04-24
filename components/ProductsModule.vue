@@ -40,13 +40,13 @@
 
     <!-- Quick Filters -->
     <div class="flex flex-wrap items-center gap-3 py-4 border-y border-slate-50">
-      <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mr-2">Quick filters:</span>
+      <span class="text-sm font-bold uppercase tracking-widest text-slate-400 mr-2">Quick filters:</span>
       <button
         v-for="filter in quickFilters"
         :key="filter.id"
         @click="handleQuickFilter(filter.id)"
         :class="[
-          'px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all duration-300 border',
+          'px-4 py-2 text-sm font-bold uppercase tracking-widest rounded-full transition-all duration-300 border',
           activeQuickFilter === filter.id 
             ? 'bg-[#033958] text-white border-[#033958]' 
             : 'bg-white text-slate-400 border-slate-100 hover:border-slate-200'
@@ -63,7 +63,7 @@
           <Icon :name="stat.icon" :class="['w-6 h-6', stat.color]" />
         </div>
         <div>
-          <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">{{ stat.title }}</p>
+          <p class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-1">{{ stat.title }}</p>
           <p class="text-xl font-bold text-slate-900 tracking-tight">{{ stat.value }}</p>
         </div>
       </div>

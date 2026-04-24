@@ -20,7 +20,7 @@
       <div class="space-y-6">
         <div class="grid grid-cols-1 gap-6">
           <div class="space-y-2">
-            <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Campaign Name</label>
+            <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Campaign Name</label>
             <input 
               v-model="form.name" 
               type="text" 
@@ -30,7 +30,7 @@
           </div>
 
           <div class="space-y-2">
-            <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Subject Line</label>
+            <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Subject Line</label>
             <input 
               v-model="form.subject" 
               type="text" 
@@ -40,7 +40,7 @@
           </div>
 
           <div class="space-y-2">
-            <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Preview Text (Optional)</label>
+            <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Preview Text (Optional)</label>
             <input 
               v-model="form.previewText" 
               type="text" 
@@ -52,9 +52,9 @@
 
         <!-- Banner Upload -->
         <div class="space-y-4">
-          <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Campaign Banner</label>
+          <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Campaign Banner</label>
           <ImageUpload v-model="form.bannerImage" />
-          <p class="text-[10px] text-slate-400 font-medium px-1 italic">Recommended size: 1200x600px. Max size: 5MB.</p>
+          <p class="text-sm text-slate-400 font-medium px-1 italic">Recommended size: 1200x600px. Max size: 5MB.</p>
         </div>
       </div>
     </div>
@@ -87,7 +87,7 @@
         <!-- Specific Emails logic -->
         <Transition name="fade">
           <div v-if="form.primaryAudience === 'Specific Emails'" class="space-y-2">
-            <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Specific Email Addresses</label>
+            <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Specific Email Addresses</label>
             <textarea 
               v-model="manualEmails"
               placeholder="Enter emails separated by commas (e.g. john@example.com, jane@example.com)"
@@ -117,7 +117,7 @@
           <!-- Future Schedule -->
           <Transition name="fade" mode="out-in">
             <div v-if="form.deliveryType === 'future'" class="space-y-2 animate-in slide-in-from-top-2 duration-300">
-               <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Schedule Date & Time</label>
+               <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Schedule Date & Time</label>
                <input 
                  type="datetime-local" 
                  v-model="form.scheduledAt"
@@ -126,7 +126,7 @@
             </div>
             <!-- Cron Option -->
             <div v-else-if="form.deliveryType === 'recurring'" class="space-y-2 animate-in slide-in-from-top-2 duration-300">
-               <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Cron Expression (e.g. 0 0 * * *)</label>
+               <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Cron Expression (e.g. 0 0 * * *)</label>
                <input 
                  v-model="form.cronExpression"
                  placeholder="Standard cron syntax for recurring sends"
@@ -171,6 +171,9 @@ import CampaignDropdown from './ui/CampaignDropdown.vue'
 import ImageUpload from './ImageUpload.vue'
 import Icon from './Icon.vue'
 import { useEmailCampaigns } from '@/composables/modules/emails/useEmailCampaigns'
+import { useCustomToast } from '@/composables/core/useCustomToast'
+
+const { showToast } = useCustomToast()
 
 const emit = defineEmits(['close', 'success'])
 const { createCampaign, loading } = useEmailCampaigns()
@@ -205,7 +208,11 @@ const scheduleOptions = [
 
 const submit = async () => {
   if (!form.name || !form.subject || !form.content) {
-    alert('Please fill in the campaign name, subject, and content.')
+    showToast({
+      title: 'Validation Error',
+      message: 'Please fill in the campaign name, subject, and content.',
+      toastType: 'error'
+    })
     return
   }
 

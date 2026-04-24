@@ -51,7 +51,7 @@
           <!-- Status Badge Overlay -->
           <div class="absolute top-4 left-4">
             <span :class="[
-              'px-3 py-1.5 text-[10px] font-bold rounded-full backdrop-blur-md',
+              'px-3 py-1.5 text-sm font-bold rounded-full backdrop-blur-md',
               program.status === 'active' ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-200' : 
               program.status === 'inactive' ? 'bg-rose-500/10 text-rose-700 border border-rose-200' :
               'bg-slate-500/10 text-slate-700 border border-slate-200'
@@ -64,8 +64,8 @@
         <!-- Program Content -->
         <div class="p-6">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-[10px] font-bold text-slate-400">{{ program.category || 'Course' }}</span>
-            <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <span class="text-sm font-bold text-slate-400">{{ program.category || 'Course' }}</span>
+            <div class="flex items-center space-x-1 transition-opacity duration-300">
               <button
                 @click="editProgram(program)"
                 class="p-2 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-lg transition-all"
@@ -97,11 +97,11 @@
           
           <div class="grid grid-cols-2 gap-4 py-4 border-y border-slate-50 mb-6">
             <div class="flex flex-col">
-              <span class="text-[10px] font-bold text-slate-400">Duration</span>
+              <span class="text-sm font-bold text-slate-400">Duration</span>
               <span class="text-sm font-bold text-slate-700">{{ program.duration || 'Flexible' }}</span>
             </div>
             <div class="flex flex-col text-right">
-              <span class="text-[10px] font-bold text-slate-400">Applicants</span>
+              <span class="text-sm font-bold text-slate-400">Applicants</span>
               <span class="text-sm font-bold text-slate-700">{{ program.applicationsCount || 0 }}</span>
             </div>
           </div>
@@ -167,7 +167,7 @@
         </div>
 
         <div class="space-y-2">
-          <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Direct URL</label>
+          <label class="text-sm font-black uppercase tracking-widest text-slate-400 ml-1">Direct URL</label>
           <div class="flex items-center space-x-2">
             <input
               :value="registrationLink"
@@ -192,6 +192,15 @@
         </button>
       </div>
     </Modal>
+
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete Program"
+      message="Are you sure you want to delete this program? This action cannot be undone."
+      confirmText="Yes, Delete Program"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -209,6 +218,7 @@ import Icon from '@/components/Icon.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Modal from '@/components/Modal.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // Composables
 const { programs, loading, getPrograms } = useGetPrograms()
@@ -224,6 +234,8 @@ const statusFilter = ref('')
 const showModal = ref(false)
 const showLinkModal = ref(false)
 const selectedProgram = ref<any>(null)
+const showDeleteModal = ref(false)
+const idToDelete = ref('')
 
 // Load programs on mount
 onMounted(() => {
@@ -288,14 +300,20 @@ const getRegistrationLink = async (programId: string) => {
   }
 }
 
-const deleteProgram = async (programId: string) => {
-  if (confirm('Are you sure you want to delete this program?')) {
-    try {
-      await softDeleteProgram(programId)
-      await getPrograms()
-    } catch (error) {
-      console.error('Error deleting program:', error)
-    }
+const deleteProgram = (programId: string) => {
+  idToDelete.value = programId
+  showDeleteModal.value = true
+}
+
+const executeDelete = async () => {
+  try {
+    await softDeleteProgram(idToDelete.value)
+    await getPrograms()
+  } catch (error) {
+    console.error('Error deleting program:', error)
+  } finally {
+    showDeleteModal.value = false
+    idToDelete.value = ''
   }
 }
 

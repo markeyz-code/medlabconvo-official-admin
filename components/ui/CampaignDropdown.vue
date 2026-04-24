@@ -1,7 +1,7 @@
 <template>
   <div class="relative w-full" v-click-outside="close">
     <div v-if="label" class="mb-2 px-1 flex justify-between items-center">
-      <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">{{ label }}</label>
+      <label class="text-sm font-black uppercase tracking-widest text-slate-400">{{ label }}</label>
     </div>
 
     <button
@@ -10,7 +10,7 @@
       class="w-full h-16 px-6 bg-[#F1F5F9] border border-transparent rounded-2xl flex items-center justify-between group hover:bg-[#E2E8F0] transition-all focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600/20"
     >
       <div class="flex flex-col items-start">
-        <span v-if="modelValue" class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">{{ label }}</span>
+        <span v-if="modelValue" class="text-sm font-black text-slate-400 uppercase tracking-tighter">{{ label }}</span>
         <span :class="['font-bold text-sm truncate transition-colors', modelValue ? 'text-slate-900' : 'text-slate-400']">
           {{ selectedOption?.label || placeholder }}
         </span>
@@ -59,7 +59,7 @@
             <span :class="['text-sm font-bold transition-colors', modelValue === option.value ? 'text-blue-600' : 'text-slate-900']">
               {{ option.label }}
             </span>
-            <span v-if="option.description" class="text-[10px] font-medium text-slate-400 tracking-tight">
+            <span v-if="option.description" class="text-sm font-medium text-slate-400 tracking-tight">
               {{ option.description }}
             </span>
           </button>

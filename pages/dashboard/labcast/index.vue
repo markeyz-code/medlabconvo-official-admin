@@ -1,26 +1,16 @@
 <template>
-    <div class="min-h-screen">
-      <!-- Header Section -->
-      <div class="sticky top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-gray-200/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div class="space-y-1">
-              <h1 class="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                Episodes
-              </h1>
-              <p class="text-gray-600">Manage your LabCast episodes with style</p>
-            </div>
-              <button
+   <Dashboard>
+        <template v-slot:header-actions>
+            <button
               @click="showCreateModal = true"
-              class="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+              class="group relative inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               <Icon name="lucide:plus" class="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-200" />
               Add Episode
               <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400 to-indigo-400 opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
             </button>
-          </div>
-        </div>
-      </div>
+        </template>
+      <div class="min-h-screen">
 
 
 
@@ -48,52 +38,44 @@
             </div>
   
             <!-- Season Filter -->
-            <div class="relative group">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Season</label>
-              <select
+            <div class="relative group w-full">
+              <SelectInput
                 v-model="selectedSeason"
-                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-200 appearance-none cursor-pointer"
-                @change="applyFilters"
-              >
-                <option value="">All Seasons</option>
-                <option v-for="season in seasons" :key="season.season" :value="season.season">
-                  Season {{ season.season }} ({{ season.episodeCount }} episodes)
-                </option>
-              </select>
-              <Icon name="lucide:chevron-down" class="absolute right-3 top-1/2 transform -translate-y-1/2 mt-4 text-gray-400 w-4 h-4 pointer-events-none" />
+                label="Season"
+                :options="[{ label: 'All Seasons', value: '' }].concat(seasons?.map(s => ({ label: `Season ${s.season} (${s.episodeCount} episodes)`, value: s.season })) || [])"
+                @update:modelValue="applyFilters"
+              />
             </div>
   
             <!-- Status Filter -->
-            <div class="relative group">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
-              <select
+            <div class="relative group w-full">
+              <SelectInput
                 v-model="selectedStatus"
-                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-200 appearance-none cursor-pointer"
-                @change="applyFilters"
-              >
-                <option value="">All Status</option>
-                <option value="true">Active</option>
-                <option value="false">Inactive</option>
-              </select>
-              <Icon name="lucide:chevron-down" class="absolute right-3 top-1/2 transform -translate-y-1/2 mt-4 text-gray-400 w-4 h-4 pointer-events-none" />
+                label="Status"
+                :options="[
+                  { label: 'All Status', value: '' },
+                  { label: 'Active', value: 'true' },
+                  { label: 'Inactive', value: 'false' }
+                ]"
+                @update:modelValue="applyFilters"
+              />
             </div>
   
             <!-- Sort Options -->
-            <div class="relative group">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Sort By</label>
-              <select
+            <div class="relative group w-full">
+              <SelectInput
                 v-model="sortBy"
-                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-200 appearance-none cursor-pointer"
-                @change="applyFilters"
-              >
-                <option value="publishedAt:desc">Latest First</option>
-                <option value="publishedAt:asc">Oldest First</option>
-                <option value="title:asc">Title A-Z</option>
-                <option value="title:desc">Title Z-A</option>
-                <option value="season:desc">Season (High-Low)</option>
-                <option value="episode:desc">Episode (High-Low)</option>
-              </select>
-              <Icon name="lucide:chevron-down" class="absolute right-3 top-1/2 transform -translate-y-1/2 mt-4 text-gray-400 w-4 h-4 pointer-events-none" />
+                label="Sort By"
+                :options="[
+                  { label: 'Latest First', value: 'publishedAt:desc' },
+                  { label: 'Oldest First', value: 'publishedAt:asc' },
+                  { label: 'Title A-Z', value: 'title:asc' },
+                  { label: 'Title Z-A', value: 'title:desc' },
+                  { label: 'Season (High-Low)', value: 'season:desc' },
+                  { label: 'Episode (High-Low)', value: 'episode:desc' }
+                ]"
+                @update:modelValue="applyFilters"
+              />
             </div>
   
             <!-- View Toggle -->
@@ -442,7 +424,7 @@
               <p class="text-gray-600 mb-8">Get started by creating your first amazing episode.</p>
               <button
                 @click="showCreateModal = true"
-                class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+                class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
               >
                 <Icon name="lucide:plus" class="w-5 h-5 mr-2" />
                 Create First Episode
@@ -634,7 +616,7 @@
                   <div class="space-y-3">
                     <button
                       @click="editEpisode(previewingEpisode)"
-                      class="w-full flex items-center justify-center gap-3 px-4 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200 font-medium"
+                      class="w-full flex items-center justify-center gap-3 px-4 py-3 bg-blue-500 text-white rounded-xl hover:bg-primary transition-all duration-200 font-medium"
                     >
                       <!-- <Icon name="lucide:edit" class="w-5 h-5" /> -->
                       <svg  class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M227.32,73.37,182.63,28.69a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H216a8,8,0,0,0,0-16H115.32l112-112A16,16,0,0,0,227.32,73.37ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.69,147.32,64l24-24L216,84.69Z"></path></svg>
@@ -714,6 +696,7 @@
         @saved="handleEpisodeSaved"
       />
     </div>
+   </Dashboard>
   </template>
   
   <script setup lang="ts">
@@ -727,6 +710,7 @@
   import { useDeleteLabCast } from "@/composables/modules/labcast/useDeleteLabCast"
   import { useReorderLabcasts } from '@/composables/modules/labcast/useReorderLabcasts'
   import { definePageMeta } from '#imports'
+  import Dashboard from '@/layouts/dashboard.vue' 
 
   const {
     loading: reorderLoading, 
@@ -736,9 +720,6 @@
     resetState: resetReorderState
    } = useReorderLabcasts()
   
-  definePageMeta({
-    layout: 'dashboard'
-  })
   
   // Reactive state
   const showCreateModal = ref(false)

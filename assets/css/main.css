@@ -155,3 +155,9 @@ input[type=number] {
 .custom-input {
   @apply w-full px-4 py-3.5 text-sm outline-none focus:border focus:border-[#2970FF] rounded-xl bg-[#1A1A1B09]  focus:bg-white pr-10
 }
+
+/* Aggressively remove all shadows from the admin dashboard */
+*, ::before, ::after {
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
+}

@@ -40,7 +40,7 @@
           <Icon :name="stat.icon" :class="['w-7 h-7', stat.color]" />
         </div>
         <div>
-          <p class="text-[10px] font-bold text-slate-400 mb-1">{{ stat.title }}</p>
+          <p class="text-sm font-bold text-slate-400 mb-1">{{ stat.title }}</p>
           <p class="text-2xl font-bold text-slate-900 leading-none">{{ stat.value }}</p>
         </div>
       </div>
@@ -91,7 +91,7 @@
             <!-- Author -->
             <td class="px-4 py-4 hidden lg:table-cell">
               <div class="flex items-center space-x-2">
-                <div class="w-7 h-7 rounded-full bg-[#033958] text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">
+                <div class="w-7 h-7 rounded-full bg-[#033958] text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
                   {{ pub.authorName?.charAt(0) || 'M' }}
                 </div>
                 <span class="text-xs font-medium text-slate-600">{{ pub.authorName || 'Unknown' }}</span>
@@ -165,8 +165,8 @@
           <p class="text-sm text-slate-500 mt-2 leading-relaxed">This will permanently remove <span class="font-bold text-slate-900">"{{ deletingPublication?.title }}"</span> from the Convo Stack registry.</p>
         </div>
         <div class="flex items-center gap-4 pt-6 border-t border-slate-50">
-          <button @click="showDeleteModal = false" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900">Safe Abort</button>
-          <button @click="handleDelete" class="flex-1 py-4 bg-red-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-red-700  -600/20">Purge Record</button>
+          <button @click="showDeleteModal = false" class="flex-1 py-4 text-sm font-black uppercase tracking-widest text-slate-400 hover:text-slate-900">Safe Abort</button>
+          <button @click="handleDelete" class="flex-1 py-4 bg-red-600 text-white text-sm font-black uppercase tracking-widest rounded-2xl hover:bg-red-700  -600/20">Purge Record</button>
         </div>
       </div>
     </Modal>
@@ -215,7 +215,7 @@
                     </div>
                     <div>
                       <p class="text-sm font-bold text-slate-900 leading-none">{{ comment.authorName || 'Unknown User' }}</p>
-                      <p class="text-[10px] font-semibold text-slate-400 mt-1">{{ formatDateTime(comment.createdAt) }}</p>
+                      <p class="text-sm font-semibold text-slate-400 mt-1">{{ formatDateTime(comment.createdAt) }}</p>
                     </div>
                   </div>
                 </div>

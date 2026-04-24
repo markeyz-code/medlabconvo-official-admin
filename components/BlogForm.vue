@@ -2,7 +2,7 @@
   <form @submit.prevent="handleSubmit" class="space-y-8 animate-in slide-in-from-right duration-500">
     <div class="space-y-6">
       <section>
-        <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Core information</h4>
+        <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Core information</h4>
         <div class="space-y-4">
           <AnimatedInput
             v-model="form.title"
@@ -24,7 +24,7 @@
       </section>
 
       <section>
-        <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Body content</h4>
+        <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Body content</h4>
         <AnimatedInput
           v-model="form.content"
           id="blogContent"
@@ -37,7 +37,7 @@
 
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Tags</h4>
+          <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Tags</h4>
           <AnimatedInput
             v-model="tagsInput"
             id="blogTags"
@@ -47,7 +47,7 @@
         </div>
         
         <div>
-          <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Classification</h4>
+          <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Classification</h4>
           <SelectInput
             v-model="form.category"
             :options="categoryOptions"

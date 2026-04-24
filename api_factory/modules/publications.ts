@@ -119,6 +119,11 @@ export const publications_api = {
     return GATEWAY_ENDPOINT.post(url, categoryData)
   },
 
+  $_update_category: async (id: string, categoryData: { name?: string; description?: string }) => {
+    const url = `/journo/categories/${id}`
+    return GATEWAY_ENDPOINT.patch(url, categoryData)
+  },
+
   $_delete_category: async (id: string) => {
     const url = `/journo/categories/${id}`
     return GATEWAY_ENDPOINT.delete(url)

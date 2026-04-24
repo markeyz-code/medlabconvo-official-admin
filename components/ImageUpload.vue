@@ -9,14 +9,14 @@
         alt="Uploaded"
         class="w-full h-full object-cover"
       />
-      <!-- hover overlay: replace / remove -->
-      <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+      <!-- action buttons -->
+      <div class="absolute top-2 right-2 flex items-center gap-2">
         <button type="button" @click="triggerUpload"
-          class="p-1.5 bg-white rounded-full text-slate-700 hover:bg-slate-100 transition-colors">
+          class="p-1.5 bg-white shadow-md rounded-full text-slate-700 hover:bg-slate-100 transition-colors">
           <ImageIcon class="w-4 h-4" />
         </button>
         <button type="button" @click="removeImage(0)"
-          class="p-1.5 bg-white rounded-full text-red-500 hover:bg-red-50 transition-colors">
+          class="p-1.5 bg-red-600 shadow-md rounded-full text-white hover:bg-red-700 transition-colors">
           <X class="w-4 h-4" />
         </button>
       </div>
@@ -52,7 +52,7 @@
         </div>
         <button @click="removeImage(index)" type="button"
           class="absolute -top-2 -right-2 p-1.5 bg-red-600 text-white rounded-full hover:bg-red-700
-                 opacity-0 group-hover/item:opacity-100 scale-90 group-hover/item:scale-100 transition-all">
+                 scale-100 transition-all shadow-md">
           <X class="w-3 h-3" />
         </button>
       </div>

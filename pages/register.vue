@@ -33,7 +33,7 @@
           <div class="mb-10">
             <div class="inline-flex items-center space-x-2 px-3 py-1 bg-[#3BAB22]/10 rounded-full mb-4">
               <div class="w-1.5 h-1.5 rounded-full bg-[#3BAB22]"></div>
-              <span class="text-[10px] font-black text-[#3BAB22]  tracking-widest">Team Invitation</span>
+              <span class="text-sm font-black text-[#3BAB22]  tracking-widest">Team Invitation</span>
             </div>
             <h2 class="text-2xl font-black text-slate-900 mb-3 tracking-tight">Create your account</h2>
             <p class="text-slate-500 font-medium text-lg leading-relaxed antialiased">

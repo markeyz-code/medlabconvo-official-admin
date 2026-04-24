@@ -69,7 +69,7 @@
             <p class="text-sm font-bold text-slate-400 mb-2">New this month</p>
             <p class="text-4xl font-bold text-blue-600 tracking-tighter">{{ thisMonthSubscriptions }}</p>
           </div>
-          <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500 border border-blue-100">
+          <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-500 border border-blue-100">
             <Icon name="lucide:bar-chart-3" class="w-8 h-8" />
           </div>
         </div>
@@ -91,6 +91,7 @@
               <th class="px-10 py-6 border-b border-slate-100">Email address</th>
               <th class="px-10 py-6 border-b border-slate-100">Status</th>
               <th class="px-10 py-6 border-b border-slate-100">Joined date</th>
+              <th class="px-10 py-6 border-b border-slate-100">Subscribed To</th>
               <th class="px-10 py-6 border-b border-slate-100">Source</th>
               <th class="px-10 py-6 text-right border-b border-slate-100">Actions</th>
             </tr>
@@ -110,6 +111,14 @@
               </td>
               <td class="px-10 py-8 whitespace-nowrap text-slate-500 font-medium font-sans">
                 {{ formatDate(subscription.createdAt) }}
+              </td>
+              <td class="px-10 py-8 whitespace-nowrap">
+                <div class="flex flex-wrap gap-2" v-if="subscription.subscribedTo?.length">
+                  <span v-for="item in subscription.subscribedTo" :key="item" class="px-2 py-1 bg-cyan-50 text-cyan-700 border border-cyan-100 rounded-md text-xs font-bold">
+                    {{ item }}
+                  </span>
+                </div>
+                <span v-else class="text-slate-400 text-sm font-medium">All</span>
               </td>
               <td class="px-10 py-8 whitespace-nowrap">
                  <span class="px-3 py-1.5 bg-slate-50 text-slate-500 border border-slate-100 rounded-lg text-sm font-bold">
@@ -149,6 +158,25 @@
         <p class="text-slate-400 text-sm font-medium max-w-[280px] mx-auto leading-relaxed">No subscriber identities found in the database.</p>
       </div>
     </div>
+
+    <!-- Unsubscribe Confirmation Modal -->
+    <ConfirmModal
+      v-model="showUnsubscribeModal"
+      title="Unsubscribe User"
+      :message="`Are you sure you want to unsubscribe ${emailToUnsubscribe}? They will no longer receive automated notifications.`"
+      confirmText="Yes, Unsubscribe"
+      confirmClass="bg-amber-600 hover:bg-amber-700"
+      @confirm="executeUnsubscribe"
+    />
+
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete Record"
+      message="Are you sure you want to delete this subscription record? This action cannot be undone."
+      confirmText="Yes, Delete Record"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -160,6 +188,7 @@ import { useSoftDeleteSubscription } from '@/composables/modules/subscriptions/u
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Icon from '@/components/Icon.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // Composables
 const { subscriptions, loading, getSubscriptions } = useGetSubscriptions()
@@ -175,6 +204,12 @@ const statusOptions = [
   { label: 'Active', value: 'active' },
   { label: 'Unsubscribed', value: 'unsubscribed' }
 ]
+
+// Modal States
+const showUnsubscribeModal = ref(false)
+const emailToUnsubscribe = ref('')
+const showDeleteModal = ref(false)
+const idToDelete = ref('')
 
 // Hooks
 onMounted(() => { getSubscriptions() })
@@ -207,35 +242,48 @@ const thisMonthSubscriptions = computed(() => {
 // Methods
 const refreshSubscriptions = () => { getSubscriptions() }
 
-const unsubscribeUser = async (email: string) => {
-  if (confirm(`Are you sure you want to unsubscribe ${email}?`)) {
-    try {
-      await unsubscribe(email)
-      await getSubscriptions()
-    } catch (error) {
-      console.error('Unsubscribe failed:', error)
-    }
+const unsubscribeUser = (email: string) => {
+  emailToUnsubscribe.value = email
+  showUnsubscribeModal.value = true
+}
+
+const executeUnsubscribe = async () => {
+  try {
+    await unsubscribe(emailToUnsubscribe.value)
+    await getSubscriptions()
+  } catch (error) {
+    console.error('Unsubscribe failed:', error)
+  } finally {
+    showUnsubscribeModal.value = false
+    emailToUnsubscribe.value = ''
   }
 }
 
-const deleteSubscription = async (subscriptionId: string) => {
-  if (confirm('Are you sure you want to delete this subscription record?')) {
-    try {
-      await softDeleteSubscription(subscriptionId)
-      await getSubscriptions()
-    } catch (error) {
-      console.error('Deletion failed:', error)
-    }
+const deleteSubscription = (subscriptionId: string) => {
+  idToDelete.value = subscriptionId
+  showDeleteModal.value = true
+}
+
+const executeDelete = async () => {
+  try {
+    await softDeleteSubscription(idToDelete.value)
+    await getSubscriptions()
+  } catch (error) {
+    console.error('Deletion failed:', error)
+  } finally {
+    showDeleteModal.value = false
+    idToDelete.value = ''
   }
 }
 
 const exportSubscriptions = () => {
   const csvContent = [
-    ['Email', 'Status', 'Subscribed Date', 'Source'],
+    ['Email', 'Status', 'Subscribed Date', 'Subscribed To', 'Source'],
     ...(filteredSubscriptions.value || []).map(sub => [
       sub.email,
       sub.isActive ? 'Active' : 'Unsubscribed',
       formatDate(sub.createdAt || ''),
+      (sub.subscribedTo || []).join('; '),
       sub.source || 'Website'
     ])
   ].map(row => row.join(',')).join('\n')

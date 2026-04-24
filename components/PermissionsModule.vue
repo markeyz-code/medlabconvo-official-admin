@@ -49,11 +49,11 @@
               </td>
               <td class="px-10 py-8">
                 <div class="inline-flex items-center px-3 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100">
-                  <span class="text-[10px] font-bold">{{ perm.resource }}</span>
+                  <span class="text-sm font-bold">{{ perm.resource }}</span>
                 </div>
               </td>
               <td class="px-10 py-8">
-                <span :class="['px-3 py-1 text-[10px] font-bold rounded-lg ring-1 ring-inset', getActionBadgeStyle(perm.action)]">
+                <span :class="['px-3 py-1 text-sm font-bold rounded-lg ring-1 ring-inset', getActionBadgeStyle(perm.action)]">
                   {{ perm.action }}
                 </span>
               </td>
@@ -114,7 +114,7 @@
               readonly
             />
           </div>
-          <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400 ml-1">
+          <div class="flex items-center gap-2 text-sm font-bold text-slate-400 ml-1">
             <Icon name="lucide:info" class="w-4 h-4" />
             This identifier is automatically created from your resource and action.
           </div>

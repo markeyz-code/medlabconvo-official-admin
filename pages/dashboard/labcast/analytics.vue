@@ -64,7 +64,7 @@
                 <div class="flex items-center space-x-2">
                   <div class="w-32 bg-gray-200 rounded-full h-2">
                     <div
-                      class="bg-blue-600 h-2 rounded-full"
+                      class="bg-primary h-2 rounded-full"
                       :style="{ width: `${(season.episodeCount / maxEpisodesInSeason) * 100}%` }"
                     ></div>
                   </div>

@@ -3,7 +3,7 @@
     <!-- Breadcrumbs & Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
       <div class="space-y-2">
-        <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+        <div class="flex items-center gap-2 text-sm font-black uppercase tracking-widest text-slate-400">
            <NuxtLink to="/dashboard/leadership" class="hover:text-[#033958] transition-colors">Team</NuxtLink>
            <Icon name="lucide:chevron-right" class="w-3 h-3" />
            <span class="text-slate-900">New Member</span>
@@ -28,7 +28,7 @@
       <!-- Sidebar: Preview -->
       <div class="xl:col-span-1 space-y-8">
         <div class="bg-white rounded-[3rem] border border-slate-100 p-10 shadow-xl space-y-8 sticky top-10">
-           <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Preview</label>
+           <label class="text-sm font-black uppercase tracking-widest text-slate-400 block px-1">Preview</label>
            
            <div class="relative aspect-square rounded-[3.5rem] bg-slate-50 border-4 border-dashed border-slate-100 overflow-hidden group">
               <img v-if="form.image" :src="form.image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -82,7 +82,7 @@
            </div>
            
            <div class="space-y-4">
-              <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Biography</label>
+              <label class="text-sm font-black uppercase tracking-widest text-slate-400 px-1">Biography</label>
               <AnimatedInput v-model="form.bio" id="bio" label="Write a short bio for this team member..." type="textarea" :rows="8" required />
            </div>
         </section>
@@ -94,7 +94,7 @@
                 <div class="w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center font-black ">02</div>
                 <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Achievements</h2>
               </div>
-              <button @click="addAchievement" class="text-[10px] font-black uppercase tracking-[0.2em] text-[#033958] hover:text-black">Add Achievement</button>
+              <button @click="addAchievement" class="text-sm font-black uppercase tracking-[0.2em] text-[#033958] hover:text-black">Add Achievement</button>
            </div>
 
            <div class="space-y-6">
@@ -108,7 +108,7 @@
               </div>
               <div v-if="!form.achievements.length" class="py-20 border-2 border-dashed border-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-200">
                  <Icon name="lucide:sparkles" class="w-12 h-12 mb-4" />
-                 <p class="text-[10px] font-black uppercase tracking-widest">No achievements added yet.</p>
+                 <p class="text-sm font-black uppercase tracking-widest">No achievements added yet.</p>
               </div>
            </div>
         </section>
@@ -120,7 +120,7 @@
                 <div class="w-10 h-10 bg-blue-500 text-white rounded-xl flex items-center justify-center font-black ">03</div>
                 <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Social Profiles</h2>
               </div>
-              <button @click="addProfile" class="text-[10px] font-black uppercase tracking-[0.2em] text-[#033958] hover:text-black">Add Profile</button>
+              <button @click="addProfile" class="text-sm font-black uppercase tracking-[0.2em] text-[#033958] hover:text-black">Add Profile</button>
            </div>
 
            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -143,7 +143,7 @@
               </div>
               <div v-if="!form.profiles.length" class="md:col-span-2 py-20 border-2 border-dashed border-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-200">
                  <Icon name="lucide:globe" class="w-12 h-12 mb-4" />
-                 <p class="text-[10px] font-black uppercase tracking-widest">No social profiles added yet.</p>
+                 <p class="text-sm font-black uppercase tracking-widest">No social profiles added yet.</p>
               </div>
            </div>
         </section>

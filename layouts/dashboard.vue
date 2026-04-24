@@ -69,7 +69,47 @@
               <span class="text-sm font-medium text-slate-400 tracking-wider mt-3 block">Security & Access</span>
             </div>
 
-            <!-- Nav Link -->
+            <!-- Nav Link with Children -->
+            <div v-else-if="item.children" class="space-y-1">
+              <button
+                @click="toggleMenu(item.name)"
+                :class="[
+                  'w-full group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 relative text-slate-500 hover:bg-slate-50 hover:text-slate-900',
+                  item.children.some(child => $route.path === child.path) ? 'bg-slate-50 text-[#033958]' : ''
+                ]"
+              >
+                <div class="flex items-center">
+                  <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 text-slate-400 group-hover:text-slate-900', item.children.some(child => $route.path === child.path) ? 'text-[#033958]' : '']" />
+                  <span class="ml-4 font-medium text-sm tracking-tight">{{ item.name }}</span>
+                </div>
+                <Icon 
+                  name="lucide:chevron-down" 
+                  :class="['w-4 h-4 transition-transform duration-300', expandedMenus.includes(item.name) ? 'rotate-180' : '']"
+                />
+              </button>
+              
+              <div 
+                v-show="expandedMenus.includes(item.name)"
+                class="pl-12 pr-4 py-1 space-y-1"
+              >
+                <NuxtLink
+                  v-for="child in item.children"
+                  :key="child.path"
+                  :to="child.path"
+                  :class="[
+                    'block px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300',
+                    $route.path === child.path
+                      ? 'bg-[#033958] text-white'
+                      : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                  ]"
+                  @click="isMobile && closeSidebar()"
+                >
+                  {{ child.name }}
+                </NuxtLink>
+              </div>
+            </div>
+
+            <!-- Standard Nav Link -->
             <NuxtLink
               v-else
               :to="item.path"
@@ -121,14 +161,14 @@
               <Icon name="lucide:menu" class="w-6 h-6" />
             </button>
             
-            <div>
+            <!-- <div>
               <h1 class="text-xl font-medium text-slate-900 leading-tight">{{ currentPageTitle }}</h1>
               <div class="flex items-center text-sm text-slate-500 mt-0.5 font-medium ">
                 <span>Admin</span>
                 <Icon name="lucide:chevron-right" class="w-3 h-3 mx-2 opacity-50" />
                 <span class="text-blue-600">{{ currentPageTitle }}</span>
               </div>
-            </div>
+            </div> -->
           </div>
           
           <div class="flex items-center space-x-4">
@@ -260,6 +300,15 @@ const isMobile = ref(false)
 const sidebarOpen = ref(true)
 const globalLoading = ref(false)
 const showLogoutModal = ref(false)
+const expandedMenus = ref<string[]>([])
+
+const toggleMenu = (name: string) => {
+  if (expandedMenus.value.includes(name)) {
+    expandedMenus.value = expandedMenus.value.filter(n => n !== name)
+  } else {
+    expandedMenus.value.push(name)
+  }
+}
 
 // Navigation items
 const { hasPermission } = useUser()
@@ -271,7 +320,16 @@ const RAW_NAVIGATION_ITEMS = [
   { name: 'Enquiries', path: '/dashboard/enquiries', icon: 'lucide:messages-square', badge: null, permission: 'enquiries:read' },
   { name: 'Subscriptions', path: '/dashboard/subscriptions', icon: 'lucide:mail', badge: null, permission: 'subscriptions:read' },
   { name: 'Campaigns', path: '/dashboard/campaigns', icon: 'lucide:send', badge: null, permission: 'campaigns:read' },
-  { name: 'Journo', path: '/dashboard/publications', icon: 'lucide:file-text', badge: null, permission: 'publications:read' },
+  { 
+    name: 'Journo', 
+    icon: 'lucide:file-text', 
+    badge: null, 
+    permission: 'publications:read',
+    children: [
+      { name: 'All Journos', path: '/dashboard/publications' },
+      { name: 'Categories', path: '/dashboard/publications/categories' }
+    ]
+  },
   { name: 'Convo Stack', path: '/dashboard/convostack', icon: 'lucide:book-open', badge: null, permission: 'convostack:read' },
   { name: 'LabCast', path: '/dashboard/labcast', icon: 'lucide:mic', badge: null, permission: 'labcast:read' },
   { name: 'Inventory', path: '/dashboard/products', icon: 'lucide:archive', badge: null, permission: 'products:read' },
@@ -366,6 +424,15 @@ provide('globalLoading', globalLoading)
 onMounted(async () => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
+  
+  // Auto-expand menus with active children
+  navigationItems.value.forEach(item => {
+    if (item.children && item.children.some(child => route.path === child.path)) {
+      if (!expandedMenus.value.includes(item.name)) {
+        expandedMenus.value.push(item.name)
+      }
+    }
+  })
   
   // Sync permissions if super_admin
   if (user.value?.role === 'super_admin') {

@@ -12,21 +12,24 @@
             class="w-full sm:w-80 pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white "
           />
         </div>
-        <select
-          v-model="statusFilter"
-          class="w-full sm:w-auto px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white "
-        >
-          <option value="">All Status</option>
-          <option value="draft">Draft</option>
-          <option value="under-review">Under Review</option>
-          <option value="approved">Approved</option>
-          <option value="published">Published</option>
-          <option value="rejected">Rejected</option>
-        </select>
+        <div class="w-full sm:w-48">
+          <SelectInput
+            v-model="statusFilter"
+            label="Status"
+            :options="[
+              { label: 'All Status', value: '' },
+              { label: 'Draft', value: 'draft' },
+              { label: 'Under Review', value: 'under-review' },
+              { label: 'Approved', value: 'approved' },
+              { label: 'Published', value: 'published' },
+              { label: 'Rejected', value: 'rejected' }
+            ]"
+          />
+        </div>
       </div>
       <button
         @click="openCreateModal"
-        class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-200 flex items-center justify-center space-x-2  hover: transform hover:-translate-y-0.5"
+        class="w-full sm:w-auto px-6 py-2.5 bg-primary text-white rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-200 flex items-center justify-center space-x-2  hover: transform hover:-translate-y-0.5"
       >
         <Plus class="w-5 h-5" />
         <span>New Publication</span>
@@ -75,7 +78,7 @@
           <!-- Drag Handle -->
           <div 
             v-if="!searchQuery && !statusFilter" 
-            class="absolute left-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            class="absolute left-2 top-1/2 transform -translate-y-1/2 transition-opacity duration-200"
           >
             <div class="flex flex-col space-y-1 cursor-move">
               <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
@@ -98,18 +101,18 @@
             <div class="flex-1 space-y-4">
               <!-- Header -->
               <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                <h3 class="text-xl font-bold text-slate-900 group-hover:text-amber-700 transition-colors duration-200">
+                <h3 class="text-base font-semibold text-slate-900 group-hover:text-amber-700 transition-colors duration-200">
                   {{ publication.title }}
                 </h3>
                 <span
-                  :class="['px-3 py-1 text-sm font-semibold rounded-full w-fit', getStatusColor(publication.status)]"
+                  :class="['px-3 py-1 text-xs font-semibold rounded-full w-fit', getStatusColor(publication.status)]"
                 >
                   {{ formatStatus(publication.status) }}
                 </span>
               </div>
               
               <!-- Abstract -->
-              <p class="text-slate-600 leading-relaxed line-clamp-3">
+              <p class="text-slate-600 text-sm leading-relaxed line-clamp-3">
                 {{ publication.abstract }}
               </p>
               
@@ -255,7 +258,7 @@
       <button
         v-if="!searchQuery && !statusFilter"
         @click="openCreateModal"
-        class="px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-200 inline-flex items-center space-x-2"
+        class="px-6 py-3 bg-primary text-white rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-200 inline-flex items-center space-x-2"
       >
         <Plus class="w-5 h-5" />
         <span>Create Publication</span>

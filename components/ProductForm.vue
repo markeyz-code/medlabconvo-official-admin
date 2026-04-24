@@ -22,7 +22,7 @@
           <div
             @click="currentStep = index"
             :class="[
-              'w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-bold transition-all duration-500 cursor-pointer',
+              'w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 cursor-pointer',
               currentStep === index 
                 ? 'bg-[#033958] text-white ring-4 ring-[#033958]/10' 
                 : currentStep > index 
@@ -35,7 +35,7 @@
           </div>
           <span
             :class="[
-              'mt-3 text-[10px] font-bold transition-colors duration-500 text-center px-1',
+              'mt-3 text-sm font-bold transition-colors duration-500 text-center px-1',
               currentStep >= index ? 'text-[#033958]' : 'text-slate-300'
             ]"
           >
@@ -123,7 +123,7 @@
               />
               <div v-if="form.isDigital" class="w-2.5 h-2.5 bg-[#033958] rounded-sm"></div>
             </div>
-            <span class="ml-3 text-[10px] font-bold text-slate-700">Digital asset</span>
+            <span class="ml-3 text-sm font-bold text-slate-700">Digital asset</span>
           </label>
 
           <SelectInput
@@ -148,7 +148,7 @@
 
         <!-- Book-specific fields -->
         <div v-if="form.category === 'books' || form.category === 'ebooks'" class="space-y-4">
-          <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Bibliographic details</h4>
+          <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Bibliographic details</h4>
           <div class="space-y-4">
             <AnimatedInput
               v-model="form.isbn"
@@ -194,7 +194,7 @@
 
         <!-- Course-specific fields -->
         <div v-if="form.category === 'courses'" class="space-y-4">
-          <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Academy details</h4>
+          <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Academy details</h4>
           <div class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
               <AnimatedInput
@@ -224,7 +224,7 @@
 
         <!-- Dimensions (for physical products) -->
         <div v-if="!form.isDigital" class="pt-6 border-t border-slate-50">
-          <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Logistics / dimensions (cm)</h4>
+          <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Logistics / dimensions (cm)</h4>
           <div class="grid grid-cols-3 gap-0">
             <AnimatedInput v-model="form.dimensions.length" id="dimLength" label="Length" type="number" position="middle" />
             <AnimatedInput v-model="form.dimensions.width" id="dimWidth" label="Width" type="number" position="middle" />
@@ -242,7 +242,7 @@
 
         <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Hero asset (cover)</h4>
+            <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Hero asset (cover)</h4>
             <ImageUpload
               v-model="form.imageUrl"
               :multiple="false"
@@ -251,7 +251,7 @@
             />
           </div>
           <div>
-            <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Asset portfolio</h4>
+            <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Asset portfolio</h4>
             <ImageUpload
               v-model="form.imageGallery"
               :multiple="true"
@@ -263,7 +263,7 @@
 
         <!-- Digital Delivery -->
         <section v-if="form.isDigital" class="pt-6 border-t border-slate-50">
-          <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Fulfillment linkage</h4>
+          <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Fulfillment linkage</h4>
           <div class="space-y-4">
             <AnimatedInput v-model="form.downloadUrl" id="dlUrl" label="Secured Download Gateway (URL)" type="url" position="top" />
             <AnimatedInput v-model="form.previewUrl" id="prevUrl" label="Public Asset Preview (URL)" type="url" position="bottom" />
@@ -274,7 +274,7 @@
         <section class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-slate-50">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <h4 class="text-[10px] font-bold text-slate-400 px-1">Core features</h4>
+              <h4 class="text-sm font-bold text-slate-400 px-1">Core features</h4>
               <button @click="addFeature" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add</button>
             </div>
             <div class="space-y-3">
@@ -290,7 +290,7 @@
           </div>
 
           <div>
-            <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Search keywords (tags)</h4>
+            <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Search keywords (tags)</h4>
             <AnimatedInput
               v-model="tagsInput"
               id="productTags"
@@ -299,7 +299,7 @@
               @input="updateTags"
             />
             <div v-if="form.tags.length" class="flex flex-wrap gap-2 mt-4">
-              <span v-for="tag in form.tags" :key="tag" class="px-3 py-1 bg-slate-50 text-slate-600 text-[10px] font-bold rounded-full border border-slate-100 flex items-center">
+              <span v-for="tag in form.tags" :key="tag" class="px-3 py-1 bg-slate-50 text-slate-600 text-sm font-bold rounded-full border border-slate-100 flex items-center">
                 {{ tag }}
                 <button @click="removeTag(tag)" class="ml-2 hover:text-red-500 transition-colors">
                   <Icon name="lucide:x" class="w-3 h-3" />

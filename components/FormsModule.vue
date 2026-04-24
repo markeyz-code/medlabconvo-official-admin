@@ -203,6 +203,15 @@
         @close="closeSubmissionsModal"
       />
     </Modal>
+
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete Form"
+      message="Are you sure you want to delete this form? This action cannot be undone."
+      confirmText="Yes, Delete Form"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -216,6 +225,7 @@ import { useCustomToast } from "@/composables/core/useCustomToast"
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import { Plus } from 'lucide-vue-next'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // Composables
 const { forms, loading, getForms } = useGetForms()
@@ -233,6 +243,8 @@ const mode = ref<'create' | 'edit'>('create')
 const selectedForm = ref<any>(null)
 const copiedFormId = ref<string | null>(null)
 const togglingFormId = ref<string | null>(null)
+const showDeleteModal = ref(false)
+const idToDelete = ref('')
 
 // Load forms on mount
 onMounted(() => {
@@ -318,14 +330,20 @@ const handleSaveForm = async (formData: any) => {
   }
 }
 
-const deleteForm = async (formId: string) => {
-  if (confirm('Are you sure you want to delete this form?')) {
-    try {
-      await softDeleteForm(formId)
-      await getForms()
-    } catch (error) {
-      console.error('Error deleting form:', error)
-    }
+const deleteForm = (formId: string) => {
+  idToDelete.value = formId
+  showDeleteModal.value = true
+}
+
+const executeDelete = async () => {
+  try {
+    await softDeleteForm(idToDelete.value)
+    await getForms()
+  } catch (error) {
+    console.error('Error deleting form:', error)
+  } finally {
+    showDeleteModal.value = false
+    idToDelete.value = ''
   }
 }
 

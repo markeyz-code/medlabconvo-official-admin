@@ -2,7 +2,7 @@
   <form @submit.prevent="handleSubmit" class="space-y-8 animate-in slide-in-from-right duration-500">
     <div class="space-y-6">
       <section>
-        <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Meta information</h4>
+        <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Meta information</h4>
         <div class="space-y-4">
           <AnimatedInput
             v-model="form.title"
@@ -25,7 +25,7 @@
       </section>
 
       <section>
-        <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Authorship & venue</h4>
+        <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Authorship & venue</h4>
         <div class="space-y-4">
           <AnimatedInput
             v-model="form.authors"
@@ -71,7 +71,7 @@
       </section>
 
       <section>
-        <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Access & identifiers</h4>
+        <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Access & identifiers</h4>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <AnimatedInput
             v-model="form.pubLink"
@@ -89,7 +89,7 @@
       </section>
 
       <section>
-        <h4 class="text-[10px] font-bold text-slate-400 mb-4 px-1">Visual documentation</h4>
+        <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Visual documentation</h4>
         <div class="space-y-4">
           <div
             @click="triggerImageUpload"
@@ -116,13 +116,13 @@
               </div>
               <div>
                 <p class="text-sm font-bold text-slate-700">Drop supporting imagery here</p>
-                <p class="text-[10px] font-bold text-slate-400 mt-1">PNG, JPEG, WEBP UP TO 10MB</p>
+                <p class="text-sm font-bold text-slate-400 mt-1">PNG, JPEG, WEBP UP TO 10MB</p>
               </div>
             </div>
 
             <div v-else class="flex flex-col items-center space-y-4">
               <div class="w-12 h-12 rounded-full border-2 border-slate-100 border-t-[#033958] animate-spin"></div>
-              <p class="text-[10px] font-bold text-[#033958]">Loading assets...</p>
+              <p class="text-sm font-bold text-[#033958]">Loading assets...</p>
             </div>
           </div>
 
@@ -140,9 +140,9 @@
               <button
                 @click="removeImage(index)"
                 type="button"
-                class="absolute inset-0 bg-red-600/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm"
+                class="absolute top-2 right-2 bg-red-600/80 text-white flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-300 backdrop-blur-sm hover:bg-red-600 shadow-md"
               >
-                <Icon name="lucide:trash-2" class="w-6 h-6" />
+                <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
             </div>
           </div>

@@ -66,19 +66,19 @@
                   </div>
                   <div class="ml-6">
                     <div class="text-base font-bold text-slate-900 tracking-tight">{{ user.firstName }} {{ user.lastName }}</div>
-                    <div class="text-[10px] font-bold text-slate-400 mt-1 lowercase">{{ user.email }}</div>
+                    <div class="text-sm font-bold text-slate-400 mt-1 lowercase">{{ user.email }}</div>
                   </div>
                 </div>
               </td>
               <td class="px-10 py-8 whitespace-nowrap uppercase">
-                <span :class="['px-3 py-1.5 text-[10px] font-bold rounded-lg ring-1 ring-inset', getRoleBadgeStyle(user.role)]">
+                <span :class="['px-3 py-1.5 text-sm font-bold rounded-lg ring-1 ring-inset', getRoleBadgeStyle(user.role)]">
                   {{ user.role?.replace('_', ' ') || 'standard' }}
                 </span>
               </td>
               <td class="px-10 py-8 whitespace-nowrap uppercase">
                 <div class="flex items-center space-x-3">
                   <div :class="['w-2 h-2 rounded-full', user.isActive ? 'bg-emerald-500' : 'bg-slate-300']"></div>
-                  <span :class="['text-[10px] font-bold', user.isActive ? 'text-slate-700' : 'text-slate-400']">
+                  <span :class="['text-sm font-bold', user.isActive ? 'text-slate-700' : 'text-slate-400']">
                     {{ user.isActive ? 'Active' : 'Inactive' }}
                   </span>
                 </div>
@@ -152,7 +152,7 @@
 
         <div v-if="invitationLink" class="bg-emerald-50 p-8 rounded-[2rem] border border-emerald-100 flex items-center justify-between gap-6 animate-in fade-in zoom-in-95">
           <div class="flex-1 min-w-0">
-            <p class="text-emerald-800 text-[10px] font-bold uppercase tracking-widest mb-3">Invitation link generated</p>
+            <p class="text-emerald-800 text-sm font-bold uppercase tracking-widest mb-3">Invitation link generated</p>
             <p class="text-emerald-700 text-sm truncate font-mono bg-white/50 px-4 py-2 rounded-lg border border-emerald-100">{{ invitationLink }}</p>
           </div>
           <button 
@@ -191,6 +191,15 @@
         @cancel="closeModal"
       />
     </SlideOver>
+
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete User"
+      message="Are you sure you want to delete this user? This action will restrict their access to the administrative panel immediately."
+      confirmText="Yes, Delete User"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -209,6 +218,7 @@ import SlideOver from '@/components/SlideOver.vue'
 import Modal from '@/components/Modal.vue'
 import Icon from '@/components/Icon.vue'
 import UserForm from '@/components/userForm.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // State
 const searchQuery = ref('')
@@ -217,6 +227,8 @@ const showModal = ref(false)
 const showInviteModal = ref(false)
 const selectedUser = ref(null)
 const copied = ref(false)
+const showDeleteModal = ref(false)
+const userIdToDelete = ref('')
 
 const inviteForm = ref({
   email: '',
@@ -281,10 +293,21 @@ const handleSaveUser = async (userData: any) => {
   } catch (err) { console.error('Ledger update failed:', err) }
 }
 
-const deleteUser = async (userId: string) => {
-  if (confirm('Are you sure you want to delete this user?')) {
-    try { await softDeleteUser(userId); await getUsers() }
-    catch (err) { console.error('Deletion protocol failed:', err) }
+const deleteUser = (userId: string) => {
+  userIdToDelete.value = userId
+  showDeleteModal.value = true
+}
+
+const executeDelete = async () => {
+  try { 
+    await softDeleteUser(userIdToDelete.value)
+    await getUsers() 
+    showToast({ title: "Success", message: "User has been deleted.", toastType: "success" })
+  }
+  catch (err) { console.error('Deletion protocol failed:', err) }
+  finally {
+    showDeleteModal.value = false
+    userIdToDelete.value = ''
   }
 }
 

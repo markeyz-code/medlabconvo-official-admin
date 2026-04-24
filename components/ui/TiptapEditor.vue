@@ -40,7 +40,7 @@
       <button 
         type="button"
         @click="showPreview = !showPreview"
-        class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-[#27628C] hover:bg-blue-50 transition-colors shadow-sm"
+        class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-black uppercase tracking-widest text-[#27628C] hover:bg-blue-50 transition-colors shadow-sm"
       >
         {{ showPreview ? 'Edit Content' : 'Live Preview' }}
       </button>
@@ -61,7 +61,7 @@
           </div>
           <div class="p-12 prose max-w-none text-slate-700" v-html="modelValue"></div>
           <div class="bg-slate-50 p-8 text-center">
-             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sent from MedLabConvo Admin Panel</p>
+             <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Sent from MedLabConvo Admin Panel</p>
           </div>
         </div>
       </div>
@@ -69,6 +69,15 @@
 
     <!-- Hidden File Input for images -->
     <input type="file" ref="fileInput" class="hidden" accept="image/*" @change="handleFileUpload" />
+
+    <!-- Custom Prompt for Links -->
+    <PromptModal
+      v-model="showLinkPrompt"
+      title="Insert Link"
+      message="Please enter the URL you want to link to."
+      placeholder="https://example.com"
+      @confirm="handleLinkConfirm"
+    />
   </div>
 </template>
 
@@ -80,6 +89,7 @@ import Image from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
 import ToolbarButton from './ToolbarButton.vue'
+import PromptModal from '@/components/PromptModal.vue'
 import { useSingleUploadFile } from '@/composables/core/useSingleUpload'
 import { ref, watch } from 'vue'
 
@@ -91,6 +101,7 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue'])
 
 const showPreview = ref(false)
+const showLinkPrompt = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
 const {监测UploadFile: uploadFile_custom, loading: uploading_legacy } = { 监测UploadFile: useSingleUploadFile().singleUploadFile, loading: useSingleUploadFile().loading } // Just locally rename for brevity or use directly
 const { singleUploadFile, loading: uploading } = useSingleUploadFile()
@@ -117,10 +128,13 @@ watch(() => props.modelValue, (val) => {
 })
 
 const setLink = () => {
-  const url = window.prompt('Enter URL')
+  showLinkPrompt.value = true
+}
+
+const handleLinkConfirm = (url: string) => {
   if (url) {
     editor.value?.chain().focus().setLink({ href: url }).run()
-  } else if (url === '') {
+  } else {
     editor.value?.chain().focus().unsetLink().run()
   }
 }

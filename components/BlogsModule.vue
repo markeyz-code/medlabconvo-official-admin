@@ -50,7 +50,7 @@
           <!-- Status Badge Overlay -->
           <div class="absolute top-4 left-4">
             <span :class="[
-              'px-3 py-1.5 text-[10px] font-bold rounded-full backdrop-blur-md',
+              'px-3 py-1.5 text-sm font-bold rounded-full backdrop-blur-md',
               blog.status === 'published' ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-200' : 'bg-amber-500/10 text-amber-700 border border-amber-200'
             ]">
               {{ blog.status }}
@@ -61,8 +61,8 @@
         <!-- Blog Content -->
         <div class="p-6">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-[10px] font-bold text-slate-400">{{ formatDate(blog.createdAt) }}</span>
-            <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <span class="text-sm font-bold text-slate-400">{{ formatDate(blog.createdAt) }}</span>
+            <div class="flex items-center space-x-1 transition-opacity duration-300">
               <button
                 @click="editBlog(blog)"
                 class="p-2 text-slate-400 hover:text-[#033958] hover:bg-slate-50 rounded-lg transition-all"
@@ -91,13 +91,13 @@
                 <Icon name="lucide:eye" class="w-4 h-4" />
                 <span class="text-sm font-bold">{{ blog.viewCount || 0 }}</span>
               </div>
-              <div v-if="blog.category" class="px-2 py-0.5 bg-slate-50 text-slate-400 text-[10px] font-bold rounded border border-slate-100">
+              <div v-if="blog.category" class="px-2 py-0.5 bg-slate-50 text-slate-400 text-sm font-bold rounded border border-slate-100">
                 {{ blog.category }}
               </div>
             </div>
             <button 
               @click="editBlog(blog)"
-              class="text-[#033958] text-[10px] font-bold hover:underline decoration-2 underline-offset-4"
+              class="text-[#033958] text-sm font-bold hover:underline decoration-2 underline-offset-4"
             >
               Edit
             </button>
@@ -136,6 +136,14 @@
         />
     </SlideOver>
 
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete Blog Post"
+      message="Are you sure you want to delete this blog post? This action cannot be undone."
+      confirmText="Yes, Delete Post"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -151,6 +159,7 @@ import BlogForm from '@/components/BlogForm.vue'
 import Icon from '@/components/Icon.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // Composables
 const { blogs, loading, getBlogs } = useGetBlogs()
@@ -164,6 +173,8 @@ const searchQuery = ref('')
 const statusFilter = ref('')
 const showModal = ref(false)
 const selectedBlog = ref<any>(null)
+const showDeleteModal = ref(false)
+const idToDelete = ref('')
 
 // Load blogs on mount
 onMounted(() => {
@@ -228,14 +239,20 @@ const publishBlog = async (blogId: string) => {
   }
 }
 
-const deleteBlog = async (blogId: string) => {
-  if (confirm('Are you sure you want to delete this blog?')) {
-    try {
-      await softDeleteBlog(blogId)
-      await getBlogs()
-    } catch (error) {
-      console.error('Error deleting blog:', error)
-    }
+const deleteBlog = (blogId: string) => {
+  idToDelete.value = blogId
+  showDeleteModal.value = true
+}
+
+const executeDelete = async () => {
+  try {
+    await softDeleteBlog(idToDelete.value)
+    await getBlogs()
+  } catch (error) {
+    console.error('Error deleting blog:', error)
+  } finally {
+    showDeleteModal.value = false
+    idToDelete.value = ''
   }
 }
 

@@ -17,10 +17,10 @@
 
       <div class="flex items-center space-x-1 bg-white/50 p-1 rounded-lg border border-slate-200/50 mr-1">
         <button type="button" @click="editor.chain().focus().toggleHeading({ level: 1 }).run()" :class="btnClass(editor.isActive('heading', { level: 1 }))" title="H1">
-          <span class="text-[10px] font-black">H1</span>
+          <span class="text-sm font-black">H1</span>
         </button>
         <button type="button" @click="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="btnClass(editor.isActive('heading', { level: 2 }))" title="H2">
-          <span class="text-[10px] font-black">H2</span>
+          <span class="text-sm font-black">H2</span>
         </button>
       </div>
 
@@ -29,7 +29,7 @@
           <Icon name="lucide:list" class="w-4 h-4" />
         </button>
         <button type="button" @click="editor.chain().focus().toggleOrderedList().run()" :class="btnClass(editor.isActive('orderedList'))" title="Numbered List">
-          <span class="text-[10px] font-black">1.</span>
+          <span class="text-sm font-black">1.</span>
         </button>
       </div>
 
@@ -54,6 +54,16 @@
 
     <!-- Editor Content -->
     <EditorContent :editor="editor" class="prose prose-sm max-w-none px-6 py-6 min-h-[250px] focus:outline-none" />
+
+    <!-- Custom Prompt for Links -->
+    <PromptModal
+      v-model="showLinkPrompt"
+      title="Insert Link"
+      message="Please enter the URL you want to link to."
+      placeholder="https://example.com"
+      :initialValue="previousUrl"
+      @confirm="handleLinkConfirm"
+    />
   </div>
 </template>
 
@@ -66,6 +76,8 @@ import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import TextAlign from '@tiptap/extension-text-align'
 import Placeholder from '@tiptap/extension-placeholder'
+import PromptModal from '@/components/PromptModal.vue'
+import { ref } from 'vue'
 
 interface Props {
   modelValue: string
@@ -79,6 +91,9 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
+
+const showLinkPrompt = ref(false)
+const previousUrl = ref('')
 
 const editor = useEditor({
   content: props.modelValue || '',
@@ -118,9 +133,11 @@ const btnClass = (active: boolean) => [
 ]
 
 const setLink = () => {
-  const previousUrl = editor.value?.getAttributes('link').href
-  const url = window.prompt('URL', previousUrl)
-  if (url === null) return
+  previousUrl.value = editor.value?.getAttributes('link').href || ''
+  showLinkPrompt.value = true
+}
+
+const handleLinkConfirm = (url: string) => {
   if (url === '') {
     editor.value?.chain().focus().extendMarkRange('link').unsetLink().run()
     return

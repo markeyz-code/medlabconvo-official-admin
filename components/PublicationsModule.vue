@@ -56,7 +56,7 @@
           <div class="flex-1 space-y-4">
             <div class="flex flex-wrap items-center gap-3">
               <span :class="[
-                'px-3 py-1.5 text-[10px] font-bold rounded-full border',
+                'px-3 py-1.5 text-sm font-bold rounded-full border',
                 publication.status === 'published' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
                 publication.status === 'approved' ? 'bg-blue-50 text-blue-600 border-blue-100' :
                 publication.status === 'pending_review' ? 'bg-amber-50 text-amber-600 border-amber-100' :
@@ -65,7 +65,7 @@
               ]">
                 {{ publication.status?.replace('_', ' ') }}
               </span>
-              <span class="text-[10px] font-bold text-slate-400">{{ publication.category || 'Scientific Paper' }}</span>
+              <span class="text-sm font-bold text-slate-400">{{ publication.category || 'Scientific Paper' }}</span>
             </div>
             
             <h3 class="text-xl font-bold text-slate-900 group-hover:text-[#033958] transition-colors duration-300 leading-tight tracking-tight">
@@ -109,7 +109,7 @@
             </div>
           </div>
           
-          <div v-if="hasPermission('publications:update')" class="flex lg:flex-col items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-slate-400 min-w-40 mr-4">
+          <div v-if="hasPermission('publications:update')" class="flex lg:flex-col items-center gap-1 transition-opacity duration-300 text-slate-400 min-w-40 mr-4">
             <div class="mb-2 w-full">
               <SelectInput
                 :modelValue="publication.status"
@@ -170,6 +170,15 @@
         @cancel="closeModal"
       />
     </SlideOver>
+
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete Publication"
+      message="Are you sure you want to delete this publication? This action cannot be undone."
+      confirmText="Yes, Delete Publication"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -191,6 +200,7 @@ import Icon from '@/components/Icon.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Modal from '@/components/Modal.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // Composables
 const { publications, loading, getPublications } = useGetPublications()
@@ -209,6 +219,8 @@ const searchQuery = ref('')
 const statusFilter = ref('')
 const showModal = ref(false)
 const selectedPublication = ref<any>(null)
+const showDeleteModal = ref(false)
+const idToDelete = ref('')
 
 const statusOptions = [
   { label: 'Draft', value: 'draft' },
@@ -336,14 +348,20 @@ const rejectPublication = async (publicationId: string) => {
   }
 }
 
-const deletePublication = async (publicationId: string) => {
-  if (confirm('Are you sure you want to delete this publication?')) {
-    try {
-      await softDeletePublication(publicationId)
-      await getPublications()
-    } catch (error) {
-      console.error('Error deleting publication:', error)
-    }
+const deletePublication = (publicationId: string) => {
+  idToDelete.value = publicationId
+  showDeleteModal.value = true
+}
+
+const executeDelete = async () => {
+  try {
+    await softDeletePublication(idToDelete.value)
+    await getPublications()
+  } catch (error) {
+    console.error('Error deleting publication:', error)
+  } finally {
+    showDeleteModal.value = false
+    idToDelete.value = ''
   }
 }
 

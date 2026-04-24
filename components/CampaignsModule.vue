@@ -28,13 +28,13 @@
       <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden relative shadow-sm">
         <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center">
           <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
-          <p class="text-[10px] font-black text-[#27628C] uppercase tracking-widest animate-pulse">Syncing Engine...</p>
+          <p class="text-sm font-black text-[#27628C] uppercase tracking-widest animate-pulse">Syncing Engine...</p>
         </div>
 
         <div class="overflow-x-auto">
           <table class="w-full text-left border-separate border-spacing-0">
             <thead>
-              <tr class="bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+              <tr class="bg-slate-50/50 text-sm font-black text-slate-400 uppercase tracking-[0.2em]">
                 <th class="px-10 py-6 border-b border-slate-100">Campaign Identity</th>
                 <th class="px-10 py-6 border-b border-slate-100">Recipient Audience</th>
                 <th class="px-10 py-6 border-b border-slate-100">Schedule Status</th>
@@ -47,7 +47,7 @@
                 <td class="px-10 py-8 whitespace-nowrap">
                   <div class="flex flex-col">
                     <span class="text-slate-900 font-black text-sm tracking-tight">{{ campaign.name }}</span>
-                    <span class="text-[10px] font-bold text-slate-400 mt-1 italic">{{ campaign.subject }}</span>
+                    <span class="text-sm font-bold text-slate-400 mt-1 italic">{{ campaign.subject }}</span>
                   </div>
                 </td>
                 <td class="px-10 py-8 whitespace-nowrap">
@@ -72,11 +72,11 @@
                   <button
                     v-if="campaign.status === 'DRAFT'"
                     @click="handleSendNow(campaign._id)"
-                    class="h-10 px-4 bg-blue-50 text-[#27628C] rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-[#27628C] hover:text-white transition-all active:scale-95"
+                    class="h-10 px-4 bg-blue-50 text-[#27628C] rounded-xl font-black text-sm uppercase tracking-widest hover:bg-[#27628C] hover:text-white transition-all active:scale-95"
                   >
                     Fire Trigger
                   </button>
-                  <span v-else class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Locked</span>
+                  <span v-else class="text-sm font-black text-slate-300 uppercase tracking-widest">Locked</span>
                 </td>
               </tr>
             </tbody>
@@ -103,6 +103,15 @@
       <CampaignBuilder @close="isBuilding = false" @success="handleSuccess" />
     </div>
 
+    <!-- Trigger Confirmation Modal -->
+    <ConfirmModal
+      v-model="showTriggerModal"
+      title="Initiate Campaign"
+      message="Are you sure you want to trigger immediate delivery? This identity will be processed by the mail engine instantly."
+      confirmText="Yes, Fire Trigger"
+      confirmClass="bg-blue-600 hover:bg-blue-700"
+      @confirm="executeSendNow"
+    />
   </div>
 </template>
 
@@ -111,9 +120,12 @@ import { ref, onMounted } from 'vue'
 import { useEmailCampaigns } from '@/composables/modules/emails/useEmailCampaigns'
 import CampaignBuilder from '@/components/CampaignBuilder.vue'
 import Icon from '@/components/Icon.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const { campaigns, loading, getCampaigns, sendCampaign } = useEmailCampaigns()
 const isBuilding = ref(false)
+const showTriggerModal = ref(false)
+const campaignIdToTrigger = ref('')
 
 const startBuilding = () => {
   isBuilding.value = true
@@ -128,11 +140,17 @@ onMounted(() => {
   getCampaigns()
 })
 
-const handleSendNow = async (id: string) => {
-  if (confirm('Trigger immediate delivery? This identity will be processed by the mail engine instantly.')) {
-    await sendCampaign(id)
-    await getCampaigns()
-  }
+const handleSendNow = (id: string) => {
+  campaignIdToTrigger.value = id
+  showTriggerModal.value = true
+}
+
+const executeSendNow = async () => {
+  if (!campaignIdToTrigger.value) return
+  await sendCampaign(campaignIdToTrigger.value)
+  showTriggerModal.value = false
+  campaignIdToTrigger.value = ''
+  await getCampaigns()
 }
 
 const formatDate = (date: string) => {

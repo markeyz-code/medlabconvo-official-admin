@@ -28,8 +28,8 @@
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-slate-50 border-b">
-              <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase">Category Name</th>
-              <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase text-right">Actions</th>
+              <th class="px-6 py-4 text-sm font-bold text-slate-400 uppercase">Category Name</th>
+              <th class="px-6 py-4 text-sm font-bold text-slate-400 uppercase text-right">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y">

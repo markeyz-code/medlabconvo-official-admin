@@ -14,32 +14,27 @@
       </div>
       
       <div>
-        <label class="block text-sm font-medium text-slate-700 mb-2">Status</label>
-        <select
+        <SelectInput
           v-model="form.isActive"
-          class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-        >
-          <option :value="true">Active</option>
-          <option :value="false">Inactive</option>
-        </select>
+          label="Status"
+          :options="[
+            { label: 'Active', value: true },
+            { label: 'Inactive', value: false }
+          ]"
+        />
       </div>
     </div>
 
     <!-- Program Selection -->
     <div>
-      <label class="block text-sm font-medium text-slate-700 mb-2">
-        Attach to Program (Optional)
-      </label>
       <div class="flex items-center space-x-3">
-        <select
-          v-model="form.programId"
-          class="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-        >
-          <option :value="null">Standalone Form (No Program)</option>
-          <option v-for="program in programs" :key="program._id" :value="program._id">
-            {{ program.title }}
-          </option>
-        </select>
+        <div class="flex-1">
+          <SelectInput
+            v-model="form.programId"
+            label="Attach to Program (Optional)"
+            :options="[{ label: 'Standalone Form (No Program)', value: '' }].concat(programs.map(p => ({ label: p.title, value: p._id })))"
+          />
+        </div>
         <button
           v-if="form.programId"
           @click="form.programId = null"
@@ -91,7 +86,7 @@
         <button
           @click="addField"
           type="button"
-          class="px-3 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors flex items-center space-x-2"
+          class="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 transition-colors flex items-center space-x-2"
         >
           <Icon name="lucide:plus" class="w-4 h-4" />
           <span>Add Field</span>
@@ -128,21 +123,21 @@
             </div>
             
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Type</label>
-              <select
+              <SelectInput
                 v-model="field.type"
-                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-              >
-                <option value="text">Text</option>
-                <option value="email">Email</option>
-                <option value="number">Phone</option>
-                <option value="textarea">Textarea</option>
-                <option value="select">Select</option>
-                <option value="radio">Radio</option>
-                <option value="checkbox">Checkbox</option>
-                <option value="date">Date</option>
-                <option value="file">File</option>
-              </select>
+                label="Type"
+                :options="[
+                  { label: 'Text', value: 'text' },
+                  { label: 'Email', value: 'email' },
+                  { label: 'Phone', value: 'number' },
+                  { label: 'Textarea', value: 'textarea' },
+                  { label: 'Select', value: 'select' },
+                  { label: 'Radio', value: 'radio' },
+                  { label: 'Checkbox', value: 'checkbox' },
+                  { label: 'Date', value: 'date' },
+                  { label: 'File', value: 'file' }
+                ]"
+              />
             </div>
           </div>
 

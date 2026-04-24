@@ -66,7 +66,7 @@
         
         <div class="space-y-4 mb-8">
           <div class="flex items-center gap-2">
-            <div class="px-3 py-1 bg-[#033958]/5 text-[#033958] text-[10px] font-black uppercase tracking-widest rounded-lg">
+            <div class="px-3 py-1 bg-[#033958]/5 text-[#033958] text-sm font-black uppercase tracking-widest rounded-lg">
               <Icon name="lucide:phone" class="w-3 h-3 inline mr-1" />
               {{ enquiry.phoneNumber }}
             </div>
@@ -80,7 +80,7 @@
             <span>{{ formatDate(enquiry.createdAt) }}</span>
           </div>
           
-          <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div class="flex items-center space-x-2 transition-opacity duration-300">
             <button
               @click.stop="deleteEnquiry(enquiry._id)"
               class="p-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
@@ -117,7 +117,7 @@
           </div>
           <div class="space-y-2">
             <label class="block text-sm font-bold text-slate-400 uppercase tracking-widest">Current Status</label>
-            <div :class="['inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase text-white tracking-widest', getStatusBg(selectedEnquiry.status)]">
+            <div :class="['inline-block px-4 py-1.5 rounded-full text-sm font-black uppercase text-white tracking-widest', getStatusBg(selectedEnquiry.status)]">
               {{ selectedEnquiry.status || 'Pending' }}
             </div>
           </div>
@@ -132,7 +132,7 @@
 
         <div class="bg-[#033958] p-8 rounded-[2rem] text-white flex items-center justify-between shadow-xl">
           <div>
-            <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-1">Time received</p>
+            <p class="text-sm font-black uppercase tracking-[0.2em] opacity-60 mb-1">Time received</p>
             <p class="text-sm font-bold">{{ formatDetailedDate(selectedEnquiry.createdAt) }}</p>
           </div>
           <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/10">
@@ -150,6 +150,15 @@
         </div>
       </div>
     </SlideOver>
+
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete Enquiry"
+      message="Are you sure you want to delete this enquiry? This action cannot be undone."
+      confirmText="Yes, Delete Enquiry"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -161,6 +170,7 @@ import SlideOver from '@/components/SlideOver.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Icon from '@/components/Icon.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // Composables
 const { enquiries, loading, getEnquiries } = useGetEnquiries()
@@ -171,6 +181,8 @@ const searchQuery = ref('')
 const statusFilter = ref('')
 const showDetailModal = ref(false)
 const selectedEnquiry = ref<any>(null)
+const showDeleteModal = ref(false)
+const idToDelete = ref('')
 
 const statusOptions = [
   { label: 'All status', value: '' },
@@ -212,14 +224,20 @@ const closeDetailModal = () => {
   setTimeout(() => { selectedEnquiry.value = null }, 300)
 }
 
-const deleteEnquiry = async (enquiryId: string) => {
-  if (confirm('Are you sure you want to delete this enquiry?')) {
-    try {
-      await softDeleteEnquiry(enquiryId)
-      await getEnquiries()
-    } catch (error) {
-      console.error('Purge failed:', error)
-    }
+const deleteEnquiry = (enquiryId: string) => {
+  idToDelete.value = enquiryId
+  showDeleteModal.value = true
+}
+
+const executeDelete = async () => {
+  try {
+    await softDeleteEnquiry(idToDelete.value)
+    await getEnquiries()
+  } catch (error) {
+    console.error('Purge failed:', error)
+  } finally {
+    showDeleteModal.value = false
+    idToDelete.value = ''
   }
 }
 
@@ -248,7 +266,7 @@ const getStatusColor = (status: string) => {
 
 const getStatusBg = (status: string) => {
   if (status === 'pending') return 'bg-amber-500'
-  if (status === 'in-progress') return 'bg-blue-600'
+  if (status === 'in-progress') return 'bg-primary'
   return 'bg-emerald-600'
 }
 </script>

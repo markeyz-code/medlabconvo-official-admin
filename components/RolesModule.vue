@@ -55,7 +55,7 @@
                   <div class="px-3 py-1 bg-slate-100 rounded-lg border border-slate-200">
                     <span class="text-sm font-bold text-slate-700">{{ role.permissions?.length || 0 }}</span>
                   </div>
-                  <span class="text-[10px] font-bold text-slate-400">Active permissions</span>
+                  <span class="text-sm font-bold text-slate-400">Active permissions</span>
                 </div>
               </td>
               <td class="px-10 py-8">
@@ -173,7 +173,7 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100 font-bold text-[10px]">
+        <div class="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100 font-bold text-sm">
           <div class="flex flex-col">
             <span class="text-slate-900">Active status</span>
             <span class="text-slate-400 mt-1">Operational immediately</span>
@@ -202,6 +202,15 @@
         </div>
       </div>
     </SlideOver>
+
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete Role"
+      message="Are you sure you want to delete this role? This action may affect users assigned to this role and cannot be undone."
+      confirmText="Yes, Delete Role"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -215,11 +224,14 @@ import { useGetPermissions } from '@/composables/modules/roles/useGetPermissions
 import SlideOver from '@/components/SlideOver.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import Icon from '@/components/Icon.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // State
 const searchQuery = ref('')
 const showModal = ref(false)
 const selectedRole = ref<any>(null)
+const showDeleteModal = ref(false)
+const idToDelete = ref('')
 
 const form = ref({
   name: '',
@@ -304,14 +316,20 @@ const handleSave = async () => {
   }
 }
 
-const confirmDelete = async (id: string) => {
-  if (confirm('Are you sure you want to delete this role?')) {
-    try {
-      await deleteRole(id)
-      await getRoles()
-    } catch (err) {
-      console.error('Delete failed:', err)
-    }
+const confirmDelete = (id: string) => {
+  idToDelete.value = id
+  showDeleteModal.value = true
+}
+
+const executeDelete = async () => {
+  try {
+    await deleteRole(idToDelete.value)
+    await getRoles()
+  } catch (err) {
+    console.error('Delete failed:', err)
+  } finally {
+    showDeleteModal.value = false
+    idToDelete.value = ''
   }
 }
 </script>

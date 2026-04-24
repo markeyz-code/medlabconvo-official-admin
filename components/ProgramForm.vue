@@ -255,7 +255,7 @@
                 v-if="form.highlights.length > 1"
                 @click="removeHighlight(index)"
                 type="button"
-                class="absolute top-4 right-4 p-2 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                class="absolute top-4 right-4 p-2 text-slate-300 hover:text-red-500 transition-colors"
               >
                 <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
@@ -291,7 +291,7 @@
             <button
               @click="removeSpeaker(index)"
               type="button"
-              class="absolute top-6 right-6 p-2 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+              class="absolute top-6 right-6 p-2 text-slate-300 hover:text-red-500 transition-colors"
             >
               <Icon name="lucide:trash-2" class="w-5 h-5" />
             </button>
@@ -299,7 +299,7 @@
             <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
               <!-- Speaker Image -->
               <div class="md:col-span-4 space-y-4">
-                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Avatar</label>
+                <label class="text-sm font-black uppercase tracking-widest text-slate-400 px-1">Avatar</label>
                 <div class="relative w-32 h-32 mx-auto md:mx-0">
                 <!-- {{ speaker.image }} -->
                   <ImageUpload

@@ -71,7 +71,7 @@
               <div class="absolute top-4 left-4">
                 <span
                   :class="[
-                    'px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full border',
+                    'px-3 py-1 text-sm font-bold uppercase tracking-widest rounded-full border',
                     getStatusColor(program.status)
                   ]"
                 >
@@ -140,7 +140,7 @@
                 <div class="flex items-center space-x-3">
                   <Clock class="w-4 h-4 text-slate-300" />
                   <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Duration</p>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Duration</p>
                     <p class="font-bold text-slate-700 text-sm mt-0.5">{{ program.duration }}</p>
                   </div>
                 </div>
@@ -148,7 +148,7 @@
                 <div class="flex items-center space-x-3">
                   <Calendar class="w-4 h-4 text-slate-300" />
                   <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Created</p>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Created</p>
                     <p class="font-bold text-slate-700 text-sm mt-0.5 font-sans">{{ formatDate(program.createdAt) }}</p>
                   </div>
                 </div>
@@ -156,7 +156,7 @@
                 <div class="flex items-center space-x-3">
                   <FileText class="w-4 h-4 text-slate-300" />
                   <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Fields</p>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Fields</p>
                     <p class="font-bold text-slate-700 text-sm mt-0.5">{{ program.formFields?.length || 0 }} total</p>
                   </div>
                 </div>
@@ -164,7 +164,7 @@
                 <div class="flex items-center space-x-3">
                   <Users class="w-4 h-4 text-slate-300" />
                   <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Applicants</p>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Applicants</p>
                     <p class="font-bold text-slate-700 text-sm mt-0.5">{{ program.applicationsCount || 0 }}</p>
                   </div>
                 </div>
@@ -172,18 +172,18 @@
 
               <!-- Focus Areas -->
               <div v-if="program.focusAreas?.length" class="flex items-center space-x-3 mb-4">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Focus:</span>
+                <span class="text-sm font-bold text-slate-400 uppercase tracking-widest">Focus:</span>
                 <div class="flex flex-wrap gap-2">
                   <span
                     v-for="area in program.focusAreas.slice(0, 4)"
                     :key="area"
-                    class="px-3 py-1 bg-slate-50 text-slate-600 rounded-full text-[10px] font-bold border border-slate-100"
+                    class="px-3 py-1 bg-slate-50 text-slate-600 rounded-full text-sm font-bold border border-slate-100"
                   >
                     {{ area }}
                   </span>
                   <span
                     v-if="program.focusAreas.length > 4"
-                    class="px-3 py-1 bg-slate-50 text-slate-400 rounded-full text-[10px] font-bold"
+                    class="px-3 py-1 bg-slate-50 text-slate-400 rounded-full text-sm font-bold"
                   >
                     +{{ program.focusAreas.length - 4 }}
                   </span>
@@ -192,7 +192,7 @@
 
               <!-- Images Preview -->
               <div v-if="program.images?.length" class="flex items-center space-x-3">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Gallery:</span>
+                <span class="text-sm font-bold text-slate-400 uppercase tracking-widest">Gallery:</span>
                 <div class="flex space-x-2">
                   <div
                     v-for="(image, index) in program.images.slice(0, 5)"
@@ -207,7 +207,7 @@
                   </div>
                   <div
                     v-if="program.images.length > 5"
-                    class="w-10 h-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 text-[10px] font-bold"
+                    class="w-10 h-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 text-sm font-bold"
                   >
                     +{{ Number(program.images?.length || 0) - 5 }}
                   </div>

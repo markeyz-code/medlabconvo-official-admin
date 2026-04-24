@@ -45,7 +45,7 @@
           <Icon :name="stat.icon" :class="['w-6 h-6', stat.color]" />
         </div>
         <div>
-          <p class="text-[10px] font-bold text-slate-400 mb-1">{{ stat.title }}</p>
+          <p class="text-sm font-bold text-slate-400 mb-1">{{ stat.title }}</p>
           <p class="text-xl font-bold text-slate-900 tracking-tight">{{ stat.value }}</p>
         </div>
       </div>
@@ -68,7 +68,7 @@
             <Icon name="lucide:mic" class="w-12 h-12 text-slate-100 group-hover:text-slate-200 transition-colors duration-500" />
           </div>
           <div class="absolute top-4 left-4">
-            <span class="px-3 py-1 bg-white/80 backdrop-blur-md text-[10px] font-bold rounded-full border border-slate-100">
+            <span class="px-3 py-1 bg-white/80 backdrop-blur-md text-sm font-bold rounded-full border border-slate-100">
               S{{ episode.season }} E{{ episode.episode }}
             </span>
           </div>
@@ -80,9 +80,9 @@
           <div class="flex items-center justify-between pt-4 border-t border-slate-50">
             <div class="flex items-center space-x-2 text-slate-400">
               <Icon name="lucide:clock" class="w-4 h-4" />
-              <span class="text-[10px] font-bold">{{ episode.duration || '00:00' }}</span>
+              <span class="text-sm font-bold">{{ episode.duration || '00:00' }}</span>
             </div>
-            <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div class="flex items-center space-x-1 transition-opacity">
               <button @click="editEpisode(episode)" class="p-2 text-slate-400 hover:text-[#033958] hover:bg-slate-50 rounded-lg">
                 <Icon name="lucide:pencil" class="w-4 h-4" />
               </button>
@@ -135,6 +135,15 @@
         </div>
       </div>
     </SlideOver>
+
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete Episode"
+      message="Are you sure you want to delete this episode? This action cannot be undone."
+      confirmText="Yes, Delete Episode"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -151,6 +160,7 @@ import AnimatedInput from "@/components/ui/AnimatedInput.vue"
 import SelectInput from "@/components/ui/SelectInput.vue"
 import Icon from "@/components/Icon.vue"
 import SlideOver from "@/components/SlideOver.vue"
+import ConfirmModal from "@/components/ConfirmModal.vue"
 
 const { createLabCast, loading: createLoading } = useCreateLabCast()
 const { labcasts, loading: labcastsLoading, getLabCasts } = useGetLabCasts()
@@ -164,6 +174,8 @@ const selectedSeason = ref('')
 const showModal = ref(false)
 const showBatchModal = ref(false)
 const editingEpisode = ref<any>(null)
+const showDeleteModal = ref(false)
+const episodeToDelete = ref<any>(null)
 
 const form = ref({
   title: '',
@@ -226,11 +238,17 @@ const handleSave = async () => {
   getLabCasts()
 }
 
-const deleteConfirm = async (episode: any) => {
-  if (confirm('Are you sure you want to delete this episode?')) {
-    await deleteLabCast(episode.id)
-    getLabCasts()
-  }
+const deleteConfirm = (episode: any) => {
+  episodeToDelete.value = episode
+  showDeleteModal.value = true
+}
+
+const executeDelete = async () => {
+  if (!episodeToDelete.value) return
+  await deleteLabCast(episodeToDelete.value.id)
+  showDeleteModal.value = false
+  episodeToDelete.value = null
+  getLabCasts()
 }
 
 onMounted(() => {

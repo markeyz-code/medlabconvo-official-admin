@@ -112,13 +112,13 @@
               :style="{ height: bar.height + '%' }"
               :class="bar.isToday ? 'bg-[#033958]' : 'bg-slate-200'"
             >
-              <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-opacity text-[10px] font-bold text-slate-600 whitespace-nowrap">
+              <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-opacity text-sm font-bold text-slate-600 whitespace-nowrap">
                 {{ bar.count }}
               </div>
             </div>
           </div>
           <div class="flex justify-between mt-2">
-            <span v-for="(bar, i) in weeklyActivity" :key="'label-' + i" class="text-[10px] font-medium text-slate-400 flex-1 text-center">
+            <span v-for="(bar, i) in weeklyActivity" :key="'label-' + i" class="text-sm font-medium text-slate-400 flex-1 text-center">
               {{ bar.day }}
             </span>
           </div>

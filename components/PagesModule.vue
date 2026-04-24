@@ -25,11 +25,11 @@
       <table class="w-full text-left border-collapse">
         <thead>
           <tr class="bg-slate-50/50 border-b border-slate-100/50 hidden md:table-row">
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Page Identity</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Sections</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Environment</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Last Modified</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+            <th class="px-6 py-5 text-sm font-black uppercase tracking-widest text-slate-400">Page Identity</th>
+            <th class="px-6 py-5 text-sm font-black uppercase tracking-widest text-slate-400">Sections</th>
+            <th class="px-6 py-5 text-sm font-black uppercase tracking-widest text-slate-400">Environment</th>
+            <th class="px-6 py-5 text-sm font-black uppercase tracking-widest text-slate-400">Last Modified</th>
+            <th class="px-6 py-5 text-sm font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
@@ -46,7 +46,7 @@
                 </div>
                 <div>
                   <h3 class="text-sm font-bold text-slate-900 leading-tight group-hover:text-[#033958] transition-colors">{{ page.title }}</h3>
-                  <span class="text-[10px] font-bold text-slate-400 mt-1 inline-block bg-slate-100 px-2 py-0.5 rounded">{{ page.key }}</span>
+                  <span class="text-sm font-bold text-slate-400 mt-1 inline-block bg-slate-100 px-2 py-0.5 rounded">{{ page.key }}</span>
                 </div>
               </div>
             </td>
@@ -61,7 +61,7 @@
 
             <!-- Environment (Currently always active) -->
             <td class="px-6 py-5 hidden md:table-cell">
-              <span class="inline-flex items-center space-x-1.5 bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full text-[10px] font-black tracking-wider uppercase">
+              <span class="inline-flex items-center space-x-1.5 bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full text-sm font-black tracking-wider uppercase">
                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                 <span>Production</span>
               </span>
@@ -74,7 +74,7 @@
 
             <!-- Actions -->
             <td class="px-6 py-5">
-              <div class="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div class="flex items-center justify-end space-x-1 transition-opacity duration-300">
                 <button @click="openEditModal(page)" class="p-2.5 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/10 rounded-xl transition-all" title="Edit Content">
                   <Icon name="lucide:pencil" class="w-4 h-4" />
                 </button>
@@ -181,6 +181,15 @@
         </form>
       </div>
     </SlideOver>
+
+    <!-- Delete Confirmation Modal -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete Page"
+      message="Are you sure you want to delete this page? This action will remove all associated content and sections immediately."
+      confirmText="Yes, Delete Page"
+      @confirm="executeDelete"
+    />
   </div>
 </template>
 
@@ -195,6 +204,7 @@ import Icon from '@/components/Icon.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import SlideOver from '@/components/SlideOver.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const { loading, cmsPages, getAllCms } = useGetCms()
 const { loading: isSaving, upsertCms } = useUpsertCms()
@@ -209,6 +219,9 @@ const form = ref<UpsertCmsPayload>({
   title: '',
   data: { sections: [] }
 })
+
+const showDeleteModal = ref(false)
+const keyToDelete = ref('')
 
 onMounted(() => {
   getAllCms()
@@ -259,15 +272,21 @@ const handleSubmit = async () => {
   }
 }
 
-const handleDeleteConfirm = async (key: string) => {
-  if (confirm('Are you sure you want to delete this page?')) {
-    try {
-      await deleteCms(key)
-      showToast({ title: 'Removed', message: 'Page successfully deleted', toastType: 'success' })
-      getAllCms()
-    } catch (err) {
-      console.error(err)
-    }
+const handleDeleteConfirm = (key: string) => {
+  keyToDelete.value = key
+  showDeleteModal.value = true
+}
+
+const executeDelete = async () => {
+  try {
+    await deleteCms(keyToDelete.value)
+    showToast({ title: 'Removed', message: 'Page successfully deleted', toastType: 'success' })
+    getAllCms()
+  } catch (err) {
+    console.error(err)
+  } finally {
+    showDeleteModal.value = false
+    keyToDelete.value = ''
   }
 }
 </script>
