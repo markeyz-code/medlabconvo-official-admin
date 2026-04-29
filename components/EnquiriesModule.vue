@@ -143,7 +143,7 @@
         <div class="flex justify-end pt-10 border-t border-slate-50">
           <button
             @click="closeDetailModal"
-            class="px-12 py-5 bg-[#033958] text-white rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-black transition-all active:scale-95 shadow-xl"
+            class="px-12 py-5 bg-[#033958] text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-black transition-all active:scale-95 shadow-xl"
           >
             Dismiss
           </button>

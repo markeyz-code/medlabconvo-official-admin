@@ -42,14 +42,14 @@
                   <button
                     @click="close"
                     type="button"
-                    class="flex-1 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors"
+                    class="flex-1 px-6 py-4 text-sm font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     @click="confirm"
                     type="button"
-                    class="flex-1 px-6 py-4 bg-[#033958] text-white rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-lg hover:bg-[#022a41] transition-all"
+                    class="flex-1 px-6 py-4 bg-[#033958] text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg hover:bg-[#022a41] transition-all"
                   >
                     Confirm
                   </button>

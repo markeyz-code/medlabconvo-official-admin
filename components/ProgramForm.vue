@@ -37,7 +37,7 @@
           </div>
           <span
             :class="[
-              'mt-3 text-[11px] font-bold transition-colors duration-500',
+              'mt-3 text-sm font-bold transition-colors duration-500',
               currentStep >= index ? 'text-[#033958]' : 'text-slate-300'
             ]"
           >
@@ -77,7 +77,6 @@
               id="programDuration"
               label="Duration (e.g. 12 weeks)"
               type="text"
-              required
               position="middle"
             />
           </div>
@@ -87,7 +86,6 @@
             label="Description"
             type="textarea"
             :rows="6"
-            required
             position="bottom"
           />
         </div>
@@ -344,13 +342,164 @@
         </section>
       </div>
 
-      <!-- Step 5: Finalization -->
-      <div v-if="currentStep === 4" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <!-- Step 5: Registration Form Builder -->
+        <div v-if="currentStep === 4" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <header class="mb-8">
+            <h3 class="text-xl font-bold text-slate-900 mb-1">Registration Builder</h3>
+            <p class="text-sm text-slate-500">Define custom fields for this program's application form.</p>
+          </header>
+
+          <div class="space-y-4">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest px-1">Custom Fields</h4>
+              <button
+                @click="addFormField"
+                type="button"
+                class="px-6 py-3 bg-[#033958] text-white rounded-xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-2"
+              >
+                <Icon name="lucide:plus" class="w-4 h-4" />
+                <span>Add Field</span>
+              </button>
+            </div>
+
+            <div class="space-y-6">
+              <div
+                v-for="(field, index) in form.formFields"
+                :key="index"
+                class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 group relative"
+              >
+                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-50">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-[#033958] font-bold text-sm">
+                      {{ index + 1 }}
+                    </div>
+                    <h4 class="font-bold text-slate-900">Field Configuration</h4>
+                  </div>
+                  <button
+                    @click="removeFormField(index)"
+                    type="button"
+                    class="text-slate-300 hover:text-red-500 p-2 rounded-xl hover:bg-red-50 transition-all"
+                  >
+                    <Icon name="lucide:trash-2" class="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div class="space-y-4">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+                    <AnimatedInput
+                      v-model="field.label"
+                      :id="'prog-field-label-'+index"
+                      label="Label"
+                      type="text"
+                      required
+                      position="top"
+                    />
+                    <SelectInput
+                      v-model="field.type"
+                      label="Field Type"
+                      :options="[
+                        { label: 'Text', value: 'text' },
+                        { label: 'Email', value: 'email' },
+                        { label: 'Number', value: 'number' },
+                        { label: 'Textarea', value: 'textarea' },
+                        { label: 'Select', value: 'select' },
+                        { label: 'Radio', value: 'radio' },
+                        { label: 'Checkbox', value: 'checkbox' },
+                        { label: 'Date', value: 'date' },
+                        { label: 'File', value: 'file' }
+                      ]"
+                      position="top"
+                    />
+                  </div>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+                    <AnimatedInput
+                      v-model="field.placeholder"
+                      :id="'prog-field-placeholder-'+index"
+                      label="Placeholder"
+                      type="text"
+                      position="middle"
+                    />
+                    <div class="flex items-center px-6 bg-white border-l border-slate-50">
+                      <label class="flex items-center group cursor-pointer">
+                        <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#033958] transition-colors">
+                          <input
+                            v-model="field.required"
+                            type="checkbox"
+                            class="absolute opacity-0 w-full h-full cursor-pointer z-10"
+                          />
+                          <div v-if="field.required" class="w-2.5 h-2.5 bg-[#033958] rounded-sm"></div>
+                        </div>
+                        <span class="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#033958] transition-colors">Mark as required</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <AnimatedInput
+                    v-model="field.description"
+                    :id="'prog-field-desc-'+index"
+                    label="Description / Help Text"
+                    type="text"
+                    position="bottom"
+                  />
+                </div>
+
+                <!-- Options for select/radio/checkbox -->
+                <div v-if="['select', 'radio', 'checkbox'].includes(field.type)" class="mt-8 pt-6 border-t border-slate-50">
+                  <div class="flex items-center justify-between mb-4">
+                    <label class="text-sm font-bold text-slate-400 uppercase tracking-widest px-1">Options</label>
+                    <button
+                      @click="addFormFieldOption(field)"
+                      type="button"
+                      class="text-[#033958] hover:text-[#022f42] text-sm font-bold flex items-center space-x-1"
+                    >
+                      <Icon name="lucide:plus" class="w-3.5 h-3.5" />
+                      <span>Add Option</span>
+                    </button>
+                  </div>
+                  <div class="space-y-3">
+                    <div
+                      v-for="(option, optionIndex) in field.options"
+                      :key="optionIndex"
+                      class="flex items-center space-x-3 group/opt"
+                    >
+                      <div class="flex-1">
+                        <AnimatedInput
+                          v-model="field.options[optionIndex]"
+                          :id="'prog-field-'+index+'-opt-'+optionIndex"
+                          :label="'Option ' + (optionIndex + 1)"
+                          type="text"
+                        />
+                      </div>
+                      <button
+                        @click="removeFormFieldOption(field, optionIndex)"
+                        type="button"
+                        class="p-3 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                      >
+                        <Icon name="lucide:x" class="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div v-if="!field.options || field.options.length === 0" class="text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                      <p class="text-sm text-slate-400">No options added yet.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div v-if="form.formFields.length === 0" class="text-center py-16 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-100">
+                <Icon name="lucide:clipboard-list" class="w-12 h-12 text-slate-200 mx-auto mb-4" />
+                <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">No custom fields defined</p>
+                <p class="text-xs text-slate-400 mt-1">Add fields to collect specific data from applicants.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6: Final Review -->
+        <div v-if="currentStep === 5" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <header class="mb-8 text-center">
           <h3 class="text-xl font-bold text-slate-900 mb-1">Review program</h3>
           <p class="text-sm text-slate-500">Double check your program settings before publishing.</p>
         </header>
-
         <div class="bg-[#1A1A1B09] rounded-3xl p-8 border border-slate-100 space-y-6">
           <div class="grid grid-cols-2 gap-8">
             <div>
@@ -463,6 +612,7 @@ const steps = [
   { title: 'Curriculum', description: 'Learning path' },
   { title: 'Media', description: 'Visual assets' },
   { title: 'Faculty', description: 'Speakers' },
+  { title: 'Registration', description: 'Custom fields' },
   { title: 'Review', description: 'Final check' }
 ]
 
@@ -490,7 +640,8 @@ const form = reactive({
   formId: '',
   externalFormLink: '',
   status: 'draft',
-  speakers: [] as Array<{ name: string; bio: string; image: string }>
+  speakers: [] as Array<{ name: string; bio: string; image: string }>,
+  formFields: [] as any[]
 })
 
 const { forms, getForms } = useGetForms()
@@ -523,7 +674,8 @@ watchEffect(() => {
       formId: props.program.form?._id || props.program.form || '',
       externalFormLink: props.program.externalFormLink || '',
       status: props.program.status || 'draft',
-      speakers: props.program.speakers?.length ? props.program.speakers.map((s: any) => ({...s})) : []
+      speakers: props.program.speakers?.length ? props.program.speakers.map((s: any) => ({...s})) : [],
+      formFields: props.program.formFields?.length ? props.program.formFields.map((f: any) => ({...f})) : []
     })
     maxStepReached.value = 3
   }
@@ -560,6 +712,24 @@ const removeHighlight = (index: number) => form.highlights.splice(index, 1)
 
 const addSpeaker = () => form.speakers.push({ name: '', bio: '', image: '' })
 const removeSpeaker = (index: number) => form.speakers.splice(index, 1)
+
+const addFormField = () => {
+  form.formFields.push({
+    id: Date.now().toString(),
+    label: '',
+    type: 'text',
+    required: false,
+    placeholder: '',
+    description: '',
+    options: []
+  })
+}
+const removeFormField = (index: number) => form.formFields.splice(index, 1)
+const addFormFieldOption = (field: any) => {
+  if (!field.options) field.options = []
+  field.options.push('')
+}
+const removeFormFieldOption = (field: any, index: number) => field.options.splice(index, 1)
 
 const { showToast } = useCustomToast()
 
@@ -612,8 +782,8 @@ const { showToast } = useCustomToast()
 
 // handleSubmit in the child form component
 const handleSubmit = async () => {
-  if (!form.title.trim() || !form.category.trim() || !form.description.trim() || !form.duration.trim()) {
-    showToast({ title: "Validation Error", message: "Please fill in all required fields.", toastType: "error" })
+  if (!form.title.trim()) {
+    showToast({ title: "Validation Error", message: "Please enter a program title.", toastType: "error" })
     return
   }
 

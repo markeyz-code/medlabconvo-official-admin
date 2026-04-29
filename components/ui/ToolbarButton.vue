@@ -10,7 +10,7 @@
     :title="label"
   >
     <Icon v-if="icon" :name="icon" class="w-4 h-4" />
-    <span v-else class="text-[11px] font-black tracking-tight">{{ label }}</span>
+    <span v-else class="text-sm font-black tracking-tight">{{ label }}</span>
   </button>
 </template>
 

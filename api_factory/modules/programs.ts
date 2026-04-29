@@ -29,8 +29,8 @@ export type Program = {
   id?: string
   title: string
   slug?: string
-  category: string
-  description: string
+  category?: string
+  description?: string
   duration?: string
   focusAreas?: string[]
   outcomes?: string[]
@@ -39,7 +39,7 @@ export type Program = {
   highlights?: Highlight[]
   status?: ProgramStatus
   registrationToken?: string
-  formFields: FormField[]
+  formFields?: FormField[]
   formTitle?: string
   formInstructions?: string
   applicationsCount?: number
@@ -51,15 +51,15 @@ export type Program = {
 
 export type CreateProgramData = {
   title: string
-  category: string
-  description: string
+  category?: string
+  description?: string
   duration?: string
   focusAreas?: string[]
   outcomes?: string[]
   keyResponsibilities?: string[]
   image?: string
   highlights?: Highlight[]
-  formFields: FormField[]
+  formFields?: FormField[]
   formTitle?: string
   formInstructions?: string
   formId?: string

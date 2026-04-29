@@ -24,7 +24,7 @@
       </div>
       <button
         @click="openCreateModal"
-        class="px-10 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-3"
+        class="px-10 py-3 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-3"
       >
         <Plus class="w-4 h-4" />
         <span>Create Form</span>

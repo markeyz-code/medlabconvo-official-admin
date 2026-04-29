@@ -40,7 +40,7 @@
 
       <!-- Sale Badge -->
       <div v-if="product.originalPrice && product.originalPrice > product.price" class="absolute bottom-4 right-4">
-        <span class="px-3 py-2 text-[11px] font-bold bg-[#033958] text-white rounded-xl">
+        <span class="px-3 py-2 text-sm font-bold bg-[#033958] text-white rounded-xl">
           -{{ Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) }}%
         </span>
       </div>

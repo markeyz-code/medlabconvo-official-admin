@@ -382,7 +382,7 @@ const filteredPublications = computed(() => {
     filtered = filtered.filter(publication => publication.status === statusFilter.value)
   }
   
-  return filtered
+  return [...filtered].sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
 })
 
 // Drag and Drop Methods

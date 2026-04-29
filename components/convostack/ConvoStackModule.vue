@@ -79,7 +79,7 @@
             <!-- Status -->
             <td class="px-4 py-4">
               <span :class="[
-                'px-2.5 py-1 text-[11px] font-semibold rounded-full capitalize',
+                'px-2.5 py-1 text-sm font-semibold rounded-full capitalize',
                 pub.status === 'published' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                 pub.status === 'draft' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
                 pub.status === 'in_review' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
@@ -292,7 +292,7 @@ const filteredPublications = computed(() => {
   if (statusFilter.value) {
     filtered = filtered.filter((p: any) => p.status === statusFilter.value)
   }
-  return filtered
+  return [...filtered].sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
 })
 
 const openEditor = (pub: any) => {

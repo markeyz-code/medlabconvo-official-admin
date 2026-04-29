@@ -17,11 +17,11 @@
       </div>
       
       <div class="flex items-center gap-4">
-        <button @click="$router.push('/dashboard/leadership')" class="px-8 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">Cancel</button>
+        <button @click="$router.push('/dashboard/leadership')" class="px-8 py-4 text-sm font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">Cancel</button>
         <button 
           @click="handleSubmit" 
           :disabled="submitting || !isFormValid"
-          class="px-12 py-4 bg-[#033958] text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.25em] shadow-2xl hover:bg-[#022a41] transition-all disabled:opacity-50 flex items-center gap-3"
+          class="px-12 py-4 bg-[#033958] text-white rounded-2xl font-black text-sm uppercase tracking-[0.25em] shadow-2xl hover:bg-[#022a41] transition-all disabled:opacity-50 flex items-center gap-3"
         >
           <div v-if="submitting" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
           <span>Save Changes</span>
