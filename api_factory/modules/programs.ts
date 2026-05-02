@@ -163,4 +163,9 @@ export const programs_api = {
     const url = `/programs/${programId}/restore`
     return GATEWAY_ENDPOINT.patch(url)
   },
+
+  $_reorder_programs: async (payload: any) => {
+    const url = '/programs/reorder'
+    return GATEWAY_ENDPOINT.patch(url, payload)
+  }
 }

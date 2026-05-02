@@ -46,70 +46,50 @@
 
     <!-- Publications Grid -->
     <div v-if="!loading && filteredPublications.length > 0" class="grid gap-6">
-      <TransitionGroup
-        enter-active-class="transition-all duration-500 ease-out"
-        enter-from-class="opacity-0 scale-95 translate-y-4"
-        enter-to-class="opacity-100 scale-100 translate-y-0"
-        leave-active-class="transition-all duration-300 ease-in"
-        leave-from-class="opacity-100 scale-100 translate-y-0"
-        leave-to-class="opacity-0 scale-95 -translate-y-4"
-        tag="div"
+      <draggable
+        v-model="localPublications"
+        item-key="_id"
+        :disabled="!!searchQuery || !!statusFilter || reorderLoading"
+        handle=".drag-handle"
+        ghost-class="opacity-50"
+        @end="handleDragEnd"
         class="space-y-4"
       >
-        <div
-          v-for="(publication, index) in filteredPublications"
-          :key="publication._id"
-          :draggable="!searchQuery && !statusFilter"
-          :class="[
-            'bg-white rounded-2xl  border border-slate-200 p-6 hover: transition-all duration-300 group relative',
-            {
-              'cursor-move': !searchQuery && !statusFilter,
-              'opacity-50 scale-95': draggedIndex === index,
-              'border-amber-300 -100': dropTargetIndex === index && draggedIndex !== index,
-              'cursor-not-allowed opacity-60': reorderLoading
-            }
-          ]"
-          @dragstart="handleDragStart($event, index)"
-          @dragend="handleDragEnd"
-          @dragover="handleDragOver($event, index)"
-          @dragleave="handleDragLeave"
-          @drop="handleDrop($event, index)"
-        >
-          <!-- Drag Handle -->
-          <div 
-            v-if="!searchQuery && !statusFilter" 
-            class="absolute left-2 top-1/2 transform -translate-y-1/2 transition-opacity duration-200"
+        <template #item="{ element: publication, index }">
+          <div
+            :class="[
+              'bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-md transition-all duration-300 group relative',
+              {
+                'cursor-move': !searchQuery && !statusFilter,
+                'cursor-not-allowed opacity-60': reorderLoading
+              }
+            ]"
           >
-            <div class="flex flex-col space-y-1 cursor-move">
-              <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
-              <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
-              <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
-              <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
-              <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
-              <div class="w-1 h-1 bg-slate-400 rounded-full"></div>
+            <!-- Mobile/Desktop Drag Handle -->
+            <div 
+              v-if="!searchQuery && !statusFilter" 
+              class="drag-handle absolute left-2 top-1/2 transform -translate-y-1/2 p-2 cursor-move text-slate-300 hover:text-amber-500 transition-colors"
+            >
+              <GripVertical class="w-5 h-5" />
             </div>
-          </div>
 
-          <!-- Drop Indicator -->
-          <div 
-            v-if="dropTargetIndex === index && draggedIndex !== index"
-            class="absolute inset-0 border-2 border-dashed border-amber-400 rounded-2xl pointer-events-none"
-          ></div>
-
-          <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4" :class="{ 'ml-6': !searchQuery && !statusFilter }">
-            <!-- Main Content -->
-            <div class="flex-1 space-y-4">
-              <!-- Header -->
-              <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                <h3 class="text-base font-semibold text-slate-900 group-hover:text-amber-700 transition-colors duration-200">
-                  {{ publication.title }}
-                </h3>
-                <span
-                  :class="['px-3 py-1 text-xs font-semibold rounded-full w-fit', getStatusColor(publication.status)]"
-                >
-                  {{ formatStatus(publication.status) }}
-                </span>
-              </div>
+            <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4" :class="{ 'ml-8': !searchQuery && !statusFilter }">
+              <!-- Main Content -->
+              <div class="flex-1 space-y-4">
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <h3 class="text-base font-semibold text-slate-900 group-hover:text-amber-700 transition-colors duration-200">
+                    {{ publication.title }}
+                  </h3>
+                  <div class="flex items-center gap-2">
+                    <span
+                      :class="['px-3 py-1 text-xs font-semibold rounded-full w-fit', getStatusColor(publication.status)]"
+                    >
+                      {{ formatStatus(publication.status) }}
+                    </span>
+                    <span v-if="publication.position" class="text-[10px] text-slate-400 font-mono">Pos: {{ publication.position }}</span>
+                  </div>
+                </div>
               
               <!-- Abstract -->
               <p class="text-slate-600 text-sm leading-relaxed line-clamp-3">
@@ -160,6 +140,26 @@
             
             <!-- Action Buttons -->
             <div class="flex lg:flex-col items-center lg:items-end gap-2">
+              <!-- Reorder Buttons (Mobile Friendly) -->
+              <div v-if="!searchQuery && !statusFilter" class="flex lg:flex-col gap-1 mr-2 lg:mr-0 border-r lg:border-r-0 lg:border-b border-slate-100 pr-2 lg:pr-0 pb-0 lg:pb-2">
+                <button
+                  @click="moveItem(index, 'up')"
+                  :disabled="index === 0 || reorderLoading"
+                  class="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg disabled:opacity-30 transition-all"
+                  title="Move Up"
+                >
+                  <ChevronUp class="w-5 h-5" />
+                </button>
+                <button
+                  @click="moveItem(index, 'down')"
+                  :disabled="index === localPublications.length - 1 || reorderLoading"
+                  class="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg disabled:opacity-30 transition-all"
+                  title="Move Down"
+                >
+                  <ChevronDown class="w-5 h-5" />
+                </button>
+              </div>
+
               <!-- Preview Button -->
               <button
                 @click="previewPublication(publication)"
@@ -206,24 +206,6 @@
                 <Globe class="w-5 h-5 group-hover/btn:scale-110 transition-transform" />
               </button>
               
-              <button
-                v-if="publication.status === 'rejected'"
-                @click="rejectPublication(publication._id)"
-                class="p-2.5 text-slate-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all duration-200 group/btn"
-                title="Publish"
-              >
-                reject
-              </button>
-              
-              <button
-                v-if="publication.status === 'published'"
-                @click="publishPublication(publication._id)"
-                class="p-2.5 text-slate-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all duration-200 group/btn"
-                title="Publish"
-              >
-                published
-              </button>
-              
               <!-- Delete Button -->
               <button
                 @click="confirmDelete(publication)"
@@ -233,9 +215,10 @@
                 <Trash2 class="w-5 h-5 group-hover/btn:scale-110 transition-transform" />
               </button>
             </div>
+            </div>
           </div>
-        </div>
-      </TransitionGroup>
+        </template>
+      </draggable>
     </div>
 
     <!-- Loading State -->
@@ -317,8 +300,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { Search, Plus, Eye, Edit, Send, Check, Globe, Trash2, User, Calendar, BookOpen, Tag, FileText, X } from 'lucide-vue-next'
+import { ref, onMounted, computed, watch } from 'vue'
+import draggable from 'vuedraggable'
+import { 
+  Search, Plus, Eye, Edit, Send, Check, Globe, Trash2, 
+  User, Calendar, BookOpen, Tag, FileText, X,
+  GripVertical, ChevronUp, ChevronDown 
+} from 'lucide-vue-next'
 import { useGetPublications } from '@/composables/modules/publications/useGetPublications'
 import { useCreatePublication } from '@/composables/modules/publications/useCreatePublication'
 import { useUpdatePublication } from '@/composables/modules/publications/useUpdatePublication'
@@ -355,14 +343,20 @@ const previewedPublication = ref(null)
 const publicationToDelete = ref(null)
 
 // Drag and drop state
-const draggedIndex = ref<number | null>(null)
-const dropTargetIndex = ref<number | null>(null)
 const localPublications = ref([])
 
 // Load publications on mount
-onMounted(() => {
-  getPublications()
+onMounted(async () => {
+  await getPublications()
+  localPublications.value = [...filteredPublications.value]
 })
+
+// Sync local state when source data changes
+watch(publications, (newVal) => {
+  if (newVal) {
+    localPublications.value = [...filteredPublications.value]
+  }
+}, { deep: true })
 
 // Computed
 const filteredPublications = computed(() => {
@@ -382,82 +376,54 @@ const filteredPublications = computed(() => {
     filtered = filtered.filter(publication => publication.status === statusFilter.value)
   }
   
-  return [...filtered].sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+  // Respect the position field if available, otherwise fallback to date
+  return [...filtered].sort((a: any, b: any) => {
+    if (a.position !== undefined && b.position !== undefined && a.position !== b.position) {
+      return a.position - b.position
+    }
+    return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+  })
 })
 
 // Drag and Drop Methods
-const handleDragStart = (event: DragEvent, index: number) => {
-  if (reorderLoading.value) {
-    event.preventDefault()
-    return
-  }
-  
-  draggedIndex.value = index
-  event.dataTransfer!.effectAllowed = 'move'
-  event.dataTransfer!.setData('text/html', '')
-  
-  // Store current publications order for potential revert
-  localPublications.value = [...filteredPublications.value]
-}
+const handleDragEnd = async () => {
+  if (reorderLoading.value) return
 
-const handleDragEnd = () => {
-  draggedIndex.value = null
-  dropTargetIndex.value = null
-}
-
-const handleDragOver = (event: DragEvent, index: number) => {
-  event.preventDefault()
-  event.dataTransfer!.dropEffect = 'move'
-  
-  if (draggedIndex.value !== null && draggedIndex.value !== index) {
-    dropTargetIndex.value = index
-  }
-}
-
-const handleDragLeave = () => {
-  // Only clear drop target if we're leaving the entire component area
-  // This prevents flickering when moving between child elements
-}
-
-const handleDrop = async (event: DragEvent, dropIndex: number) => {
-  event.preventDefault()
-  
-  if (draggedIndex.value === null || draggedIndex.value === dropIndex || reorderLoading.value) {
-    return
-  }
-  
   try {
-    // Create a new array with the reordered items
-    const reorderedItems = [...filteredPublications.value]
-    const draggedItem = reorderedItems[draggedIndex.value]
+    // Call the reorder API with the new order in localPublications
+    await reorderFromSortedArray(localPublications.value)
     
-    // Remove the dragged item from its original position
-    reorderedItems.splice(draggedIndex.value, 1)
-    
-    // Insert the dragged item at the new position
-    reorderedItems.splice(dropIndex, 0, draggedItem)
-    
-    // Call the reorder API
-    await reorderFromSortedArray(reorderedItems)
-    
-    // Refresh the publications list to get the updated order from the server
+    // Refresh to ensure everything is in sync
     await getPublications()
     
-    // Auto-hide success message after 3 seconds
+    // Success message auto-hide
     setTimeout(() => {
       resetReorderState()
     }, 3000)
-    
   } catch (error) {
     console.error('Error reordering publications:', error)
-    // Auto-hide error message after 5 seconds
+    // Revert local state on error
+    localPublications.value = [...filteredPublications.value]
     setTimeout(() => {
       resetReorderState()
     }, 5000)
-  } finally {
-    draggedIndex.value = null
-    dropTargetIndex.value = null
   }
+}
+
+const moveItem = async (index: number, direction: 'up' | 'down') => {
+  if (reorderLoading.value) return
+  
+  const newIndex = direction === 'up' ? index - 1 : index + 1
+  if (newIndex < 0 || newIndex >= localPublications.value.length) return
+  
+  // Swap items
+  const items = [...localPublications.value]
+  const temp = items[index]
+  items[index] = items[newIndex]
+  items[newIndex] = temp
+  
+  localPublications.value = items
+  await handleDragEnd()
 }
 
 // Existing Methods

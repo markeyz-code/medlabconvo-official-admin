@@ -36,22 +36,30 @@
 
     <!-- Programs List -->
     <div v-if="!loading && filteredPrograms.length > 0" class="space-y-4">
-      <TransitionGroup
-        enter-active-class="transition-all duration-500 ease-out"
-        enter-from-class="opacity-0 translate-x-4"
-        enter-to-class="opacity-100 translate-x-0"
-        leave-active-class="transition-all duration-300 ease-in"
-        leave-from-class="opacity-100 translate-x-0"
-        leave-to-class="opacity-0 -translate-x-4"
-        tag="div"
+      <draggable
+        v-model="localPrograms"
+        item-key="_id"
+        :disabled="!!searchQuery || !!statusFilter || reorderLoading"
+        handle=".drag-handle"
+        ghost-class="opacity-50"
+        @end="handleReorder"
         class="space-y-4"
       >
-        <div
-          v-for="program in filteredPrograms"
-          :key="program._id"
-          class="bg-white rounded-2xl border border-slate-100 overflow-hidden transition-all duration-300 group hover:border-[#033958]/20"
-        >
-          <div class="flex flex-col md:flex-row">
+        <template #item="{ element: program, index }">
+          <div
+            :class="[
+              'bg-white rounded-2xl border border-slate-100 overflow-hidden transition-all duration-300 group hover:border-[#033958]/20 relative',
+              { 'opacity-60 cursor-not-allowed': reorderLoading }
+            ]"
+          >
+            <div class="flex flex-col md:flex-row">
+              <!-- Drag Handle -->
+              <div 
+                v-if="!searchQuery && !statusFilter" 
+                class="drag-handle absolute left-0 top-0 bottom-0 w-8 flex items-center justify-center cursor-move text-slate-200 hover:text-[#033958] transition-colors bg-slate-50/50 hover:bg-slate-100/50 z-10"
+              >
+                <GripVertical class="w-5 h-5" />
+              </div>
             <!-- Program Image -->
             <div class="relative w-full md:w-64 h-48 md:h-auto bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden flex-shrink-0">
               <img
@@ -214,9 +222,48 @@
                 </div>
               </div>
             </div>
+
+            <!-- Mobile Move Buttons -->
+            <div v-if="!searchQuery && !statusFilter" class="md:hidden border-t border-slate-50 flex divide-x divide-slate-50">
+              <button 
+                @click="moveItem(index, 'up')" 
+                :disabled="index === 0 || reorderLoading"
+                class="flex-1 py-3 flex items-center justify-center text-slate-400 disabled:opacity-20"
+              >
+                <ChevronUp class="w-5 h-5 mr-1" />
+                <span class="text-xs font-bold uppercase tracking-widest">Move Up</span>
+              </button>
+              <button 
+                @click="moveItem(index, 'down')" 
+                :disabled="index === localPrograms.length - 1 || reorderLoading"
+                class="flex-1 py-3 flex items-center justify-center text-slate-400 disabled:opacity-20"
+              >
+                <ChevronDown class="w-5 h-5 mr-1" />
+                <span class="text-xs font-bold uppercase tracking-widest">Move Down</span>
+              </button>
+            </div>
+
+            <!-- Desktop Move Buttons (Hidden on mobile) -->
+            <div v-if="!searchQuery && !statusFilter" class="hidden md:flex flex-col border-l border-slate-50">
+              <button 
+                @click="moveItem(index, 'up')" 
+                :disabled="index === 0 || reorderLoading"
+                class="flex-1 px-3 hover:bg-slate-50 text-slate-300 hover:text-[#033958] transition-colors disabled:opacity-10"
+              >
+                <ChevronUp class="w-5 h-5" />
+              </button>
+              <button 
+                @click="moveItem(index, 'down')" 
+                :disabled="index === localPrograms.length - 1 || reorderLoading"
+                class="flex-1 px-3 hover:bg-slate-50 text-slate-300 hover:text-[#033958] transition-colors disabled:opacity-10"
+              >
+                <ChevronDown class="w-5 h-5" />
+              </button>
+            </div>
+            </div>
           </div>
-        </div>
-      </TransitionGroup>
+        </template>
+      </draggable>
     </div>
 
     <!-- Loading State -->
@@ -301,20 +348,32 @@
       confirm-class="bg-rose-600 hover:bg-rose-700"
       @confirm="handleDeleteConfirm"
     />
+
+    <ConfirmModal
+      v-model="showPushToTopModal"
+      title="Program Position"
+      message="Would you like this newly created program to take the first position on the list?"
+      confirm-text="Yes, First Position"
+      cancel-text="No, Bottom Position"
+      @confirm="handleSaveWithPush(true)"
+      @cancel="handleSaveWithPush(false)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
+import draggable from 'vuedraggable'
 import {
   Search, Plus, Eye, Edit, Link, Trash2, GraduationCap,
-  Users, Clock, Calendar, FileText, Copy
+  Users, Clock, Calendar, FileText, Copy, GripVertical, ChevronUp, ChevronDown
 } from 'lucide-vue-next'
 import { useGetPrograms } from '@/composables/modules/programs/useGetPrograms'
 import { useCreateProgram } from '@/composables/modules/programs/useCreateProgram'
 import { useUpdateProgram } from '@/composables/modules/programs/useUpdateProgram'
 import { useSoftDeleteProgram } from '@/composables/modules/programs/useSoftDeleteProgram'
 import { useGetRegistrationLink } from '@/composables/modules/programs/useGetRegistrationLink'
+import { useReorderPrograms } from '@/composables/modules/programs/useReorderPrograms'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 
@@ -332,14 +391,31 @@ const showModal = ref(false)
 const showViewModal = ref(false)
 const showLinkModal = ref(false)
 const showDeleteModal = ref(false)
+const showPushToTopModal = ref(false)
 const selectedProgram = ref<any>(null)
 const viewedProgram = ref<any>(null)
 const programToDelete = ref<any>(null)
+const localPrograms = ref<any[]>([])
+const pendingProgramData = ref<any>(null)
+const pendingDoneCallback = ref<any>(null)
+
+const { 
+  loading: reorderLoading, 
+  reorderFromSortedArray 
+} = useReorderPrograms()
 
 // Hooks
-onMounted(() => {
-  getPrograms()
+onMounted(async () => {
+  await getPrograms()
+  localPrograms.value = [...filteredPrograms.value]
 })
+
+// Keep local state in sync
+watch(programs, (newVal) => {
+  if (newVal) {
+    localPrograms.value = [...filteredPrograms.value]
+  }
+}, { deep: true })
 
 // Computed
 const filteredPrograms = computed(() => {
@@ -358,7 +434,13 @@ const filteredPrograms = computed(() => {
     filtered = filtered.filter(program => program.status === statusFilter.value)
   }
   
-  return filtered
+  // Sort by position first
+  return [...filtered].sort((a: any, b: any) => {
+    if (a.position !== undefined && b.position !== undefined && a.position !== b.position) {
+      return a.position - b.position
+    }
+    return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+  })
 })
 
 // Methods
@@ -428,17 +510,75 @@ const handleSaveProgram = async (programData: any, done: () => void) => {
   try {
     if (selectedProgram.value) {
       await updateProgram(selectedProgram.value._id, programData)
+      await getPrograms()
+      closeModal()
+      done()
     } else {
-      await createProgram(programData)
+      // For new programs, prompt for position
+      pendingProgramData.value = programData
+      pendingDoneCallback.value = done
+      showPushToTopModal.value = true
     }
-    await getPrograms()
-    closeModal()
   } catch (error) {
     console.error('Error saving program:', error)
-    // showToast({ title: 'Error', message: 'Failed to save program.', toastType: 'error' })
-  } finally {
-    done()  // 👈 always stop the spinner, whether success or failure
+    done()
   }
+}
+
+const handleSaveWithPush = async (pushToTop: boolean) => {
+  const programData = pendingProgramData.value
+  const done = pendingDoneCallback.value
+  showPushToTopModal.value = false
+  
+  try {
+    // If pushing to top, set position to something smaller than the current first
+    if (pushToTop) {
+      const firstPos = filteredPrograms.value.length > 0 ? (filteredPrograms.value[0].position || 0) : 0
+      programData.position = firstPos - 1
+    }
+    
+    await createProgram(programData)
+    await getPrograms()
+    
+    // After creating, if we didn't push to top, or if we want to normalize positions
+    // we could trigger a reorder, but the server sort (position ASC, createdAt DESC)
+    // will handle it if we set position correctly.
+    
+    closeModal()
+  } catch (error) {
+    console.error('Error creating program:', error)
+  } finally {
+    if (done) done()
+    pendingProgramData.value = null
+    pendingDoneCallback.value = null
+  }
+}
+
+const handleReorder = async () => {
+  if (reorderLoading.value) return
+  
+  try {
+    await reorderFromSortedArray(localPrograms.value)
+    await getPrograms()
+  } catch (error) {
+    console.error('Error reordering programs:', error)
+    localPrograms.value = [...filteredPrograms.value]
+  }
+}
+
+const moveItem = async (index: number, direction: 'up' | 'down') => {
+  if (reorderLoading.value) return
+  
+  const newIndex = direction === 'up' ? index - 1 : index + 1
+  if (newIndex < 0 || newIndex >= localPrograms.value.length) return
+  
+  const items = [...localPrograms.value]
+  const temp = items[index]
+  items[index] = items[newIndex]
+  items[newIndex] = temp
+  
+  localPrograms.value = items
+  await handleReorder()
 }
 
 const getRegistrationLink = async (programId: string) => {
