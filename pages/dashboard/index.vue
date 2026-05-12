@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import DashboardOverview from '~/components/DashboardOverview.vue'
-import { definePageMeta } from '#imports'
+
 
 // Meta
 definePageMeta({

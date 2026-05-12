@@ -164,7 +164,7 @@ import { useUploadImage } from '@/composables/modules/upload/useUploadImage'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Icon from '@/components/Icon.vue'
-import { definePageMeta } from '#imports'
+
 
 definePageMeta({
   layout: 'dashboard',

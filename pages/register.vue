@@ -149,7 +149,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useInvitations } from '@/composables/modules/users/useInvitations'
 import { useSignup } from '@/composables/modules/auth/useSignup'
 import { useCustomToast } from '@/composables/core/useCustomToast'
-import { definePageMeta } from '#imports'
+
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 
 definePageMeta({

@@ -4,7 +4,7 @@
   
   <script setup lang="ts">
   import SubscriptionsModule from '~/components/SubscriptionsModule.vue'
-  import { definePageMeta } from '#imports'
+  
   
   definePageMeta({
     layout: 'dashboard',

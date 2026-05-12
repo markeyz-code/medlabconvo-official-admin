@@ -74,7 +74,6 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth_api } from '@/api_factory/modules/auth'
 import { useCustomToast } from '@/composables/core/useCustomToast'
-import { definePageMeta } from '#imports'
 
 definePageMeta({
   layout: false,

@@ -172,7 +172,7 @@
   import { useRoute } from 'vue-router'
   import { useResetPassword } from '@/composables/modules/auth/useResetPassword'
   import { useCustomToast } from '@/composables/core/useCustomToast'
-  import { definePageMeta } from '#imports'
+  
   import AnimatedInput from '@/components/ui/AnimatedInput.vue'
   
 

@@ -709,7 +709,7 @@
   import { useUpdateLabCast } from "@/composables/modules/labcast/useUpdateLabCast"
   import { useDeleteLabCast } from "@/composables/modules/labcast/useDeleteLabCast"
   import { useReorderLabcasts } from '@/composables/modules/labcast/useReorderLabcasts'
-  import { definePageMeta } from '#imports'
+  
   import Dashboard from '@/layouts/dashboard.vue' 
 
   const {

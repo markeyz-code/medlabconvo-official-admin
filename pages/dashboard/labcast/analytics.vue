@@ -188,7 +188,7 @@
   import { useGetSeasons } from "@/composables/modules/labcast/useGetSeasons"
   import { useGetPopularTags } from "@/composables/modules/labcast/useGetPopularTags"
   import { useGetLatestEpisodes } from "@/composables/modules/labcast/useGetLatestEpisodes"
-  import { definePageMeta } from '#imports'
+  
   import { computed, onMounted } from 'vue'
   // import Icon from '#components/Icon.vue'
   

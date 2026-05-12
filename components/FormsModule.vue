@@ -1,13 +1,13 @@
 <template>
-  <div class="space-y-6">
+  <div class="space-y-8">
     <!-- Header Actions -->
-    <div class="flex justify-between items-center">
-      <div class="flex items-center space-x-6 flex-1 max-w-2xl">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white/50 backdrop-blur-md p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+      <div class="flex items-center space-x-6 flex-1 w-full max-w-2xl">
         <div class="flex-1">
           <AnimatedInput
             v-model="searchQuery"
             id="formSearch"
-            label="Search forms"
+            label="Search all forms..."
             type="text"
           />
         </div>
@@ -15,50 +15,46 @@
           <SelectInput
             v-model="statusFilter"
             :options="[
-              { label: 'All status', value: '' },
-              { label: 'Active', value: 'active' },
-              { label: 'Inactive', value: 'inactive' }
+              { label: 'All Statuses', value: '' },
+              { label: 'Active Forms', value: 'active' },
+              { label: 'Inactive Forms', value: 'inactive' }
             ]"
           />
         </div>
       </div>
       <button
         @click="openCreateModal"
-        class="px-10 py-3 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-3"
+        class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-[#033958] to-[#044d77] text-white rounded-2xl font-bold text-sm shadow-xl shadow-blue-900/20 hover:shadow-2xl hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-3"
       >
-        <Plus class="w-4 h-4" />
-        <span>Create Form</span>
+        <div class="bg-white/20 p-1 rounded-lg">
+          <Plus class="w-4 h-4" />
+        </div>
+        <span>Create New Programme Form</span>
       </button>
     </div>
 
-    <!-- Forms Table -->
-    <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden">
+    <!-- Forms Grid/Table Container -->
+    <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-slate-200/50">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-slate-100 text-sm">
-          <thead class="bg-slate-50">
+          <thead class="bg-slate-50/50">
             <tr>
-              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
-                Title
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
+                Programme Form
               </th>
-              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
-                Description
-              </th>
-              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
                 Status
               </th>
-              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
-                Fields
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
+                Configuration
               </th>
-              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
-                Submissions
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
+                Engagement
               </th>
-              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
-                Form URL
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
+                Share Link
               </th>
-              <th scope="col" class="px-6 py-5 text-left font-bold text-slate-400">
-                Created
-              </th>
-              <th scope="col" class="px-6 py-5 text-right font-bold text-slate-400">
+              <th scope="col" class="px-8 py-6 text-right font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
                 Actions
               </th>
             </tr>
@@ -67,104 +63,107 @@
             <tr
               v-for="form in filteredForms"
               :key="form._id"
-              class="hover:bg-slate-50/50 transition-colors duration-150"
+              class="group hover:bg-blue-50/30 transition-all duration-300"
             >
-              <!-- Title -->
-              <td class="px-6 py-5 whitespace-nowrap">
-                <div class="font-bold text-slate-900">{{ form.title }}</div>
-              </td>
-
-              <!-- Description -->
-              <td class="px-6 py-5">
-                <div class="text-slate-500 max-w-xs truncate" :title="form.description">
-                  {{ form.description }}
+              <!-- Title & Description -->
+              <td class="px-8 py-6 whitespace-nowrap">
+                <div class="flex flex-col">
+                  <div class="font-bold text-slate-900 text-base group-hover:text-[#033958] transition-colors">
+                    {{ form.title || 'Untitled Professional Form' }}
+                  </div>
+                  <div class="text-slate-400 text-xs mt-1 max-w-xs truncate font-medium">
+                    {{ form.description || 'No description provided' }}
+                  </div>
                 </div>
               </td>
 
               <!-- Status -->
-              <td class="px-6 py-5 whitespace-nowrap">
+              <td class="px-8 py-6 whitespace-nowrap">
                 <button
                   @click="toggleFormStatus(form)"
                   :disabled="togglingFormId === form._id"
                   :class="[
-                    'px-3 py-1 inline-flex items-center text-sm font-bold rounded-full transition-all duration-200',
-                    form.isActive ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200',
-                    togglingFormId === form._id ? 'opacity-50 cursor-not-allowed' : ''
+                    'px-4 py-1.5 inline-flex items-center text-[11px] font-black uppercase tracking-widest rounded-full transition-all duration-300',
+                    form.isActive 
+                      ? 'bg-emerald-100 text-emerald-700 shadow-sm shadow-emerald-200' 
+                      : 'bg-slate-100 text-slate-500 shadow-sm shadow-slate-200',
+                    togglingFormId === form._id ? 'opacity-50 cursor-not-allowed scale-95' : 'hover:scale-105 active:scale-95'
                   ]"
                 >
-                  <span v-if="togglingFormId === form._id" class="mr-1">
+                  <div v-if="togglingFormId === form._id" class="mr-2">
                     <svg class="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                  </span>
-                  {{ form.isActive ? 'Active' : 'Inactive' }}
+                  </div>
+                  <div v-else :class="['w-1.5 h-1.5 rounded-full mr-2', form.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400']"></div>
+                  {{ form.isActive ? 'Live' : 'Draft' }}
                 </button>
               </td>
 
-              <!-- Fields Count -->
-              <td class="px-6 py-5 whitespace-nowrap">
-                <div class="text-slate-700 font-medium">{{ form.fields?.length || 0 }}</div>
-              </td>
-
-              <!-- Submissions Count -->
-              <td class="px-6 py-5 whitespace-nowrap">
-                <div class="text-slate-700 font-medium">{{ form.submissionsCount || 0 }}</div>
-              </td>
-
-              <!-- Form URL -->
-              <td class="px-6 py-5">
+              <!-- Configuration (Fields) -->
+              <td class="px-8 py-6 whitespace-nowrap">
                 <div class="flex items-center space-x-2">
-                  <a 
-                    :href="`https://www.medlabconvo.com/forms/submit/${form?.accessToken}`"
-                    target="_blank"
-                    class="text-blue-600 hover:underline truncate max-w-[150px] font-medium"
-                    :title="`https://www.medlabconvo.com/forms/submit/${form?.accessToken}`"
-                  >
-                    ...{{ form?.accessToken?.substring(form?.accessToken?.length - 8) }}
-                  </a>
-                  <button
-                    @click.stop="copyFormUrl(form)"
-                    :class="[
-                      'p-1.5 rounded-lg transition-all duration-200',
-                      copiedFormId === form._id 
-                        ? 'text-green-600 bg-green-50' 
-                        : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
-                    ]"
-                  >
-                    <Icon name="lucide:copy" class="w-4 h-4" />
-                  </button>
+                  <div class="p-2 bg-blue-50 rounded-lg text-[#033958]">
+                    <Icon name="lucide:layout" class="w-4 h-4" />
+                  </div>
+                  <span class="font-bold text-slate-700">{{ form.fields?.length || 0 }}</span>
+                  <span class="text-slate-400 text-xs font-bold uppercase tracking-tighter">Fields</span>
                 </div>
               </td>
 
-              <!-- Created Date -->
-              <td class="px-6 py-5 whitespace-nowrap text-slate-500 font-medium">
-                {{ formatDate(form.createdAt) }}
+              <!-- Engagement (Submissions) -->
+              <td class="px-8 py-6 whitespace-nowrap">
+                <div class="flex items-center space-x-2">
+                  <div class="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+                    <Icon name="lucide:users" class="w-4 h-4" />
+                  </div>
+                  <span class="font-bold text-slate-700">{{ form.submissionsCount || 0 }}</span>
+                  <span class="text-slate-400 text-xs font-bold uppercase tracking-tighter">Entries</span>
+                </div>
+              </td>
+
+              <!-- Form URL -->
+              <td class="px-8 py-6 whitespace-nowrap">
+                <div class="flex items-center space-x-3 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100 group/link cursor-pointer hover:bg-white hover:border-blue-200 transition-all duration-300" @click="copyFormUrl(form)">
+                  <a 
+                    :href="`https://www.medlabconvo.com/forms/submit/${form?.accessToken}`"
+                    target="_blank"
+                    class="text-blue-600 font-bold text-xs truncate max-w-[100px] hover:underline"
+                    @click.stop
+                  >
+                    /{{ form?.accessToken?.substring(0, 8) }}...
+                  </a>
+                  <Icon 
+                    :name="copiedFormId === form._id ? 'lucide:check' : 'lucide:copy'" 
+                    :class="['w-3.5 h-3.5 transition-all duration-300', copiedFormId === form._id ? 'text-emerald-500 scale-125' : 'text-slate-400 group-hover/link:text-blue-500']" 
+                  />
+                </div>
               </td>
 
               <!-- Actions -->
-              <td class="px-6 py-5 whitespace-nowrap text-right">
-                <div class="flex items-center justify-end space-x-1 text-slate-400">
+              <td class="px-8 py-6 whitespace-nowrap text-right">
+                <div class="flex items-center justify-end space-x-2">
                   <button
                     @click="editForm(form, 'edit')"
-                    class="p-2 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                    title="Edit form"
+                    class="p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-blue-600 hover:border-blue-200 hover:shadow-md rounded-xl transition-all duration-300"
+                    title="Configure form"
                   >
-                    <Icon name="lucide:pencil" class="w-4 h-4" />
+                    <Icon name="lucide:settings-2" class="w-4.5 h-4.5" />
                   </button>
                   <button
                     @click="viewSubmissions(form)"
-                    class="p-2 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
-                    title="View submissions"
+                    class="p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-md rounded-xl transition-all duration-300"
+                    title="Analyze results"
                   >
-                    <Icon name="lucide:eye" class="w-4 h-4" />
+                    <Icon name="lucide:bar-chart-3" class="w-4.5 h-4.5" />
                   </button>
                   <button
                     @click="deleteForm(form._id)"
-                    class="p-2 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                    title="Delete form"
+                    class="p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-red-600 hover:border-red-200 hover:shadow-md rounded-xl transition-all duration-300"
+                    title="Remove form"
                   >
-                    <Icon name="lucide:trash-2" class="w-4 h-4" />
+                    <Icon name="lucide:trash-2" class="w-4.5 h-4.5" />
                   </button>
                 </div>
               </td>
@@ -172,21 +171,33 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Empty State -->
+      <div v-if="!loading && filteredForms?.length === 0" class="text-center py-32">
+        <div class="w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 shadow-inner">
+          <Icon name="lucide:clipboard-list" class="w-10 h-10 text-slate-200" />
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">No forms found</h3>
+        <p class="text-slate-400 mt-2 max-w-sm mx-auto font-medium">We couldn't find any programme forms matching your current filters.</p>
+        <button 
+          @click="searchQuery = ''; statusFilter = ''" 
+          class="mt-8 text-[#033958] font-black text-xs uppercase tracking-widest hover:underline"
+        >
+          Clear all filters
+        </button>
+      </div>
+      
+      <!-- Loading State Overlay -->
+      <div v-if="loading" class="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center z-10">
+        <div class="flex flex-col items-center">
+          <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin"></div>
+          <span class="mt-4 text-xs font-black text-[#033958] uppercase tracking-[0.2em]">Syncing...</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="flex items-center justify-center py-12">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#033958]"></div>
-    </div>
-
-    <!-- Empty State -->
-    <div v-else-if="filteredForms?.length === 0" class="text-center py-20 bg-white rounded-3xl border border-slate-100">
-      <Icon name="lucide:clipboard-list" class="w-12 h-12 text-slate-200 mx-auto mb-4" />
-      <p class="text-slate-400 font-medium">No forms found matching your criteria</p>
-    </div>
-
-    <!-- Create/Edit Form Modal -->
-    <Modal v-model="showModal" title="Form Builder" size="xl">
+    <!-- Modals -->
+    <Modal v-model="showModal" title="Professional Form Architect" size="xl" :close-on-outside-click="false">
       <FormBuilder
         :form="selectedForm"
         :mode="mode"
@@ -195,8 +206,7 @@
       />
     </Modal>
 
-    <!-- Submissions Modal -->
-    <Modal v-model="showSubmissionsModal" title="Form Submissions" size="xl">
+    <Modal v-model="showSubmissionsModal" title="Form Submission Intelligence" size="xl">
       <FormSubmissions
         v-if="selectedForm"
         :form="selectedForm"
@@ -204,12 +214,11 @@
       />
     </Modal>
 
-    <!-- Delete Confirmation Modal -->
     <ConfirmModal
       v-model="showDeleteModal"
-      title="Delete Form"
-      message="Are you sure you want to delete this form? This action cannot be undone."
-      confirmText="Yes, Delete Form"
+      title="Archive Programme Form"
+      message="Are you sure you want to move this form to the archive? Public access will be immediately revoked."
+      confirmText="Archive Form"
       @confirm="executeDelete"
     />
   </div>
@@ -275,11 +284,11 @@ const filteredForms = computed(() => {
 // Methods
 const openCreateModal = () => {
   selectedForm.value = null
+  mode.value = 'create'
   showModal.value = true
 }
 
 const editForm = (form: any, action: any) => {
-  console.log('Editing form:', form, 'Action:', action)
   selectedForm.value = form
   mode.value = action
   showModal.value = true
@@ -359,8 +368,8 @@ const copyFormUrl = async (form: any) => {
     
     copiedFormId.value = form._id
     showToast({
-      title: "Success",
-      message: "Form URL copied to clipboard",
+      title: "Link Copied",
+      message: "The form URL is ready to be shared.",
       toastType: "success",
       duration: 3000,
     })
@@ -385,6 +394,13 @@ const toggleFormStatus = async (form: any) => {
     }
     await updateForm(form._id, updatedFormData)
     await getForms()
+    
+    showToast({
+      title: form.isActive ? "Form Deactivated" : "Form Published",
+      message: `The form status has been successfully updated.`,
+      toastType: "success",
+      duration: 3000,
+    })
   } catch (error) {
     console.error('Error toggling form status:', error)
   } finally {

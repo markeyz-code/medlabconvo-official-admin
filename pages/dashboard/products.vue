@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta } from '#imports'
+
 import ProductsModule from '@/components/ProductsModule.vue'
 
 definePageMeta({

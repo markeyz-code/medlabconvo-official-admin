@@ -107,7 +107,7 @@ import { useLogin } from '@/composables/modules/auth/useLogin'
 import { useUser } from '@/composables/modules/auth/user'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 import { useLoader } from '@/composables/core/useLoader'
-import { definePageMeta } from '#imports'
+
 
 // Meta
 definePageMeta({

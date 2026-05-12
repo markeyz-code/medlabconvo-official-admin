@@ -98,7 +98,7 @@
   import { ref, reactive } from 'vue'
   import { useForgotPassword } from '@/composables/modules/auth/useForgotPassword'
   import { useCustomToast } from '@/composables/core/useCustomToast'
-  import { definePageMeta } from '#imports'
+  
   import AnimatedInput from '@/components/ui/AnimatedInput.vue'
   
   

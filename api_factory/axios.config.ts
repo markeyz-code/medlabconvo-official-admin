@@ -1,9 +1,6 @@
 import axios, { type AxiosResponse } from "axios";
 import { useUser } from "@/composables/modules/auth/user";
 import { useCustomToast } from '@/composables/core/useCustomToast'
-const { showToast } = useCustomToast();
-
-const { token, logOut } = useUser();
 
 const $GATEWAY_ENDPOINT_WITHOUT_VERSION = import.meta.env
   .VITE_BASE_URL as string;
@@ -22,15 +19,11 @@ export const GATEWAY_ENDPOINT_V2 = axios.create({
 
 export const GATEWAY_ENDPOINT_WITH_AUTH = axios.create({
   baseURL: $GATEWAY_ENDPOINT,
-  headers: {
-    Authorization: `Bearer ${token.value}`,
-  },
 });
 
 export const GATEWAY_ENDPOINT_WITH_AUTH_FORM_DATA = axios.create({
   baseURL: $GATEWAY_ENDPOINT,
   headers: {
-    Authorization: `Bearer ${token.value}`,
     "Content-Type": "multipart/form-data",
   },
 });
@@ -40,9 +33,6 @@ export const GATEWAY_ENDPOINT_WITHOUT_VERSION = axios.create({
 });
 export const GATEWAY_ENDPOINT_WITHOUT_VERSION_WITH_AUTH = axios.create({
   baseURL: $GATEWAY_ENDPOINT_WITHOUT_VERSION,
-  headers: {
-    Authorization: `Bearer ${token.value}`,
-  },
 });
 export const IMAGE_UPLOAD_ENDPOINT = axios.create({
   baseURL: $IMAGE_UPLOAD_ENDPOINT,
@@ -58,10 +48,12 @@ const instanceArray = [
   GATEWAY_ENDPOINT_WITH_AUTH,
   GATEWAY_ENDPOINT_WITHOUT_VERSION,
   GATEWAY_ENDPOINT_WITHOUT_VERSION_WITH_AUTH,
+  GATEWAY_ENDPOINT_WITH_AUTH_FORM_DATA
 ];
 
 instanceArray.forEach((instance) => {
   instance.interceptors.request.use((config: any) => {
+    const { token } = useUser();
     if (token.value) {
       config.headers.Authorization = `Bearer ${token.value}`;
     }
@@ -73,6 +65,9 @@ instanceArray.forEach((instance) => {
       return response;
     },
     (err: any) => {
+      const { logOut } = useUser();
+      const { showToast } = useCustomToast();
+      
       if (typeof err.response === "undefined") {
         showToast({
           title: "Error",

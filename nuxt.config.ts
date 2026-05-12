@@ -5,6 +5,7 @@ export default defineNuxtConfig({
 
   devServer: {
     port: 3001,
+    host: '127.0.0.1'
   },
 
   postcss: {
@@ -85,6 +86,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxtjs/google-fonts",
     "@nuxtjs/robots",
+    "@vite-pwa/nuxt"
   ],
 
    googleFonts: {
@@ -95,6 +97,9 @@ export default defineNuxtConfig({
     },
     display: "swap",
     preload: true,
+  },
+  nitro: {
+    ssr: false,
   },
   compatibilityDate: '2025-04-08'
 });
