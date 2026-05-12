@@ -59,14 +59,14 @@ const props = defineProps({
   },
   size: {
     type: String as () => 'sm' | 'md' | 'lg' | 'xl' | 'full',
-    default: 'full'
+    default: 'lg'
   }
 })
 
 const emit = defineEmits(['update:modelValue', 'close'])
 
 const sizeClass = computed(() => {
-  return 'slideover-full'
+  return `slideover-${props.size}`
 })
 
 const close = () => {
