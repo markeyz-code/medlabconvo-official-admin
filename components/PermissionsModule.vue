@@ -82,7 +82,7 @@
     </div>
 
     <!-- Injection Sheet -->
-    <SlideOver v-model="showModal" title="Create permission">
+    <SlideOver v-model="showModal" size="full" title="Create permission">
       <div class="p-8 space-y-10">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <AnimatedInput

@@ -135,12 +135,12 @@
   </template>
   
   <script setup lang="ts">
-  import { definePageMeta, ref, onMounted } from '#imports'
+  import { ref, onMounted } from '#imports'
   import { useGetSeasons } from "@/composables/modules/labcast/useGetSeasons"
   import { useGetEpisodesBySeason } from "@/composables/modules/labcast/useGetEpisodesBySeason"
   import Icon from '@/components/Icon.vue'
   
-  definePageMeta({
+ definePageMeta({
     layout: 'dashboard'
   })
   

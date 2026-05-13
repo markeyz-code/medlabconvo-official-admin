@@ -1,7 +1,7 @@
 <template>
-  <div class="space-y-8 p-1">
+  <div class="space-y-4 p-1">
     <!-- Form Basic Info -->
-    <div class="bg-white/50 backdrop-blur-sm rounded-3xl p-8 border border-slate-100 shadow-sm space-y-6">
+    <div class="bg-white/50 backdrop-blur-sm rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
       <div class="flex items-center space-x-3 mb-2">
         <div class="w-2 h-8 bg-[#033958] rounded-full"></div>
         <h3 class="text-xl font-bold text-slate-900 tracking-tight">Basic Information</h3>
@@ -115,15 +115,15 @@
           leave-from-class="transform scale-100 opacity-100"
           leave-to-class="transform scale-95 opacity-0"
         >
-          <div
-            v-for="(field, index) in form.fields"
-            :key="field.id"
-            class="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all duration-500 group relative overflow-hidden"
-          >
+            <div
+              v-for="(field, index) in form.fields"
+              :key="field.id"
+              class="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all duration-500 group relative focus-within:z-50"
+            >
             <!-- Field Number Badge (Glassmorphism style) -->
             <div class="absolute top-0 right-0 w-32 h-32 bg-slate-50/50 -mr-16 -mt-16 rounded-full group-hover:bg-blue-50/50 transition-colors duration-500"></div>
             
-            <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-50 relative z-10">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-50 relative z-10">
               <div class="flex items-center space-x-4">
                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center text-[#033958] font-black text-lg shadow-inner">
                   {{ index + 1 }}
@@ -144,7 +144,7 @@
             </div>
 
             <div class="space-y-6 relative z-10">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-0 overflow-hidden rounded-2xl border border-slate-100">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-2xl border border-slate-100">
                 <AnimatedInput
                   v-model="field.label"
                   :id="'field-label-'+index"
@@ -171,7 +171,7 @@
                 />
               </div>
               
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-0 overflow-hidden rounded-2xl border border-slate-100">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-2xl border border-slate-100">
                 <AnimatedInput
                   v-model="field.placeholder"
                   :id="'field-placeholder-'+index"
@@ -210,8 +210,8 @@
             </div>
 
             <!-- Options for select/radio/checkbox -->
-            <div v-if="['select', 'radio', 'checkbox'].includes(field.type)" class="mt-8 pt-8 border-t border-slate-50 relative z-10">
-              <div class="flex items-center justify-between mb-6 px-2">
+            <div v-if="['select', 'radio', 'checkbox'].includes(field.type)" class="mt-4 pt-4 border-t border-slate-50 relative z-10">
+              <div class="flex items-center justify-between mb-3 px-2">
                 <label class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Options</label>
                 <button
                   @click="addOption(field)"
@@ -270,7 +270,7 @@
     </div>
 
     <!-- Post-submission Config -->
-    <div class="bg-gradient-to-br from-white to-slate-50 rounded-[2rem] p-8 border border-slate-100 shadow-sm space-y-6">
+    <div class="bg-gradient-to-br from-white to-slate-50 rounded-[2rem] p-6 border border-slate-100 shadow-sm space-y-4">
       <div class="flex items-center space-x-3 mb-2">
         <div class="w-2 h-8 bg-emerald-500 rounded-full"></div>
         <h3 class="text-xl font-bold text-slate-900 tracking-tight">Success & Redirection</h3>
@@ -295,7 +295,7 @@
     </div>
 
     <!-- Form Actions -->
-    <div class="flex items-center justify-between pt-10 border-t border-slate-200 sticky bottom-0 bg-white/80 backdrop-blur-md pb-4 px-2 z-50">
+    <div class="flex items-center justify-between pt-6 border-t border-slate-200 sticky bottom-0 bg-white/80 backdrop-blur-md pb-2 px-2 z-[60]">
       <div class="flex flex-col">
         <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Current Status</span>
         <div class="flex items-center space-x-2">

@@ -32,127 +32,150 @@
       </button>
     </div>
 
-    <!-- Programs Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-      <div
-        v-for="program in filteredPrograms"
-        :key="program.id"
-        class="group bg-white rounded-2xl border border-slate-100 overflow-hidden hover:border-[#033958]/20 hover: hover:[#033958]/5 transition-all duration-500"
-      >
-        <!-- Program Banner -->
-        <div class="relative h-40 bg-slate-50 overflow-hidden">
-          <div 
-            class="absolute inset-0 bg-gradient-to-br from-[#033958]/5 to-transparent group-hover:scale-110 transition-transform duration-700"
-          ></div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <Icon name="lucide:graduation-cap" class="w-12 h-12 text-[#033958]/10 group-hover:text-[#033958]/20 transition-colors duration-500" />
-          </div>
-          
-          <!-- Status Badge Overlay -->
-          <div class="absolute top-4 left-4">
-            <span :class="[
-              'px-3 py-1.5 text-sm font-bold rounded-full backdrop-blur-md',
-              program.status === 'active' ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-200' : 
-              program.status === 'inactive' ? 'bg-rose-500/10 text-rose-700 border border-rose-200' :
-              'bg-slate-500/10 text-slate-700 border border-slate-200'
-            ]">
-              {{ program.status }}
-            </span>
-          </div>
-        </div>
-        
-        <!-- Program Content -->
-        <div class="p-6">
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-sm font-bold text-slate-400">{{ program.category || 'Course' }}</span>
-            <div class="flex items-center space-x-1 transition-opacity duration-300">
-              <button
-                @click="editProgram(program)"
-                class="p-2 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-lg transition-all"
-              >
-                <Icon name="lucide:pencil" class="w-4 h-4" />
-              </button>
-              <button
-                @click="getRegistrationLink(program.id)"
-                class="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
-                title="Registration Link"
-              >
-                <Icon name="lucide:link" class="w-4 h-4" />
-              </button>
-              <button
-                @click="deleteProgram(program.id)"
-                class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-              >
-                <Icon name="lucide:trash-2" class="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-          
-          <h3 class="text-lg font-bold text-slate-900 mb-2 group-hover:text-[#033958] transition-colors duration-300 line-clamp-2 leading-tight">
-            {{ program.title }}
-          </h3>
-          <p class="text-sm text-slate-500 mb-6 line-clamp-3 leading-relaxed h-15">
-            {{ program.description }}
-          </p>
-          
-          <div class="grid grid-cols-2 gap-4 py-4 border-y border-slate-50 mb-6">
-            <div class="flex flex-col">
-              <span class="text-sm font-bold text-slate-400">Duration</span>
-              <span class="text-sm font-bold text-slate-700">{{ program.duration || 'Flexible' }}</span>
-            </div>
-            <div class="flex flex-col text-right">
-              <span class="text-sm font-bold text-slate-400">Applicants</span>
-              <span class="text-sm font-bold text-slate-700">{{ program.applicationsCount || 0 }}</span>
-            </div>
-          </div>
+    <!-- Programs Registry (Table Layout) -->
+    <div v-if="!loading && filteredPrograms.length > 0" class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm relative">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-separate border-spacing-0">
+          <thead>
+            <tr class="bg-slate-50/50 text-sm font-black uppercase tracking-widest text-slate-400">
+              <th class="px-8 py-6 border-b border-slate-100">Image</th>
+              <th class="px-8 py-6 border-b border-slate-100">Program Identity</th>
+              <th class="px-8 py-6 border-b border-slate-100">Status</th>
+              <th class="px-8 py-6 border-b border-slate-100 text-center">Applicants</th>
+              <th class="px-8 py-6 border-b border-slate-100">Duration</th>
+              <th class="px-8 py-6 border-b border-slate-100">Created At</th>
+              <th class="px-8 py-6 border-b border-slate-100 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-50">
+            <tr v-for="program in filteredPrograms" :key="program.id" class="group hover:bg-slate-50/50 transition-all duration-300">
+              <!-- Program Image -->
+              <td class="px-8 py-6">
+                <div class="relative w-16 h-12 rounded-xl overflow-hidden shadow-sm ring-2 ring-slate-100 group-hover:ring-blue-100 transition-all">
+                  <img 
+                    :src="program.image || '/placeholder-program.jpg'" 
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    alt="Program Thumbnail"
+                  />
+                  <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+              </td>
 
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2 text-slate-400">
-              <Icon name="lucide:calendar" class="w-4 h-4" />
-              <span class="text-sm font-bold">{{ formatDate(program.createdAt) }}</span>
-            </div>
-            <button 
-              @click="editProgram(program)"
-              class="text-[#033958] text-sm font-bold hover:underline decoration-2 underline-offset-4"
-            >
-              Edit
-            </button>
-          </div>
-        </div>
+              <!-- Program Identity -->
+              <td class="px-8 py-6">
+                <div class="flex flex-col">
+                  <span class="text-sm font-bold text-slate-900 leading-none mb-1 group-hover:text-[#033958] transition-colors line-clamp-1">
+                    {{ program.title }}
+                  </span>
+                  <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">{{ program.category || 'General' }}</span>
+                </div>
+              </td>
+
+              <!-- Status -->
+              <td class="px-8 py-6">
+                <span :class="[
+                  'inline-flex items-center px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full ring-1 ring-inset',
+                  program.status === 'active' ? 'bg-emerald-50 text-emerald-700 ring-emerald-500/20' : 'bg-amber-50 text-amber-700 ring-amber-500/20'
+                ]">
+                  {{ program.status }}
+                </span>
+              </td>
+
+              <!-- Applicants -->
+              <td class="px-8 py-6 text-center">
+                <div class="inline-flex flex-col items-center">
+                  <span class="text-sm font-black text-[#033958]">{{ program.applicationsCount || 0 }}</span>
+                  <span class="text-[10px] font-bold text-slate-400">Total</span>
+                </div>
+              </td>
+
+              <!-- Duration -->
+              <td class="px-8 py-6 text-sm font-bold text-slate-600">
+                {{ program.duration || 'Flexible' }}
+              </td>
+
+              <!-- Created At -->
+              <td class="px-8 py-6">
+                <span class="text-xs font-bold text-slate-400">{{ formatDate(program.createdAt) }}</span>
+              </td>
+
+              <!-- Actions -->
+              <td class="px-8 py-6">
+                <div class="flex items-center justify-end space-x-1">
+                  <button
+                    @click="previewProgram(program)"
+                    class="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                    title="Quick Preview"
+                  >
+                    <Icon name="lucide:eye" class="w-4 h-4" />
+                  </button>
+                  <button
+                    @click="editProgram(program)"
+                    class="p-2.5 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-xl transition-all"
+                    title="Edit Program"
+                  >
+                    <Icon name="lucide:pencil" class="w-4 h-4" />
+                  </button>
+                  <button
+                    @click="getRegistrationLink(program.id)"
+                    class="p-2.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"
+                    title="Registration Gateway"
+                  >
+                    <Icon name="lucide:link" class="w-4 h-4" />
+                  </button>
+                  <button
+                    @click="deleteProgram(program.id)"
+                    class="p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
+                    title="Delete Permanently"
+                  >
+                    <Icon name="lucide:trash-2" class="w-4 h-4" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="flex flex-col items-center justify-center py-24 space-y-4">
-      <div class="relative w-12 h-12">
-        <div class="absolute inset-0 rounded-full border-4 border-slate-100"></div>
+    <div v-if="loading" class="flex flex-col items-center justify-center py-32 space-y-4">
+      <div class="relative w-14 h-14">
+        <div class="absolute inset-0 rounded-full border-4 border-slate-50"></div>
         <div class="absolute inset-0 rounded-full border-4 border-t-[#033958] animate-spin"></div>
       </div>
-      <span class="text-sm font-bold text-slate-400 animate-pulse">Fetching curriculum...</span>
+      <span class="text-sm font-black uppercase tracking-widest text-slate-400 animate-pulse">Synchronizing curricula...</span>
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="filteredPrograms.length === 0" class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
-      <div class="w-20 h-20 bg-white rounded-2xl  flex items-center justify-center mb-6">
-        <Icon name="lucide:graduation-cap" class="w-10 h-10 text-slate-300" />
+    <div v-else-if="filteredPrograms.length === 0" class="flex flex-col items-center justify-center py-32 bg-slate-50/50 rounded-[3rem] border border-dashed border-slate-200">
+      <div class="w-24 h-24 bg-white rounded-[2rem] shadow-sm flex items-center justify-center mb-8">
+        <Icon name="lucide:graduation-cap" class="w-10 h-10 text-slate-100" />
       </div>
-      <h3 class="text-xl font-bold text-slate-900 mb-2">No programs found</h3>
-      <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed">Your educational portfolio is empty or doesn't match the search.</p>
+      <h3 class="text-2xl font-black text-[#033958] mb-2 tracking-tighter">No Programs Found</h3>
+      <p class="text-slate-400 mb-10 max-w-sm text-center leading-relaxed font-bold text-sm">Your educational portfolio is currently empty. Start by launching your first scientific curriculum.</p>
       <button
         @click="openCreateModal"
-        class="px-6 py-3 bg-white border border-slate-200 text-slate-900 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all font-semibold "
+        class="px-10 py-4 bg-[#033958] text-white rounded-2xl hover:bg-[#022a41] transition-all font-bold text-sm shadow-xl active:scale-95"
       >
         Launch New Program
       </button>
     </div>
 
     <!-- SlideOver for Edit/Create -->
-    <SlideOver v-model="showModal" :title="selectedProgram ? 'Edit Program' : 'New Program'">
+    <SlideOver v-model="showModal" size="full" :title="selectedProgram ? 'Edit Program' : 'New Program'">
       <ProgramForm
         :program="selectedProgram"
         @save="handleSaveProgram"
         @cancel="closeModal"
       />
+    </SlideOver>
+
+    <!-- SlideOver for Preview -->
+    <SlideOver v-model="showPreviewModal" size="full" title="Program Intelligence Preview">
+      <div class="p-10">
+        <ProgramPreview :program="previewingProgram" />
+      </div>
     </SlideOver>
 
     <!-- Registration Link Modal (Custom Premium Style) -->
@@ -214,6 +237,7 @@ import { useGetRegistrationLink } from '@/composables/modules/programs/useGetReg
 import { useCustomToast } from '@/composables/core/useCustomToast'
 import SlideOver from '@/components/SlideOver.vue'
 import ProgramForm from '@/components/ProgramForm.vue'
+import ProgramPreview from '@/components/ProgramPreview.vue'
 import Icon from '@/components/Icon.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
@@ -232,6 +256,8 @@ const { showToast } = useCustomToast()
 const searchQuery = ref('')
 const statusFilter = ref('')
 const showModal = ref(false)
+const showPreviewModal = ref(false)
+const previewingProgram = ref<any>(null)
 const showLinkModal = ref(false)
 const selectedProgram = ref<any>(null)
 const showDeleteModal = ref(false)
@@ -270,6 +296,11 @@ const openCreateModal = () => {
 const editProgram = (program: any) => {
   selectedProgram.value = program
   showModal.value = true
+}
+
+const previewProgram = (program: any) => {
+  previewingProgram.value = program
+  showPreviewModal.value = true
 }
 
 const closeModal = () => {

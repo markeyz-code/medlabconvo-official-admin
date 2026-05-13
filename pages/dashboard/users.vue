@@ -6,7 +6,7 @@
   import UsersModule from '~/components/UsersModule.vue'
   
   
-  definePageMeta({
+ definePageMeta({
     layout: 'dashboard',
     middleware: 'auth'
   })

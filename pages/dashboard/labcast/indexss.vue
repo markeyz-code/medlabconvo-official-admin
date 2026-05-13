@@ -147,13 +147,13 @@
   </template>
   
   <script setup lang="ts">
-  import { definePageMeta, onMounted } from '#imports'
+  import { onMounted } from '#imports'
   import { useGetLabCastStats } from "@/composables/modules/labcast/useGetLabCastStats"
   import { useGetLatestEpisodes } from "@/composables/modules/labcast/useGetLatestEpisodes"
   import { useGetPopularTags } from "@/composables/modules/labcast/useGetPopularTags"
   import Icon from "@/components/Icon.vue"
   
-  definePageMeta({
+ definePageMeta({
     layout: 'dashboard'
   })
   

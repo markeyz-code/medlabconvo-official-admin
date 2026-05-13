@@ -6,7 +6,7 @@
   import TeamsModule from '~/components/TeamsModule.vue'
   
   
-  definePageMeta({
+ definePageMeta({
     layout: 'dashboard',
     middleware: 'auth'
   })

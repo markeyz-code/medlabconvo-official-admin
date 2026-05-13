@@ -192,7 +192,7 @@
   import { computed, onMounted } from 'vue'
   // import Icon from '#components/Icon.vue'
   
-  definePageMeta({
+ definePageMeta({
     layout: 'dashboard'
   })
   

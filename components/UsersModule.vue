@@ -184,7 +184,7 @@
     </Modal>
 
     <!-- Configure Personnel (SlideOver) -->
-    <SlideOver v-model="showModal" title="User settings">
+    <SlideOver v-model="showModal" size="full" title="User settings">
       <UserForm
         :user="selectedUser"
         @save="handleSaveUser"

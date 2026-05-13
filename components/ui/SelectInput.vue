@@ -16,7 +16,7 @@
         <div
           @click="toggleDropdown"
           :class="[
-            'w-full py-4 pt-6 px-4 bg-white border border-slate-200 flex justify-between items-center cursor-pointer',
+            'w-full py-3 pt-5 px-4 bg-white border border-slate-200 flex justify-between items-center cursor-pointer',
             'focus:outline-none focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] transition-all duration-300 font-medium text-slate-900 rounded-2xl shadow-sm',
             roundedClasses,
             disabled ? 'opacity-50 cursor-not-allowed' : '',
@@ -44,76 +44,80 @@
           </svg>
         </div>
   
-        <!-- Dropdown -->
-        <div
-          v-if="showDropdown"
-          class="absolute z-50 mt-1 w-full bg-white  rounded-md overflow-hidden border border-gray-100"
-        >
-          <!-- Search Input -->
-          <div class="p-2 border-b-[0.5px]  sticky top-0 bg-white">
-            <div class="relative">
-              <svg 
-                class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <circle cx="11" cy="11" r="8"/>
-                <path d="m21 21-4.35-4.35"/>
-              </svg>
-              <input
-                ref="searchInputRef"
-                v-model="searchQuery"
-                type="text"
-                placeholder="Search..."
-                class="w-full pl-9 pr-3 py-3 border-[0.5px] border-gray-300 rounded-lg focus:border-[0.5px] focus:border-[#3BAB22] outline-none text-sm"
-                @click.stop
-              />
-            </div>
-          </div>
-          
-          <!-- Options List -->
-          <div class="max-h-48 overflow-y-auto">
-            <div
-              v-for="(option, index) in filteredOptions"
-              :key="index"
-              @click="selectOption(option)"
-              class="p-3 font-medium hover:bg-gray-25 m-1 rounded-lg cursor-pointer transition-colors text-sm text-[#1A1A1B]"
-            >
-              <!-- Custom option slot -->
-              <slot v-if="slots.default" :option="option" :index="index" />
-              <!-- Default option display -->
-              <template v-else>
-                {{ getLabel(option) }}
-              </template>
+        <!-- Dropdown (Teleported to Body for maximum z-index and no clipping) -->
+        <Teleport to="body">
+          <div
+            v-if="showDropdown"
+            ref="dropdownRef"
+            :style="dropdownStyle"
+            class="fixed z-[9999] bg-white rounded-xl border border-slate-100 shadow-2xl flex flex-col animate-in fade-in zoom-in duration-200"
+          >
+            <!-- Search Input -->
+            <div class="p-2 border-b-[0.5px] sticky top-0 bg-white rounded-t-xl">
+              <div class="relative">
+                <svg 
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input
+                  ref="searchInputRef"
+                  v-model="searchQuery"
+                  type="text"
+                  placeholder="Search..."
+                  class="w-full pl-9 pr-3 py-2.5 border-[0.5px] border-gray-200 rounded-lg focus:border-[#033958] outline-none text-sm transition-colors"
+                  @click.stop
+                />
+              </div>
             </div>
             
-            <!-- No results message -->
-            <div 
-              v-if="filteredOptions.length === 0" 
-              class="p-4 text-center text-sm text-gray-900"
-            >
-              No results found for "{{ searchQuery }}"
+            <!-- Options List -->
+            <div class="max-h-60 overflow-y-auto custom-scrollbar p-1">
+              <div
+                v-for="(option, index) in filteredOptions"
+                :key="index"
+                @click="selectOption(option)"
+                class="p-3 font-medium hover:bg-slate-50 rounded-lg cursor-pointer transition-colors text-sm text-slate-700 flex items-center justify-between group"
+              >
+                <span class="flex-1">
+                  <!-- Custom option slot -->
+                  <slot v-if="slots.default" :option="option" :index="index" />
+                  <!-- Default option display -->
+                  <template v-else>
+                    {{ getLabel(option) }}
+                  </template>
+                </span>
+                <Icon v-if="getValue(option) === modelValue" name="lucide:check" class="w-4 h-4 text-[#033958]" />
+              </div>
+              
+              <!-- No results message -->
+              <div 
+                v-if="filteredOptions.length === 0" 
+                class="p-8 text-center"
+              >
+                <Icon name="lucide:search-x" class="w-8 h-8 text-slate-200 mx-auto mb-2" />
+                <p class="text-xs font-bold text-slate-400">No results found for "{{ searchQuery }}"</p>
+              </div>
             </div>
           </div>
-        </div>
+        </Teleport>
       </div>
   
       <!-- Error message -->
-      <div v-if="errorMessage && showError" class="mt-2 flex items-center text-red-600 text-sm">
-        <svg class="mr-2 w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-             viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" x2="12" y1="8" y2="12"/>
-          <line x1="12" x2="12.01" y1="16" y2="16"/>
-        </svg>
+      <div v-if="errorMessage && showError" class="mt-2 flex items-center text-red-600 text-sm animate-in shake duration-300">
+        <Icon name="lucide:alert-circle" class="mr-2 w-4 h-4" />
         {{ errorMessage }}
       </div>
     </div>
   </template>
   
   <script setup lang="ts">
-  import { ref, computed, useId, onMounted, onUnmounted, nextTick } from 'vue'
+  import { ref, computed, useId, onMounted, onUnmounted, nextTick, reactive, watch } from 'vue'
+  import Icon from '@/components/Icon.vue'
   
   // Props
   interface Props {
@@ -153,9 +157,60 @@
   const showDropdown = ref(false)
   const isFocused = ref(false)
   const containerRef = ref<HTMLElement | null>(null)
+  const dropdownRef = ref<HTMLElement | null>(null)
   const searchInputRef = ref<HTMLInputElement | null>(null)
   const searchQuery = ref('')
   const inputId = useId()
+  
+  const dropdownStyle = reactive({
+    top: '0px',
+    left: '0px',
+    width: '0px',
+    minWidth: '200px'
+  })
+  
+  // Positioning logic
+  const updateDropdownPosition = () => {
+    if (!containerRef.value) return
+    
+    const rect = containerRef.value.getBoundingClientRect()
+    const windowHeight = window.innerHeight
+    const dropdownHeight = 300 // Max height estimate
+    
+    // Check if there's enough space below
+    const spaceBelow = windowHeight - rect.bottom
+    const openUpward = spaceBelow < dropdownHeight && rect.top > dropdownHeight
+    
+    dropdownStyle.left = `${rect.left}px`
+    dropdownStyle.width = `${rect.width}px`
+    
+    if (openUpward) {
+      // Position above: trigger top - dropdown height (approx 300)
+      // Since we don't know exact height, let's use bottom-up positioning
+      dropdownStyle.top = 'auto'
+      // fixed positioning needs a reference. Let's use top = rect.top - dropdownHeight
+      // Actually, it's safer to just set top and let CSS handle max-height.
+      // But let's just use bottom: window.innerHeight - rect.top + 4
+      dropdownStyle.bottom = `${window.innerHeight - rect.top + 4}px`
+      dropdownStyle.top = 'auto'
+    } else {
+      dropdownStyle.top = `${rect.bottom + 4}px`
+      dropdownStyle.bottom = 'auto'
+    }
+  }
+
+  // Improved positioning with auto-flip
+  watch(showDropdown, async (val) => {
+    if (val) {
+      await nextTick()
+      updateDropdownPosition()
+      window.addEventListener('scroll', updateDropdownPosition, true)
+      window.addEventListener('resize', updateDropdownPosition)
+    } else {
+      window.removeEventListener('scroll', updateDropdownPosition, true)
+      window.removeEventListener('resize', updateDropdownPosition)
+    }
+  })
   
   // Methods
   const toggleDropdown = async () => {
@@ -249,7 +304,10 @@
   
   // Click outside handler
   const handleClickOutside = (event: MouseEvent) => {
-    if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
+    const isClickInsideContainer = containerRef.value && containerRef.value.contains(event.target as Node)
+    const isClickInsideDropdown = dropdownRef.value && dropdownRef.value.contains(event.target as Node)
+    
+    if (!isClickInsideContainer && !isClickInsideDropdown) {
       showDropdown.value = false
       isFocused.value = false
       searchQuery.value = ''

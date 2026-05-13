@@ -6,7 +6,7 @@
   import FormsModule from '~/components/FormsModule.vue'
   
   
-  definePageMeta({
+ definePageMeta({
     layout: 'dashboard',
     middleware: 'auth'
   })

@@ -157,7 +157,7 @@
   import { useUpdateLabCast } from "@/composables/modules/labcast/useUpdateLabCast"
   import { useDeleteLabCast } from "@/composables/modules/labcast/useDeleteLabCast"
   
-  definePageMeta({
+ definePageMeta({
     layout: 'dashboard'
   })
   

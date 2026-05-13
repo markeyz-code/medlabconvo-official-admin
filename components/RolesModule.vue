@@ -106,7 +106,7 @@
     </div>
 
     <!-- Configuration Sheet -->
-    <SlideOver v-model="showModal" :title="isEditing ? 'Edit role' : 'Create role'">
+    <SlideOver v-model="showModal" size="full" :title="isEditing ? 'Edit role' : 'Create role'">
       <div class="p-8 space-y-10">
         <div class="space-y-8">
            <AnimatedInput

@@ -196,23 +196,23 @@
       </div>
     </div>
 
-    <!-- Modals -->
-    <Modal v-model="showModal" title="Professional Form Architect" size="xl" :close-on-outside-click="false">
+    <!-- Side Drawers -->
+    <SlideOver v-model="showModal" :title="mode === 'edit' ? 'Edit Programme Form' : 'Create Programme Form'" size="full">
       <FormBuilder
         :form="selectedForm"
         :mode="mode"
         @save="handleSaveForm"
         @cancel="closeModal"
       />
-    </Modal>
+    </SlideOver>
 
-    <Modal v-model="showSubmissionsModal" title="Form Submission Intelligence" size="xl">
+    <SlideOver v-model="showSubmissionsModal" title="Form Submission Intelligence" size="full">
       <FormSubmissions
         v-if="selectedForm"
         :form="selectedForm"
         @close="closeSubmissionsModal"
       />
-    </Modal>
+    </SlideOver>
 
     <ConfirmModal
       v-model="showDeleteModal"
@@ -234,6 +234,9 @@ import { useCustomToast } from "@/composables/core/useCustomToast"
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import { Plus } from 'lucide-vue-next'
+import SlideOver from '@/components/SlideOver.vue'
+import FormBuilder from '@/components/FormBuilder.vue'
+import FormSubmissions from '@/components/FormSubmissions.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // Composables

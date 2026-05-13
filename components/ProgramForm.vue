@@ -1,8 +1,8 @@
 <template>
-  <div class="animate-in slide-in-from-right duration-500 p-6">
+  <div class="animate-in slide-in-from-right duration-500 p-4">
     <!-- {{ program }} -->
     <!-- Step Indicator -->
-    <div class="mb-10">
+    <div class="mb-6">
 
       <div class="flex items-center justify-between px-2">
         <div
@@ -62,7 +62,6 @@
             id="programTitle"
             label="Program title"
             type="text"
-            required
             position="top"
           />
           <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
@@ -244,11 +243,11 @@
             <button @click="addHighlight" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add highlight</button>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div
-              v-for="(highlight, index) in form.highlights"
-              :key="index"
-              class="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4 relative group"
-            >
+              <div
+                v-for="(highlight, index) in form.highlights"
+                :key="index"
+                class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-4 relative group focus-within:z-20"
+              >
               <button
                 v-if="form.highlights.length > 1"
                 @click="removeHighlight(index)"
@@ -284,8 +283,8 @@
           <p class="text-sm text-slate-500">Add experts and speakers for this program. You can add bios and avatars now or later.</p>
         </header>
 
-        <section class="space-y-8">
-          <div v-for="(speaker, index) in form.speakers" :key="index" class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 relative group">
+        <section class="space-y-6">
+          <div v-for="(speaker, index) in form.speakers" :key="index" class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 relative group focus-within:z-20">
             <button
               @click="removeSpeaker(index)"
               type="button"
@@ -366,9 +365,9 @@
               <div
                 v-for="(field, index) in form.formFields"
                 :key="index"
-                class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 group relative"
+                class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 group relative focus-within:z-30"
               >
-                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-50">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-50">
                   <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-[#033958] font-bold text-sm">
                       {{ index + 1 }}
@@ -391,7 +390,6 @@
                       :id="'prog-field-label-'+index"
                       label="Label"
                       type="text"
-                      required
                       position="top"
                     />
                     <SelectInput
@@ -782,11 +780,6 @@ const { showToast } = useCustomToast()
 
 // handleSubmit in the child form component
 const handleSubmit = async () => {
-  if (!form.title.trim()) {
-    showToast({ title: "Validation Error", message: "Please enter a program title.", toastType: "error" })
-    return
-  }
-
   isSubmitting.value = true  // 👈 spinner starts here
 
   const extractUrl = (val: any) => {

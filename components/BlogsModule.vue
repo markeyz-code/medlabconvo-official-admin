@@ -128,7 +128,7 @@
     </div>
 
     <!-- Create/Edit Blog SlideOver -->
-    <SlideOver v-model="showModal" :title="selectedBlog ? 'Edit post' : 'Create post'">
+    <SlideOver v-model="showModal" size="full" :title="selectedBlog ? 'Edit post' : 'Create post'">
       <BlogForm
           :blog="selectedBlog"
           @save="handleSaveBlog"

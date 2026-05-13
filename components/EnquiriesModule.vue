@@ -97,7 +97,7 @@
     </div>
 
     <!-- Enquiry Detail Sheet -->
-    <SlideOver v-model="showDetailModal" title="Enquiry details">
+    <SlideOver v-model="showDetailModal" size="full" title="Enquiry details">
       <div v-if="selectedEnquiry" class="p-8 space-y-10">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div class="space-y-2">

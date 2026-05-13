@@ -6,7 +6,7 @@
   import SubscriptionsModule from '~/components/SubscriptionsModule.vue'
   
   
-  definePageMeta({
+ definePageMeta({
     layout: 'dashboard',
     middleware: 'auth'
   })

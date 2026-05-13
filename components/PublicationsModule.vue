@@ -163,7 +163,7 @@
     </div>
 
     <!-- SlideOver for Edit/Create -->
-    <SlideOver v-model="showModal" :title="selectedPublication ? 'Edit publication' : 'New publication'">
+    <SlideOver v-model="showModal" size="full" :title="selectedPublication ? 'Edit publication' : 'New publication'">
       <PublicationForm
         :publication="selectedPublication"
         @save="handleSavePublication"

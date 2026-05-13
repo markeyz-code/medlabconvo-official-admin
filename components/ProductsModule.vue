@@ -123,7 +123,7 @@
     </div>
 
     <!-- Modals & SlideOvers -->
-    <SlideOver v-model="showCreateModal" :title="editingProduct ? 'Edit product' : 'Add product'">
+    <SlideOver v-model="showCreateModal" size="full" :title="editingProduct ? 'Edit product' : 'Add product'">
       <div class="p-8">
         <ProductForm
           :product="editingProduct"

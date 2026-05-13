@@ -104,7 +104,7 @@
     </div>
 
     <!-- Slide-over for Edit/Create -->
-    <SlideOver v-model="isSlideOverOpen" :title="isEditing ? 'Edit page' : 'Create page'" size="lg">
+    <SlideOver v-model="isSlideOverOpen" size="full" :title="isEditing ? 'Edit page' : 'Create page'">
       <div class="p-8 pb-32">
         <form @submit.prevent="handleSubmit" class="space-y-10">
           <!-- Identity Section -->

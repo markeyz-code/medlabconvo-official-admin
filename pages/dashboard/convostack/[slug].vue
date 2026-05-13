@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { definePageMeta, useRouter, useRoute } from '#imports'
+import { useRouter, useRoute } from '#imports'
 import ConvoStackEditor from '@/components/convostack/ConvoStackEditor.vue'
 import { convostack_api } from '@/api_factory/modules/convostack'
 

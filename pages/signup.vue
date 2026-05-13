@@ -113,7 +113,7 @@
  
  
  // Meta
- definePageMeta({
+ ({
  layout: false,
  auth: false
  })

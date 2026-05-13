@@ -6,7 +6,7 @@
   import EnquiriesModule from '~/components/EnquiriesModule.vue'
   
   
-  definePageMeta({
+ definePageMeta({
     layout: 'dashboard',
     middleware: 'auth'
   })

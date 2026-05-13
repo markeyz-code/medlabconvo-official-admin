@@ -6,7 +6,7 @@
   import BlogsModule from '~/components/BlogsModule.vue'
   
   
-  definePageMeta({
+ definePageMeta({
     layout: 'dashboard',
     middleware: 'auth'
   })

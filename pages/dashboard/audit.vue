@@ -6,7 +6,7 @@
   import AuditModule from '~/components/AuditModule.vue'
   
   
-  definePageMeta({
+ definePageMeta({
     layout: 'dashboard',
     middleware: 'auth'
   })

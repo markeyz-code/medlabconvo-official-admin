@@ -215,7 +215,7 @@
 
     
   // Meta
-  definePageMeta({
+ definePageMeta({
     layout: false,
     auth: false
   })

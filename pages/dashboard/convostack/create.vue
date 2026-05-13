@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useRouter } from '#imports'
+import { useRouter } from '#imports'
 import ConvoStackEditor from '@/components/convostack/ConvoStackEditor.vue'
 
 definePageMeta({
