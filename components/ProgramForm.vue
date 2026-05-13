@@ -64,6 +64,13 @@
             type="text"
             position="top"
           />
+          <AnimatedInput
+            v-model="form.slug"
+            id="programSlug"
+            label="Custom URL Slug (e.g. mastery-course)"
+            type="text"
+            position="middle"
+          />
           <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
             <SelectInput
               v-model="form.category"
@@ -433,13 +440,29 @@
                     </div>
                   </div>
 
-                  <AnimatedInput
-                    v-model="field.description"
-                    :id="'prog-field-desc-'+index"
-                    label="Description / Help Text"
-                    type="text"
-                    position="bottom"
-                  />
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+                    <AnimatedInput
+                      v-model="field.description"
+                      :id="'prog-field-desc-'+index"
+                      label="Description / Help Text"
+                      type="text"
+                      position="middle"
+                      class="border-r border-slate-50"
+                    />
+                    <div v-if="['select', 'radio', 'checkbox'].includes(field.type)" class="flex items-center px-6 bg-white">
+                      <label class="flex items-center group cursor-pointer">
+                        <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#033958] transition-colors">
+                          <input
+                            v-model="field.allowOther"
+                            type="checkbox"
+                            class="absolute opacity-0 w-full h-full cursor-pointer z-10"
+                          />
+                          <div v-if="field.allowOther" class="w-2.5 h-2.5 bg-[#033958] rounded-sm"></div>
+                        </div>
+                        <span class="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#033958] transition-colors">Allow "Other"</span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
 
                 <!-- Options for select/radio/checkbox -->
@@ -626,6 +649,7 @@ const categoryOptions = [
 
 const form = reactive({
   title: '',
+  slug: '',
   category: '',
   description: '',
   duration: '',
@@ -654,12 +678,21 @@ const formOptions = computed(() => {
   }
   return options
 })
+const STORAGE_KEY = 'medlab_program_form_draft'
+
+// Cache form changes to localStorage
+watch(form, (newVal) => {
+  if (!props.program) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newVal))
+  }
+}, { deep: true })
 
 // Initialize form with program data if editing
 watchEffect(() => {
   if (props.program) {
     Object.assign(form, {
       title: props.program.title || '',
+      slug: props.program.slug || '',
       category: props.program.category || '',
       description: props.program.description || '',
       duration: props.program.duration || '',
@@ -676,6 +709,16 @@ watchEffect(() => {
       formFields: props.program.formFields?.length ? props.program.formFields.map((f: any) => ({...f})) : []
     })
     maxStepReached.value = 3
+  } else {
+    // Check for draft in localStorage
+    const savedDraft = localStorage.getItem(STORAGE_KEY)
+    if (savedDraft) {
+      try {
+        const draft = JSON.parse(savedDraft)
+        Object.assign(form, draft)
+        return
+      } catch (e) {}
+    }
   }
 })
 
@@ -719,7 +762,8 @@ const addFormField = () => {
     required: false,
     placeholder: '',
     description: '',
-    options: []
+    options: [],
+    allowOther: false
   })
 }
 const removeFormField = (index: number) => form.formFields.splice(index, 1)
@@ -806,6 +850,7 @@ const handleSubmit = async () => {
   // ✅ Pass done() — parent calls it when its async work finishes
   emit('save', cleanedForm, () => {
     isSubmitting.value = false  // 👈 spinner stops here, driven by parent
+    localStorage.removeItem(STORAGE_KEY)
   })
 }
 </script>

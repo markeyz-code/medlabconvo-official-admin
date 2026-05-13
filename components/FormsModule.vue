@@ -127,12 +127,12 @@
               <td class="px-8 py-6 whitespace-nowrap">
                 <div class="flex items-center space-x-3 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100 group/link cursor-pointer hover:bg-white hover:border-blue-200 transition-all duration-300" @click="copyFormUrl(form)">
                   <a 
-                    :href="`https://www.medlabconvo.com/forms/submit/${form?.accessToken}`"
+                    :href="`https://www.medlabconvo.com/forms/submit/${form?.slug}`"
                     target="_blank"
                     class="text-blue-600 font-bold text-xs truncate max-w-[100px] hover:underline"
                     @click.stop
                   >
-                    /{{ form?.accessToken?.substring(0, 8) }}...
+                    /{{ form?.slug }}
                   </a>
                   <Icon 
                     :name="copiedFormId === form._id ? 'lucide:check' : 'lucide:copy'" 
@@ -221,6 +221,95 @@
       confirmText="Archive Form"
       @confirm="executeDelete"
     />
+
+    <!-- Form Connectivity Gateway (Premium Modal) -->
+    <Modal v-model="showLinkModal" title="Gateway Activation" size="md">
+      <div v-if="generatedLink" class="p-0 overflow-hidden">
+        <!-- Hero Header -->
+        <div class="bg-gradient-to-br from-[#033958] to-[#044d77] p-10 text-center relative overflow-hidden">
+          <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+          <Icon name="lucide:zap" class="w-32 h-32 text-white/5 absolute -top-8 -right-8 rotate-12" />
+          
+          <div class="relative z-10 space-y-4">
+            <div class="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20 flex items-center justify-center mx-auto shadow-2xl">
+              <Icon name="lucide:rocket" class="w-10 h-10 text-white" />
+            </div>
+            <div>
+              <h3 class="text-2xl font-black text-white tracking-tighter">Form is Live!</h3>
+              <p class="text-blue-100/60 text-sm font-bold uppercase tracking-widest">Premium sharing enabled</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Body -->
+        <div class="p-10 space-y-10 bg-white">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between px-1">
+              <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Your Unique Form URL</label>
+              <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-1">
+                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                Publicly Reachable
+              </span>
+            </div>
+            
+            <div class="group relative">
+              <div class="absolute inset-0 bg-blue-500/5 blur-xl group-hover:bg-blue-500/10 transition-all rounded-3xl"></div>
+              <div class="relative flex items-center bg-slate-50 border border-slate-100 rounded-3xl p-2 pl-6 focus-within:border-blue-300 focus-within:bg-white transition-all shadow-inner">
+                <span class="text-sm font-bold text-slate-400 select-none mr-2">/</span>
+                <input
+                  :value="generatedLink.split('/').pop()"
+                  readonly
+                  class="flex-1 bg-transparent border-none text-sm font-black text-[#033958] focus:ring-0 cursor-default truncate py-4"
+                />
+                <button
+                  @click="copyGeneratedLink"
+                  class="px-6 py-4 bg-[#033958] text-white rounded-[1.2rem] font-bold text-xs hover:bg-[#022a41] transition-all active:scale-95 flex items-center gap-2 shadow-lg"
+                >
+                  <Icon :name="isCopied ? 'lucide:check' : 'lucide:copy'" class="w-4 h-4" />
+                  <span>{{ isCopied ? 'Copied' : 'Copy' }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sharing Strategies -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 group hover:border-blue-100 transition-all cursor-pointer">
+              <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-blue-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                <Icon name="lucide:qr-code" class="w-5 h-5" />
+              </div>
+              <h4 class="text-xs font-black text-slate-900 uppercase mb-1">QR Access</h4>
+              <p class="text-[10px] text-slate-400 font-bold leading-tight">Instant access via mobile scan</p>
+            </div>
+            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 group hover:border-indigo-100 transition-all cursor-pointer">
+              <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-indigo-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                <Icon name="lucide:share-2" class="w-5 h-5" />
+              </div>
+              <h4 class="text-xs font-black text-slate-900 uppercase mb-1">Social Share</h4>
+              <p class="text-[10px] text-slate-400 font-bold leading-tight">Broaden your campaign reach</p>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
+            <button 
+              @click="showLinkModal = false"
+              class="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors"
+            >
+              Back to Dashboard
+            </button>
+            <a 
+              :href="generatedLink" 
+              target="_blank"
+              class="text-xs font-black uppercase tracking-widest text-[#033958] flex items-center gap-2 hover:gap-3 transition-all"
+            >
+              View Live Form
+              <Icon name="lucide:external-link" class="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -257,6 +346,9 @@ const copiedFormId = ref<string | null>(null)
 const togglingFormId = ref<string | null>(null)
 const showDeleteModal = ref(false)
 const idToDelete = ref('')
+const showLinkModal = ref(false)
+const generatedLink = ref('')
+const isCopied = ref(false)
 
 // Load forms on mount
 onMounted(() => {
@@ -332,13 +424,39 @@ const handleSaveForm = async (formData: any) => {
       delete cleanedFormData.programTitle
       
       await updateForm(selectedForm.value._id, cleanedFormData)
+      showToast({
+        title: "Form Updated",
+        message: "Your changes have been successfully saved.",
+        toastType: "success",
+      })
     } else {
-      await createForm(formData)
+      const result = await createForm(formData)
+      if (result) {
+        generatedLink.value = `https://www.medlabconvo.com/forms/submit/${result.slug}`
+        showLinkModal.value = true
+      }
     }
     await getForms()
     closeModal()
   } catch (error) {
     console.error('Error saving form:', error)
+  }
+}
+
+const copyGeneratedLink = async () => {
+  try {
+    await navigator.clipboard.writeText(generatedLink.value)
+    isCopied.value = true
+    showToast({
+      title: "Link Copied",
+      message: "Ready to share with your audience.",
+      toastType: "success",
+    })
+    setTimeout(() => {
+      isCopied.value = false
+    }, 2000)
+  } catch (error) {
+    console.error('Failed to copy link:', error)
   }
 }
 
@@ -366,7 +484,7 @@ const formatDate = (date: string) => {
 
 const copyFormUrl = async (form: any) => {
   try {
-    const formUrl = `https://www.medlabconvo.com/forms/submit/${form.accessToken}`
+    const formUrl = `https://www.medlabconvo.com/forms/submit/${form.slug}`
     await navigator.clipboard.writeText(formUrl)
     
     copiedFormId.value = form._id

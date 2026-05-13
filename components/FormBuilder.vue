@@ -16,6 +16,13 @@
             type="text"
             position="top"
           />
+          <AnimatedInput
+            v-model="form.slug"
+            id="formSlug"
+            label="Custom URL Slug (e.g. general-enquiry)"
+            type="text"
+            position="middle"
+          />
         </div>
         <div>
           <SelectInput
@@ -200,13 +207,34 @@
                 </div>
               </div>
 
-              <AnimatedInput
-                v-model="field.description"
-                :id="'field-desc-'+index"
-                label="Help Text (Optional)"
-                type="text"
-                position="bottom"
-              />
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-2xl border border-slate-100">
+                <AnimatedInput
+                  v-model="field.description"
+                  :id="'field-desc-'+index"
+                  label="Help Text (Optional)"
+                  type="text"
+                  position="middle"
+                  class="border-r border-slate-50"
+                />
+                <div v-if="['select', 'radio', 'checkbox'].includes(field.type)" class="flex items-center px-8 bg-white">
+                  <label class="flex items-center group cursor-pointer w-full py-4">
+                    <div class="relative flex items-center justify-center w-6 h-6 rounded-lg border-2 border-slate-200 group-hover:border-[#27628C] transition-all duration-300 overflow-hidden">
+                      <input
+                        v-model="field.allowOther"
+                        type="checkbox"
+                        class="absolute opacity-0 w-full h-full cursor-pointer z-10"
+                      />
+                      <div 
+                        v-if="field.allowOther" 
+                        class="w-full h-full bg-[#27628C] flex items-center justify-center animate-in fade-in zoom-in duration-200"
+                      >
+                        <Icon name="lucide:check" class="w-4 h-4 text-white" />
+                      </div>
+                    </div>
+                    <span class="ml-4 text-sm font-bold text-slate-600 group-hover:text-[#27628C] transition-colors">Allow "Other" option</span>
+                  </label>
+                </div>
+              </div>
             </div>
 
             <!-- Options for select/radio/checkbox -->
@@ -346,6 +374,7 @@ const emit = defineEmits(['save', 'cancel'])
 
 const form = reactive({
   title: '',
+  slug: '',
   bannerImage: '',
   description: '',
   instructions: '',
@@ -361,11 +390,21 @@ onMounted(async () => {
   await getPrograms()
 })
 
+const STORAGE_KEY = 'medlab_standalone_form_draft'
+
+// Cache form changes to localStorage
+watch(form, (newVal) => {
+  if (!props.form) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newVal))
+  }
+}, { deep: true })
+
 // Initialize form with data if editing
 watchEffect(() => {
   if (props.form) {
     Object.assign(form, {
       title: props.form.title || '',
+      slug: props.form.slug || '',
       bannerImage: props.form.bannerImage || '',
       description: props.form.description || '',
       instructions: props.form.instructions || '',
@@ -376,9 +415,22 @@ watchEffect(() => {
       redirectUrl: props.form.redirectUrl || ''
     })
   } else {
-    // Reset form for new form
+    // Check for draft in localStorage
+    const savedDraft = localStorage.getItem(STORAGE_KEY)
+    if (savedDraft) {
+      try {
+        const draft = JSON.parse(savedDraft)
+        Object.assign(form, draft)
+        return // Skip default reset
+      } catch (e) {
+        console.error('Failed to parse form draft', e)
+      }
+    }
+
+    // Reset form for new form if no draft
     Object.assign(form, {
       title: '',
+      slug: '',
       bannerImage: '',
       description: '',
       instructions: '',
@@ -402,7 +454,8 @@ const addField = () => {
     required: false,
     placeholder: '',
     description: '',
-    options: []
+    options: [],
+    allowOther: false
   })
 }
 
@@ -430,6 +483,7 @@ const handleSubmit = () => {
   }
   
   emit('save', formData)
+  localStorage.removeItem(STORAGE_KEY)
 }
 </script>
 

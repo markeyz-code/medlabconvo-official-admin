@@ -169,7 +169,7 @@ const formatDate = (date: string) => {
 
 const copyLink = async () => {
   // Mock logic to show link functionality
-  const link = `https://medlabconvo.com/programs/${props.program?.id}`
+  const link = `https://medlabconvo.com/programs/${props.program?.id || props.program?._id}`
   await navigator.clipboard.writeText(link)
   showToast({
     title: 'Link Copied',
