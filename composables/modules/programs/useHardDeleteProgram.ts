@@ -14,7 +14,7 @@ export const useHardDeleteProgram = () => {
     success.value = false
 
     try {
-      await programs_api.$_hard_delete_program(programId)
+      const response = await programs_api.$_hard_delete_program(programId)
       if ([200, 201].includes(response?.status)) {
         success.value = true
 

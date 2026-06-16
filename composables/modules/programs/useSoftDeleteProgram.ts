@@ -14,7 +14,7 @@ export const useSoftDeleteProgram = () => {
     success.value = false
 
     try {
-      await programs_api.$_soft_delete_program(programId)
+      const response = await programs_api.$_soft_delete_program(programId)
       if ([200, 201].includes(response?.status)) {
         success.value = true
 

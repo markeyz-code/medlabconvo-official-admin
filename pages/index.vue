@@ -100,17 +100,17 @@
 </template>
 
 <script setup lang="ts">
-import Icon from '@/components/Icon.vue'
-import { useLogin } from '@/composables/modules/auth/useLogin'
-import { useUser } from '@/composables/modules/auth/user'
-import { useCustomToast } from '@/composables/core/useCustomToast'
-import { useLoader } from '@/composables/core/useLoader'
-
 // Meta — must be at top level
 definePageMeta({
   layout: false,
   auth: false
 })
+
+import Icon from '@/components/Icon.vue'
+import { useLogin } from '@/composables/modules/auth/useLogin'
+import { useUser } from '@/composables/modules/auth/user'
+import { useCustomToast } from '@/composables/core/useCustomToast'
+import { useLoader } from '@/composables/core/useLoader'
 
 // Composables
 const router = useRouter()

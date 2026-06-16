@@ -75,11 +75,11 @@
                 @click="toggleMenu(item.name)"
                 :class="[
                   'w-full group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 relative text-slate-500 hover:bg-slate-50 hover:text-slate-900',
-                  item.children.some(child => $route.path === child.path) ? 'bg-slate-50 text-[#033958]' : ''
+                  item.children.some(child => isActive(child.path)) ? 'bg-slate-50 text-[#033958]' : ''
                 ]"
               >
                 <div class="flex items-center">
-                  <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 text-slate-400 group-hover:text-slate-900', item.children.some(child => $route.path === child.path) ? 'text-[#033958]' : '']" />
+                  <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 text-slate-400 group-hover:text-slate-900', item.children.some(child => isActive(child.path)) ? 'text-[#033958]' : '']" />
                   <span class="ml-4 font-medium text-sm tracking-tight">{{ item.name }}</span>
                 </div>
                 <Icon 
@@ -98,7 +98,7 @@
                   :to="child.path"
                   :class="[
                     'block px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300',
-                    $route.path === child.path
+                    isActive(child.path)
                       ? 'bg-[#033958] text-white'
                       : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                   ]"
@@ -115,13 +115,13 @@
               :to="item.path"
               :class="[
                 'group flex items-center px-4 py-3 rounded-xl transition-all duration-300 relative',
-                $route.path === item.path 
+                isActive(item.path) 
                   ? 'bg-[#033958] text-white' 
                   : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
               ]"
               @click="isMobile && closeSidebar()"
             >
-              <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110', $route.path === item.path ? 'text-white' : 'text-slate-400 group-hover:text-slate-900']" />
+              <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110', isActive(item.path) ? 'text-white' : 'text-slate-400 group-hover:text-slate-900']" />
               <span class="ml-4 font-medium text-sm tracking-tight">{{ item.name }}</span>
               
               <span 
@@ -310,6 +310,14 @@ const toggleMenu = (name: string) => {
   }
 }
 
+const isActive = (path: string) => {
+  if (!path) return false;
+  if (path === '/dashboard') {
+    return route.path === '/dashboard';
+  }
+  return route.path === path || route.path.startsWith(`${path}/`);
+}
+
 // Navigation items
 const { hasPermission } = useUser()
 
@@ -427,7 +435,7 @@ onMounted(async () => {
   
   // Auto-expand menus with active children
   navigationItems.value.forEach(item => {
-    if (item.children && item.children.some(child => route.path === child.path)) {
+    if (item.children && item.children.some(child => isActive(child.path))) {
       if (!expandedMenus.value.includes(item.name)) {
         expandedMenus.value.push(item.name)
       }

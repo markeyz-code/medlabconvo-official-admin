@@ -50,7 +50,7 @@
     <!-- Step Content -->
     <form @submit.prevent="handleSubmit" class="space-y-8">
       <!-- Step 1: Basic Information -->
-      <div v-if="currentStep === 0" class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div v-if="steps[currentStep]?.id === 'core'" class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <header class="mb-8">
           <h3 class="text-xl font-bold text-slate-900 mb-1">Basic details</h3>
           <p class="text-sm text-slate-500">Enter the core information for this program.</p>
@@ -115,7 +115,7 @@
       </div>
 
       <!-- Step 2: Curriculum & Focus -->
-      <div v-if="currentStep === 1" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div v-if="steps[currentStep]?.id === 'curriculum'" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <header class="mb-8">
           <h3 class="text-xl font-bold text-slate-900 mb-1">Curriculum design</h3>
           <p class="text-sm text-slate-500">Detail the focus and outcomes of this program.</p>
@@ -216,7 +216,7 @@
       </div>
 
       <!-- Step 3: Visual Assets & Highlights -->
-      <div v-if="currentStep === 2" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div v-if="steps[currentStep]?.id === 'media'" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <header class="mb-8">
           <h3 class="text-xl font-bold text-slate-900 mb-1">Visual assets</h3>
           <p class="text-sm text-slate-500">Upload media and add key highlights for this program.</p>
@@ -283,7 +283,7 @@
       </div>
       
       <!-- Step 4: Speakers & Faculty -->
-      <div v-if="currentStep === 3" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div v-if="steps[currentStep]?.id === 'faculty'" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <header class="mb-8">
           <h3 class="text-xl font-bold text-slate-900 mb-1">Scientific speakers & mentors</h3>
            <!-- {{ form.speakers }} -->
@@ -349,7 +349,7 @@
       </div>
 
         <!-- Step 5: Registration Form Builder -->
-        <div v-if="currentStep === 4" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div v-if="steps[currentStep]?.id === 'registration'" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <header class="mb-8">
             <h3 class="text-xl font-bold text-slate-900 mb-1">Registration Builder</h3>
             <p class="text-sm text-slate-500">Define custom fields for this program's application form.</p>
@@ -516,7 +516,7 @@
         </div>
 
         <!-- Step 6: Final Review -->
-        <div v-if="currentStep === 5" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div v-if="steps[currentStep]?.id === 'review'" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <header class="mb-8 text-center">
           <h3 class="text-xl font-bold text-slate-900 mb-1">Review program</h3>
           <p class="text-sm text-slate-500">Double check your program settings before publishing.</p>
@@ -628,14 +628,22 @@ const currentStep = ref(0)
 const maxStepReached = ref(0)
 const isSubmitting = ref(false)
 
-const steps = [
-  { title: 'Core info', description: 'Basic details' },
-  { title: 'Curriculum', description: 'Learning path' },
-  { title: 'Media', description: 'Visual assets' },
-  { title: 'Faculty', description: 'Speakers' },
-  { title: 'Registration', description: 'Custom fields' },
-  { title: 'Review', description: 'Final check' }
-]
+const hasAttachedForm = computed(() => !!form.formId || !!form.externalFormLink)
+
+const steps = computed(() => {
+  const allSteps = [
+    { title: 'Core info', description: 'Basic details', id: 'core' },
+    { title: 'Curriculum', description: 'Learning path', id: 'curriculum' },
+    { title: 'Media', description: 'Visual assets', id: 'media' },
+    { title: 'Faculty', description: 'Speakers', id: 'faculty' },
+    { title: 'Registration', description: 'Custom fields', id: 'registration' },
+    { title: 'Review', description: 'Final check', id: 'review' }
+  ]
+  if (hasAttachedForm.value) {
+    return allSteps.filter((s) => s.id !== 'registration')
+  }
+  return allSteps
+})
 
 const categoryOptions = [
   {label:'Technology training',value:'Technology Training'},
@@ -722,9 +730,18 @@ watchEffect(() => {
   }
 })
 
+watch(hasAttachedForm, () => {
+  if (currentStep.value >= steps.value.length) {
+    currentStep.value = steps.value.length - 1
+  }
+  if (maxStepReached.value >= steps.value.length) {
+    maxStepReached.value = steps.value.length - 1
+  }
+})
+
 // Navigation methods
 const nextStep = () => {
-  if (currentStep.value < steps.length - 1) {
+  if (currentStep.value < steps.value.length - 1) {
     currentStep.value++
     if (currentStep.value > maxStepReached.value) {
       maxStepReached.value = currentStep.value
