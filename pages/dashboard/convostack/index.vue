@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import ConvoStackModule from '@/components/convostack/ConvoStackModule.vue'
 definePageMeta({
   layout: "dashboard"
 })
+import ConvoStackModule from '@/components/convostack/ConvoStackModule.vue'
 </script>

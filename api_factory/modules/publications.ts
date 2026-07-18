@@ -37,7 +37,7 @@ export type CreatePublicationData = {
   doiLink?: string
 }
 
-export type UpdatePublicationData = Partial<CreatePublicationData>
+export type UpdatePublicationData = Partial<CreatePublicationData> & { status?: PublicationStatus }
 
 export type ReviewPublicationData = {
   rejectionReason: string

@@ -144,18 +144,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+definePageMeta({
+  layout: false,
+  auth: false
+})
+
 import { useInvitations } from '@/composables/modules/users/useInvitations'
 import { useSignup } from '@/composables/modules/auth/useSignup'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
-
-definePageMeta({
-  layout: false,
-  auth: false
-})
 
 const route = useRoute()
 const router = useRouter()

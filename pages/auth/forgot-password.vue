@@ -95,12 +95,15 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, reactive } from 'vue'
+  definePageMeta({
+    layout: false,
+    auth: false
+  })
+
   import { useForgotPassword } from '@/composables/modules/auth/useForgotPassword'
   import { useCustomToast } from '@/composables/core/useCustomToast'
   
   import AnimatedInput from '@/components/ui/AnimatedInput.vue'
-  
   
   // Form data
   const form = reactive({
@@ -123,12 +126,5 @@
       // Error is handled by the composable
     }
   }
-
-    
-  // Meta
- definePageMeta({
-    layout: false,
-    auth: false
-  })
   </script>
   

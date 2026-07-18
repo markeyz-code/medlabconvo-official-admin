@@ -168,14 +168,16 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, reactive, computed } from 'vue'
-  import { useRoute } from 'vue-router'
+  definePageMeta({
+    layout: false,
+    auth: false
+  })
+
   import { useResetPassword } from '@/composables/modules/auth/useResetPassword'
   import { useCustomToast } from '@/composables/core/useCustomToast'
   
   import AnimatedInput from '@/components/ui/AnimatedInput.vue'
   
-
   // Route and composable
   const route = useRoute()
   const token = computed(() => route.query.token as string)
@@ -212,12 +214,5 @@
       // Error is handled by the composable
     }
   }
-
-    
-  // Meta
- definePageMeta({
-    layout: false,
-    auth: false
-  })
   </script>
   

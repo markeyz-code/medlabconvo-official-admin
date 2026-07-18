@@ -71,18 +71,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useLoader } from '@/composables/core/useLoader'
-import { useCustomToast } from '@/composables/core/useCustomToast'
-import { useUser } from '@/composables/modules/auth/user'
-import { auth_api } from '@/api_factory/modules/auth'
-
-
 definePageMeta({
   layout: false,
   auth: false
 })
+
+import { useLoader } from '@/composables/core/useLoader'
+import { useCustomToast } from '@/composables/core/useCustomToast'
+import { useUser } from '@/composables/modules/auth/user'
+import { auth_api } from '@/api_factory/modules/auth'
 
 const router = useRouter()
 const route = useRoute()

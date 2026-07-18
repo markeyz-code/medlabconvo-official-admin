@@ -178,33 +178,20 @@
                 <Edit class="w-5 h-5 group-hover/btn:scale-110 transition-transform" />
               </button>
               
-              <!-- Status Action Buttons -->
-              <button
-                v-if="publication.status === 'draft'"
-                @click="submitForReview(publication._id)"
-                class="p-2.5 text-slate-600 hover:text-yellow-600 hover:bg-yellow-50 rounded-xl transition-all duration-200 group/btn"
-                title="Submit for Review"
+              <!-- Aggressive Status Dropdown -->
+              <select
+                :value="publication.status"
+                @change="handleAggressiveStatusUpdate(publication, $event.target.value)"
+                class="p-2 text-sm border-2 border-amber-500 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none font-semibold text-slate-700 bg-amber-50 cursor-pointer transition-all duration-200 hover:bg-amber-100"
+                title="Update Status Aggressively"
               >
-                <Send class="w-5 h-5 group-hover/btn:scale-110 transition-transform" />
-              </button>
-              
-              <button
-                v-if="publication.status === 'pending_review'"
-                @click="approvePublication(publication._id)"
-                class="p-2.5 text-slate-600 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all duration-200 group/btn"
-                title="Approve"
-              >
-                <Check class="w-5 h-5 group-hover/btn:scale-110 transition-transform" />
-              </button>
-              
-              <button
-                v-if="publication.status === 'approved'"
-                @click="publishPublication(publication._id)"
-                class="p-2.5 text-slate-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all duration-200 group/btn"
-                title="Publish"
-              >
-                <Globe class="w-5 h-5 group-hover/btn:scale-110 transition-transform" />
-              </button>
+                <option value="draft">Draft</option>
+                <option value="pending_review">Pending Review</option>
+                <option value="under-review">Under Review</option>
+                <option value="approved">Approved</option>
+                <option value="published">Published</option>
+                <option value="rejected">Rejected</option>
+              </select>
               
               <!-- Delete Button -->
               <button
@@ -529,6 +516,15 @@ const publishPublication = async (publicationId: string) => {
 const rejectPublication = async (publicationId: string) => {
   // Implement reject functionality if needed
   console.log('Reject publication:', publicationId)
+}
+
+const handleAggressiveStatusUpdate = async (publication: any, newStatus: string) => {
+  try {
+    await updatePublication(publication._id, { status: newStatus as any })
+    await getPublications()
+  } catch (error) {
+    console.error('Error aggressively updating status:', error)
+  }
 }
 
 // Utility functions
