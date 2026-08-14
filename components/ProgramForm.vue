@@ -57,13 +57,22 @@
         </header>
 
         <div class="space-y-4">
-          <AnimatedInput
-            v-model="form.title"
-            id="programTitle"
-            label="Program title"
-            type="text"
-            position="top"
-          />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+            <AnimatedInput
+              v-model="form.title"
+              id="programTitle"
+              label="Program title"
+              type="text"
+              position="middle"
+            />
+            <AnimatedInput
+              v-model="form.position"
+              id="programPosition"
+              label="Display Order (lower = higher priority)"
+              type="number"
+              position="middle"
+            />
+          </div>
           <AnimatedInput
             v-model="form.slug"
             id="programSlug"
@@ -186,8 +195,8 @@
         <!-- Key Responsibilities -->
         <section>
           <div class="flex items-center justify-between mb-4">
-            <h4 class="text-sm font-bold text-slate-400 px-1">Participant expectations</h4>
-            <button @click="addResponsibility" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add expectation</button>
+            <h4 class="text-sm font-bold text-slate-400 px-1">Program Schedule</h4>
+            <button @click="addResponsibility" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add schedule</button>
           </div>
           <div class="space-y-3">
             <div
@@ -199,7 +208,7 @@
                 <AnimatedInput
                   v-model="form.keyResponsibilities[index]"
                   :id="'resp-'+index"
-                  label="Expectation"
+                  label="Schedule"
                 />
               </div>
               <button
@@ -657,6 +666,7 @@ const categoryOptions = [
 
 const form = reactive({
   title: '',
+  position: 0,
   slug: '',
   category: '',
   description: '',
@@ -700,6 +710,7 @@ watchEffect(() => {
   if (props.program) {
     Object.assign(form, {
       title: props.program.title || '',
+      position: props.program.position || 0,
       slug: props.program.slug || '',
       category: props.program.category || '',
       description: props.program.description || '',

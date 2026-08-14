@@ -95,9 +95,9 @@
         </ul>
       </div>
   
-      <!-- Key Responsibilities -->
+      <!-- Program Schedule -->
       <div v-if="program.keyResponsibilities?.length" class="mb-8">
-        <h3 class="text-lg font-semibold text-slate-900 mb-4">Key Responsibilities</h3>
+        <h3 class="text-lg font-semibold text-slate-900 mb-4">Program Schedule</h3>
         <ul class="space-y-2">
           <li
             v-for="responsibility in program.keyResponsibilities"

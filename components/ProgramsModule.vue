@@ -360,7 +360,7 @@ const closeModal = () => {
   selectedProgram.value = null
 }
 
-const handleSaveProgram = async (programData: any) => {
+const handleSaveProgram = async (programData: any, done?: () => void) => {
   try {
     if (selectedProgram.value) {
       await updateProgram(selectedProgram.value.id || selectedProgram.value._id, programData)
@@ -380,6 +380,8 @@ const handleSaveProgram = async (programData: any) => {
     closeModal()
   } catch (error) {
     console.error('Error saving program:', error)
+  } finally {
+    if (done) done()
   }
 }
 
