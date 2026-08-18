@@ -121,6 +121,29 @@
             />
           </div>
         </section>
+
+        <section class="pt-6 border-t border-slate-50">
+          <div class="flex items-center justify-between mb-4 px-1">
+            <div>
+              <h4 class="text-sm font-bold text-slate-900">Automated Welcome Email</h4>
+              <p class="text-xs text-slate-500">Send an automated email to applicants upon registration.</p>
+            </div>
+            <CustomToggle v-model="form.sendAutomatedEmail" />
+          </div>
+          
+          <div v-if="form.sendAutomatedEmail" class="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+            <div class="bg-blue-50/50 rounded-2xl p-4 border border-blue-100 flex gap-3">
+              <Icon name="lucide:info" class="w-5 h-5 text-blue-500 shrink-0" />
+              <p class="text-xs text-blue-700 leading-relaxed">
+                This email will be wrapped in the standard MedLabConvo branded template. You can use the editor below to customize the content, add images, and format the text.
+              </p>
+            </div>
+            <TiptapEditor 
+              v-model="form.automatedEmailContent" 
+              placeholder="Start writing the welcome email..."
+            />
+          </div>
+        </section>
       </div>
 
       <!-- Step 2: Curriculum & Focus -->
@@ -618,6 +641,8 @@ import { reactive, ref, watchEffect, computed } from 'vue'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
+import CustomToggle from '@/components/ui/CustomToggle.vue'
+import TiptapEditor from '@/components/ui/TiptapEditor.vue'
 import { useGetForms } from '@/composables/modules/forms/useGetForms'
 import ImageUpload from '@/components/ImageUpload.vue'
 import Icon from '@/components/Icon.vue'
@@ -680,6 +705,8 @@ const form = reactive({
   formId: '',
   externalFormLink: '',
   status: 'draft',
+  sendAutomatedEmail: false,
+  automatedEmailContent: '',
   speakers: [] as Array<{ name: string; bio: string; image: string }>,
   formFields: [] as any[]
 })
@@ -724,6 +751,8 @@ watchEffect(() => {
       formId: props.program.form?._id || props.program.form || '',
       externalFormLink: props.program.externalFormLink || '',
       status: props.program.status || 'draft',
+      sendAutomatedEmail: props.program.sendAutomatedEmail || false,
+      automatedEmailContent: props.program.automatedEmailContent || '',
       speakers: props.program.speakers?.length ? props.program.speakers.map((s: any) => ({...s})) : [],
       formFields: props.program.formFields?.length ? props.program.formFields.map((f: any) => ({...f})) : []
     })

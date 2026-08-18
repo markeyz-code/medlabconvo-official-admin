@@ -71,6 +71,7 @@ export default defineNuxtConfig({
         {
           src: "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js",
           type: "text/javascript",
+          defer: true
         },
       ],
     },
@@ -80,7 +81,7 @@ export default defineNuxtConfig({
     transpile: ["lucide-vue-next"],
   },
 
-   css: ['/assets/font/stylesheet.css', "/assets/css/main.css"],
+  css: ['/assets/font/stylesheet.css', "/assets/css/main.css"],
 
   modules: [
     "@nuxtjs/tailwindcss",
@@ -89,7 +90,32 @@ export default defineNuxtConfig({
     "@vite-pwa/nuxt"
   ],
 
-   googleFonts: {
+  tailwindcss: {
+    viewer: false
+  },
+
+  vite: {
+    optimizeDeps: {
+      include: [
+        'vue', 
+        'vue-router',
+        'axios',
+        'lucide-vue-next',
+        '@tiptap/vue-3',
+        '@tiptap/starter-kit',
+        '@tiptap/extension-image',
+        '@tiptap/extension-link',
+        '@tiptap/extension-placeholder',
+        '@tiptap/extension-text-align',
+        '@tiptap/extension-underline',
+        '@vueuse/core',
+        'vuedraggable',
+        'aos'
+      ]
+    }
+  },
+
+  googleFonts: {
     families: {
       "Inter": [400, 500, 600, 700],
       "Poppins": [400, 500, 600, 700],
