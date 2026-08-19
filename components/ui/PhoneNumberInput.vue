@@ -72,7 +72,7 @@
                     ref="searchInputRef"
                     v-model="searchQuery"
                     type="text"
-                    placeholder="Search"
+
                     class="w-full pl-10 pr-3 py-2.5 bg-white border-[0.5px] border-gray-200 rounded-lg focus:border-[#3BAB22] focus:ring-1 focus:ring-[#3BAB22] outline-none text-base placeholder-gray-400"
                     @click.stop
                   />
@@ -117,7 +117,7 @@
           ref="phoneInputRef"
           v-model="displayPhoneNumber"
           type="tel"
-          :placeholder="isFocused ? formatPlaceholder : ''"
+
           :disabled="disabled"
           :readonly="readonly"
           class="flex-1 bg-transparent outline-none border-none text-[#1A1A1B] placeholder-gray-400 text-base"

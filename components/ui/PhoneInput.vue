@@ -24,7 +24,7 @@
           <input
             v-model="countrySearchQuery"
             type="text"
-            placeholder="Search"
+
             class="w-full px-3 py-2 text-sm border-b-[0.5px] border-gray-100 focus:outline-none"
           />
           <div
@@ -44,7 +44,7 @@
         <input
           :value="modelValue"
           type="tel"
-          :placeholder="phonePlaceholder"
+
           class="w-full px-3 py-4 bg-[#1A1A1B09] border-none rounded-r-lg focus:border-[0.5px] focus:border-[#3BAB22] outline-none text-lg"
           :class="errorMessage ? 'border-red-500' : 'border-gray-300'"
           @input="onPhoneInput"

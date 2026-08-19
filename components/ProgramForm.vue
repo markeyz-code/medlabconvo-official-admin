@@ -140,7 +140,7 @@
             </div>
             <TiptapEditor 
               v-model="form.automatedEmailContent" 
-              placeholder="Start writing the welcome email..."
+
             />
           </div>
         </section>
@@ -299,7 +299,7 @@
               <AnimatedInput
                 v-model="highlight.title"
                 label="Highlight title"
-                placeholder="e.g. industry certification"
+
                 position="top"
               />
               <AnimatedInput
@@ -353,7 +353,7 @@
                   v-model="speaker.name"
                   :id="'speaker-name-'+index"
                   label="Speaker name"
-                  placeholder="e.g. Dr. Jane Smith"
+
                   position="top"
                 />
                 <AnimatedInput
@@ -362,7 +362,7 @@
                   type="textarea"
                   :rows="3"
                   label="Short biography"
-                  placeholder="A brief overview of their background and expertise..."
+
                   position="bottom"
                 />
               </div>

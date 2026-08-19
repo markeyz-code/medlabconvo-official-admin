@@ -33,7 +33,7 @@
                     type="text"
                     ref="inputRef"
                     class="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-[#033958] focus:bg-white rounded-2xl text-sm font-bold transition-all outline-none"
-                    :placeholder="placeholder"
+
                     @keyup.enter="confirm"
                   />
                 </div>

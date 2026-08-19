@@ -87,7 +87,7 @@
           v-model="form.name"
           id="category-name"
           label="Category Name"
-          placeholder="e.g., Clinical Research"
+
           required
         />
         

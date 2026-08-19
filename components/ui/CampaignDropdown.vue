@@ -40,7 +40,7 @@
             <input
               v-model="search"
               type="text"
-              placeholder="Search..."
+
               class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500/30 transition-all"
               @click.stop
             />

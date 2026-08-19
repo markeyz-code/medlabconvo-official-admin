@@ -24,7 +24,7 @@
             <input 
               v-model="form.name" 
               type="text" 
-              placeholder="Internal campaign reference name"
+
               class="w-full h-16 px-6 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-600/20 focus:ring-4 focus:ring-blue-600/5 transition-all outline-none font-bold text-sm"
             />
           </div>
@@ -34,7 +34,7 @@
             <input 
               v-model="form.subject" 
               type="text" 
-              placeholder="What recipients see in their inbox"
+
               class="w-full h-16 px-6 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-600/20 focus:ring-4 focus:ring-blue-600/5 transition-all outline-none font-bold text-sm"
             />
           </div>
@@ -44,7 +44,7 @@
             <input 
               v-model="form.previewText" 
               type="text" 
-              placeholder="Short teaser text after the subject"
+
               class="w-full h-16 px-6 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-600/20 focus:ring-4 focus:ring-blue-600/5 transition-all outline-none font-bold text-sm"
             />
           </div>
@@ -81,7 +81,7 @@
           v-model="form.primaryAudience" 
           :options="audienceOptions" 
           label="Select Target Segment"
-          placeholder="Who should receive this?"
+
         />
 
         <!-- Specific Emails logic -->
@@ -90,7 +90,7 @@
             <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Specific Email Addresses</label>
             <textarea 
               v-model="manualEmails"
-              placeholder="Enter emails separated by commas (e.g. john@example.com, jane@example.com)"
+
               class="w-full h-32 p-6 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-600/20 focus:ring-4 focus:ring-blue-600/5 transition-all outline-none font-medium text-sm leading-relaxed"
             ></textarea>
           </div>
@@ -110,7 +110,7 @@
           v-model="form.deliveryType" 
           :options="scheduleOptions" 
           label="Delivery Strategy"
-          placeholder="When should we send?"
+
         />
 
         <div class="pt-1">
@@ -129,7 +129,7 @@
                <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Cron Expression (e.g. 0 0 * * *)</label>
                <input 
                  v-model="form.cronExpression"
-                 placeholder="Standard cron syntax for recurring sends"
+
                  class="w-full h-16 px-6 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-600/20 focus:ring-4 focus:ring-blue-600/5 transition-all outline-none font-bold text-sm"
                />
             </div>

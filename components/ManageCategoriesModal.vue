@@ -8,7 +8,7 @@
             v-model="newCategory.name"
             id="new-category-name"
             label="Category Name"
-            placeholder="e.g., Clinical Research"
+
             required
           />
         </div>

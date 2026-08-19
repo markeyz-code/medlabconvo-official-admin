@@ -74,7 +74,7 @@
             <input
               v-model="form.title"
               type="text"
-              placeholder="Enter your main title..."
+
               class="w-full text-4xl md:text-5xl font-black text-slate-900 bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight tracking-tight block"
               style="all: unset; display: block; width: 100%; font-size: 2.5rem; font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; color: #0f172a;"
             />
@@ -85,7 +85,7 @@
             <input
               v-model="form.subtitle"
               type="text"
-              placeholder="Add a compelling subtitle..."
+
               class="w-full text-xl md:text-2xl font-bold text-[#27628C] bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight block italic"
               style="all: unset; display: block; width: 100%; font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: #27628C; font-style: italic;"
             />
@@ -96,7 +96,7 @@
             <textarea
               v-model="form.excerpt"
               rows="2"
-              placeholder="A brief summary for previews and search engines..."
+
               class="w-full text-lg md:text-xl font-medium text-slate-500 bg-transparent border-none outline-none resize-none focus:ring-0 p-0 m-0 block leading-relaxed"
               style="all: unset; display: block; width: 100%; font-size: 1.25rem; font-weight: 500; line-height: 1.6; color: #64748b; height: 3.2rem;"
             ></textarea>
@@ -123,7 +123,7 @@
           <textarea
             v-model="form.bodyHtml"
             rows="6"
-            placeholder="Paste your Substack body_html here to preserve exact formatting, image galleries, and buttons..."
+
             class="w-full p-6 bg-white border border-slate-200 rounded-2xl text-sm font-mono text-slate-600 focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-inner"
           ></textarea>
           <p class="text-sm text-slate-400 font-medium">Note: If this field contains data, the standard content block engine below will be ignored on the user-facing side.</p>
@@ -321,7 +321,7 @@
             </div>
             <div class="space-y-2">
               <label class="text-xs font-semibold text-slate-500 ml-1">Canonical URL (for Substack migration)</label>
-              <input v-model="form.canonicalUrl" type="url" placeholder="https://yourblog.substack.com/p/slug" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+              <input v-model="form.canonicalUrl" type="url" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
             </div>
             <div class="space-y-2">
               <label class="text-xs font-semibold text-slate-500 ml-1">Substack External ID</label>

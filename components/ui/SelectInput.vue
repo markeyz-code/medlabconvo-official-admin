@@ -32,7 +32,7 @@
             />
             <!-- Default selected label -->
             <template v-else>
-              {{ selectedLabel || placeholder }}
+              {{ selectedLabel }}
             </template>
           </span>
           <svg
@@ -68,7 +68,7 @@
                   ref="searchInputRef"
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Search..."
+
                   class="w-full pl-9 pr-3 py-2.5 border-[0.5px] border-gray-200 rounded-lg focus:border-[#033958] outline-none text-sm transition-colors"
                   @click.stop
                 />

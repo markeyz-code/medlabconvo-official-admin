@@ -56,7 +56,7 @@
         <label class="text-sm font-black uppercase tracking-widest text-slate-400 px-1">Biography</label>
         <TiptapEditor
           v-model="form.bio"
-          placeholder="Write a short bio for this team member..."
+
         />
       </div>
     </div>

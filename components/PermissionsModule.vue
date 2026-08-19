@@ -126,7 +126,7 @@
             v-model="form.description"
             rows="4"
             class="w-full p-6 bg-slate-50 border border-slate-100 rounded-3xl focus:ring-2 focus:ring-[#3BAB22] focus:bg-white font-medium text-slate-700 resize-none transition-all outline-none"
-            placeholder="Explain what this permission allows..."
+
           ></textarea>
         </div>
 

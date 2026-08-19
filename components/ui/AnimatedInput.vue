@@ -17,7 +17,7 @@
         v-if="type === 'textarea'"
         :id="inputId"
         :value="modelValue"
-        :placeholder="placeholder"
+
         :disabled="disabled"
         :readonly="readonly"
         :rows="rows"
@@ -38,7 +38,7 @@
         ref="inputRef"
         :type="computedType" 
         :value="displayValue"
-        :placeholder="placeholder"
+
         :disabled="disabled"
         :readonly="readonly || type === 'date' || type === 'time' || type === 'datetime-local'"
         :autocomplete="autocomplete"

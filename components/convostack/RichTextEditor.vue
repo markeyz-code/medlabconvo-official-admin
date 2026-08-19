@@ -60,7 +60,7 @@
       v-model="showLinkPrompt"
       title="Insert Link"
       message="Please enter the URL you want to link to."
-      placeholder="https://example.com"
+
       :initialValue="previousUrl"
       @confirm="handleLinkConfirm"
     />

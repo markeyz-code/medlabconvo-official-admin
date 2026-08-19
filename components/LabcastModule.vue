@@ -124,7 +124,7 @@
             v-model="form.description"
             rows="4"
             class="w-full p-6 bg-slate-50 border border-slate-100 rounded-3xl focus:ring-2 focus:ring-[#033958] focus:bg-white font-medium text-slate-700 resize-none transition-all outline-none"
-            placeholder="What is this episode about?"
+
           ></textarea>
         </div>
         <div class="flex justify-end pt-8 gap-4 border-t border-slate-50">
