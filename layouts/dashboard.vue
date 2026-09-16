@@ -345,6 +345,7 @@ const RAW_NAVIGATION_ITEMS = [
   { name: 'Blogs', path: '/dashboard/blogs', icon: 'lucide:newspaper', badge: null, permission: 'blogs:read' },
   { name: 'Forms', path: '/dashboard/forms', icon: 'lucide:clipboard-list', badge: null, permission: 'forms:read' },
   { name: 'CMS', path: '/dashboard/cms', icon: 'lucide:copy', badge: null, permission: 'cms:read' },
+  { name: 'Short Reads', path: '/dashboard/short-reads', icon: 'lucide:layers', badge: null, permission: 'short_reads:read' },
   
   // Separator / Section for Access Control
   { name: 'divider', path: '', icon: '', badge: null, type: 'divider', permission: 'roles:read' },
@@ -392,6 +393,7 @@ const currentPageDescription = computed(() => {
     '/dashboard/convostack': 'Manage and organize Convo Stack content and academic resources.',
     '/dashboard/cms': 'Manage all dynamic content and pages across your platform seamlessly.',
     '/dashboard/audit': 'View security logs and system activity history.',
+    '/dashboard/short-reads': 'Manage Zikoko-style short read carousels and cover images.',
     '/dashboard/access-control/roles': 'Define group-based permissions and system roles.',
     '/dashboard/access-control/permissions': 'Manage individual granular system permissions.',
     '/dashboard/style-guide': 'Developer reference for medlabconvo design components.'
@@ -454,25 +456,7 @@ onMounted(async () => {
     }
   }
 
-  const fetches: Promise<any>[] = []
-  if (hasPermission('users:read')) fetches.push(getUsers())
-  if (hasPermission('enquiries:read')) fetches.push(getEnquiries())
-  if (hasPermission('subscriptions:read')) fetches.push(getSubscriptions())
-  if (hasPermission('blogs:read')) fetches.push(getBlogs())
-  if (hasPermission('teams:read')) fetches.push(getTeamMembers())
-  if (hasPermission('publications:read')) fetches.push(getPublications())
-  if (hasPermission('labcast:read')) fetches.push(getLabCasts())
-  if (hasPermission('products:read')) fetches.push(getProducts())
-  if (hasPermission('programs:read')) fetches.push(getPrograms())
-  if (hasPermission('forms:read')) fetches.push(getForms())
-  if (hasPermission('audit:read')) fetches.push(getAuditLogs())
-  if (hasPermission('convostack:read')) fetches.push(getConvoStacks())
-
-  try {
-    await Promise.all(fetches)
-  } catch (error) {
-    console.error('Core data load failed:', error)
-  }
+  // Data is loaded lazily on their respective pages now to prevent massive layout blocking
 })
 
 onUnmounted(() => window.removeEventListener('resize', checkMobile))

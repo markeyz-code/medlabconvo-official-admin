@@ -13,6 +13,7 @@ export const useSingleUploadFile = () => {
       // Create FormData and append the file
       const formData = new FormData()
       formData.append('file', file)
+      formData.append('name', file.name || 'uploaded_image')
 
       // Make the API call with FormData
       const res = await $_single_upload(formData) as any

@@ -1,55 +1,52 @@
 <template>
-  <div class="mb-2 relative">
-    <div class="relative input-container">
+  <div class="w-full">
+    <div class="mb-2 relative">
       <label 
-        :for="inputId"
-        :class="[
-          'absolute transition-all duration-300 ease-in-out pointer-events-none z-10 font-medium',
-          isFocused || modelValue ? 
-            'text-xs text-[#033958] left-4 top-2' : 
-            `text-sm text-slate-400 left-4 ${type === 'textarea' ? 'top-4' : 'top-1/2 transform -translate-y-1/2'}`
-        ]"
+        :for="id || inputId"
+        class="block text-sm font-bold text-[#033958] mb-1.5 ml-1"
       >
         {{ label }}
       </label>
+      <div class="relative input-container">
       
       <textarea
         v-if="type === 'textarea'"
-        :id="inputId"
-        :value="modelValue"
+        :id="id || inputId"
+        :required="required"
+        ref="textareaRef"
+        v-model="internalValue"
 
         :disabled="disabled"
         :readonly="readonly"
         :rows="rows"
         :class="[
-          'w-full py-3 pt-5 px-4 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] transition-all duration-300 resize-none font-medium text-slate-900 rounded-2xl',
+          'w-full py-3.5 px-4 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] transition-all duration-300 resize-none font-medium text-slate-900 rounded-2xl',
           roundedClasses,
           disabled ? 'opacity-50 cursor-not-allowed' : '',
           (hasError || (errorMessage && showError)) ? 'border-[0.5px] ring-red-500 border-red-500' : ''
         ]"
-        @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
       />
       
       <input
         v-else
-        :id="inputId"
+        :id="id || inputId"
+        :required="required"
         ref="inputRef"
         :type="computedType" 
-        :value="displayValue"
+        v-model="internalValue"
 
         :disabled="disabled"
         :readonly="readonly || type === 'date' || type === 'time' || type === 'datetime-local'"
         :autocomplete="autocomplete"
         :class="[
-          'w-full py-3 pt-5 px-4 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] transition-all duration-300 font-medium text-slate-900 rounded-2xl',
+          'w-full py-3.5 px-4 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] transition-all duration-300 font-medium text-slate-900 rounded-2xl',
           roundedClasses,
           disabled ? 'opacity-50 cursor-not-allowed' : '',
           (type === 'date' || type === 'time' || type === 'datetime-local') ? 'cursor-pointer' : '',
           (hasError || (errorMessage && showError)) ? 'border-[0.5px] ring-red-500 border-red-500' : ''
         ]"
-        @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
         @click="handleInputClick"
@@ -502,10 +499,11 @@
       </div>
     </Transition>
   </Teleport>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, useId, watch } from 'vue'
+import { ref, computed, useId, watch, onMounted, onUnmounted } from 'vue'
 
 interface Props {
   modelValue?: string | number
@@ -520,6 +518,8 @@ interface Props {
   position?: 'top' | 'middle' | 'bottom' | 'standalone'
   hasError?: boolean
   rows?: number
+  id?: string
+  required?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -549,6 +549,7 @@ const showTimePicker = ref(false)
 const showDateTimePicker = ref(false)
 const inputId = useId()
 const inputRef = ref<HTMLInputElement | null>(null)
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
 
 const currentMonth = ref(new Date().getMonth())
 const currentYear = ref(new Date().getFullYear())
@@ -576,6 +577,11 @@ const displayValue = computed(() => {
     return parsed ? `${formatDateDisplay(parsed.date)} • ${parsed.hour}:${parsed.minute} ${parsed.period}` : props.modelValue
   }
   return props.modelValue
+})
+
+const internalValue = computed({
+  get: () => displayValue.value,
+  set: (val: any) => emit('update:modelValue', val)
 })
 
 const roundedClasses = computed(() => {
@@ -676,9 +682,7 @@ function getDTDayClass(day: CalendarDay) {
   ]
 }
 
-const handleInput = (e: Event) => {
-  emit('update:modelValue', (e.target as HTMLInputElement).value)
-}
+
 
 const handleFocus = (e: FocusEvent) => {
   isFocused.value = true
@@ -696,9 +700,39 @@ const handleInputClick = () => {
   else if (props.type === 'datetime-local') showDateTimePicker.value = true
 }
 
+// const togglePasswordVisibility = () => {
+//   if (inputRef.value && inputRef.value.value !== props.modelValue) {
+//     emit('update:modelValue', inputRef.value.value)
+//   }
+//   showPassword.value = !showPassword.value
+// }
+
 const togglePasswordVisibility = () => {
-  showPassword.value = !showPassword.value
+  if (inputRef.value && inputRef.value.value !== props.modelValue) {
+    emit('update:modelValue', inputRef.value.value)
+  }
+  showPassword.value = !showPassword.value  // This triggers type change
+  // Value gets lost here during DOM re-render
 }
+
+let autofillInterval: any = null
+
+onMounted(() => {
+  autofillInterval = setInterval(() => {
+    const el = inputRef.value || textareaRef.value
+    if (el && el.value && el.value !== props.modelValue) {
+      emit('update:modelValue', el.value)
+    }
+  }, 200)
+  
+  setTimeout(() => {
+    if (autofillInterval) clearInterval(autofillInterval)
+  }, 2000)
+})
+
+onUnmounted(() => {
+  if (autofillInterval) clearInterval(autofillInterval)
+})
 
 const prevMonth = () => {
   if (currentMonth.value === 0) {

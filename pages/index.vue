@@ -31,22 +31,13 @@
             required
           ></UiAnimatedInput>
 
-          <div class="relative">
-            <UiAnimatedInput
-              id="password"
-              label="Password"
-              v-model="loginForm.password"
-              :type="showPassword ? 'text' : 'password'"
-              required
-            ></UiAnimatedInput>
-            <button
-              type="button"
-              @click="showPassword = !showPassword"
-              class="absolute right-4 top-[22px] text-gray-400 hover:text-[#033958] transition-colors"
-            >
-              <Icon :name="showPassword ? 'lucide:eye-off' : 'lucide:eye'" class="w-5 h-5" />
-            </button>
-          </div>
+          <UiAnimatedInput
+            id="password"
+            label="Password"
+            v-model="loginForm.password"
+            type="password"
+            required
+          ></UiAnimatedInput>
 
           <div class="flex items-center justify-between mt-2">
             <label class="flex items-center cursor-pointer group">
@@ -72,7 +63,7 @@
           <button
             type="submit"
             :disabled="loading"
-            class="w-full bg-[#033958] hover:bg-[#044a73] text-white mt-8 py-3.5 px-6 rounded-2xl font-bold text-lg transition-all duration-300 active:scale-[0.98] disabled:opacity-50 shadow-md"
+            class="w-full bg-[#033958] hover:bg-[#044a73] text-white mt-8 py-2.5 px-6 rounded-2xl font-bold text-lg transition-all duration-300 active:scale-[0.98] disabled:opacity-50 shadow-md"
           >
             <div v-if="loading" class="flex items-center justify-center space-x-3">
               <div class="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white"></div>
@@ -95,7 +86,6 @@
         </div>
       </div>
     </div>
-    <UiFullscreenLoader :isVisible="isLoading" />
   </div>
 </template>
 
@@ -110,12 +100,10 @@ import Icon from '@/components/Icon.vue'
 import { useLogin } from '@/composables/modules/auth/useLogin'
 import { useUser } from '@/composables/modules/auth/user'
 import { useCustomToast } from '@/composables/core/useCustomToast'
-import { useLoader } from '@/composables/core/useLoader'
 
 // Composables
 const router = useRouter()
 const { loading, error, success, login } = useLogin()
-const { isLoading, showLoader, hideLoader } = useLoader()
 
 // Reactive data
 const loginForm = ref({
@@ -123,8 +111,6 @@ const loginForm = ref({
   password: '',
   rememberMe: false
 })
-
-const showPassword = ref(false)
 
 // Methods
 const handleLogin = async () => {
@@ -134,21 +120,21 @@ const handleLogin = async () => {
     return;
   }
   try {
-    showLoader()
     const response: any = await login({
       email: loginForm.value.email,
       password: loginForm.value.password
     })
     
     if (response?.requiresOtp) {
-      await router.push({ path: '/verify-login', query: { email: loginForm.value.email } })
+      router.push({ path: '/verify-login', query: { email: loginForm.value.email } })
     } else if (success.value) {
-      await router.push('/dashboard')
+      router.push('/dashboard')
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error('Login failed:', err)
-  } finally {
-    hideLoader()
+    if (err?.response?.data?.requiresOtp) {
+      router.push({ path: '/verify-login', query: { email: loginForm.value.email } })
+    }
   }
 }
 

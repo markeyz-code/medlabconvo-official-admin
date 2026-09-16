@@ -1,17 +1,12 @@
 <template>
   <div class="mb-2 relative">
+    <label 
+      :for="inputId"
+      class="block text-sm font-bold text-gray-900 mb-1.5 ml-1"
+    >
+      {{ label }}
+    </label>
     <div class="relative input-container">
-      <label 
-        :for="inputId"
-        :class="[
-          'absolute transition-all duration-300 ease-in-out pointer-events-none z-10',
-          isFocused || modelValue ? 
-            'text-sm text-gray-900 left-3 top-2' : 
-            `text-base text-gray-900 left-3 ${type === 'textarea' ? 'top-4' : 'top-1/2 transform -translate-y-1/2'}`
-        ]"
-      >
-        {{ label }}
-      </label>
       
       <textarea
         v-if="type === 'textarea'"
@@ -22,7 +17,7 @@
         :readonly="readonly"
         :rows="rows"
         :class="[
-          'w-full py-4 pt-6 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus:outline-none focus:ring-1 focus:ring-[#033958] focus:border-[#033958] transition-all duration-300 resize-none',
+          'w-full py-4 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus:outline-none focus:ring-1 focus:ring-[#033958] focus:border-[#033958] transition-all duration-300 resize-none',
           roundedClasses,
           disabled ? 'opacity-50 cursor-not-allowed' : '',
           (hasError || (errorMessage && showError)) ? 'border-[0.5px] ring-red-500 border-red-500' : ''
@@ -43,7 +38,7 @@
         :readonly="readonly || type === 'date' || type === 'time' || type === 'datetime-local'"
         :autocomplete="autocomplete"
         :class="[
-          'w-full py-4 pt-6 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus:outline-none focus:ring-1 focus:ring-[#033958] focus:border-[#033958] transition-all duration-300',
+          'w-full py-4 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus:outline-none focus:ring-1 focus:ring-[#033958] focus:border-[#033958] transition-all duration-300',
           roundedClasses,
           disabled ? 'opacity-50 cursor-not-allowed' : '',
           (type === 'date' || type === 'time' || type === 'datetime-local') ? 'cursor-pointer' : '',
@@ -696,8 +691,16 @@ const handleInputClick = () => {
   else if (props.type === 'datetime-local') showDateTimePicker.value = true
 }
 
+// const togglePasswordVisibility = () => {
+//   showPassword.value = !showPassword.value
+// }
+
 const togglePasswordVisibility = () => {
-  showPassword.value = !showPassword.value
+  if (inputRef.value && inputRef.value.value !== props.modelValue) {
+    emit('update:modelValue', inputRef.value.value)
+  }
+  showPassword.value = !showPassword.value  // This triggers type change
+  // Value gets lost here during DOM re-render
 }
 
 const prevMonth = () => {

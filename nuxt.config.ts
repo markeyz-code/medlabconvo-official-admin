@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     },
   },
 
+
   app: {
     head: {
       title: "medlabconvo | Admin",
@@ -87,7 +88,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxtjs/google-fonts",
     "@nuxtjs/robots",
-    "@vite-pwa/nuxt"
+    // "@vite-pwa/nuxt"
   ],
 
   tailwindcss: {
