@@ -10,7 +10,14 @@
         <p class="text-sm font-medium text-slate-400 tracking-normal">Manage your team members and leadership profiles</p>
       </div>
 
-      <div class="relative z-10 flex items-center gap-4 w-full sm:w-auto">
+      <div class="relative z-10 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+        <NuxtLink
+          to="/dashboard/leadership/categories"
+          class="flex-1 sm:flex-none px-8 py-3 bg-white text-[#033958] border border-[#033958] rounded-2xl font-medium text-sm tracking-normal hover:bg-slate-50 transition-all flex items-center justify-center space-x-2 active:scale-95"
+        >
+          <Icon name="lucide:settings" class="w-5 h-5" />
+          <span>Manage Categories</span>
+        </NuxtLink>
         <button
           @click="openAddDrawer"
           class="flex-1 sm:flex-none px-10 py-3 bg-[#033958] text-white rounded-2xl font-medium text-sm  tracking-normal hover:bg-[#022a41] transition-all flex items-center justify-center space-x-3 -2xl active:scale-95"
@@ -34,13 +41,7 @@
       <div class="w-full md:w-64">
         <SelectInput 
           v-model="categoryFilter" 
-          :options="[
-            { label: 'All Categories', value: '' },
-            { label: 'Executive Board', value: 'Executive Board' },
-            { label: 'Management Team', value: 'Management Team' },
-            { label: 'Volunteer Committee', value: 'Volunteer Committee' },
-            { label: 'Advisory Council', value: 'Advisory Council' }
-          ]" 
+          :options="categoryOptions" 
         />
       </div>
     </div>
@@ -163,6 +164,7 @@ const members = ref<TeamMember[]>([])
 const loading = ref(false)
 const searchQuery = ref('')
 const categoryFilter = ref('')
+const categoryOptions = ref([{ label: 'All Categories', value: '' }])
 
 const showDrawer = ref(false)
 const selectedMember = ref<TeamMember | null>(null)
@@ -182,7 +184,31 @@ const fetchMembers = async () => {
   }
 }
 
-onMounted(fetchMembers)
+const fetchCategories = async () => {
+  try {
+    const res = await teams_api.$_get_categories()
+    const options = res.data.map((c: any) => ({
+      label: c.name,
+      value: c.name
+    }))
+    categoryOptions.value = [{ label: 'All Categories', value: '' }, ...options]
+  } catch (error) {
+    console.error('Failed to fetch categories', error)
+    // Fallback options
+    categoryOptions.value = [
+      { label: 'All Categories', value: '' },
+      { label: 'Executive Board', value: 'Executive Board' },
+      { label: 'Management Team', value: 'Management Team' },
+      { label: 'Volunteer Committee', value: 'Volunteer Committee' },
+      { label: 'Advisory Council', value: 'Advisory Council' }
+    ]
+  }
+}
+
+onMounted(() => {
+  fetchMembers()
+  fetchCategories()
+})
 
 const filteredMembers = computed(() => {
   let list = [...members.value]
