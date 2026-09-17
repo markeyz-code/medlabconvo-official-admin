@@ -24,7 +24,7 @@
       </div>
       <button
         @click="openCreateModal"
-        class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-[#033958] to-[#044d77] text-white rounded-2xl font-bold text-sm shadow-xl shadow-blue-900/20 hover:shadow-2xl hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-3"
+        class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-[#033958] to-[#044d77] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-3"
       >
         <div class="bg-white/20 p-1 rounded-lg">
           <Plus class="w-4 h-4" />
@@ -34,27 +34,27 @@
     </div>
 
     <!-- Forms Grid/Table Container -->
-    <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-slate-200/50">
+    <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm border border-slate-200 shadow-slate-200/50">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-slate-100 text-sm">
           <thead class="bg-slate-50/50">
             <tr>
-              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-[10px]">
                 Programme Form
               </th>
-              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-[10px]">
                 Status
               </th>
-              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-[10px]">
                 Configuration
               </th>
-              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-[10px]">
                 Engagement
               </th>
-              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-[10px]">
                 Share Link
               </th>
-              <th scope="col" class="px-8 py-6 text-right font-black text-slate-400 uppercase tracking-[0.15em] text-[10px]">
+              <th scope="col" class="px-8 py-6 text-right font-black text-slate-400  tracking-normal text-[10px]">
                 Actions
               </th>
             </tr>
@@ -83,7 +83,7 @@
                   @click="toggleFormStatus(form)"
                   :disabled="togglingFormId === form._id"
                   :class="[
-                    'px-4 py-1.5 inline-flex items-center text-[11px] font-black uppercase tracking-widest rounded-full transition-all duration-300',
+                    'px-4 py-1.5 inline-flex items-center text-[11px] font-black  tracking-normal rounded-full transition-all duration-300',
                     form.isActive 
                       ? 'bg-emerald-100 text-emerald-700 shadow-sm shadow-emerald-200' 
                       : 'bg-slate-100 text-slate-500 shadow-sm shadow-slate-200',
@@ -108,7 +108,7 @@
                     <Icon name="lucide:layout" class="w-4 h-4" />
                   </div>
                   <span class="font-bold text-slate-700">{{ form.fields?.length || 0 }}</span>
-                  <span class="text-slate-400 text-xs font-bold uppercase tracking-tighter">Fields</span>
+                  <span class="text-slate-400 text-xs font-bold  tracking-normal">Fields</span>
                 </div>
               </td>
 
@@ -119,7 +119,7 @@
                     <Icon name="lucide:users" class="w-4 h-4" />
                   </div>
                   <span class="font-bold text-slate-700">{{ form.submissionsCount || 0 }}</span>
-                  <span class="text-slate-400 text-xs font-bold uppercase tracking-tighter">Entries</span>
+                  <span class="text-slate-400 text-xs font-bold  tracking-normal">Entries</span>
                 </div>
               </td>
 
@@ -181,7 +181,7 @@
         <p class="text-slate-400 mt-2 max-w-sm mx-auto font-medium">We couldn't find any programme forms matching your current filters.</p>
         <button 
           @click="searchQuery = ''; statusFilter = ''" 
-          class="mt-8 text-[#033958] font-black text-xs uppercase tracking-widest hover:underline"
+          class="mt-8 text-[#033958] font-black text-xs  tracking-normal hover:underline"
         >
           Clear all filters
         </button>
@@ -191,7 +191,7 @@
       <div v-if="loading" class="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center z-10">
         <div class="flex flex-col items-center">
           <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin"></div>
-          <span class="mt-4 text-xs font-black text-[#033958] uppercase tracking-[0.2em]">Syncing...</span>
+          <span class="mt-4 text-xs font-black text-[#033958]  tracking-normal">Syncing...</span>
         </div>
       </div>
     </div>
@@ -231,12 +231,12 @@
           <Icon name="lucide:zap" class="w-32 h-32 text-white/5 absolute -top-8 -right-8 rotate-12" />
           
           <div class="relative z-10 space-y-4">
-            <div class="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20 flex items-center justify-center mx-auto shadow-2xl">
+            <div class="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20 flex items-center justify-center mx-auto shadow-sm border border-slate-200">
               <Icon name="lucide:rocket" class="w-10 h-10 text-white" />
             </div>
             <div>
-              <h3 class="text-2xl font-black text-white tracking-tighter">Form is Live!</h3>
-              <p class="text-blue-100/60 text-sm font-bold uppercase tracking-widest">Premium sharing enabled</p>
+              <h3 class="text-lg font-black text-white tracking-normal">Form is Live!</h3>
+              <p class="text-blue-100/60 text-sm font-bold  tracking-normal">Premium sharing enabled</p>
             </div>
           </div>
         </div>
@@ -245,8 +245,8 @@
         <div class="p-10 space-y-10 bg-white">
           <div class="space-y-4">
             <div class="flex items-center justify-between px-1">
-              <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Your Unique Form URL</label>
-              <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-1">
+              <label class="text-[10px] font-black  tracking-normal text-slate-400">Your Unique Form URL</label>
+              <span class="text-[10px] font-black text-emerald-500  tracking-normal flex items-center gap-1">
                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                 Publicly Reachable
               </span>
@@ -263,7 +263,7 @@
                 />
                 <button
                   @click="copyGeneratedLink"
-                  class="px-6 py-4 bg-[#033958] text-white rounded-[1.2rem] font-bold text-xs hover:bg-[#022a41] transition-all active:scale-95 flex items-center gap-2 shadow-lg"
+                  class="px-6 py-4 bg-[#033958] text-white rounded-[1.2rem] font-bold text-xs hover:bg-[#022a41] transition-all active:scale-95 flex items-center gap-2 shadow-sm border border-slate-100"
                 >
                   <Icon :name="isCopied ? 'lucide:check' : 'lucide:copy'" class="w-4 h-4" />
                   <span>{{ isCopied ? 'Copied' : 'Copy' }}</span>
@@ -278,14 +278,14 @@
               <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-blue-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
                 <Icon name="lucide:qr-code" class="w-5 h-5" />
               </div>
-              <h4 class="text-xs font-black text-slate-900 uppercase mb-1">QR Access</h4>
+              <h4 class="text-xs font-black text-slate-900  mb-1">QR Access</h4>
               <p class="text-[10px] text-slate-400 font-bold leading-tight">Instant access via mobile scan</p>
             </div>
             <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 group hover:border-indigo-100 transition-all cursor-pointer">
               <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-indigo-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
                 <Icon name="lucide:share-2" class="w-5 h-5" />
               </div>
-              <h4 class="text-xs font-black text-slate-900 uppercase mb-1">Social Share</h4>
+              <h4 class="text-xs font-black text-slate-900  mb-1">Social Share</h4>
               <p class="text-[10px] text-slate-400 font-bold leading-tight">Broaden your campaign reach</p>
             </div>
           </div>
@@ -294,14 +294,14 @@
           <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
             <button 
               @click="showLinkModal = false"
-              class="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors"
+              class="text-xs font-black  tracking-normal text-slate-400 hover:text-slate-900 transition-colors"
             >
               Back to Dashboard
             </button>
             <a 
               :href="generatedLink" 
               target="_blank"
-              class="text-xs font-black uppercase tracking-widest text-[#033958] flex items-center gap-2 hover:gap-3 transition-all"
+              class="text-xs font-black  tracking-normal text-[#033958] flex items-center gap-2 hover:gap-3 transition-all"
             >
               View Live Form
               <Icon name="lucide:external-link" class="w-4 h-4" />

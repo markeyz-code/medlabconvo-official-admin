@@ -4,49 +4,49 @@
     <div v-if="editor" class="flex flex-wrap items-center gap-1 px-3 py-2 border-b border-slate-100 bg-slate-50/80 backdrop-blur-md sticky top-0 z-10">
       <!-- Text Style -->
       <div class="flex items-center space-x-1 bg-white/50 p-1 rounded-lg border border-slate-200/50 mr-1">
-        <button type="button" @click="editor.chain().focus().toggleBold().run()" :class="btnClass(editor.isActive('bold'))" title="Bold">
+        <button type="button" @mousedown.prevent="editor.chain().focus().toggleBold().run()" :class="btnClass(editor.isActive('bold'))" title="Bold">
           <Icon name="lucide:bold" class="w-4 h-4" />
         </button>
-        <button type="button" @click="editor.chain().focus().toggleItalic().run()" :class="btnClass(editor.isActive('italic'))" title="Italic">
+        <button type="button" @mousedown.prevent="editor.chain().focus().toggleItalic().run()" :class="btnClass(editor.isActive('italic'))" title="Italic">
           <Icon name="lucide:italic" class="w-4 h-4" />
         </button>
-        <button type="button" @click="editor.chain().focus().toggleUnderline().run()" :class="btnClass(editor.isActive('underline'))" title="Underline">
+        <button type="button" @mousedown.prevent="editor.chain().focus().toggleUnderline().run()" :class="btnClass(editor.isActive('underline'))" title="Underline">
           <Icon name="lucide:underline" class="w-4 h-4" />
         </button>
       </div>
 
       <div class="flex items-center space-x-1 bg-white/50 p-1 rounded-lg border border-slate-200/50 mr-1">
-        <button type="button" @click="editor.chain().focus().toggleHeading({ level: 1 }).run()" :class="btnClass(editor.isActive('heading', { level: 1 }))" title="H1">
+        <button type="button" @mousedown.prevent="editor.chain().focus().toggleHeading({ level: 1 }).run()" :class="btnClass(editor.isActive('heading', { level: 1 }))" title="H1">
           <span class="text-sm font-black">H1</span>
         </button>
-        <button type="button" @click="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="btnClass(editor.isActive('heading', { level: 2 }))" title="H2">
+        <button type="button" @mousedown.prevent="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="btnClass(editor.isActive('heading', { level: 2 }))" title="H2">
           <span class="text-sm font-black">H2</span>
         </button>
       </div>
 
       <div class="flex items-center space-x-1 bg-white/50 p-1 rounded-lg border border-slate-200/50 mr-1">
-        <button type="button" @click="editor.chain().focus().toggleBulletList().run()" :class="btnClass(editor.isActive('bulletList'))" title="Bullets">
+        <button type="button" @mousedown.prevent="editor.chain().focus().toggleBulletList().run()" :class="btnClass(editor.isActive('bulletList'))" title="Bullets">
           <Icon name="lucide:list" class="w-4 h-4" />
         </button>
-        <button type="button" @click="editor.chain().focus().toggleOrderedList().run()" :class="btnClass(editor.isActive('orderedList'))" title="Numbered List">
+        <button type="button" @mousedown.prevent="editor.chain().focus().toggleOrderedList().run()" :class="btnClass(editor.isActive('orderedList'))" title="Numbered List">
           <span class="text-sm font-black">1.</span>
         </button>
       </div>
 
       <div class="flex items-center space-x-1 bg-white/50 p-1 rounded-lg border border-slate-200/50 mr-1">
-        <button type="button" @click="editor.chain().focus().toggleBlockquote().run()" :class="btnClass(editor.isActive('blockquote'))" title="Quote">
+        <button type="button" @mousedown.prevent="editor.chain().focus().toggleBlockquote().run()" :class="btnClass(editor.isActive('blockquote'))" title="Quote">
           <Icon name="lucide:quote" class="w-4 h-4" />
         </button>
-        <button type="button" @click="setLink" :class="btnClass(editor.isActive('link'))" title="Add Link">
+        <button type="button" @mousedown.prevent="setLink" :class="btnClass(editor.isActive('link'))" title="Add Link">
           <Icon name="lucide:link" class="w-4 h-4" />
         </button>
       </div>
 
       <div class="flex items-center space-x-1 ml-auto">
-        <button type="button" @click="editor.chain().focus().undo().run()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 transition-all" title="Undo">
+        <button type="button" @mousedown.prevent="editor.chain().focus().undo().run()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 transition-all" title="Undo">
           <Icon name="lucide:undo" class="w-4 h-4" />
         </button>
-        <button type="button" @click="editor.chain().focus().redo().run()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 transition-all" title="Redo">
+        <button type="button" @mousedown.prevent="editor.chain().focus().redo().run()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 transition-all" title="Redo">
           <Icon name="lucide:redo" class="w-4 h-4" />
         </button>
       </div>

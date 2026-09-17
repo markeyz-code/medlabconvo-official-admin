@@ -77,7 +77,7 @@
                 <div class="flex items-center space-x-3">
                   <span class="text-sm font-bold text-slate-900">{{ getActionLabel(log.action) }}</span>
                   <span class="w-1 h-1 rounded-full bg-slate-300"></span>
-                  <span class="text-sm font-bold text-slate-400 uppercase tracking-widest">{{ log.resource.replace('_', ' ') }}</span>
+                  <span class="text-sm font-bold text-slate-400  tracking-normal">{{ log.resource.replace('_', ' ') }}</span>
                   <span v-if="log.resourceId" class="px-2 py-0.5 text-sm font-bold bg-slate-100 text-slate-500 rounded-lg">
                     ID: {{ log.resourceId.slice(-8) }}
                   </span>
@@ -91,7 +91,7 @@
               </p>
               
               <!-- Metadata -->
-              <div v-if="log.metadata" class="flex flex-wrap items-center gap-4 text-sm font-bold text-slate-400 uppercase tracking-widest">
+              <div v-if="log.metadata" class="flex flex-wrap items-center gap-4 text-sm font-bold text-slate-400  tracking-normal">
                 <span v-if="log.metadata.ip" class="flex items-center">
                   <Icon name="lucide:globe" class="w-3 h-3 mr-1" />
                   {{ log.metadata.ip }}

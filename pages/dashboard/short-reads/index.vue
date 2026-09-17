@@ -2,7 +2,7 @@
   <div class="space-y-6">
     <div class="flex justify-between items-center">
       <div>
-        <h2 class="text-2xl font-bold text-gray-900">Short Reads</h2>
+        <h2 class="text-lg font-bold text-gray-900">Short Reads</h2>
         <p class="text-gray-500">Manage Zikoko-style short read stories.</p>
       </div>
       <NuxtLink to="/dashboard/short-reads/create" class="px-4 py-2 bg-[#033958] text-white rounded-lg hover:bg-opacity-90">
@@ -24,7 +24,7 @@
       <div v-else class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-gray-50/50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500">
+            <tr class="bg-gray-50/50 border-b border-gray-100 text-xs  tracking-wider text-gray-500">
               <th class="py-4 px-6 font-semibold">Story Details</th>
               <th class="py-4 px-6 font-semibold">Author</th>
               <th class="py-4 px-6 font-semibold">Status</th>
@@ -74,7 +74,7 @@
 
     <!-- Delete Confirmation Modal -->
     <div v-if="isDeleteModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm">
-      <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 w-full max-w-md overflow-hidden transform transition-all">
         <div class="p-6">
           <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>

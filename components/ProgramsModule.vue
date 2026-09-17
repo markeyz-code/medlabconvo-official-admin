@@ -5,7 +5,8 @@
       <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
         <div class="w-full sm:w-72">
           <AnimatedInput
-            v-model="searchQuery"
+            v-model="filters.search"
+            @input="handleSearch"
             id="search-programs"
             label="Search programs..."
             type="text"
@@ -13,12 +14,27 @@
         </div>
         <div class="w-full sm:w-48">
           <SelectInput
-            v-model="statusFilter"
+            v-model="filters.status"
+            @change="handleFilter"
             :options="[
               { label: 'All Status', value: '' },
               { label: 'Active', value: 'active' },
               { label: 'Inactive', value: 'inactive' },
               { label: 'Draft', value: 'draft' }
+            ]"
+          />
+        </div>
+        <div class="w-full sm:w-48">
+          <SelectInput
+            v-model="filters.category"
+            @change="handleFilter"
+            :options="[
+              { label: 'All Categories', value: '' },
+              { label: 'Healthcare', value: 'Healthcare' },
+              { label: 'Education', value: 'Education' },
+              { label: 'Technology Training', value: 'Technology Training' },
+              { label: 'Business Development', value: 'Business Development' },
+              { label: 'General', value: 'General' }
             ]"
           />
         </div>
@@ -33,11 +49,11 @@
     </div>
 
     <!-- Programs Registry (Table Layout) -->
-    <div v-if="!loading && filteredPrograms.length > 0" class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm relative">
+    <div v-if="!loading && programs.length > 0" class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm relative">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-separate border-spacing-0">
           <thead>
-            <tr class="bg-slate-50/50 text-sm font-black uppercase tracking-widest text-slate-400">
+            <tr class="bg-slate-50/50 text-sm font-black  tracking-normal text-slate-400">
               <th class="px-8 py-6 border-b border-slate-100">Image</th>
               <th class="px-8 py-6 border-b border-slate-100">Program Identity</th>
               <th class="px-8 py-6 border-b border-slate-100">Status</th>
@@ -48,7 +64,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-50">
-            <tr v-for="program in filteredPrograms" :key="program.id || program._id" class="group hover:bg-slate-50/50 transition-all duration-300">
+            <tr v-for="program in programs" :key="program.id || program._id" class="group hover:bg-slate-50/50 transition-all duration-300">
               <!-- Program Image -->
               <td class="px-8 py-6">
                 <div class="relative w-16 h-12 rounded-xl overflow-hidden shadow-sm ring-2 ring-slate-100 group-hover:ring-blue-100 transition-all">
@@ -67,14 +83,14 @@
                   <span class="text-sm font-bold text-slate-900 leading-none mb-1 group-hover:text-[#033958] transition-colors line-clamp-1">
                     {{ program.title }}
                   </span>
-                  <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">{{ program.category || 'General' }}</span>
+                  <span class="text-[10px] font-black  tracking-normal text-slate-400">{{ program.category || 'General' }}</span>
                 </div>
               </td>
 
               <!-- Status -->
               <td class="px-8 py-6">
                 <span :class="[
-                  'inline-flex items-center px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full ring-1 ring-inset',
+                  'inline-flex items-center px-3 py-1 text-[10px] font-black  tracking-normal rounded-full ring-1 ring-inset',
                   program.status === 'active' ? 'bg-emerald-50 text-emerald-700 ring-emerald-500/20' : 'bg-amber-50 text-amber-700 ring-amber-500/20'
                 ]">
                   {{ program.status }}
@@ -138,25 +154,47 @@
       </div>
     </div>
 
+
+    <!-- Pagination -->
+    <div v-if="!loading && metadata.pages > 1" class="flex items-center justify-between mt-6 px-4">
+      <span class="text-sm text-slate-500 font-medium">Showing page {{ metadata.page }} of {{ metadata.pages }} ({{ metadata.total }} total)</span>
+      <div class="flex items-center space-x-2">
+        <button 
+          @click="setPage(metadata.page - 1)" 
+          :disabled="metadata.page === 1"
+          class="p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        >
+          <Icon name="lucide:chevron-left" class="w-4 h-4" />
+        </button>
+        <button 
+          @click="setPage(metadata.page + 1)" 
+          :disabled="metadata.page === metadata.pages"
+          class="p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        >
+          <Icon name="lucide:chevron-right" class="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-32 space-y-4">
       <div class="relative w-14 h-14">
         <div class="absolute inset-0 rounded-full border-4 border-slate-50"></div>
         <div class="absolute inset-0 rounded-full border-4 border-t-[#033958] animate-spin"></div>
       </div>
-      <span class="text-sm font-black uppercase tracking-widest text-slate-400 animate-pulse">Synchronizing curricula...</span>
+      <span class="text-sm font-black  tracking-normal text-slate-400 animate-pulse">Synchronizing curricula...</span>
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="filteredPrograms.length === 0" class="flex flex-col items-center justify-center py-32 bg-slate-50/50 rounded-[3rem] border border-dashed border-slate-200">
+    <div v-else-if="programs.length === 0" class="flex flex-col items-center justify-center py-32 bg-slate-50/50 rounded-[3rem] border border-dashed border-slate-200">
       <div class="w-24 h-24 bg-white rounded-[2rem] shadow-sm flex items-center justify-center mb-8">
         <Icon name="lucide:graduation-cap" class="w-10 h-10 text-slate-100" />
       </div>
-      <h3 class="text-2xl font-black text-[#033958] mb-2 tracking-tighter">No Programs Found</h3>
+      <h3 class="text-lg font-black text-[#033958] mb-2 tracking-normal">No Programs Found</h3>
       <p class="text-slate-400 mb-10 max-w-sm text-center leading-relaxed font-bold text-sm">Your educational portfolio is currently empty. Start by launching your first scientific curriculum.</p>
       <button
         @click="openCreateModal"
-        class="px-10 py-4 bg-[#033958] text-white rounded-2xl hover:bg-[#022a41] transition-all font-bold text-sm shadow-xl active:scale-95"
+        class="px-10 py-4 bg-[#033958] text-white rounded-2xl hover:bg-[#022a41] transition-all font-bold text-sm shadow-sm border border-slate-200 active:scale-95"
       >
         Launch New Program
       </button>
@@ -187,12 +225,12 @@
           <Icon name="lucide:link-2" class="w-32 h-32 text-white/5 absolute -top-8 -right-8 rotate-12" />
           
           <div class="relative z-10 space-y-4">
-            <div class="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20 flex items-center justify-center mx-auto shadow-2xl">
+            <div class="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20 flex items-center justify-center mx-auto shadow-sm border border-slate-200">
               <Icon name="lucide:globe" class="w-10 h-10 text-white" />
             </div>
             <div>
-              <h3 class="text-2xl font-black text-white tracking-tighter">Gateway Activated</h3>
-              <p class="text-blue-100/60 text-sm font-bold uppercase tracking-widest">Global enrollment ready</p>
+              <h3 class="text-lg font-black text-white tracking-normal">Gateway Activated</h3>
+              <p class="text-blue-100/60 text-sm font-bold  tracking-normal">Global enrollment ready</p>
             </div>
           </div>
         </div>
@@ -201,8 +239,8 @@
         <div class="p-10 space-y-10 bg-white">
           <div class="space-y-4">
             <div class="flex items-center justify-between px-1">
-              <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Secure Enrollment URL</label>
-              <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-1">
+              <label class="text-[10px] font-black  tracking-normal text-slate-400">Secure Enrollment URL</label>
+              <span class="text-[10px] font-black text-emerald-500  tracking-normal flex items-center gap-1">
                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                 HTTPS Secure
               </span>
@@ -219,7 +257,7 @@
                 />
                 <button
                   @click="copyToClipboard(registrationLink)"
-                  class="px-6 py-4 bg-[#033958] text-white rounded-[1.2rem] font-bold text-xs hover:bg-[#022a41] transition-all active:scale-95 flex items-center gap-2 shadow-lg"
+                  class="px-6 py-4 bg-[#033958] text-white rounded-[1.2rem] font-bold text-xs hover:bg-[#022a41] transition-all active:scale-95 flex items-center gap-2 shadow-sm border border-slate-100"
                 >
                   <Icon :name="copiedLink ? 'lucide:check' : 'lucide:copy'" class="w-4 h-4" />
                   <span>{{ copiedLink ? 'Copied' : 'Copy' }}</span>
@@ -234,14 +272,14 @@
               <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-blue-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
                 <Icon name="lucide:qr-code" class="w-5 h-5" />
               </div>
-              <h4 class="text-xs font-black text-slate-900 uppercase mb-1">Visual Entry</h4>
+              <h4 class="text-xs font-black text-slate-900  mb-1">Visual Entry</h4>
               <p class="text-[10px] text-slate-400 font-bold leading-tight">Generate QR asset for physical collateral</p>
             </div>
             <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 group hover:border-emerald-100 transition-all cursor-pointer">
               <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-emerald-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
                 <Icon name="lucide:mail" class="w-5 h-5" />
               </div>
-              <h4 class="text-xs font-black text-slate-900 uppercase mb-1">Email Blast</h4>
+              <h4 class="text-xs font-black text-slate-900  mb-1">Email Blast</h4>
               <p class="text-[10px] text-slate-400 font-bold leading-tight">Notify all qualified practitioners</p>
             </div>
           </div>
@@ -250,14 +288,14 @@
           <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
             <button 
               @click="showLinkModal = false"
-              class="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors"
+              class="text-xs font-black  tracking-normal text-slate-400 hover:text-slate-900 transition-colors"
             >
               Close Gateway
             </button>
             <a 
               :href="registrationLink" 
               target="_blank"
-              class="text-xs font-black uppercase tracking-widest text-[#033958] flex items-center gap-2 hover:gap-3 transition-all"
+              class="text-xs font-black  tracking-normal text-[#033958] flex items-center gap-2 hover:gap-3 transition-all"
             >
               Test Portal
               <Icon name="lucide:arrow-right" class="w-4 h-4" />
@@ -296,7 +334,7 @@ import Modal from '@/components/Modal.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // Composables
-const { programs, loading, getPrograms } = useGetPrograms()
+const { programs, loading, getPrograms, metadata, filters, setPage } = useGetPrograms()
 const { createProgram } = useCreateProgram()
 const { updateProgram } = useUpdateProgram()
 const { softDeleteProgram } = useSoftDeleteProgram()
@@ -304,8 +342,7 @@ const { registrationLink, getRegistrationLink: fetchRegistrationLink } = useGetR
 const { showToast } = useCustomToast()
 
 // Reactive data
-const searchQuery = ref('')
-const statusFilter = ref('')
+
 const showModal = ref(false)
 const showPreviewModal = ref(false)
 const previewingProgram = ref<any>(null)
@@ -320,24 +357,20 @@ onMounted(() => {
   getPrograms()
 })
 
-// Computed
-const filteredPrograms = computed(() => {
-  let filtered = (programs.value || []) as any[]
+// Filter handling with debounce for search
+let searchTimeout: any = null
+const handleSearch = () => {
+  if (searchTimeout) clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => {
+    metadata.value.page = 1
+    getPrograms()
+  }, 500)
+}
 
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(program => 
-      program.title?.toLowerCase().includes(query) ||
-      program.description?.toLowerCase().includes(query)
-    )
-  }
-
-  if (statusFilter.value) {
-    filtered = filtered.filter(program => program.status === statusFilter.value)
-  }
-
-  return filtered
-})
+const handleFilter = () => {
+  metadata.value.page = 1
+  getPrograms()
+}
 
 // Methods
 const openCreateModal = () => {

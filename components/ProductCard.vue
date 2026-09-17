@@ -70,7 +70,7 @@
       </p>
 
       <div class="flex items-baseline space-x-2 mb-6">
-        <span class="text-2xl font-black text-slate-900">₦{{ formatPrice(product.price) }}</span>
+        <span class="text-lg font-black text-slate-900">₦{{ formatPrice(product.price) }}</span>
         <span v-if="product.originalPrice && product.originalPrice > product.price" class="text-sm font-bold text-slate-300 line-through">
           ₦{{ formatPrice(product.originalPrice) }}
         </span>

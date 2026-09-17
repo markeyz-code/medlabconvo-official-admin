@@ -53,7 +53,7 @@
 
     <div class="grid grid-cols-1 gap-8">
       <div class="space-y-4">
-        <label class="text-sm font-black uppercase tracking-widest text-slate-400 px-1">Biography</label>
+        <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Biography</label>
         <TiptapEditor
           v-model="form.bio"
 

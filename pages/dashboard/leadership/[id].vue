@@ -1,27 +1,27 @@
 <template>
   <div v-if="loading" class="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
      <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin"></div>
-     <span class="text-sm font-black uppercase tracking-widest text-[#033958]">Loading member...</span>
+     <span class="text-sm font-black  tracking-normal text-[#033958]">Loading member...</span>
   </div>
 
   <div v-else class="p-6 md:p-10 space-y-10 animate-in fade-in duration-700 pb-40">
     <!-- Breadcrumbs & Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
       <div class="space-y-2">
-        <div class="flex items-center gap-2 text-sm font-black uppercase tracking-widest text-slate-400">
+        <div class="flex items-center gap-2 text-sm font-black  tracking-normal text-slate-400">
            <NuxtLink to="/dashboard/leadership" class="hover:text-[#033958] transition-colors">Team</NuxtLink>
            <Icon name="lucide:chevron-right" class="w-3 h-3" />
            <span class="text-slate-900">Edit Member</span>
         </div>
-        <h1 class="text-4xl font-black text-slate-900 tracking-tighter uppercase ">Edit Team Member</h1>
+        <h1 class="text-lg font-black text-slate-900 tracking-normal  ">Edit Team Member</h1>
       </div>
       
       <div class="flex items-center gap-4">
-        <button @click="$router.push('/dashboard/leadership')" class="px-8 py-4 text-sm font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">Cancel</button>
+        <button @click="$router.push('/dashboard/leadership')" class="px-8 py-4 text-sm font-black  tracking-normal text-slate-400 hover:text-slate-900 transition-colors">Cancel</button>
         <button 
           @click="handleSubmit" 
           :disabled="submitting || !isFormValid"
-          class="px-12 py-4 bg-[#033958] text-white rounded-2xl font-black text-sm uppercase tracking-[0.25em] shadow-2xl hover:bg-[#022a41] transition-all disabled:opacity-50 flex items-center gap-3"
+          class="px-12 py-4 bg-[#033958] text-white rounded-2xl font-black text-sm  tracking-normal shadow-sm border border-slate-200 hover:bg-[#022a41] transition-all disabled:opacity-50 flex items-center gap-3"
         >
           <div v-if="submitting" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
           <span>Save Changes</span>
@@ -32,14 +32,14 @@
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-12">
       <!-- Sidebar: Preview -->
       <div class="xl:col-span-1 space-y-8">
-        <div class="bg-white rounded-[3rem] border border-slate-100 p-10 shadow-xl space-y-8 sticky top-10">
-           <label class="text-sm font-black uppercase tracking-widest text-slate-400 block px-1">Preview</label>
+        <div class="bg-white rounded-[3rem] border border-slate-100 p-10 shadow-sm border border-slate-200 space-y-8 sticky top-10">
+           <label class="text-sm font-black  tracking-normal text-slate-400 block px-1">Preview</label>
            
            <div class="relative aspect-square rounded-[3.5rem] bg-slate-50 border-4 border-dashed border-slate-100 overflow-hidden group">
               <img v-if="form.image" :src="form.image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div v-else class="absolute inset-0 flex flex-col items-center justify-center text-slate-200">
                  <Icon name="lucide:user" class="w-20 h-20 mb-4" />
-                 <span class="text-[9px] font-black uppercase tracking-widest">No Photo Selected</span>
+                 <span class="text-[9px] font-black  tracking-normal">No Photo Selected</span>
               </div>
               <input type="file" @change="handleImageUpload" class="absolute inset-0 opacity-0 cursor-pointer z-10" />
               <div v-if="uploading" class="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-20">
@@ -48,9 +48,9 @@
            </div>
 
            <div class="space-y-4">
-              <h3 class="text-3xl font-black text-slate-900 tracking-tighter uppercase ">{{ form.name || 'Member Name' }}</h3>
-              <p class="text-xs font-black text-[#033958] uppercase tracking-widest truncate">{{ form.title || 'Job Title' }}</p>
-              <div class="inline-flex px-3 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-widest rounded-lg border border-emerald-100">
+              <h3 class="text-xl font-black text-slate-900 tracking-normal  ">{{ form.name || 'Member Name' }}</h3>
+              <p class="text-xs font-black text-[#033958]  tracking-normal truncate">{{ form.title || 'Job Title' }}</p>
+              <div class="inline-flex px-3 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black  tracking-normal rounded-lg border border-emerald-100">
                  {{ form.roleCategory }}
               </div>
            </div>
@@ -64,10 +64,10 @@
       <!-- Main Form -->
       <div class="xl:col-span-2 space-y-12">
         <!-- Basic Information -->
-        <section class="bg-white rounded-[3.5rem] p-10 md:p-14 border border-slate-100 shadow-2xl space-y-10">
+        <section class="bg-white rounded-[3.5rem] p-10 md:p-14 border border-slate-100 shadow-sm border border-slate-200 space-y-10">
            <div class="flex items-center gap-4">
               <div class="w-10 h-10 bg-[#033958] text-white rounded-xl flex items-center justify-center font-black ">01</div>
-              <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Basic Information</h2>
+              <h2 class="text-xl font-black text-slate-900  tracking-normal ">Basic Information</h2>
            </div>
 
            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -86,19 +86,19 @@
            </div>
            
            <div class="space-y-4">
-              <label class="text-sm font-black uppercase tracking-widest text-slate-400 px-1">Biography</label>
+              <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Biography</label>
               <AnimatedInput v-model="form.bio" id="bio" label="Write a short bio for this team member..." type="textarea" :rows="8" required />
            </div>
         </section>
 
         <!-- Achievements -->
-        <section class="bg-white rounded-[3.5rem] p-10 md:p-14 border border-slate-100 shadow-2xl space-y-10">
+        <section class="bg-white rounded-[3.5rem] p-10 md:p-14 border border-slate-100 shadow-sm border border-slate-200 space-y-10">
            <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
                 <div class="w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center font-black ">02</div>
-                <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Achievements</h2>
+                <h2 class="text-xl font-black text-slate-900  tracking-normal ">Achievements</h2>
               </div>
-              <button @click="addAchievement" class="text-sm font-black uppercase tracking-[0.2em] text-[#033958] hover:text-black">Add Achievement</button>
+              <button @click="addAchievement" class="text-sm font-black  tracking-normal text-[#033958] hover:text-black">Add Achievement</button>
            </div>
 
            <div class="space-y-6">
@@ -112,19 +112,19 @@
               </div>
               <div v-if="!form.achievements.length" class="py-20 border-2 border-dashed border-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-200">
                  <Icon name="lucide:sparkles" class="w-12 h-12 mb-4" />
-                 <p class="text-sm font-black uppercase tracking-widest">No achievements added yet.</p>
+                 <p class="text-sm font-black  tracking-normal">No achievements added yet.</p>
               </div>
            </div>
         </section>
 
         <!-- Social Profiles -->
-        <section class="bg-white rounded-[3.5rem] p-10 md:p-14 border border-slate-100 shadow-2xl space-y-10">
+        <section class="bg-white rounded-[3.5rem] p-10 md:p-14 border border-slate-100 shadow-sm border border-slate-200 space-y-10">
            <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
                 <div class="w-10 h-10 bg-blue-500 text-white rounded-xl flex items-center justify-center font-black ">03</div>
-                <h2 class="text-xl font-black text-slate-900 uppercase tracking-tighter ">Social Profiles</h2>
+                <h2 class="text-xl font-black text-slate-900  tracking-normal ">Social Profiles</h2>
               </div>
-              <button @click="addProfile" class="text-sm font-black uppercase tracking-[0.2em] text-[#033958] hover:text-black">Add Profile</button>
+              <button @click="addProfile" class="text-sm font-black  tracking-normal text-[#033958] hover:text-black">Add Profile</button>
            </div>
 
            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -140,13 +140,13 @@
                     ]" 
                  />
                  <AnimatedInput v-model="profile.url" :id="'prof-'+idx" label="Profile URL" type="text" />
-                 <button @click="removeProfile(idx)" class="absolute -top-3 -right-3 w-8 h-8 bg-white text-slate-200 hover:text-rose-500 rounded-full border border-slate-100 shadow-xl flex items-center justify-center">
+                 <button @click="removeProfile(idx)" class="absolute -top-3 -right-3 w-8 h-8 bg-white text-slate-200 hover:text-rose-500 rounded-full border border-slate-100 shadow-sm border border-slate-200 flex items-center justify-center">
                     <Icon name="lucide:x" class="w-4 h-4" />
                  </button>
               </div>
               <div v-if="!form.profiles.length" class="md:col-span-2 py-20 border-2 border-dashed border-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-200">
                  <Icon name="lucide:globe" class="w-12 h-12 mb-4" />
-                 <p class="text-sm font-black uppercase tracking-widest">No social profiles added yet.</p>
+                 <p class="text-sm font-black  tracking-normal">No social profiles added yet.</p>
               </div>
            </div>
         </section>

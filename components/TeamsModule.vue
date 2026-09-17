@@ -6,14 +6,14 @@
       <div class="absolute right-0 top-0 w-64 h-64 bg-[#033958]/5 blur-3xl rounded-full"></div>
       
       <div class="relative z-10 space-y-2">
-        <h2 class="text-3xl font-black text-slate-900 tracking-tighter ">Team Management</h2>
-        <p class="text-sm font-bold text-slate-400 tracking-widest">Manage your team members and leadership profiles</p>
+        <h2 class="text-xl font-black text-slate-900 tracking-normal ">Team Management</h2>
+        <p class="text-sm font-bold text-slate-400 tracking-normal">Manage your team members and leadership profiles</p>
       </div>
 
       <div class="relative z-10 flex items-center gap-4 w-full sm:w-auto">
         <button
           @click="openAddDrawer"
-          class="flex-1 sm:flex-none px-10 py-3 bg-[#033958] text-white rounded-2xl font-black text-sm  tracking-[0.25em] hover:bg-[#022a41] transition-all flex items-center justify-center space-x-3 -2xl active:scale-95"
+          class="flex-1 sm:flex-none px-10 py-3 bg-[#033958] text-white rounded-2xl font-black text-sm  tracking-normal hover:bg-[#022a41] transition-all flex items-center justify-center space-x-3 -2xl active:scale-95"
         >
           <Icon name="lucide:plus-circle" class="w-5 h-5" />
           <span>Add Team Member</span>
@@ -50,25 +50,25 @@
       <!-- Loading Overlay -->
       <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
          <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
-         <span class="text-sm font-black  tracking-widest text-[#033958]">Loading members...</span>
+         <span class="text-sm font-black  tracking-normal text-[#033958]">Loading members...</span>
       </div>
 
       <div v-if="!loading && filteredMembers.length === 0" class="py-40 text-center">
         <div class="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-8">
            <Icon name="lucide:users-round" class="w-12 h-12 text-slate-200" />
         </div>
-        <h3 class="text-xl font-black text-slate-900  tracking-tighter ">No Members Found</h3>
-        <p class="text-sm font-bold text-slate-400  tracking-widest mt-2">No team members match your current filters.</p>
+        <h3 class="text-xl font-black text-slate-900  tracking-normal ">No Members Found</h3>
+        <p class="text-sm font-bold text-slate-400  tracking-normal mt-2">No team members match your current filters.</p>
       </div>
 
       <table v-else class="w-full text-left border-collapse">
         <thead>
           <tr class="border-b border-slate-100">
-            <th class="px-10 py-8 text-sm font-black  tracking-widest text-slate-400">Photo</th>
-            <th class="px-10 py-8 text-sm font-black  tracking-widest text-slate-400">Name & Title</th>
-            <th class="px-10 py-8 text-sm font-black  tracking-widest text-slate-400">Category</th>
-            <th class="px-10 py-8 text-sm font-black  tracking-widest text-slate-400 text-center">Order</th>
-            <th class="px-10 py-8 text-sm font-black  tracking-widest text-slate-400 text-right">Actions</th>
+            <th class="px-10 py-8 text-sm font-black  tracking-normal text-slate-400">Photo</th>
+            <th class="px-10 py-8 text-sm font-black  tracking-normal text-slate-400">Name & Title</th>
+            <th class="px-10 py-8 text-sm font-black  tracking-normal text-slate-400">Category</th>
+            <th class="px-10 py-8 text-sm font-black  tracking-normal text-slate-400 text-center">Order</th>
+            <th class="px-10 py-8 text-sm font-black  tracking-normal text-slate-400 text-right">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
@@ -83,12 +83,12 @@
             </td>
             <td class="px-10 py-8">
                <div class="flex flex-col">
-                  <span class="text-lg font-black text-slate-900   tracking-tighter">{{ member.name }}</span>
-                  <span class="text-sm font-bold text-[#033958]  tracking-widest">{{ member.title }}</span>
+                  <span class="text-lg font-black text-slate-900   tracking-normal">{{ member.name }}</span>
+                  <span class="text-sm font-bold text-[#033958]  tracking-normal">{{ member.title }}</span>
                </div>
             </td>
             <td class="px-10 py-8 text-center sm:text-left">
-               <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#033958] text-white text-[9px] font-black  tracking-widest rounded-lg">
+               <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#033958] text-white text-[9px] font-black  tracking-normal rounded-lg">
                   {{ member.roleCategory || 'General' }}
                </div>
             </td>

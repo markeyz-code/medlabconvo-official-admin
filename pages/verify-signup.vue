@@ -6,10 +6,10 @@
       <div class="absolute inset-0 bg-gradient-to-t from-[#033958] via-[#033958]/80 to-transparent"></div>
       
       <div class="relative z-10 w-full max-w-lg mb-12">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl mb-8 overflow-hidden shadow-2xl p-1">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl mb-8 overflow-hidden shadow-sm border border-slate-200 p-1">
           <img src="@/assets/img/logo.jpeg" class="w-full h-full object-cover rounded-xl" />
         </div>
-        <h1 class="text-4xl font-bold text-white mb-4 leading-tight">Welcome to MedLabConvo</h1>
+        <h1 class="text-lg font-bold text-white mb-4 leading-tight">Welcome to MedLabConvo</h1>
         <p class="text-lg text-blue-100/80">You're just one step away from joining our administrative platform.</p>
       </div>
     </div>
@@ -22,7 +22,7 @@
           <Icon name="lucide:mail-open" class="w-10 h-10 text-[#3BAB22]" />
         </div>
         
-        <h2 class="text-2xl font-extrabold text-[#033958] mb-4 tracking-tight">Verify Your Email</h2>
+        <h2 class="text-lg font-extrabold text-[#033958] mb-4 tracking-tight">Verify Your Email</h2>
         <p class="text-gray-900 mb-10 font-medium">
           We've sent a 6-digit activation code to <br/>
           <span class="text-[#033958] font-bold">{{ email }}</span>

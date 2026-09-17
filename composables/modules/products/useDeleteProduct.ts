@@ -14,8 +14,8 @@ export const useDeleteProduct = () => {
     success.value = false
 
     try {
-      await products_api.$_delete_product(productId)
-      if ([200, 201].includes(response?.status)) {
+      const response = await products_api.$_delete_product(productId)
+      if ([200, 201, 204].includes(response?.status)) {
         success.value = true
 
       }

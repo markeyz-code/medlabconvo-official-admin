@@ -106,7 +106,7 @@
         <button
           @click="addField"
           type="button"
-          class="px-6 py-3 bg-gradient-to-r from-[#033958] to-[#044d77] text-white rounded-2xl font-bold text-sm shadow-lg shadow-blue-900/20 hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95 flex items-center space-x-2"
+          class="px-6 py-3 bg-gradient-to-r from-[#033958] to-[#044d77] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-100 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-0.5 transition-all active:scale-95 flex items-center space-x-2"
         >
           <Icon name="lucide:plus" class="w-4 h-4" />
           <span>Add Field</span>
@@ -125,7 +125,7 @@
             <div
               v-for="(field, index) in form.fields"
               :key="field.id"
-              class="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all duration-500 group relative focus-within:z-50"
+              class="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm hover:shadow-sm border border-slate-200 hover:border-blue-100 transition-all duration-500 group relative focus-within:z-50"
             >
             <!-- Field Number Badge (Glassmorphism style) -->
             <div class="absolute top-0 right-0 w-32 h-32 bg-slate-50/50 -mr-16 -mt-16 rounded-full group-hover:bg-blue-50/50 transition-colors duration-500"></div>
@@ -137,7 +137,7 @@
                 </div>
                 <div>
                   <h4 class="font-bold text-slate-900">Field Configuration</h4>
-                  <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Question {{ index + 1 }}</p>
+                  <p class="text-[10px]  tracking-normal text-slate-400 font-bold">Question {{ index + 1 }}</p>
                 </div>
               </div>
               <button
@@ -240,7 +240,7 @@
             <!-- Options for select/radio/checkbox -->
             <div v-if="['select', 'radio', 'checkbox'].includes(field.type)" class="mt-4 pt-4 border-t border-slate-50 relative z-10">
               <div class="flex items-center justify-between mb-3 px-2">
-                <label class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Options</label>
+                <label class="text-[11px] font-black text-slate-400  tracking-normal">Options</label>
                 <button
                   @click="addOption(field)"
                   type="button"
@@ -325,7 +325,7 @@
     <!-- Form Actions -->
     <div class="flex items-center justify-between pt-6 border-t border-slate-200 sticky bottom-0 bg-white/80 backdrop-blur-md pb-2 px-2 z-[60]">
       <div class="flex flex-col">
-        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Current Status</span>
+        <span class="text-[10px] font-black text-slate-400  tracking-normal">Current Status</span>
         <div class="flex items-center space-x-2">
           <div :class="['w-2 h-2 rounded-full animate-pulse', form.isActive ? 'bg-green-500' : 'bg-slate-300']"></div>
           <span class="text-sm font-bold text-slate-700">{{ form.isActive ? 'Active & Accepting Submissions' : 'Inactive / Draft' }}</span>
@@ -343,7 +343,7 @@
         <button
           @click="handleSubmit"
           type="button"
-          class="px-10 py-3 bg-gradient-to-r from-cyan-600 to-blue-700 text-white rounded-2xl font-bold text-sm shadow-xl shadow-blue-900/20 hover:shadow-2xl hover:-translate-y-1 transition-all active:scale-95 flex items-center space-x-3"
+          class="px-10 py-3 bg-gradient-to-r from-cyan-600 to-blue-700 text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center space-x-3"
         >
           <Icon :name="mode === 'edit' ? 'lucide:save' : 'lucide:check-circle'" class="w-4 h-4" />
           <span>{{ mode === 'edit' ? 'Update' : 'Create' }} Professional Form</span>

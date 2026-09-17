@@ -335,14 +335,14 @@
             <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
               <!-- Speaker Image -->
               <div class="md:col-span-4 space-y-4">
-                <label class="text-sm font-black uppercase tracking-widest text-slate-400 px-1">Avatar</label>
+                <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Avatar</label>
                 <div class="relative w-32 h-32 mx-auto md:mx-0">
                 <!-- {{ speaker.image }} -->
                   <ImageUpload
                     v-model="speaker.image"
                     :multiple="false"
                     folder="speakers"
-                    class="rounded-full w-32 h-32 border-4 border-white shadow-xl overflow-hidden mx-auto md:mx-0"
+                    class="rounded-full w-32 h-32 border-4 border-white shadow-sm border border-slate-200 overflow-hidden mx-auto md:mx-0"
                   />
                 </div>
               </div>
@@ -389,7 +389,7 @@
 
           <div class="space-y-4">
             <div class="flex items-center justify-between mb-4">
-              <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest px-1">Custom Fields</h4>
+              <h4 class="text-sm font-bold text-slate-400  tracking-normal px-1">Custom Fields</h4>
               <button
                 @click="addFormField"
                 type="button"
@@ -500,7 +500,7 @@
                 <!-- Options for select/radio/checkbox -->
                 <div v-if="['select', 'radio', 'checkbox'].includes(field.type)" class="mt-8 pt-6 border-t border-slate-50">
                   <div class="flex items-center justify-between mb-4">
-                    <label class="text-sm font-bold text-slate-400 uppercase tracking-widest px-1">Options</label>
+                    <label class="text-sm font-bold text-slate-400  tracking-normal px-1">Options</label>
                     <button
                       @click="addFormFieldOption(field)"
                       type="button"
@@ -540,7 +540,7 @@
               </div>
               <div v-if="form.formFields.length === 0" class="text-center py-16 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-100">
                 <Icon name="lucide:clipboard-list" class="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">No custom fields defined</p>
+                <p class="text-slate-400 font-bold  tracking-normal text-[10px]">No custom fields defined</p>
                 <p class="text-xs text-slate-400 mt-1">Add fields to collect specific data from applicants.</p>
               </div>
             </div>

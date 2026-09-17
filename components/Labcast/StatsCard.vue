@@ -13,7 +13,7 @@
             <div class="h-4 bg-gray-200 rounded w-20"></div>
           </div>
           <div v-else>
-            <p class="text-2xl font-semibold text-gray-900">{{ value }}</p>
+            <p class="text-lg font-semibold text-gray-900">{{ value }}</p>
             <p class="text-sm text-gray-900">{{ title }}</p>
           </div>
         </div>

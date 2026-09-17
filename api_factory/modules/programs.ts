@@ -95,6 +95,10 @@ export type ProgramApplication = {
 
 export type ProgramQueryParams = {
   status?: ProgramStatus
+  page?: number
+  limit?: number
+  search?: string
+  category?: string
 }
 
 // API Factory

@@ -115,7 +115,7 @@ onUnmounted(() => {
 .slideover-md { width: 100%; max-width: 480px; }
 .slideover-lg { width: 100%; max-width: 640px; }
 .slideover-xl { width: 100%; max-width: 800px; }
-.slideover-full { width: 100%; max-width: 100%; }
+.slideover-full { width: 100%; max-width: 50vw; }
 
 /* Header */
 .slideover-header {

@@ -43,7 +43,7 @@
           </div>
         </div>
         
-        <h1 class="text-2xl font-bold text-slate-900 mb-2">
+        <h1 class="text-lg font-bold text-slate-900 mb-2">
           {{ product.name }}
         </h1>
         <p class="text-lg text-indigo-600 font-medium mb-4">by {{ product.author }}</p>
@@ -95,28 +95,28 @@
           <div class="flex items-center justify-center mb-2">
             <Eye class="w-5 h-5 text-slate-600" />
           </div>
-          <div class="text-2xl font-bold text-slate-900">{{ product.viewCount || 0 }}</div>
+          <div class="text-lg font-bold text-slate-900">{{ product.viewCount || 0 }}</div>
           <div class="text-sm text-slate-600">Views</div>
         </div>
         <div class="bg-slate-50 rounded-lg p-4 text-center">
           <div class="flex items-center justify-center mb-2">
             <ShoppingCart class="w-5 h-5 text-slate-600" />
           </div>
-          <div class="text-2xl font-bold text-slate-900">{{ product.salesCount || 0 }}</div>
+          <div class="text-lg font-bold text-slate-900">{{ product.salesCount || 0 }}</div>
           <div class="text-sm text-slate-600">Sales</div>
         </div>
         <div class="bg-slate-50 rounded-lg p-4 text-center">
           <div class="flex items-center justify-center mb-2">
             <Star class="w-5 h-5 text-slate-600" />
           </div>
-          <div class="text-2xl font-bold text-slate-900">{{ product.rating || 0 }}</div>
+          <div class="text-lg font-bold text-slate-900">{{ product.rating || 0 }}</div>
           <div class="text-sm text-slate-600">Rating</div>
         </div>
         <div class="bg-slate-50 rounded-lg p-4 text-center">
           <div class="flex items-center justify-center mb-2">
             <MessageSquare class="w-5 h-5 text-slate-600" />
           </div>
-          <div class="text-2xl font-bold text-slate-900">{{ product.reviewCount || 0 }}</div>
+          <div class="text-lg font-bold text-slate-900">{{ product.reviewCount || 0 }}</div>
           <div class="text-sm text-slate-600">Reviews</div>
         </div>
       </div>

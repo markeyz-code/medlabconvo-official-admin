@@ -2,7 +2,7 @@
   <div class="max-w-4xl mx-auto space-y-6">
     <div class="flex justify-between items-center">
       <div>
-        <h2 class="text-2xl font-bold text-gray-900">Edit Short Read</h2>
+        <h2 class="text-lg font-bold text-gray-900">Edit Short Read</h2>
         <p class="text-gray-500">Update this carousel story.</p>
       </div>
       <button @click="submit" :disabled="loading" class="px-4 py-2 bg-[#033958] text-white rounded-lg disabled:opacity-50">

@@ -20,11 +20,11 @@
             leave-from-class="opacity-100 scale-100 translate-y-0"
             leave-to-class="opacity-0 scale-95 translate-y-4"
           >
-            <div v-if="modelValue" class="inline-block w-full max-w-md p-8 my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-[2.5rem] shadow-2xl">
+            <div v-if="modelValue" class="inline-block w-full max-w-md p-8 my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-[2.5rem] shadow-sm border border-slate-200">
               <div class="space-y-6">
                 <div>
-                  <h3 class="text-2xl font-black text-slate-900 tracking-tighter uppercase">{{ title }}</h3>
-                  <p class="text-sm font-bold text-slate-400 tracking-widest mt-1">{{ message }}</p>
+                  <h3 class="text-lg font-black text-slate-900 tracking-normal ">{{ title }}</h3>
+                  <p class="text-sm font-bold text-slate-400 tracking-normal mt-1">{{ message }}</p>
                 </div>
 
                 <div class="relative">
@@ -42,14 +42,14 @@
                   <button
                     @click="close"
                     type="button"
-                    class="flex-1 px-6 py-4 text-sm font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors"
+                    class="flex-1 px-6 py-4 text-sm font-black  tracking-normal text-slate-400 hover:text-slate-900 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     @click="confirm"
                     type="button"
-                    class="flex-1 px-6 py-4 bg-[#033958] text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg hover:bg-[#022a41] transition-all"
+                    class="flex-1 px-6 py-4 bg-[#033958] text-white rounded-2xl font-black text-sm  tracking-normal shadow-sm border border-slate-100 hover:bg-[#022a41] transition-all"
                   >
                     Confirm
                   </button>

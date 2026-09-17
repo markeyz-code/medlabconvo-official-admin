@@ -15,7 +15,7 @@
         </div>
         <div>
           <p class="text-slate-400 text-xs font-semibold mb-1">{{ stat.title }}</p>
-          <h3 class="text-2xl font-bold text-slate-900 tracking-tight">{{ stat.value }}</h3>
+          <h3 class="text-lg font-bold text-slate-900 tracking-tight">{{ stat.value }}</h3>
         </div>
         <div class="absolute bottom-0 left-0 w-full h-0.5 bg-transparent group-hover:bg-[#033958] transition-all duration-300"></div>
       </NuxtLink>

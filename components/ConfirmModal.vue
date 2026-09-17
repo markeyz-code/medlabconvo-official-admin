@@ -25,7 +25,7 @@
             >
               <div
                 v-if="modelValue"
-                class="inline-block w-full max-w-sm p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-2xl shadow-2xl border border-slate-100"
+                class="inline-block w-full max-w-sm p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-2xl shadow-sm border border-slate-200 border border-slate-100"
               >
                 <div class="flex gap-y-6 flex-col items-center mb-4">
                   <div class="flex-shrink-0 w-10 h-10 mx-auto bg-red-100 rounded-full flex items-center justify-center">

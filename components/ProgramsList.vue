@@ -79,7 +79,7 @@
               <div class="absolute top-4 left-4">
                 <span
                   :class="[
-                    'px-3 py-1 text-sm font-bold uppercase tracking-widest rounded-full border',
+                    'px-3 py-1 text-sm font-bold  tracking-normal rounded-full border',
                     getStatusColor(program.status)
                   ]"
                 >
@@ -103,7 +103,7 @@
                   <h3 class="font-bold text-xl text-slate-900 group-hover:text-slate-900 transition-colors mb-1 tracking-tight">
                     {{ program.title }}
                   </h3>
-                  <p class="text-sm text-slate-400 font-bold uppercase tracking-widest">{{ program.category }}</p>
+                  <p class="text-sm text-slate-400 font-bold  tracking-normal">{{ program.category }}</p>
                 </div>
                 
                 <!-- Action Buttons -->
@@ -148,7 +148,7 @@
                 <div class="flex items-center space-x-3">
                   <Clock class="w-4 h-4 text-slate-300" />
                   <div>
-                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Duration</p>
+                    <p class="text-sm font-bold text-slate-400  tracking-normal">Duration</p>
                     <p class="font-bold text-slate-700 text-sm mt-0.5">{{ program.duration }}</p>
                   </div>
                 </div>
@@ -156,7 +156,7 @@
                 <div class="flex items-center space-x-3">
                   <Calendar class="w-4 h-4 text-slate-300" />
                   <div>
-                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Created</p>
+                    <p class="text-sm font-bold text-slate-400  tracking-normal">Created</p>
                     <p class="font-bold text-slate-700 text-sm mt-0.5 font-sans">{{ formatDate(program.createdAt) }}</p>
                   </div>
                 </div>
@@ -164,7 +164,7 @@
                 <div class="flex items-center space-x-3">
                   <FileText class="w-4 h-4 text-slate-300" />
                   <div>
-                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Fields</p>
+                    <p class="text-sm font-bold text-slate-400  tracking-normal">Fields</p>
                     <p class="font-bold text-slate-700 text-sm mt-0.5">{{ program.formFields?.length || 0 }} total</p>
                   </div>
                 </div>
@@ -172,7 +172,7 @@
                 <div class="flex items-center space-x-3">
                   <Users class="w-4 h-4 text-slate-300" />
                   <div>
-                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Applicants</p>
+                    <p class="text-sm font-bold text-slate-400  tracking-normal">Applicants</p>
                     <p class="font-bold text-slate-700 text-sm mt-0.5">{{ program.applicationsCount || 0 }}</p>
                   </div>
                 </div>
@@ -180,7 +180,7 @@
 
               <!-- Focus Areas -->
               <div v-if="program.focusAreas?.length" class="flex items-center space-x-3 mb-4">
-                <span class="text-sm font-bold text-slate-400 uppercase tracking-widest">Focus:</span>
+                <span class="text-sm font-bold text-slate-400  tracking-normal">Focus:</span>
                 <div class="flex flex-wrap gap-2">
                   <span
                     v-for="area in program.focusAreas.slice(0, 4)"
@@ -200,7 +200,7 @@
 
               <!-- Images Preview -->
               <div v-if="program.images?.length" class="flex items-center space-x-3">
-                <span class="text-sm font-bold text-slate-400 uppercase tracking-widest">Gallery:</span>
+                <span class="text-sm font-bold text-slate-400  tracking-normal">Gallery:</span>
                 <div class="flex space-x-2">
                   <div
                     v-for="(image, index) in program.images.slice(0, 5)"
@@ -231,7 +231,7 @@
                 class="flex-1 py-3 flex items-center justify-center text-slate-400 disabled:opacity-20"
               >
                 <ChevronUp class="w-5 h-5 mr-1" />
-                <span class="text-xs font-bold uppercase tracking-widest">Move Up</span>
+                <span class="text-xs font-bold  tracking-normal">Move Up</span>
               </button>
               <button 
                 @click="moveItem(index, 'down')" 
@@ -239,7 +239,7 @@
                 class="flex-1 py-3 flex items-center justify-center text-slate-400 disabled:opacity-20"
               >
                 <ChevronDown class="w-5 h-5 mr-1" />
-                <span class="text-xs font-bold uppercase tracking-widest">Move Down</span>
+                <span class="text-xs font-bold  tracking-normal">Move Down</span>
               </button>
             </div>
 
@@ -270,7 +270,7 @@
     <div v-if="loading" class="flex items-center justify-center py-24">
       <div class="flex flex-col items-center">
         <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin"></div>
-        <p class="text-sm font-bold text-slate-400 mt-4 uppercase tracking-widest">Loading programs...</p>
+        <p class="text-sm font-bold text-slate-400 mt-4  tracking-normal">Loading programs...</p>
       </div>
     </div>
 
@@ -313,7 +313,7 @@
     <Modal v-model="showLinkModal" title="Registration link" size="md">
       <div v-if="registrationLink" class="space-y-6 p-2">
         <div class="space-y-2">
-          <label class="block text-sm font-bold text-slate-400 uppercase tracking-widest ml-1">Unique URL</label>
+          <label class="block text-sm font-bold text-slate-400  tracking-normal ml-1">Unique URL</label>
           <div class="flex items-center space-x-3">
             <input
               :value="registrationLink"

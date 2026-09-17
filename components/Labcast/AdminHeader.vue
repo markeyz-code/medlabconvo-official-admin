@@ -2,7 +2,7 @@
     <div class="mb-8">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 class="text-2xl font-bold text-gray-900">{{ title }}</h1>
+          <h1 class="text-lg font-bold text-gray-900">{{ title }}</h1>
           <p v-if="subtitle" class="mt-1 text-sm text-gray-900">{{ subtitle }}</p>
         </div>
         <div v-if="$slots.actions" class="mt-4 sm:mt-0">

@@ -10,14 +10,14 @@
             <Icon name="lucide:megaphone" class="w-8 h-8" />
           </div>
           <div>
-            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Campaign Analytics</h2>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Marketing & Automation</p>
+            <h2 class="text-lg font-black text-slate-900 tracking-tight">Campaign Analytics</h2>
+            <p class="text-xs font-bold text-slate-400  tracking-normal mt-1">Marketing & Automation</p>
           </div>
         </div>
 
         <button
           @click="startBuilding"
-          class="px-8 py-4 bg-gray-900 text-white rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all flex items-center gap-3 shadow-xl shadow-gray-900/10 group"
+          class="px-8 py-4 bg-gray-900 text-white rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all flex items-center gap-3 shadow-sm border border-slate-200 shadow-gray-900/10 group"
         >
           <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform" />
           <span>New Campaign</span>
@@ -28,13 +28,13 @@
       <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden relative shadow-sm">
         <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center">
           <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
-          <p class="text-sm font-black text-[#27628C] uppercase tracking-widest animate-pulse">Syncing Engine...</p>
+          <p class="text-sm font-black text-[#27628C]  tracking-normal animate-pulse">Syncing Engine...</p>
         </div>
 
         <div class="overflow-x-auto">
           <table class="w-full text-left border-separate border-spacing-0">
             <thead>
-              <tr class="bg-slate-50/50 text-sm font-black text-slate-400 uppercase tracking-[0.2em]">
+              <tr class="bg-slate-50/50 text-sm font-black text-slate-400  tracking-normal">
                 <th class="px-10 py-6 border-b border-slate-100">Campaign Identity</th>
                 <th class="px-10 py-6 border-b border-slate-100">Recipient Audience</th>
                 <th class="px-10 py-6 border-b border-slate-100">Schedule Status</th>
@@ -52,7 +52,7 @@
                 </td>
                 <td class="px-10 py-8 whitespace-nowrap">
                    <div class="flex items-center gap-1.5 flex-wrap max-w-[200px]">
-                      <span v-for="type in campaign.recipientType" :key="type" class="px-3 py-1 bg-white border border-slate-200 rounded-lg text-[9px] font-black text-slate-600 uppercase">
+                      <span v-for="type in campaign.recipientType" :key="type" class="px-3 py-1 bg-white border border-slate-200 rounded-lg text-[9px] font-black text-slate-600 ">
                         {{ type }}
                       </span>
                    </div>
@@ -62,7 +62,7 @@
                 </td>
                 <td class="px-10 py-8 whitespace-nowrap">
                   <span :class="[
-                    'px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border',
+                    'px-4 py-1.5 rounded-full text-[9px] font-black  tracking-normal border',
                     statusClass(campaign.status)
                   ]">
                     {{ campaign.status }}
@@ -72,11 +72,11 @@
                   <button
                     v-if="campaign.status === 'DRAFT'"
                     @click="handleSendNow(campaign._id)"
-                    class="h-10 px-4 bg-blue-50 text-[#27628C] rounded-xl font-black text-sm uppercase tracking-widest hover:bg-[#27628C] hover:text-white transition-all active:scale-95"
+                    class="h-10 px-4 bg-blue-50 text-[#27628C] rounded-xl font-black text-sm  tracking-normal hover:bg-[#27628C] hover:text-white transition-all active:scale-95"
                   >
                     Fire Trigger
                   </button>
-                  <span v-else class="text-sm font-black text-slate-300 uppercase tracking-widest">Locked</span>
+                  <span v-else class="text-sm font-black text-slate-300  tracking-normal">Locked</span>
                 </td>
               </tr>
             </tbody>
@@ -88,9 +88,9 @@
                <div class="absolute inset-0 bg-[#27628B]/5 rounded-full blur-2xl"></div>
                <Icon name="lucide:mail-open" class="w-14 h-14 text-slate-100 relative z-10" />
             </div>
-            <h3 class="text-2xl font-black text-slate-900 mb-4 tracking-tight">Zero Campaigns Detected</h3>
+            <h3 class="text-lg font-black text-slate-900 mb-4 tracking-tight">Zero Campaigns Detected</h3>
             <p class="text-slate-400 text-sm font-bold max-w-sm mx-auto leading-relaxed">Your message queue is currently empty. Initiate your first marketing blast to begin engaging with the community.</p>
-            <button @click="startBuilding" class="mt-10 px-10 py-5 bg-[#27628C] text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-blue-900/20">
+            <button @click="startBuilding" class="mt-10 px-10 py-5 bg-[#27628C] text-white rounded-[1.5rem] font-black text-xs  tracking-normal hover:scale-105 active:scale-95 transition-all shadow-sm border border-slate-200 shadow-blue-900/20">
                Craft First Identity
             </button>
           </div>

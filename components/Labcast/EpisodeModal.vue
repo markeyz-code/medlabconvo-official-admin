@@ -21,14 +21,14 @@
     >
       <div
         v-if="modelValue"
-        class="fixed inset-y-0 right-0 z-50 w-full max-w-4xl bg-white shadow-2xl flex flex-col overflow-hidden"
+        class="fixed inset-y-0 right-0 z-50 w-full max-w-4xl bg-white shadow-sm border border-slate-200 flex flex-col overflow-hidden"
       >
               <!-- Header with Gradient -->
               <div class="relative flex-shrink-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 px-8 py-6">
                 <div class="absolute inset-0 bg-black/10"></div>
                 <div class="relative flex items-center justify-between">
                   <div class="space-y-1">
-                    <h3 class="text-2xl font-bold text-white">
+                    <h3 class="text-lg font-bold text-white">
                       {{ episode ? 'Edit Episode' : 'Create New Episode' }}
                     </h3>
                     <p class="text-blue-100">

@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    @click="$emit('click')"
+    @mousedown.prevent="$emit('click')"
     :disabled="disabled"
     :class="[
       'w-9 h-9 flex items-center justify-center rounded-lg transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none',

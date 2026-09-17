@@ -7,16 +7,45 @@ export const useGetPrograms = () => {
   const loading = ref(false)
   const error = ref<string | null>(null)
   const programs = ref<Program[]>([])
+  
+  // Pagination State
+  const metadata = ref({
+    total: 0,
+    page: 1,
+    limit: 10,
+    pages: 1
+  })
+  
+  // Filter State
+  const filters = ref({
+    search: '',
+    status: '',
+    category: ''
+  })
 
   const getPrograms = async (params?: ProgramQueryParams) => {
     loading.value = true
     error.value = null
 
-    try {
-      const response = await programs_api.$_get_programs(params)
-      if ([200, 201].includes(response?.status)) {
-        programs.value = response.data
+    const mergedParams = {
+      page: metadata.value.page,
+      limit: metadata.value.limit,
+      ...(filters.value.search && { search: filters.value.search }),
+      ...(filters.value.status && { status: filters.value.status }),
+      ...(filters.value.category && { category: filters.value.category }),
+      ...params
+    }
 
+    try {
+      const response = await programs_api.$_get_programs(mergedParams)
+      if ([200, 201].includes(response?.status)) {
+        // Handle new paginated response structure or fallback to array if older response
+        if (response.data?.data && response.data?.metadata) {
+          programs.value = response.data.data
+          metadata.value = response.data.metadata
+        } else if (Array.isArray(response.data)) {
+          programs.value = response.data
+        }
       }
       return response.data
     } catch (err: any) {
@@ -26,18 +55,30 @@ export const useGetPrograms = () => {
       loading.value = false
     }
   }
+  
+  const setPage = (page: number) => {
+    if (page >= 1 && page <= metadata.value.pages) {
+      metadata.value.page = page
+      getPrograms()
+    }
+  }
 
   const resetState = () => {
     loading.value = false
     error.value = null
     programs.value = []
+    metadata.value = { total: 0, page: 1, limit: 10, pages: 1 }
+    filters.value = { search: '', status: '', category: '' }
   }
 
   return {
     loading,
     error,
     programs,
+    metadata,
+    filters,
     getPrograms,
+    setPage,
     resetState,
   }
 }

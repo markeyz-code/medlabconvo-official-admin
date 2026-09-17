@@ -21,6 +21,24 @@
         </div>
       </div>
       <div class="flex items-center space-x-4 w-full md:w-auto">
+        <!-- View Toggle -->
+        <div class="hidden sm:flex bg-slate-100 p-1 rounded-xl">
+          <button 
+            @click="viewMode = 'grid'" 
+            :class="['p-2 rounded-lg transition-all', viewMode === 'grid' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-600']"
+            title="Grid view"
+          >
+            <Icon name="lucide:layout-grid" class="w-4 h-4" />
+          </button>
+          <button 
+            @click="viewMode = 'list'" 
+            :class="['p-2 rounded-lg transition-all', viewMode === 'list' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-600']"
+            title="List view"
+          >
+            <Icon name="lucide:list" class="w-4 h-4" />
+          </button>
+        </div>
+
         <button
           @click="showBatchModal = true"
           class="flex-1 md:flex-none px-6 py-3 border border-slate-200 text-slate-900 rounded-xl hover:bg-slate-50 transition-all font-bold text-sm flex items-center justify-center space-x-2"
@@ -40,13 +58,13 @@
 
     <!-- Quick Filters -->
     <div class="flex flex-wrap items-center gap-3 py-4 border-y border-slate-50">
-      <span class="text-sm font-bold uppercase tracking-widest text-slate-400 mr-2">Quick filters:</span>
+      <span class="text-sm font-bold  tracking-normal text-slate-400 mr-2">Quick filters:</span>
       <button
         v-for="filter in quickFilters"
         :key="filter.id"
         @click="handleQuickFilter(filter.id)"
         :class="[
-          'px-4 py-2 text-sm font-bold uppercase tracking-widest rounded-full transition-all duration-300 border',
+          'px-4 py-2 text-sm font-bold  tracking-normal rounded-full transition-all duration-300 border',
           activeQuickFilter === filter.id 
             ? 'bg-[#033958] text-white border-[#033958]' 
             : 'bg-white text-slate-400 border-slate-100 hover:border-slate-200'
@@ -63,27 +81,92 @@
           <Icon :name="stat.icon" :class="['w-6 h-6', stat.color]" />
         </div>
         <div>
-          <p class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-1">{{ stat.title }}</p>
+          <p class="text-sm font-bold  tracking-normal text-slate-400 mb-1">{{ stat.title }}</p>
           <p class="text-xl font-bold text-slate-900 tracking-tight">{{ stat.value }}</p>
         </div>
       </div>
     </div>
 
-    <!-- Products Grid -->
-    <div v-if="allProductsLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-      <div v-for="i in 8" :key="i" class="bg-slate-50 rounded-2xl h-80 animate-pulse"></div>
+    <!-- Products View -->
+    <div v-if="allProductsLoading" :class="viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8' : 'space-y-4'">
+      <div v-for="i in 8" :key="i" class="bg-slate-50 rounded-2xl animate-pulse" :class="viewMode === 'grid' ? 'h-80' : 'h-24'"></div>
     </div>
 
-    <div v-else-if="currentProducts?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-      <ProductCard
-        v-for="product in currentProducts"
-        :key="product.id || product._id"
-        :product="product"
-        @edit="editProduct"
-        @delete="deleteProductConfirm"
-        @view="viewProduct"
-        @update-stock="handleUpdateStock"
-      />
+    <div v-else-if="currentProducts?.length">
+      <!-- Grid View -->
+      <div v-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <ProductCard
+          v-for="product in currentProducts"
+          :key="product.id || product._id"
+          :product="product"
+          @edit="editProduct"
+          @delete="deleteProductConfirm"
+          @view="viewProduct"
+          @update-stock="handleUpdateStock"
+        />
+      </div>
+
+      <!-- Tabular/List View -->
+      <div v-else class="bg-white rounded-3xl border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50/50 border-b border-slate-100 text-xs font-bold text-slate-400 tracking-wider">
+                <th class="p-4 pl-6 font-bold">Product</th>
+                <th class="p-4 font-bold">Category</th>
+                <th class="p-4 font-bold">Price</th>
+                <th class="p-4 font-bold">Stock</th>
+                <th class="p-4 font-bold">Status</th>
+                <th class="p-4 pr-6 text-right font-bold">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr v-for="product in currentProducts" :key="product.id || product._id" class="hover:bg-slate-50/50 transition-colors">
+                <td class="p-4 pl-6 flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-xl bg-slate-100 flex-shrink-0 overflow-hidden flex items-center justify-center border border-slate-200">
+                    <img v-if="product.images?.length" :src="product.images[0]" class="w-full h-full object-cover" />
+                    <Icon v-else name="lucide:image" class="w-5 h-5 text-slate-300" />
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-slate-900 text-sm line-clamp-1">{{ product.name }}</h4>
+                    <span class="text-xs text-slate-400 font-medium line-clamp-1">{{ product.author }}</span>
+                  </div>
+                </td>
+                <td class="p-4 text-sm text-slate-600 font-medium capitalize">{{ product.category }}</td>
+                <td class="p-4 text-sm font-bold text-slate-900">
+                  ₦{{ product.price?.toLocaleString() || 0 }}
+                </td>
+                <td class="p-4 text-sm">
+                  <div class="flex items-center gap-2">
+                    <button @click="handleUpdateStock(product.id || product._id, -1)" class="w-6 h-6 rounded border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100">
+                      <Icon name="lucide:minus" class="w-3 h-3" />
+                    </button>
+                    <span class="font-bold text-slate-700 w-6 text-center">{{ product.stock || 0 }}</span>
+                    <button @click="handleUpdateStock(product.id || product._id, 1)" class="w-6 h-6 rounded border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100">
+                      <Icon name="lucide:plus" class="w-3 h-3" />
+                    </button>
+                  </div>
+                </td>
+                <td class="p-4">
+                  <span :class="['px-3 py-1 rounded-full text-xs font-bold', product.isDigital ? 'bg-indigo-50 text-indigo-600' : (product.stock > 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600')]">
+                    {{ product.isDigital ? 'Digital' : (product.stock > 0 ? 'In Stock' : 'Out of Stock') }}
+                  </span>
+                </td>
+                <td class="p-4 pr-6">
+                  <div class="flex items-center justify-end gap-2">
+                    <button @click="editProduct(product)" class="p-2 text-slate-400 hover:text-[#033958] hover:bg-slate-100 rounded-lg transition-all" title="Edit">
+                      <Icon name="lucide:edit-2" class="w-4 h-4" />
+                    </button>
+                    <button @click="deleteProductConfirm(product)" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Delete">
+                      <Icon name="lucide:trash-2" class="w-4 h-4" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- Empty State -->
@@ -103,7 +186,7 @@
 
     <!-- Pagination -->
     <div v-if="currentProducts?.length && totalProductCount > perPage" class="flex items-center justify-between pt-8 border-t border-slate-100">
-      <span class="text-sm font-bold text-slate-400 uppercase tracking-widest">Page {{ currentPageNumber }}</span>
+      <span class="text-sm font-bold text-slate-400  tracking-normal">Page {{ currentPageNumber }}</span>
       <div class="flex items-center space-x-4">
         <button 
           @click="changePage(currentPageNumber - 1)"
@@ -291,7 +374,7 @@ const confirmDelete = async () => {
 }
 
 const handleUpdateStock = async (productId: string, newStock: number) => {
-  await updateStock(productId, { stock: newStock })
+  await updateStock(productId, newStock)
   if (updateStockSuccess.value) loadProducts(currentPageNumber.value)
 }
 

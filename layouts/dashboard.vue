@@ -6,20 +6,20 @@
         <div class="relative w-40 h-40 mx-auto group">
           <div class="absolute inset-0 bg-red-100 rounded-[3rem] rotate-12 group-hover:rotate-0 transition-transform duration-700"></div>
           <div class="absolute inset-0 bg-red-50 rounded-[3rem] -rotate-6 group-hover:rotate-0 transition-transform duration-700 delay-100"></div>
-          <div class="relative w-full h-full bg-white rounded-[3rem] border-2 border-red-100 flex items-center justify-center shadow-xl shadow-red-900/10">
+          <div class="relative w-full h-full bg-white rounded-[3rem] border-2 border-red-100 flex items-center justify-center shadow-sm border border-slate-200 shadow-red-900/10">
             <Icon name="lucide:shield-off" class="w-16 h-16 text-red-600" />
           </div>
         </div>
 
         <div class="space-y-4">
-          <h1 class="text-4xl font-bold text-slate-900 tracking-tight">Access Restricted</h1>
+          <h1 class="text-lg font-bold text-slate-900 tracking-tight">Access Restricted</h1>
           <p class="text-slate-500 text-lg font-medium leading-relaxed">
             Members are not allowed access to the admin portal. Please reach out to the administrators to update your role.
           </p>
           <div class="pt-4 flex flex-col items-center gap-2">
             <div class="px-4 py-2 bg-slate-50 rounded-full border border-slate-200 flex items-center gap-3">
               <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-              <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Unauthorized Account</span>
+              <span class="text-xs font-bold text-slate-500  tracking-normal">Unauthorized Account</span>
             </div>
           </div>
         </div>
@@ -27,7 +27,7 @@
         <div class="pt-8">
           <button
             @click="confirmLogout"
-            class="px-12 py-4 bg-[#033958] text-white rounded-2xl font-bold hover:bg-[#022a41] hover:scale-105 transition-all duration-300 shadow-2xl shadow-[#033958]/20 flex items-center gap-3 mx-auto"
+            class="px-12 py-4 bg-[#033958] text-white rounded-2xl font-bold hover:bg-[#022a41] hover:scale-105 transition-all duration-300 shadow-sm border border-slate-200 shadow-[#033958]/20 flex items-center gap-3 mx-auto"
           >
             <Icon name="lucide:log-out" class="w-5 h-5" />
             <span>Return to Portal</span>
@@ -47,16 +47,14 @@
 
       <!-- Navigation Sidebar -->
       <aside 
-        class="fixed left-0 top-0 h-full w-64 bg-white text-slate-800 z-40 border-r border-slate-100 transition-all duration-300"
-        :class="[
-          isMobile && !sidebarOpen ? '-translate-x-full' : 'translate-x-0'
-        ]"
+        class="fixed left-0 top-0 h-full bg-white text-slate-800 z-40 border-r border-slate-100 transition-all duration-300" :class="[isMobile && !sidebarOpen ? '-translate-x-full' : 'translate-x-0', isSidebarMinimized ? 'w-20' : 'w-64']"
+        
       >
         <!-- Logo Section -->
-        <div class="flex items-center h-20 px-6 border-b border-slate-50 mb-4">
-          <div class="flex items-center space-x-3 overflow-hidden">
-            <img src="@/assets/img/logo.jpeg" class="h-10 w-10 rounded-md ring-2 ring-slate-50" />
-            <span class="font-medium text-lg truncate text-slate-900">MedLabConvo</span>
+        <div class="flex items-center h-20 px-6 border-b border-slate-50 mb-4 overflow-hidden" :class="isSidebarMinimized ? 'justify-center px-0' : ''">
+          <div class="flex items-center space-x-3 shrink-0">
+            <img src="@/assets/img/logo.jpeg" class="h-10 w-10 rounded-md ring-2 ring-slate-50 shrink-0" />
+            <span v-if="!isSidebarMinimized" class="font-medium text-lg truncate text-slate-900 transition-opacity duration-300">MedLabConvo</span>
           </div>
         </div>
 
@@ -66,7 +64,7 @@
             <!-- Divider -->
             <div v-if="item.type === 'divider'" class="py-4 px-4">
               <div class="h-px bg-slate-100 w-full"></div>
-              <span class="text-sm font-medium text-slate-400 tracking-wider mt-3 block">Security & Access</span>
+              <span v-if="!isSidebarMinimized" class="text-sm font-medium text-slate-400 tracking-wider mt-3 block">Security & Access</span>
             </div>
 
             <!-- Nav Link with Children -->
@@ -78,11 +76,12 @@
                   item.children.some(child => isActive(child.path)) ? 'bg-slate-50 text-[#033958]' : ''
                 ]"
               >
-                <div class="flex items-center">
+                <div class="flex items-center" :class="isSidebarMinimized ? 'justify-center w-full' : ''">
                   <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 text-slate-400 group-hover:text-slate-900', item.children.some(child => isActive(child.path)) ? 'text-[#033958]' : '']" />
-                  <span class="ml-4 font-medium text-sm tracking-tight">{{ item.name }}</span>
+                  <span v-if="!isSidebarMinimized" class="ml-4 font-medium text-sm tracking-tight">{{ item.name }}</span>
                 </div>
                 <Icon 
+                  v-if="!isSidebarMinimized"
                   name="lucide:chevron-down" 
                   :class="['w-4 h-4 transition-transform duration-300', expandedMenus.includes(item.name) ? 'rotate-180' : '']"
                 />
@@ -149,18 +148,24 @@
       <!-- Main Content Area -->
       <main :class="[
         'transition-all duration-300 min-h-screen flex flex-col',
-        isMobile ? 'ml-0' : 'ml-64'
+        isMobile ? 'ml-0' : (isSidebarMinimized ? 'ml-20' : 'ml-64')
       ]">
         <!-- Top Header -->
         <header class="h-20 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-20">
-          <div class="flex items-center space-x-6">
+          <div class="flex items-center space-x-6 w-full max-w-xl">
             <button
               @click="toggleSidebar"
               class="lg:hidden p-2 rounded-lg hover:bg-slate-50 text-slate-600"
             >
               <Icon name="lucide:menu" class="w-6 h-6" />
             </button>
-            
+            <button
+              @click="showSearchModal = true"
+              class="hidden sm:flex items-center space-x-2 px-4 py-2 bg-slate-50 rounded-xl border border-slate-200 hover:bg-slate-100 transition-all text-slate-500 w-full"
+            >
+              <Icon name="lucide:search" class="w-4 h-4" />
+              <span class="text-sm font-medium">Search anything... (Cmd+K)</span>
+            </button>
             <!-- <div>
               <h1 class="text-xl font-medium text-slate-900 leading-tight">{{ currentPageTitle }}</h1>
               <div class="flex items-center text-sm text-slate-500 mt-0.5 font-medium ">
@@ -199,7 +204,7 @@
           <!-- Page Title Description -->
           <div class="mb-10 pb-6 border-b border-slate-200 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <h2 class="text-2xl font-medium text-slate-900 mb-2 leading-tight tracking-tight">{{ currentPageTitle }}</h2>
+              <h2 class="text-lg font-medium text-slate-900 mb-2 leading-tight tracking-tight">{{ currentPageTitle }}</h2>
               <p class="text-slate-400 text-sm font-medium max-w-2xl leading-relaxed antialiased">{{ currentPageDescription }}</p>
             </div>
             <slot name="header-actions" />
@@ -240,6 +245,45 @@
       </div>
     </Modal>
 
+    <!-- Search Modal -->
+    <Modal v-model="showSearchModal" title="Global Search" size="md" paddingClass="p-3 sm:p-4">
+      <div class="space-y-4">
+        <div class="relative">
+          <Icon name="lucide:search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input 
+            v-model="searchQuery" 
+            type="text" 
+            placeholder="Search for users, programs, roles..." 
+            class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#033958] focus:border-transparent outline-none transition-all text-slate-900 placeholder:text-slate-400"
+            autofocus
+          />
+        </div>
+        <div class="max-h-64 overflow-y-auto space-y-2 mt-4 custom-scrollbar">
+          <template v-if="filteredSearchResults.length > 0">
+            <NuxtLink 
+              v-for="res in filteredSearchResults" 
+              :key="res.path" 
+              :to="res.path"
+              @click="showSearchModal = false"
+              class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 group"
+            >
+              <div class="w-8 h-8 rounded-lg bg-[#033958]/5 text-[#033958] flex items-center justify-center shrink-0 group-hover:bg-[#033958]/10 transition-colors">
+                <Icon :name="res.icon || 'lucide:file'" class="w-4 h-4" />
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-sm font-medium text-slate-900 truncate">{{ res.name }}</h4>
+                <p v-if="res.parent" class="text-xs text-slate-500 truncate">{{ res.parent }}</p>
+              </div>
+              <Icon name="lucide:chevron-right" class="w-4 h-4 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </NuxtLink>
+          </template>
+          <div v-else-if="searchQuery" class="text-center py-8 text-slate-500">
+            No results found for "{{ searchQuery }}"
+          </div>
+          
+        </div>
+      </div>
+    </Modal>
     <!-- Global Loading Overlay -->
     <transition name="fade">
       <div v-if="globalLoading" class="fixed inset-0 bg-[#033958]/10 backdrop-blur-sm flex items-center justify-center z-[100]">
@@ -296,8 +340,45 @@ const { logout, loading: logoutLoading } = useLogout()
 const { user } = useUser()
 
 // Reactive data
+
 const isMobile = ref(false)
 const sidebarOpen = ref(true)
+const isSidebarMinimized = ref(false)
+const toggleSidebarMinimize = () => { isSidebarMinimized.value = !isSidebarMinimized.value }
+const showSearchModal = ref(false)
+const searchQuery = ref('')
+
+const flattenedNavigation = computed(() => {
+  const result = []
+  RAW_NAVIGATION_ITEMS.forEach(item => {
+    if (item.type === 'divider') return
+    
+    // Add the parent if it has a valid path
+    if (item.path) {
+      result.push({ name: item.name, path: item.path, icon: item.icon, parent: null })
+    }
+    
+    // Add children if they exist
+    if (item.children) {
+      item.children.forEach(child => {
+        if (child.path) {
+          result.push({ name: child.name, path: child.path, icon: item.icon || 'lucide:file', parent: item.name })
+        }
+      })
+    }
+  })
+  return result
+})
+
+const filteredSearchResults = computed(() => {
+  if (!searchQuery.value) return flattenedNavigation.value // By default return all navigations
+  
+  const query = searchQuery.value.toLowerCase()
+  return flattenedNavigation.value.filter(item => 
+    item.name.toLowerCase().includes(query) || (item.parent && item.parent.toLowerCase().includes(query))
+  )
+})
+
 const globalLoading = ref(false)
 const showLogoutModal = ref(false)
 const expandedMenus = ref<string[]>([])
@@ -434,6 +515,13 @@ provide('globalLoading', globalLoading)
 onMounted(async () => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
+  
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault()
+      showSearchModal.value = true
+    }
+  })
   
   // Auto-expand menus with active children
   navigationItems.value.forEach(item => {

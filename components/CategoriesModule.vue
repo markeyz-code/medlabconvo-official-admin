@@ -26,8 +26,8 @@
       <table class="w-full text-left border-collapse">
         <thead>
           <tr class="bg-slate-50 border-b border-slate-100">
-            <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Category Name</th>
-            <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-400  tracking-wider">Category Name</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-400  tracking-wider text-right">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">

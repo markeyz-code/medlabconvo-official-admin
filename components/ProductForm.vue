@@ -536,8 +536,14 @@ const handleSubmit = async () => {
     showToast({ title: "Validation Error", message: "Key details are required.", toastType: "error" });
     return;
   }
+  
+  if (!form.imageUrl) {
+    showToast({ title: "Validation Error", message: "Please upload a Hero asset (cover image).", toastType: "error" });
+    return;
+  }
+
   try {
-    const cleanedForm = {
+    const cleanedForm: any = {
       ...form,
       category: form.category as ProductCategory,
       status: form.status as ProductStatus,
@@ -545,6 +551,14 @@ const handleSubmit = async () => {
       features: form.features.filter(feature => feature.trim()),
       publicationDate: form.publicationDate ? new Date(form.publicationDate) : undefined
     }
+
+    if (!cleanedForm.isbn) delete cleanedForm.isbn;
+    if (!cleanedForm.publisher) delete cleanedForm.publisher;
+    if (!cleanedForm.instructor) delete cleanedForm.instructor;
+    if (!cleanedForm.videoUrl) delete cleanedForm.videoUrl;
+    if (!cleanedForm.downloadUrl) delete cleanedForm.downloadUrl;
+    if (!cleanedForm.previewUrl) delete cleanedForm.previewUrl;
+    if (!cleanedForm.originalPrice) delete cleanedForm.originalPrice;
     
     if (props.product) {
       await performUpdateProduct(props.product.id || props.product._id, cleanedForm)

@@ -41,7 +41,7 @@
         </div>
         <div>
           <p class="text-sm font-bold text-slate-400 mb-1">{{ stat.title }}</p>
-          <p class="text-2xl font-bold text-slate-900 leading-none">{{ stat.value }}</p>
+          <p class="text-lg font-bold text-slate-900 leading-none">{{ stat.value }}</p>
         </div>
       </div>
     </div>
@@ -143,7 +143,7 @@
       <div class="w-24 h-24 bg-slate-50 rounded-3xl flex items-center justify-center mb-6">
         <Icon name="lucide:sparkles" class="w-12 h-12 text-slate-200" />
       </div>
-      <h3 class="text-2xl font-bold text-slate-900 tracking-tight">No publications found</h3>
+      <h3 class="text-lg font-bold text-slate-900 tracking-tight">No publications found</h3>
       <p class="text-sm text-slate-500 mb-8 max-w-sm text-center leading-relaxed">Your publication archive is currently empty. Start by creating your first post.</p>
       <button
         @click="openEditor(null)"
@@ -165,8 +165,8 @@
           <p class="text-sm text-slate-500 mt-2 leading-relaxed">This will permanently remove <span class="font-bold text-slate-900">"{{ deletingPublication?.title }}"</span> from the Convo Stack registry.</p>
         </div>
         <div class="flex items-center gap-4 pt-6 border-t border-slate-50">
-          <button @click="showDeleteModal = false" class="flex-1 py-4 text-sm font-black uppercase tracking-widest text-slate-400 hover:text-slate-900">Safe Abort</button>
-          <button @click="handleDelete" class="flex-1 py-4 bg-red-600 text-white text-sm font-black uppercase tracking-widest rounded-2xl hover:bg-red-700  -600/20">Purge Record</button>
+          <button @click="showDeleteModal = false" class="flex-1 py-4 text-sm font-black  tracking-normal text-slate-400 hover:text-slate-900">Safe Abort</button>
+          <button @click="handleDelete" class="flex-1 py-4 bg-red-600 text-white text-sm font-black  tracking-normal rounded-2xl hover:bg-red-700  -600/20">Purge Record</button>
         </div>
       </div>
     </Modal>

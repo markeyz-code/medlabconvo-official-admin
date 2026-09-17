@@ -66,7 +66,7 @@
         
         <div class="space-y-4 mb-8">
           <div class="flex items-center gap-2">
-            <div class="px-3 py-1 bg-[#033958]/5 text-[#033958] text-sm font-black uppercase tracking-widest rounded-lg">
+            <div class="px-3 py-1 bg-[#033958]/5 text-[#033958] text-sm font-black  tracking-normal rounded-lg">
               <Icon name="lucide:phone" class="w-3 h-3 inline mr-1" />
               {{ enquiry.phoneNumber }}
             </div>
@@ -101,38 +101,38 @@
       <div v-if="selectedEnquiry" class="p-8 space-y-10">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div class="space-y-2">
-            <label class="block text-sm font-bold text-slate-400 uppercase tracking-widest">Sender identity</label>
-            <p class="text-base font-bold text-slate-900 uppercase italic">{{ selectedEnquiry.firstName }} {{ selectedEnquiry.lastName }}</p>
+            <label class="block text-sm font-bold text-slate-400  tracking-normal">Sender identity</label>
+            <p class="text-base font-bold text-slate-900  italic">{{ selectedEnquiry.firstName }} {{ selectedEnquiry.lastName }}</p>
           </div>
           <div class="space-y-2">
-            <label class="block text-sm font-bold text-slate-400 uppercase tracking-widest">Email address</label>
+            <label class="block text-sm font-bold text-slate-400  tracking-normal">Email address</label>
             <p class="text-base font-bold text-[#033958] lowercase">{{ selectedEnquiry.email }}</p>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10 pt-6 border-t border-slate-50">
           <div class="space-y-2">
-            <label class="block text-sm font-bold text-slate-400 uppercase tracking-widest">Phone line</label>
+            <label class="block text-sm font-bold text-slate-400  tracking-normal">Phone line</label>
             <p class="text-base font-bold text-slate-900">{{ selectedEnquiry.phoneNumber }}</p>
           </div>
           <div class="space-y-2">
-            <label class="block text-sm font-bold text-slate-400 uppercase tracking-widest">Current Status</label>
-            <div :class="['inline-block px-4 py-1.5 rounded-full text-sm font-black uppercase text-white tracking-widest', getStatusBg(selectedEnquiry.status)]">
+            <label class="block text-sm font-bold text-slate-400  tracking-normal">Current Status</label>
+            <div :class="['inline-block px-4 py-1.5 rounded-full text-sm font-black  text-white tracking-normal', getStatusBg(selectedEnquiry.status)]">
               {{ selectedEnquiry.status || 'Pending' }}
             </div>
           </div>
         </div>
         
         <div class="space-y-4 pt-6 border-t border-slate-50">
-          <label class="block text-sm font-bold text-slate-400 uppercase tracking-widest">Message content</label>
+          <label class="block text-sm font-bold text-slate-400  tracking-normal">Message content</label>
           <div class="bg-slate-50 p-8 rounded-[2rem] border border-slate-100 shadow-inner">
             <p class="text-sm font-medium text-slate-700 leading-[2] whitespace-pre-wrap antialiased">{{ selectedEnquiry.message }}</p>
           </div>
         </div>
 
-        <div class="bg-[#033958] p-8 rounded-[2rem] text-white flex items-center justify-between shadow-xl">
+        <div class="bg-[#033958] p-8 rounded-[2rem] text-white flex items-center justify-between shadow-sm border border-slate-200">
           <div>
-            <p class="text-sm font-black uppercase tracking-[0.2em] opacity-60 mb-1">Time received</p>
+            <p class="text-sm font-black  tracking-normal opacity-60 mb-1">Time received</p>
             <p class="text-sm font-bold">{{ formatDetailedDate(selectedEnquiry.createdAt) }}</p>
           </div>
           <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/10">
@@ -143,7 +143,7 @@
         <div class="flex justify-end pt-10 border-t border-slate-50">
           <button
             @click="closeDetailModal"
-            class="px-12 py-5 bg-[#033958] text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-black transition-all active:scale-95 shadow-xl"
+            class="px-12 py-5 bg-[#033958] text-white rounded-2xl font-black text-sm  tracking-normal hover:bg-black transition-all active:scale-95 shadow-sm border border-slate-200"
           >
             Dismiss
           </button>

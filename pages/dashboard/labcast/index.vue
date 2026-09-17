@@ -3,7 +3,7 @@
         <template v-slot:header-actions>
             <button
               @click="showCreateModal = true"
-              class="group relative inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+              class="group relative inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-sm border border-slate-100 hover:shadow-sm border border-slate-200"
             >
               <Icon name="lucide:plus" class="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-200" />
               Add Episode
@@ -16,7 +16,7 @@
 
       <div class="space-y-8">
         <!-- Enhanced Filters Section -->
-        <div class="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/20 p-6 hover:shadow-xl transition-all duration-300">
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/20 p-6 hover:shadow-sm border border-slate-200 transition-all duration-300">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             <!-- Search with Animation -->
             <div class="relative group">
@@ -295,7 +295,7 @@
             <div
               v-for="(episode, index) in currentEpisodes"
               :key="episode._id"
-              class="group bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+              class="group bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm border border-slate-100 border border-white/20 hover:shadow-sm border border-slate-200 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
               :style="{ animationDelay: `${index * 100}ms` }"
               draggable="true"
               @dragstart="handleDragStart($event, index)"
@@ -416,7 +416,7 @@
   
           <!-- Empty State -->
           <div v-else class="text-center py-16">
-            <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-12 max-w-md mx-auto">
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm border border-slate-100 border border-white/20 p-12 max-w-md mx-auto">
               <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Icon name="lucide:podcast" class="w-10 h-10 text-blue-500" />
               </div>
@@ -424,7 +424,7 @@
               <p class="text-gray-600 mb-8">Get started by creating your first amazing episode.</p>
               <button
                 @click="showCreateModal = true"
-                class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+                class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-sm border border-slate-100"
               >
                 <Icon name="lucide:plus" class="w-5 h-5 mr-2" />
                 Create First Episode
@@ -435,7 +435,7 @@
   
         <!-- Enhanced Pagination -->
         <!-- <div v-if="currentEpisodes?.length && labcastsTotalCount > perPage" class="flex justify-center">
-          <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-2">
+          <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm border border-slate-100 border border-white/20 p-2">
             <div class="flex items-center gap-2">
               <button
                 @click="changePage(labcastsCurrentPage - 1)"
@@ -480,7 +480,7 @@
           class="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
           <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"></div>
-          <div class="relative bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100">
+          <div class="relative bg-white rounded-3xl shadow-sm border border-slate-200 max-w-4xl w-full max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100">
             <!-- Modal Header -->
             <div class="flex items-center justify-between p-6 border-b border-gray-100">
               <h2 class="text-xl font-bold text-gray-900">Episode Preview</h2>
@@ -502,7 +502,7 @@
                    <!-- <img :src="previewingEpisode.image" />
                   <div class="aspect-video bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl overflow-hidden relative">
                     <div class="absolute inset-0 flex items-center justify-center">
-                      <button class="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200">
+                      <button class="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm border border-slate-100 hover:scale-110 transition-transform duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-600 ml-1" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"></path></svg>
                       </button>
                     </div>
@@ -525,7 +525,7 @@
                   <img :src="previewingEpisode.image" class="w-full h-full object-cover" />
                   
                   <div class="absolute inset-0 flex items-center justify-center">
-                    <button class="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200">
+                    <button class="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm border border-slate-100 hover:scale-110 transition-transform duration-200">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-600 ml-1" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"></path></svg>
                     </button>
                   </div>
@@ -560,7 +560,7 @@
                       </span>
                     </div>
                     
-                    <h1 class="text-2xl font-bold text-gray-900">{{ previewingEpisode.title }}</h1>
+                    <h1 class="text-lg font-bold text-gray-900">{{ previewingEpisode.title }}</h1>
                     <p class="text-gray-600 text-lg leading-relaxed">{{ previewingEpisode.description }}</p>
                   </div>
   
@@ -659,7 +659,7 @@
           class="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
           <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"></div>
-          <div class="relative bg-white rounded-3xl shadow-2xl max-w-md w-full transform transition-all duration-300 scale-100">
+          <div class="relative bg-white rounded-3xl shadow-sm border border-slate-200 max-w-md w-full transform transition-all duration-300 scale-100">
             <div class="p-8 text-center">
               <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Icon name="lucide:trash-2" class="w-8 h-8 text-red-500" />

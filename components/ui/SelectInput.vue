@@ -16,7 +16,7 @@
         <div
           @click="toggleDropdown"
           :class="[
-            'w-full py-3 pt-5 px-4 bg-white border border-slate-200 flex justify-between items-center cursor-pointer',
+            'w-full py-3 pt-5 px-4 bg-white border-2 border-slate-300 flex justify-between items-center cursor-pointer',
             'focus:outline-none focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] transition-all duration-300 font-medium text-slate-900 rounded-2xl shadow-sm',
             roundedClasses,
             disabled ? 'opacity-50 cursor-not-allowed' : '',
@@ -50,7 +50,7 @@
             v-if="showDropdown"
             ref="dropdownRef"
             :style="dropdownStyle"
-            class="fixed z-[9999] bg-white rounded-xl border border-slate-100 shadow-2xl flex flex-col animate-in fade-in zoom-in duration-200"
+            class="fixed z-[9999] bg-white rounded-xl border border-slate-100 shadow-sm border border-slate-200 flex flex-col animate-in fade-in zoom-in duration-200"
           >
             <!-- Search Input -->
             <div class="p-2 border-b-[0.5px] sticky top-0 bg-white rounded-t-xl">

@@ -70,29 +70,29 @@
         <!-- Document Header (Substack Style) -->
         <div class="bg-white rounded-3xl p-10 md:p-14 border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
           <div>
-            <label class="text-sm font-bold text-slate-400 uppercase tracking-[0.1em] mb-2 block ml-1">Main Title</label>
+            <label class="text-sm font-bold text-slate-400  tracking-normal mb-2 block ml-1">Main Title</label>
             <input
               v-model="form.title"
               type="text"
 
-              class="w-full text-4xl md:text-5xl font-black text-slate-900 bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight tracking-tight block"
+              class="w-full text-lg md:text-xl font-black text-slate-900 bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight tracking-tight block"
               style="all: unset; display: block; width: 100%; font-size: 2.5rem; font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; color: #0f172a;"
             />
           </div>
           
           <div class="pt-4 border-t border-slate-50">
-            <label class="text-sm font-bold text-[#27628C] uppercase tracking-[0.1em] mb-2 block ml-1">Substack Quality Subtitle</label>
+            <label class="text-sm font-bold text-[#27628C]  tracking-normal mb-2 block ml-1">Substack Quality Subtitle</label>
             <input
               v-model="form.subtitle"
               type="text"
 
-              class="w-full text-xl md:text-2xl font-bold text-[#27628C] bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight block italic"
+              class="w-full text-xl md:text-lg font-bold text-[#27628C] bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight block italic"
               style="all: unset; display: block; width: 100%; font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: #27628C; font-style: italic;"
             />
           </div>
 
           <div class="pt-4 border-t border-slate-50">
-            <label class="text-sm font-bold text-slate-400 uppercase tracking-[0.1em] mb-2 block ml-1">Excerpt (SEO Summary)</label>
+            <label class="text-sm font-bold text-slate-400  tracking-normal mb-2 block ml-1">Excerpt (SEO Summary)</label>
             <textarea
               v-model="form.excerpt"
               rows="2"
@@ -107,12 +107,12 @@
         <div class="bg-[#033958]/5 rounded-3xl p-8 border border-[#033958]/10 space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white shadow-lg">
+              <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white shadow-sm border border-slate-100">
                 <Icon name="lucide:code-2" class="w-5 h-5" />
               </div>
               <div>
                 <h4 class="text-sm font-bold text-slate-900 leading-tight">Substack High-Fidelity Content</h4>
-                <p class="text-sm font-bold text-slate-400 uppercase">Input Raw HTML (Overwrites Block Engine)</p>
+                <p class="text-sm font-bold text-slate-400 ">Input Raw HTML (Overwrites Block Engine)</p>
               </div>
             </div>
             <div v-if="form.bodyHtml" class="flex items-center bg-green-50 text-green-600 px-3 py-1.5 rounded-full text-sm font-bold border border-green-100">

@@ -25,7 +25,7 @@
             <div
               v-if="modelValue"
               :class="[
-                'relative transform overflow-hidden rounded-[2.5rem] bg-white text-left shadow-2xl transition-all my-8 w-full',
+                'relative transform overflow-hidden rounded-[2.5rem] bg-white text-left shadow-sm border border-slate-200 transition-all my-8 w-full',
                 sizeClass
               ]"
             >
@@ -47,7 +47,7 @@
 
               <!-- Content -->
               <div class="max-h-[80vh] overflow-y-auto">
-                <div class="p-8">
+                <div :class="paddingClass">
                   <slot />
                 </div>
               </div>
@@ -67,11 +67,13 @@ interface Props {
   title: string
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
   closeOnOutsideClick?: boolean
+  paddingClass?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   size: 'md',
-  closeOnOutsideClick: true
+  closeOnOutsideClick: true,
+  paddingClass: 'p-6 lg:p-8'
 })
 
 const emit = defineEmits(['update:modelValue', 'close'])

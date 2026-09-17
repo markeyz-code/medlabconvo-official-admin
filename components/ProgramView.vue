@@ -28,7 +28,7 @@
           </div>
         </div>
         
-        <h1 class="text-2xl font-bold text-slate-900 mb-2">
+        <h1 class="text-lg font-bold text-slate-900 mb-2">
           {{ program.title }}
         </h1>
         <p class="text-lg text-indigo-600 font-medium mb-4">{{ program.category }}</p>

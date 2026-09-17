@@ -40,7 +40,7 @@
       <button 
         type="button"
         @click="showPreview = !showPreview"
-        class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-black uppercase tracking-widest text-[#27628C] hover:bg-blue-50 transition-colors shadow-sm"
+        class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-black  tracking-normal text-[#27628C] hover:bg-blue-50 transition-colors shadow-sm"
       >
         {{ showPreview ? 'Edit Content' : 'Live Preview' }}
       </button>
@@ -54,14 +54,14 @@
 
       <!-- Live Email Preview Overlay -->
       <div v-if="showPreview" class="absolute inset-0 z-30 bg-white overflow-y-auto p-10">
-        <div class="max-w-[600px] mx-auto border border-slate-100 rounded-[2rem] shadow-2xl overflow-hidden bg-white">
+        <div class="max-w-[600px] mx-auto border border-slate-100 rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden bg-white">
           <!-- Branded Wrapper Context -->
           <div class="bg-[#27628C] p-8 text-center">
-            <h1 class="text-white text-xl font-black uppercase tracking-[0.2em]">MedLabConvo</h1>
+            <h1 class="text-white text-xl font-black  tracking-normal">MedLabConvo</h1>
           </div>
           <div class="p-12 prose max-w-none text-slate-700" v-html="modelValue"></div>
           <div class="bg-slate-50 p-8 text-center">
-             <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Sent from MedLabConvo Admin Panel</p>
+             <p class="text-sm font-bold text-slate-400  tracking-normal">Sent from MedLabConvo Admin Panel</p>
           </div>
         </div>
       </div>
@@ -70,14 +70,7 @@
     <!-- Hidden File Input for images -->
     <input type="file" ref="fileInput" class="hidden" accept="image/*" @change="handleFileUpload" />
 
-    <!-- Custom Prompt for Links -->
-    <PromptModal
-      v-model="showLinkPrompt"
-      title="Insert Link"
-      message="Please enter the URL you want to link to."
 
-      @confirm="handleLinkConfirm"
-    />
   </div>
 </template>
 
@@ -89,7 +82,6 @@ import Image from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
 import ToolbarButton from './ToolbarButton.vue'
-import PromptModal from '@/components/PromptModal.vue'
 import { useSingleUploadFile } from '@/composables/core/useSingleUpload'
 import { ref, watch } from 'vue'
 
@@ -101,7 +93,6 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue'])
 
 const showPreview = ref(false)
-const showLinkPrompt = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
 const {监测UploadFile: uploadFile_custom, loading: uploading_legacy } = { 监测UploadFile: useSingleUploadFile().singleUploadFile, loading: useSingleUploadFile().loading } // Just locally rename for brevity or use directly
 const { singleUploadFile, loading: uploading } = useSingleUploadFile()
@@ -111,7 +102,7 @@ const editor = useEditor({
   extensions: [
     StarterKit,
     Underline,
-    Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-blue-600 underline pointer-events-none' } }),
+    Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-blue-600 underline cursor-pointer' } }),
     Image.configure({ HTMLAttributes: { class: 'max-w-full rounded-2xl border border-slate-100 shadow-sm my-8' } }),
     Placeholder.configure({ placeholder: props.placeholder || 'Start writing your campaign content...' }),
   ],
@@ -128,15 +119,22 @@ watch(() => props.modelValue, (val) => {
 })
 
 const setLink = () => {
-  showLinkPrompt.value = true
-}
+  const previousUrl = editor.value?.getAttributes('link').href || ''
+  const url = window.prompt('URL', previousUrl)
 
-const handleLinkConfirm = (url: string) => {
-  if (url) {
-    editor.value?.chain().focus().setLink({ href: url }).run()
-  } else {
-    editor.value?.chain().focus().unsetLink().run()
+  // cancelled
+  if (url === null) {
+    return
   }
+
+  // empty
+  if (url === '') {
+    editor.value?.chain().focus().extendMarkRange('link').unsetLink().run()
+    return
+  }
+
+  // update or set link
+  editor.value?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
 }
 
 const triggerImageUpload = () => fileInput.value?.click()

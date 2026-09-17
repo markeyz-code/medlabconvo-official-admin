@@ -70,12 +70,12 @@
                   </div>
                 </div>
               </td>
-              <td class="px-10 py-8 whitespace-nowrap uppercase">
+              <td class="px-10 py-8 whitespace-nowrap ">
                 <span :class="['px-3 py-1.5 text-sm font-bold rounded-lg ring-1 ring-inset', getRoleBadgeStyle(user.role)]">
                   {{ user.role?.replace('_', ' ') || 'standard' }}
                 </span>
               </td>
-              <td class="px-10 py-8 whitespace-nowrap uppercase">
+              <td class="px-10 py-8 whitespace-nowrap ">
                 <div class="flex items-center space-x-3">
                   <div :class="['w-2 h-2 rounded-full', user.isActive ? 'bg-emerald-500' : 'bg-slate-300']"></div>
                   <span :class="['text-sm font-bold', user.isActive ? 'text-slate-700' : 'text-slate-400']">
@@ -130,7 +130,7 @@
                <Icon name="lucide:shield-check" class="w-6 h-6" />
              </div>
              <div>
-               <p class="text-[#033958] text-sm font-bold uppercase tracking-widest mb-3">Invitation protocol</p>
+               <p class="text-[#033958] text-sm font-bold  tracking-normal mb-3">Invitation protocol</p>
                <p class="text-slate-600 text-sm font-medium leading-relaxed">Send an invitation to a new team member. They will receive a link to set up their account with the specified role.</p>
              </div>
           </div>
@@ -152,7 +152,7 @@
 
         <div v-if="invitationLink" class="bg-emerald-50 p-8 rounded-[2rem] border border-emerald-100 flex items-center justify-between gap-6 animate-in fade-in zoom-in-95">
           <div class="flex-1 min-w-0">
-            <p class="text-emerald-800 text-sm font-bold uppercase tracking-widest mb-3">Invitation link generated</p>
+            <p class="text-emerald-800 text-sm font-bold  tracking-normal mb-3">Invitation link generated</p>
             <p class="text-emerald-700 text-sm truncate font-mono bg-white/50 px-4 py-2 rounded-lg border border-emerald-100">{{ invitationLink }}</p>
           </div>
           <button 

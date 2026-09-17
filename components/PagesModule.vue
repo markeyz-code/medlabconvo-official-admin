@@ -3,7 +3,7 @@
     <!-- Header Actions -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
       <div class="flex flex-col space-y-1">
-        <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Website content</h2>
+        <h2 class="text-lg font-bold text-slate-900 tracking-tight">Website content</h2>
         <p class="text-sm font-bold text-slate-400">Manage static pages and website sections</p>
       </div>
       <button
@@ -25,11 +25,11 @@
       <table class="w-full text-left border-collapse">
         <thead>
           <tr class="bg-slate-50/50 border-b border-slate-100/50 hidden md:table-row">
-            <th class="px-6 py-5 text-sm font-black uppercase tracking-widest text-slate-400">Page Identity</th>
-            <th class="px-6 py-5 text-sm font-black uppercase tracking-widest text-slate-400">Sections</th>
-            <th class="px-6 py-5 text-sm font-black uppercase tracking-widest text-slate-400">Environment</th>
-            <th class="px-6 py-5 text-sm font-black uppercase tracking-widest text-slate-400">Last Modified</th>
-            <th class="px-6 py-5 text-sm font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+            <th class="px-6 py-5 text-sm font-black  tracking-normal text-slate-400">Page Identity</th>
+            <th class="px-6 py-5 text-sm font-black  tracking-normal text-slate-400">Sections</th>
+            <th class="px-6 py-5 text-sm font-black  tracking-normal text-slate-400">Environment</th>
+            <th class="px-6 py-5 text-sm font-black  tracking-normal text-slate-400">Last Modified</th>
+            <th class="px-6 py-5 text-sm font-black  tracking-normal text-slate-400 text-right">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
@@ -61,7 +61,7 @@
 
             <!-- Environment (Currently always active) -->
             <td class="px-6 py-5 hidden md:table-cell">
-              <span class="inline-flex items-center space-x-1.5 bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full text-sm font-black tracking-wider uppercase">
+              <span class="inline-flex items-center space-x-1.5 bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full text-sm font-black tracking-wider ">
                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                 <span>Production</span>
               </span>

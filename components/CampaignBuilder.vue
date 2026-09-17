@@ -3,7 +3,7 @@
     
     <!-- Header with Back Button -->
     <div class="flex items-center justify-between">
-      <button @click="$emit('close')" class="flex items-center gap-2 text-slate-400 font-bold text-xs uppercase tracking-widest hover:text-slate-900 transition-colors group">
+      <button @click="$emit('close')" class="flex items-center gap-2 text-slate-400 font-bold text-xs  tracking-normal hover:text-slate-900 transition-colors group">
         <Icon name="lucide:arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
         Back to Campaigns
       </button>
@@ -20,7 +20,7 @@
       <div class="space-y-6">
         <div class="grid grid-cols-1 gap-6">
           <div class="space-y-2">
-            <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Campaign Name</label>
+            <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Campaign Name</label>
             <input 
               v-model="form.name" 
               type="text" 
@@ -30,7 +30,7 @@
           </div>
 
           <div class="space-y-2">
-            <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Subject Line</label>
+            <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Subject Line</label>
             <input 
               v-model="form.subject" 
               type="text" 
@@ -40,7 +40,7 @@
           </div>
 
           <div class="space-y-2">
-            <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Preview Text (Optional)</label>
+            <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Preview Text (Optional)</label>
             <input 
               v-model="form.previewText" 
               type="text" 
@@ -52,7 +52,7 @@
 
         <!-- Banner Upload -->
         <div class="space-y-4">
-          <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Campaign Banner</label>
+          <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Campaign Banner</label>
           <ImageUpload v-model="form.bannerImage" />
           <p class="text-sm text-slate-400 font-medium px-1 italic">Recommended size: 1200x600px. Max size: 5MB.</p>
         </div>
@@ -87,7 +87,7 @@
         <!-- Specific Emails logic -->
         <Transition name="fade">
           <div v-if="form.primaryAudience === 'Specific Emails'" class="space-y-2">
-            <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Specific Email Addresses</label>
+            <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Specific Email Addresses</label>
             <textarea 
               v-model="manualEmails"
 
@@ -117,7 +117,7 @@
           <!-- Future Schedule -->
           <Transition name="fade" mode="out-in">
             <div v-if="form.deliveryType === 'future'" class="space-y-2 animate-in slide-in-from-top-2 duration-300">
-               <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Schedule Date & Time</label>
+               <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Schedule Date & Time</label>
                <input 
                  type="datetime-local" 
                  v-model="form.scheduledAt"
@@ -126,7 +126,7 @@
             </div>
             <!-- Cron Option -->
             <div v-else-if="form.deliveryType === 'recurring'" class="space-y-2 animate-in slide-in-from-top-2 duration-300">
-               <label class="text-sm font-black uppercase tracking-[0.2em] text-slate-400 px-1">Cron Expression (e.g. 0 0 * * *)</label>
+               <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Cron Expression (e.g. 0 0 * * *)</label>
                <input 
                  v-model="form.cronExpression"
 
@@ -146,14 +146,14 @@
     <div class="flex items-center justify-end gap-6 pt-4">
       <button 
         @click="$emit('close')" 
-        class="px-10 py-4 text-sm font-black text-slate-400 hover:text-slate-900 transition-colors uppercase tracking-widest"
+        class="px-10 py-4 text-sm font-black text-slate-400 hover:text-slate-900 transition-colors  tracking-normal"
       >
         Discard
       </button>
       <button 
         @click="submit"
         :disabled="loading"
-        class="h-16 px-16 bg-gray-900 text-white rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-900/10 flex items-center gap-3 disabled:opacity-50 disabled:scale-100"
+        class="h-16 px-16 bg-gray-900 text-white rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all shadow-sm border border-slate-200 shadow-gray-900/10 flex items-center gap-3 disabled:opacity-50 disabled:scale-100"
       >
         <span v-if="!loading">{{ form.deliveryType === 'immediate' ? 'Send Campaign' : 'Schedule Campaign' }}</span>
         <div v-else class="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>

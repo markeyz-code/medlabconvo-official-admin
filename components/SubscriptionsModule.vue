@@ -43,7 +43,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-bold text-slate-400 mb-2">Total audience</p>
-            <p class="text-4xl font-bold text-slate-900 tracking-tighter">{{ totalSubscribers }}</p>
+            <p class="text-lg font-bold text-slate-900 tracking-normal">{{ totalSubscribers }}</p>
           </div>
           <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:bg-[#033958] group-hover:text-white transition-colors duration-500 border border-slate-100">
             <Icon name="lucide:users" class="w-8 h-8" />
@@ -55,7 +55,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-bold text-slate-400 mb-2">Active subscribers</p>
-            <p class="text-4xl font-bold text-emerald-600 tracking-tighter">{{ activeSubscriptions }}</p>
+            <p class="text-lg font-bold text-emerald-600 tracking-normal">{{ activeSubscriptions }}</p>
           </div>
           <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-500 border border-emerald-100">
             <Icon name="lucide:badge-check" class="w-8 h-8" />
@@ -67,7 +67,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-bold text-slate-400 mb-2">New this month</p>
-            <p class="text-4xl font-bold text-blue-600 tracking-tighter">{{ thisMonthSubscriptions }}</p>
+            <p class="text-lg font-bold text-blue-600 tracking-normal">{{ thisMonthSubscriptions }}</p>
           </div>
           <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-500 border border-blue-100">
             <Icon name="lucide:bar-chart-3" class="w-8 h-8" />
@@ -101,7 +101,7 @@
               <td class="px-10 py-8 whitespace-nowrap text-slate-700 font-medium">
                 {{ subscription.email }}
               </td>
-              <td class="px-10 py-8 whitespace-nowrap uppercase">
+              <td class="px-10 py-8 whitespace-nowrap ">
                 <div class="flex items-center space-x-3">
                   <div :class="['w-2 h-2 rounded-full', subscription.isActive ? 'bg-emerald-500' : 'bg-rose-500']"></div>
                   <span :class="['text-sm font-bold', subscription.isActive ? 'text-emerald-700' : 'text-rose-700']">

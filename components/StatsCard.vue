@@ -3,7 +3,7 @@
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm font-medium text-slate-600">{{ title }}</p>
-          <p class="text-2xl font-bold text-slate-900 mt-1">{{ value }}</p>
+          <p class="text-lg font-bold text-slate-900 mt-1">{{ value }}</p>
           <div class="flex items-center mt-2">
             <span :class="[
               'text-sm font-medium',
