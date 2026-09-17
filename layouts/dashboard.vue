@@ -405,16 +405,7 @@ const { hasPermission } = useUser()
 const RAW_NAVIGATION_ITEMS = [
   { name: 'Dashboard', path: '/dashboard', icon: 'lucide:layout-grid', badge: null, permission: 'dashboard:view' },
   { name: 'Users', path: '/dashboard/users', icon: 'lucide:users', badge: null, permission: 'users:read' },
-  { 
-    name: 'About Us', 
-    icon: 'lucide:users-2', 
-    badge: null, 
-    permission: 'teams:read',
-    children: [
-      { name: 'Members', path: '/dashboard/teams' },
-      { name: 'Categories', path: '/dashboard/leadership/categories' }
-    ]
-  },
+  { name: 'About Us', path: '/dashboard/teams', icon: 'lucide:users-2', badge: null, permission: 'teams:read' },
   { name: 'Enquiries', path: '/dashboard/enquiries', icon: 'lucide:messages-square', badge: null, permission: 'enquiries:read' },
   { name: 'Subscriptions', path: '/dashboard/subscriptions', icon: 'lucide:mail', badge: null, permission: 'subscriptions:read' },
   { name: 'Campaigns', path: '/dashboard/campaigns', icon: 'lucide:send', badge: null, permission: 'campaigns:read' },

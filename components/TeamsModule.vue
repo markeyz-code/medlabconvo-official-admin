@@ -11,13 +11,13 @@
       </div>
 
       <div class="relative z-10 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-        <NuxtLink
-          to="/dashboard/leadership/categories"
+        <button
+          @click="showCategoryDrawer = true"
           class="flex-1 sm:flex-none px-8 py-3 bg-white text-[#033958] border border-[#033958] rounded-2xl font-medium text-sm tracking-normal hover:bg-slate-50 transition-all flex items-center justify-center space-x-2 active:scale-95"
         >
           <Icon name="lucide:settings" class="w-5 h-5" />
           <span>Manage Categories</span>
-        </NuxtLink>
+        </button>
         <button
           @click="openAddDrawer"
           class="flex-1 sm:flex-none px-10 py-3 bg-[#033958] text-white rounded-2xl font-medium text-sm  tracking-normal hover:bg-[#022a41] transition-all flex items-center justify-center space-x-3 -2xl active:scale-95"
@@ -136,6 +136,22 @@
       </SlideOver>
     </ClientOnly>
 
+    <!-- Category Side Drawer -->
+    <ClientOnly>
+      <SlideOver 
+        v-model="showCategoryDrawer" 
+        size="full"
+        title="Manage Categories"
+      >
+        <div class="p-8">
+          <TeamCategoryManager 
+            @changed="fetchCategories" 
+            @close="showCategoryDrawer = false" 
+          />
+        </div>
+      </SlideOver>
+    </ClientOnly>
+
     <!-- Delete Confirmation Modal -->
     <ConfirmModal
       v-model="showDeleteModal"
@@ -156,9 +172,12 @@ import SelectInput from '@/components/ui/SelectInput.vue'
 import Icon from '@/components/Icon.vue'
 import SlideOver from '@/components/SlideOver.vue'
 import TeamMemberForm from '@/components/TeamMemberForm.vue'
+import TeamCategoryManager from '@/components/TeamCategoryManager.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const { showToast } = useCustomToast()
+
+const showCategoryDrawer = ref(false)
 
 const members = ref<TeamMember[]>([])
 const loading = ref(false)
