@@ -20,12 +20,7 @@
         <SelectInput 
           v-model="form.roleCategory" 
           label="Role Category"
-          :options="[
-            { label: 'Executive Board', value: 'Executive Board' },
-            { label: 'Management Team', value: 'Management Team' },
-            { label: 'Volunteer Committee', value: 'Volunteer Committee' },
-            { label: 'Advisory Council', value: 'Advisory Council' }
-          ]" 
+          :options="categoryOptions" 
         />
       </div>
     </div>
@@ -56,7 +51,6 @@
         <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Biography</label>
         <TiptapEditor
           v-model="form.bio"
-
         />
       </div>
     </div>
@@ -80,7 +74,6 @@
       </div>
     </div>
 
-
     <div class="flex justify-end space-x-6 pt-10 border-t border-slate-50">
       <button
         type="button"
@@ -100,12 +93,13 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watchEffect } from 'vue'
+import { reactive, watchEffect, ref, onMounted } from 'vue'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 import ImageUpload from '@/components/ImageUpload.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import TiptapEditor from '@/components/ui/TiptapEditor.vue'
+import { teams_api } from '@/api_factory/modules/teams'
 
 interface Props {
   member?: any
@@ -114,10 +108,35 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits(['save', 'cancel'])
 
+const categoryOptions = ref([{ label: 'Loading...', value: '' }])
+
+const fetchCategories = async () => {
+  try {
+    const res = await teams_api.$_get_categories()
+    categoryOptions.value = res.data.map((c: any) => ({
+      label: c.name,
+      value: c.name
+    }))
+  } catch (error) {
+    console.error('Failed to fetch categories', error)
+    // Fallback options just in case
+    categoryOptions.value = [
+      { label: 'Executive Board', value: 'Executive Board' },
+      { label: 'Board of Directors', value: 'Board of Directors' },
+      { label: 'Executive Directors', value: 'Executive Directors' },
+      { label: 'Heads of Department', value: 'Heads of Department' }
+    ]
+  }
+}
+
+onMounted(() => {
+  fetchCategories()
+})
+
 const form = reactive({
   name: '',
   title: '',
-  roleCategory: 'Executive Board',
+  roleCategory: '',
   position: 1,
   image: '',
   bio: '',
@@ -138,7 +157,7 @@ watchEffect(() => {
     Object.assign(form, {
       name: props.member.name || '',
       title: props.member.title || '',
-      roleCategory: props.member.roleCategory || 'Executive Board',
+      roleCategory: props.member.roleCategory || '',
       position: props.member.position ?? 1,
       image: props.member.image || '',
       bio: props.member.bio || '',
@@ -149,7 +168,7 @@ watchEffect(() => {
     Object.assign(form, {
       name: '',
       title: '',
-      roleCategory: 'Executive Board',
+      roleCategory: '',
       position: 1,
       image: '',
       bio: '',

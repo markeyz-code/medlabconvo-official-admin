@@ -6,6 +6,19 @@ export type Profile = {
   url: string
 }
 
+export type TeamCategory = {
+  _id?: string
+  name: string
+  position: number
+}
+
+export type CreateTeamCategoryData = {
+  name: string
+  position?: number
+}
+
+export type UpdateTeamCategoryData = Partial<CreateTeamCategoryData>
+
 export type TeamMember = {
   id?: string // slug
   _id?: string
@@ -37,6 +50,24 @@ export type UpdateTeamMemberData = Partial<CreateTeamMemberData>
 
 // API Factory
 export const teams_api = {
+  // Categories
+  $_create_category: async (data: CreateTeamCategoryData) => {
+    return GATEWAY_ENDPOINT.post('/teams/categories', data)
+  },
+
+  $_get_categories: async () => {
+    return GATEWAY_ENDPOINT.get('/teams/categories')
+  },
+
+  $_update_category: async (id: string, data: UpdateTeamCategoryData) => {
+    return GATEWAY_ENDPOINT.patch(`/teams/categories/${id}`, data)
+  },
+
+  $_delete_category: async (id: string) => {
+    return GATEWAY_ENDPOINT.delete(`/teams/categories/${id}`)
+  },
+
+  // Members
   $_create_member: async (memberData: CreateTeamMemberData) => {
     return GATEWAY_ENDPOINT.post('/teams', memberData)
   },
