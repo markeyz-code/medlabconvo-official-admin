@@ -1,4 +1,3 @@
-// composables/products/useBatchCreateProducts.ts
 import { ref } from 'vue'
 import { products_api, type CreateProductData, type Product } from '@/api_factory/modules/products'
 import { useCustomToast } from "@/composables/core/useCustomToast";
