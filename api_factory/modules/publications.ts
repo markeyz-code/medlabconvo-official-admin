@@ -51,7 +51,8 @@ export type PublicationQueryParams = {
 export const publications_api = {
   $_create_publication: async (publicationData: CreatePublicationData) => {
     const url = `/publications`
-    return GATEWAY_ENDPOINT.post(url, publicationData)
+    const payload = { ...publicationData, year: Number(publicationData.year) }
+    return GATEWAY_ENDPOINT.post(url, payload)
   },
 
   $_get_publications: async (params?: PublicationQueryParams) => {
@@ -71,7 +72,8 @@ export const publications_api = {
 
   $_update_publication: async (publicationId: string, publicationData: UpdatePublicationData) => {
     const url = `/publications/${publicationId}`
-    return GATEWAY_ENDPOINT.patch(url, publicationData)
+    const payload = publicationData.year ? { ...publicationData, year: Number(publicationData.year) } : publicationData
+    return GATEWAY_ENDPOINT.patch(url, payload)
   },
 
   $_submit_for_review: async (publicationId: string) => {
