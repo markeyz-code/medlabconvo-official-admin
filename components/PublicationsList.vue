@@ -87,7 +87,7 @@
                     >
                       {{ formatStatus(publication.status) }}
                     </span>
-                    <span v-if="publication.position" class="text-[10px] text-slate-400 font-mono">Pos: {{ publication.position }}</span>
+                    <span v-if="publication.position" class="text-sm text-slate-400 font-mono">Pos: {{ publication.position }}</span>
                   </div>
                 </div>
               

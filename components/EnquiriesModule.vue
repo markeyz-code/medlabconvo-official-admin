@@ -55,7 +55,7 @@
         <div class="flex items-start justify-between mb-8">
           <div class="flex items-center space-x-5">
             <div :class="['w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-xl ring-4 ring-slate-50', getStatusBg(enquiry.status)]">
-              {{ enquiry.name?.[0] || '?' }}
+              {{ enquiry.firstName?.[0] || '?' }}
             </div>
             <div>
               <h3 class="text-sm font-bold text-slate-900 tracking-tight">{{ enquiry.firstName }} {{ enquiry.lastName }}</h3>
@@ -200,9 +200,10 @@ const filteredEnquiries = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(enquiry => 
-      enquiry.name?.toLowerCase().includes(query) ||
+      enquiry.firstName?.toLowerCase().includes(query) ||
+      enquiry.lastName?.toLowerCase().includes(query) ||
       enquiry.email?.toLowerCase().includes(query) ||
-      enquiry.subject?.toLowerCase().includes(query)
+      enquiry.message?.toLowerCase().includes(query)
     )
   }
   if (statusFilter.value) {

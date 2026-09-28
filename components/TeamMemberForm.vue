@@ -159,7 +159,7 @@ watchEffect(() => {
       title: props.member.title || '',
       roleCategory: props.member.roleCategory || '',
       position: props.member.position ?? 1,
-      image: props.member.image || '',
+      image: typeof props.member.image === 'object' ? (props.member.image as any).url : (props.member.image === '[object Object]' ? '' : (props.member.image || '')),
       bio: props.member.bio || '',
       linkedin: linked,
       twitter: twitt
@@ -195,7 +195,7 @@ const handleSubmit = () => {
     title: form.title,
     roleCategory: form.roleCategory,
     position: form.position,
-    image: form.image,
+    image: typeof form.image === 'object' ? (form.image as any)?.url || (form.image as any)?.secure_url || '' : (form.image === '[object Object]' ? '' : form.image),
     bio: form.bio,
     profiles: profiles
   }

@@ -106,8 +106,11 @@ const { singleUploadFile, loading: uploadingSingle, uploadResponse: singleUpload
   const imageUrls = computed(() => {
   const extractUrl = (val: any): string => {
     if (!val) return ''
-    if (typeof val === 'string') return val
-    if (typeof val === 'object') {
+    if (typeof val === 'string') {
+      if (val === '[object Object]') return ''
+      return val
+    }
+    if (typeof val === 'object' && val !== null) {
       return val.url || val.secure_url || val.fileUrl || ''
     }
     return ''

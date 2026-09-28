@@ -83,14 +83,14 @@
                   <span class="text-sm font-bold text-slate-900 leading-none mb-1 group-hover:text-[#033958] transition-colors line-clamp-1">
                     {{ program.title }}
                   </span>
-                  <span class="text-[10px] font-black  tracking-normal text-slate-400">{{ program.category || 'General' }}</span>
+                  <span class="text-sm font-black  tracking-normal text-slate-400">{{ program.category || 'General' }}</span>
                 </div>
               </td>
 
               <!-- Status -->
               <td class="px-8 py-6">
                 <span :class="[
-                  'inline-flex items-center px-3 py-1 text-[10px] font-black  tracking-normal rounded-full ring-1 ring-inset',
+                  'inline-flex items-center px-3 py-1 text-sm font-black  tracking-normal rounded-full ring-1 ring-inset',
                   program.status === 'active' ? 'bg-emerald-50 text-emerald-700 ring-emerald-500/20' : 'bg-amber-50 text-amber-700 ring-amber-500/20'
                 ]">
                   {{ program.status }}
@@ -101,7 +101,7 @@
               <td class="px-8 py-6 text-center">
                 <div class="inline-flex flex-col items-center">
                   <span class="text-sm font-black text-[#033958]">{{ program.applicationsCount || 0 }}</span>
-                  <span class="text-[10px] font-bold text-slate-400">Total</span>
+                  <span class="text-sm font-bold text-slate-400">Total</span>
                 </div>
               </td>
 
@@ -239,8 +239,8 @@
         <div class="p-10 space-y-10 bg-white">
           <div class="space-y-4">
             <div class="flex items-center justify-between px-1">
-              <label class="text-[10px] font-black  tracking-normal text-slate-400">Secure Enrollment URL</label>
-              <span class="text-[10px] font-black text-emerald-500  tracking-normal flex items-center gap-1">
+              <label class="text-sm font-black  tracking-normal text-slate-400">Secure Enrollment URL</label>
+              <span class="text-sm font-black text-emerald-500  tracking-normal flex items-center gap-1">
                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                 HTTPS Secure
               </span>
@@ -273,14 +273,14 @@
                 <Icon name="lucide:qr-code" class="w-5 h-5" />
               </div>
               <h4 class="text-xs font-black text-slate-900  mb-1">Visual Entry</h4>
-              <p class="text-[10px] text-slate-400 font-bold leading-tight">Generate QR asset for physical collateral</p>
+              <p class="text-sm text-slate-400 font-bold leading-tight">Generate QR asset for physical collateral</p>
             </div>
             <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 group hover:border-emerald-100 transition-all cursor-pointer">
               <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-emerald-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
                 <Icon name="lucide:mail" class="w-5 h-5" />
               </div>
               <h4 class="text-xs font-black text-slate-900  mb-1">Email Blast</h4>
-              <p class="text-[10px] text-slate-400 font-bold leading-tight">Notify all qualified practitioners</p>
+              <p class="text-sm text-slate-400 font-bold leading-tight">Notify all qualified practitioners</p>
             </div>
           </div>
 

@@ -137,7 +137,7 @@
                 </div>
                 <div>
                   <h4 class="font-bold text-slate-900">Field Configuration</h4>
-                  <p class="text-[10px]  tracking-normal text-slate-400 font-bold">Question {{ index + 1 }}</p>
+                  <p class="text-sm  tracking-normal text-slate-400 font-bold">Question {{ index + 1 }}</p>
                 </div>
               </div>
               <button
@@ -240,7 +240,7 @@
             <!-- Options for select/radio/checkbox -->
             <div v-if="['select', 'radio', 'checkbox'].includes(field.type)" class="mt-4 pt-4 border-t border-slate-50 relative z-10">
               <div class="flex items-center justify-between mb-3 px-2">
-                <label class="text-[11px] font-black text-slate-400  tracking-normal">Options</label>
+                <label class="text-sm font-black text-slate-400  tracking-normal">Options</label>
                 <button
                   @click="addOption(field)"
                   type="button"
@@ -325,7 +325,7 @@
     <!-- Form Actions -->
     <div class="flex items-center justify-between pt-6 border-t border-slate-200 sticky bottom-0 bg-white/80 backdrop-blur-md pb-2 px-2 z-[60]">
       <div class="flex flex-col">
-        <span class="text-[10px] font-black text-slate-400  tracking-normal">Current Status</span>
+        <span class="text-sm font-black text-slate-400  tracking-normal">Current Status</span>
         <div class="flex items-center space-x-2">
           <div :class="['w-2 h-2 rounded-full animate-pulse', form.isActive ? 'bg-green-500' : 'bg-slate-300']"></div>
           <span class="text-sm font-bold text-slate-700">{{ form.isActive ? 'Active & Accepting Submissions' : 'Inactive / Draft' }}</span>

@@ -540,7 +540,7 @@
               </div>
               <div v-if="form.formFields.length === 0" class="text-center py-16 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-100">
                 <Icon name="lucide:clipboard-list" class="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                <p class="text-slate-400 font-bold  tracking-normal text-[10px]">No custom fields defined</p>
+                <p class="text-slate-400 font-bold  tracking-normal text-sm">No custom fields defined</p>
                 <p class="text-xs text-slate-400 mt-1">Add fields to collect specific data from applicants.</p>
               </div>
             </div>

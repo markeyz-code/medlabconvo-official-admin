@@ -39,22 +39,22 @@
         <table class="min-w-full divide-y divide-slate-100 text-sm">
           <thead class="bg-slate-50/50">
             <tr>
-              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-[10px]">
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-sm">
                 Programme Form
               </th>
-              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-[10px]">
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-sm">
                 Status
               </th>
-              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-[10px]">
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-sm">
                 Configuration
               </th>
-              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-[10px]">
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-sm">
                 Engagement
               </th>
-              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-[10px]">
+              <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-sm">
                 Share Link
               </th>
-              <th scope="col" class="px-8 py-6 text-right font-black text-slate-400  tracking-normal text-[10px]">
+              <th scope="col" class="px-8 py-6 text-right font-black text-slate-400  tracking-normal text-sm">
                 Actions
               </th>
             </tr>
@@ -83,7 +83,7 @@
                   @click="toggleFormStatus(form)"
                   :disabled="togglingFormId === form._id"
                   :class="[
-                    'px-4 py-1.5 inline-flex items-center text-[11px] font-black  tracking-normal rounded-full transition-all duration-300',
+                    'px-4 py-1.5 inline-flex items-center text-sm font-black  tracking-normal rounded-full transition-all duration-300',
                     form.isActive 
                       ? 'bg-emerald-100 text-emerald-700 shadow-sm shadow-emerald-200' 
                       : 'bg-slate-100 text-slate-500 shadow-sm shadow-slate-200',
@@ -245,8 +245,8 @@
         <div class="p-10 space-y-10 bg-white">
           <div class="space-y-4">
             <div class="flex items-center justify-between px-1">
-              <label class="text-[10px] font-black  tracking-normal text-slate-400">Your Unique Form URL</label>
-              <span class="text-[10px] font-black text-emerald-500  tracking-normal flex items-center gap-1">
+              <label class="text-sm font-black  tracking-normal text-slate-400">Your Unique Form URL</label>
+              <span class="text-sm font-black text-emerald-500  tracking-normal flex items-center gap-1">
                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                 Publicly Reachable
               </span>
@@ -279,14 +279,14 @@
                 <Icon name="lucide:qr-code" class="w-5 h-5" />
               </div>
               <h4 class="text-xs font-black text-slate-900  mb-1">QR Access</h4>
-              <p class="text-[10px] text-slate-400 font-bold leading-tight">Instant access via mobile scan</p>
+              <p class="text-sm text-slate-400 font-bold leading-tight">Instant access via mobile scan</p>
             </div>
             <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 group hover:border-indigo-100 transition-all cursor-pointer">
               <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-indigo-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
                 <Icon name="lucide:share-2" class="w-5 h-5" />
               </div>
               <h4 class="text-xs font-black text-slate-900  mb-1">Social Share</h4>
-              <p class="text-[10px] text-slate-400 font-bold leading-tight">Broaden your campaign reach</p>
+              <p class="text-sm text-slate-400 font-bold leading-tight">Broaden your campaign reach</p>
             </div>
           </div>
 
