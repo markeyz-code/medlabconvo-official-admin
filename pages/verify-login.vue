@@ -38,7 +38,7 @@
 
         <button
           @click="verify"
-          :disabled="isLoading || otpCode.length !== 6"
+          :disabled="isLoading || !otpCode || otpCode?.length !== 6"
           class="w-full bg-[#033958] hover:bg-[#044a73] text-white py-3 px-4 rounded-xl font-semibold text-base transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         >
           <div v-if="isLoading" class="flex items-center justify-center space-x-2">
@@ -97,7 +97,7 @@ onMounted(() => {
 })
 
 const verify = async () => {
-  if (otpCode.value.length !== 6) return
+  if (!otpCode.value || otpCode.value?.length !== 6) return
 
   try {
     showLoader()
