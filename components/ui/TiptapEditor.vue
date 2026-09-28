@@ -23,9 +23,17 @@
 
       <div class="w-px h-6 bg-slate-200 mx-2"></div>
 
+      <!-- Alignment -->
+      <ToolbarButton @click="editor.chain().focus().setTextAlign('left').run()" :active="editor.isActive({ textAlign: 'left' })" icon="lucide:align-left" />
+      <ToolbarButton @click="editor.chain().focus().setTextAlign('center').run()" :active="editor.isActive({ textAlign: 'center' })" icon="lucide:align-center" />
+      <ToolbarButton @click="editor.chain().focus().setTextAlign('right').run()" :active="editor.isActive({ textAlign: 'right' })" icon="lucide:align-right" />
+      <ToolbarButton @click="editor.chain().focus().setTextAlign('justify').run()" :active="editor.isActive({ textAlign: 'justify' })" icon="lucide:align-justify" />
+
+      <div class="w-px h-6 bg-slate-200 mx-2"></div>
+
       <!-- Lists -->
       <ToolbarButton @click="editor.chain().focus().toggleBulletList().run()" :active="editor.isActive('bulletList')" icon="lucide:list" />
-      <ToolbarButton @click="editor.chain().focus().toggleOrderedList().run()" :active="editor.isActive('orderedList')" icon="lucide:list-ordered" /> <!-- Use list icon but for ordered -->
+      <ToolbarButton @click="editor.chain().focus().toggleOrderedList().run()" :active="editor.isActive('orderedList')" icon="lucide:list-ordered" />
       <ToolbarButton @click="editor.chain().focus().toggleBlockquote().run()" :active="editor.isActive('blockquote')" icon="lucide:quote" />
 
       <div class="w-px h-6 bg-slate-200 mx-2"></div>
@@ -54,7 +62,7 @@
 
       <!-- Live Email Preview Overlay -->
       <div v-if="showPreview" class="absolute inset-0 z-30 bg-white overflow-y-auto p-10">
-        <div class="max-w-[600px] mx-auto border border-slate-100 rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden bg-white">
+        <div class="max-w-[600px] mx-auto border border-slate-100 rounded-[2rem] shadow-sm overflow-hidden bg-white">
           <!-- Branded Wrapper Context -->
           <div class="bg-[#27628C] p-8 text-center">
             <h1 class="text-white text-xl font-black  tracking-normal">MedLabConvo</h1>
@@ -69,8 +77,6 @@
 
     <!-- Hidden File Input for images -->
     <input type="file" ref="fileInput" class="hidden" accept="image/*" @change="handleFileUpload" />
-
-
   </div>
 </template>
 
@@ -81,6 +87,7 @@ import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
+import TextAlign from '@tiptap/extension-text-align'
 import ToolbarButton from './ToolbarButton.vue'
 import { useSingleUploadFile } from '@/composables/core/useSingleUpload'
 import { ref, watch } from 'vue'
@@ -94,7 +101,6 @@ const emit = defineEmits(['update:modelValue'])
 
 const showPreview = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
-const {监测UploadFile: uploadFile_custom, loading: uploading_legacy } = { 监测UploadFile: useSingleUploadFile().singleUploadFile, loading: useSingleUploadFile().loading } // Just locally rename for brevity or use directly
 const { singleUploadFile, loading: uploading } = useSingleUploadFile()
 
 const editor = useEditor({
@@ -102,6 +108,7 @@ const editor = useEditor({
   extensions: [
     StarterKit,
     Underline,
+    TextAlign.configure({ types: ['heading', 'paragraph'] }),
     Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-blue-600 underline cursor-pointer' } }),
     Image.configure({ HTMLAttributes: { class: 'max-w-full rounded-2xl border border-slate-100 shadow-sm my-8' } }),
     Placeholder.configure({ placeholder: props.placeholder || 'Start writing your campaign content...' }),
@@ -179,4 +186,7 @@ const handleFileUpload = async (event: Event) => {
   opacity: 0.8;
   margin: 2rem 0;
 }
+:deep(.tiptap ul) { list-style-type: disc; padding-left: 1.5rem; margin: 1rem 0; }
+:deep(.tiptap ol) { list-style-type: decimal; padding-left: 1.5rem; margin: 1rem 0; }
+:deep(.tiptap li p) { margin: 0; }
 </style>
