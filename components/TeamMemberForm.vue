@@ -194,7 +194,7 @@ const handleSubmit = () => {
     name: form.name,
     title: form.title,
     roleCategory: form.roleCategory,
-    position: form.position,
+    position: Number(form.position),
     image: typeof form.image === 'object' ? (form.image as any)?.url || (form.image as any)?.secure_url || '' : (form.image === '[object Object]' ? '' : form.image),
     bio: form.bio,
     profiles: profiles
