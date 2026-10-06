@@ -46,7 +46,15 @@
                   :key="field.id"
                   class="px-4 py-3 text-sm text-slate-600"
                 >
-                  {{ getFieldValue(submission, field.id) }}
+                  <template v-if="isUrl(getFieldValue(submission, field.id))">
+                    <a :href="getFieldValue(submission, field.id)" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#033958]/10 text-[#033958] rounded-lg hover:bg-[#033958]/20 transition-colors font-semibold text-xs">
+                      <Icon name="lucide:external-link" class="w-3.5 h-3.5" />
+                      View File
+                    </a>
+                  </template>
+                  <template v-else>
+                    {{ getFieldValue(submission, field.id) }}
+                  </template>
                 </td>
                 <td class="px-4 py-3 text-right">
                   <button
@@ -88,7 +96,13 @@
               :key="response.fieldId"
             >
               <label class="block text-sm font-medium text-slate-700 mb-1">{{ response.fieldLabel }}</label>
-              <p class="text-slate-900 bg-slate-50 p-3 rounded-lg">{{ response.value }}</p>
+              <div v-if="isUrl(response.value)" class="mt-1">
+                <a :href="response.value" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-colors font-medium text-sm shadow-sm">
+                  <Icon name="lucide:download" class="w-4 h-4" />
+                  Preview / Download File
+                </a>
+              </div>
+              <p v-else class="text-slate-900 bg-slate-50 p-3 rounded-lg">{{ response.value }}</p>
             </div>
           </div>
           
@@ -132,6 +146,11 @@
   const getFieldValue = (submission: any, fieldId: string) => {
     const response = submission.responses?.find((r: any) => r.fieldId === fieldId)
     return response?.value || '-'
+  }
+
+  const isUrl = (val: string) => {
+    if (!val) return false
+    return val.toString().startsWith('http://') || val.toString().startsWith('https://')
   }
   
   const viewSubmission = (submission: any) => {
