@@ -445,9 +445,9 @@ const form = reactive({
   description: '',
   category: '',
   author: '',
-  price: 0,
-  originalPrice: 0,
-  stock: 0,
+  price: '' as any,
+  originalPrice: '' as any,
+  stock: '' as any,
   status: 'draft',
   availability: 'available',
   isDigital: false,
@@ -458,14 +458,14 @@ const form = reactive({
   isbn: '',
   publisher: '',
   publicationDate: '',
-  pages: 0,
-  weight: 0,
+  pages: '' as any,
+  weight: '' as any,
   dimensions: {
-    length: 0,
-    width: 0,
-    height: 0
+    length: '' as any,
+    width: '' as any,
+    height: '' as any
   },
-  duration: 0,
+  duration: '' as any,
   instructor: '',
   videoUrl: '',
   downloadUrl: '',
@@ -479,9 +479,9 @@ watchEffect(() => {
       description: props.product.description || '',
       category: props.product.category || '',
       author: props.product.author || '',
-      price: props.product.price || 0,
-      originalPrice: props.product.originalPrice || 0,
-      stock: props.product.stock || 0,
+      price: props.product.price ?? '',
+      originalPrice: props.product.originalPrice ?? '',
+      stock: props.product.stock ?? 0,
       status: props.product.status || 'draft',
       availability: props.product.availability || 'available',
       isDigital: props.product.isDigital || false,
@@ -492,10 +492,10 @@ watchEffect(() => {
       isbn: props.product.isbn || '',
       publisher: props.product.publisher || '',
       publicationDate: props.product.publicationDate ? new Date(props.product.publicationDate).toISOString().split('T')[0] : '',
-      pages: props.product.pages || 0,
-      weight: props.product.weight || 0,
-      dimensions: props.product.dimensions ? { ...props.product.dimensions } : { length: 0, width: 0, height: 0 },
-      duration: props.product.duration || 0,
+      pages: props.product.pages ?? '',
+      weight: props.product.weight ?? '',
+      dimensions: props.product.dimensions ? { ...props.product.dimensions } : { length: '', width: '', height: '' },
+      duration: props.product.duration ?? '',
       instructor: props.product.instructor || '',
       videoUrl: props.product.videoUrl || '',
       downloadUrl: props.product.downloadUrl || '',
@@ -525,15 +525,16 @@ const removeTag = (tagToRemove: string) => {
   tagsInput.value = form.tags.join(', ')
 }
 
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('en-NG').format(price)
+const formatPrice = (price: number | string) => {
+  const num = Number(price) || 0
+  return new Intl.NumberFormat('en-NG').format(num)
 }
 
 const { showToast } = useCustomToast()
 
 const handleSubmit = async () => {
   if (!form.name.trim() || !form.category.trim() || !form.author.trim() || !form.description.trim()) {
-    showToast({ title: "Validation Error", message: "Key details are required.", toastType: "error" });
+    showToast({ title: "Validation Error", message: "Key details (Name, Category, Author, Description) are required.", toastType: "error" });
     return;
   }
   
@@ -542,23 +543,99 @@ const handleSubmit = async () => {
     return;
   }
 
+  const numPrice = Number(form.price);
+  if (form.price === '' || form.price === null || form.price === undefined || isNaN(numPrice) || numPrice < 0) {
+    showToast({ title: "Validation Error", message: "Please enter a valid sales price (0 or greater).", toastType: "error" });
+    return;
+  }
+
+  const numStock = Number(form.stock);
+  if (form.stock === '' || form.stock === null || form.stock === undefined || isNaN(numStock) || numStock < 0) {
+    showToast({ title: "Validation Error", message: "Please enter a valid stock level (0 or greater).", toastType: "error" });
+    return;
+  }
+
   try {
     const cleanedForm: any = {
       ...form,
+      price: numPrice,
+      stock: numStock,
       category: form.category as ProductCategory,
       status: form.status as ProductStatus,
       availability: form.availability as ProductAvailability,
-      features: form.features.filter(feature => feature.trim()),
+      isDigital: Boolean(form.isDigital),
+      features: (form.features || []).map((feature: string) => feature.trim()).filter(Boolean),
+      tags: (form.tags || []).map((tag: string) => tag.trim()).filter(Boolean),
       publicationDate: form.publicationDate ? new Date(form.publicationDate) : undefined
     }
 
-    if (!cleanedForm.isbn) delete cleanedForm.isbn;
-    if (!cleanedForm.publisher) delete cleanedForm.publisher;
-    if (!cleanedForm.instructor) delete cleanedForm.instructor;
-    if (!cleanedForm.videoUrl) delete cleanedForm.videoUrl;
-    if (!cleanedForm.downloadUrl) delete cleanedForm.downloadUrl;
-    if (!cleanedForm.previewUrl) delete cleanedForm.previewUrl;
-    if (!cleanedForm.originalPrice) delete cleanedForm.originalPrice;
+    // Optional originalPrice
+    if (form.originalPrice !== '' && form.originalPrice !== null && form.originalPrice !== undefined) {
+      const numOriginal = Number(form.originalPrice);
+      if (!isNaN(numOriginal) && numOriginal > 0) {
+        cleanedForm.originalPrice = numOriginal;
+      } else {
+        delete cleanedForm.originalPrice;
+      }
+    } else {
+      delete cleanedForm.originalPrice;
+    }
+
+    // Optional book-specific fields
+    if (form.category === 'books' || form.category === 'ebooks') {
+      if (form.pages !== '' && form.pages !== null && form.pages !== undefined && !isNaN(Number(form.pages)) && Number(form.pages) > 0) {
+        cleanedForm.pages = Number(form.pages);
+      } else {
+        delete cleanedForm.pages;
+      }
+    } else {
+      delete cleanedForm.isbn;
+      delete cleanedForm.publisher;
+      delete cleanedForm.publicationDate;
+      delete cleanedForm.pages;
+    }
+
+    // Optional course-specific fields
+    if (form.category === 'courses') {
+      if (form.duration !== '' && form.duration !== null && form.duration !== undefined && !isNaN(Number(form.duration)) && Number(form.duration) > 0) {
+        cleanedForm.duration = Number(form.duration);
+      } else {
+        delete cleanedForm.duration;
+      }
+    } else {
+      delete cleanedForm.duration;
+      delete cleanedForm.instructor;
+      delete cleanedForm.videoUrl;
+    }
+
+    // Digital vs physical fulfillment & logistics
+    if (cleanedForm.isDigital) {
+      delete cleanedForm.weight;
+      delete cleanedForm.dimensions;
+    } else {
+      delete cleanedForm.downloadUrl;
+      if (form.weight !== '' && form.weight !== null && form.weight !== undefined && !isNaN(Number(form.weight)) && Number(form.weight) > 0) {
+        cleanedForm.weight = Number(form.weight);
+      } else {
+        delete cleanedForm.weight;
+      }
+
+      const length = Number(form.dimensions?.length) || 0;
+      const width = Number(form.dimensions?.width) || 0;
+      const height = Number(form.dimensions?.height) || 0;
+      if (length > 0 || width > 0 || height > 0) {
+        cleanedForm.dimensions = { length, width, height };
+      } else {
+        delete cleanedForm.dimensions;
+      }
+    }
+
+    // Clean any empty strings, nulls, or undefined
+    for (const key of Object.keys(cleanedForm)) {
+      if (cleanedForm[key] === '' || cleanedForm[key] === null || cleanedForm[key] === undefined) {
+        delete cleanedForm[key];
+      }
+    }
     
     if (props.product) {
       await performUpdateProduct(props.product.id || props.product._id, cleanedForm)

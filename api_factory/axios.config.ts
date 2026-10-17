@@ -80,12 +80,20 @@ instanceArray.forEach((instance) => {
           ...err.response,
         };
       }
+      const formatErrorMessage = (data: any): string => {
+        const msg = data?.message || data?.error;
+        if (Array.isArray(msg)) {
+          return msg.join('. ');
+        }
+        return msg || "An error occurred";
+      };
+
       if (err.response.status === 401) {
         console.log(err.response.data.error)
         logOut();
         showToast({
           title: "Error",
-          message: err?.response?.data?.message || err?.response?.data?.error || "An error occured",
+          message: formatErrorMessage(err?.response?.data),
           toastType: "error",
           duration: 3000
         });
@@ -94,10 +102,10 @@ instanceArray.forEach((instance) => {
           ...err.response,
         };
       } else if (statusCodeStartsWith(err.response.status, 4)) {
-        if (err.response.data.message) {
+        if (err.response.data) {
           showToast({
             title: "Error",
-            message: err?.response?.data?.message || err?.response?.data?.error || "An error occured",
+            message: formatErrorMessage(err?.response?.data),
             toastType: "error",
             duration: 3000
           });
@@ -109,7 +117,7 @@ instanceArray.forEach((instance) => {
       } else if (err.response.status === 500) {
         showToast({
           title: "Error",
-          message: err?.response?.data?.message || err?.response?.data?.error || "An error occured",
+          message: formatErrorMessage(err?.response?.data),
           toastType: "error",
           duration: 3000
         });
@@ -120,7 +128,7 @@ instanceArray.forEach((instance) => {
       } else if (err.response.status === 409) {
         showToast({
           title: "Error",
-          message: err?.response?.data?.message || err?.response?.data?.error || "An error occured",
+          message: formatErrorMessage(err?.response?.data),
           toastType: "error",
           duration: 3000
         });

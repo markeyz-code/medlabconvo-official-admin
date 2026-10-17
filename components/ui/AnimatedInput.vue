@@ -537,7 +537,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string]
+  'update:modelValue': [value: string | number]
   'focus': [event: FocusEvent]
   'blur': [event: FocusEvent]
 }>()
@@ -581,7 +581,18 @@ const displayValue = computed(() => {
 
 const internalValue = computed({
   get: () => displayValue.value,
-  set: (val: any) => emit('update:modelValue', val)
+  set: (val: any) => {
+    if (props.type === 'number') {
+      if (val === '' || val === null || val === undefined) {
+        emit('update:modelValue', '')
+      } else {
+        const num = Number(val)
+        emit('update:modelValue', isNaN(num) ? val : num)
+      }
+    } else {
+      emit('update:modelValue', val)
+    }
+  }
 })
 
 const roundedClasses = computed(() => {
@@ -720,8 +731,13 @@ let autofillInterval: any = null
 onMounted(() => {
   autofillInterval = setInterval(() => {
     const el = inputRef.value || textareaRef.value
-    if (el && el.value && el.value !== props.modelValue) {
-      emit('update:modelValue', el.value)
+    if (el && el.value !== undefined && el.value !== '' && el.value != props.modelValue) {
+      if (props.type === 'number') {
+        const num = Number(el.value)
+        emit('update:modelValue', isNaN(num) ? el.value : num)
+      } else {
+        emit('update:modelValue', el.value)
+      }
     }
   }, 200)
   
