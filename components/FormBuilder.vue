@@ -2,9 +2,21 @@
   <div class="space-y-4 p-1">
     <!-- Form Basic Info -->
     <div class="bg-white/50 backdrop-blur-sm rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
-      <div class="flex items-center space-x-3 mb-2">
-        <div class="w-2 h-8 bg-[#033958] rounded-full"></div>
-        <h3 class="text-xl font-bold text-slate-900 tracking-tight">Basic Information</h3>
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center space-x-3">
+          <div class="w-2 h-8 bg-[#033958] rounded-full"></div>
+          <h3 class="text-xl font-bold text-slate-900 tracking-tight">Basic Information</h3>
+        </div>
+        <button
+          v-if="hasDraft && mode !== 'edit'"
+          @click="resetFormToEmpty"
+          type="button"
+          class="text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-xl transition-all flex items-center space-x-1.5 active:scale-95 cursor-pointer"
+          title="Clear saved draft and start fresh"
+        >
+          <Icon name="lucide:rotate-ccw" class="w-3.5 h-3.5" />
+          <span>Clear Cached Draft</span>
+        </button>
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -335,15 +347,15 @@
       <div class="flex space-x-4">
         <button
           type="button"
-          @click="$emit('cancel')"
-          class="px-8 py-3 border-2 border-slate-200 text-slate-600 rounded-2xl font-bold text-sm hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95"
+          @click="handleDiscard"
+          class="px-8 py-3 border-2 border-slate-200 text-slate-600 rounded-2xl font-bold text-sm hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95 cursor-pointer"
         >
           Discard Changes
         </button>
         <button
           @click="handleSubmit"
           type="button"
-          class="px-10 py-3 bg-gradient-to-r from-cyan-600 to-blue-700 text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center space-x-3"
+          class="px-10 py-3 bg-gradient-to-r from-cyan-600 to-blue-700 text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center space-x-3 cursor-pointer"
         >
           <Icon :name="mode === 'edit' ? 'lucide:save' : 'lucide:check-circle'" class="w-4 h-4" />
           <span>{{ mode === 'edit' ? 'Update' : 'Create' }} Professional Form</span>
@@ -354,7 +366,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watchEffect, onMounted, computed } from 'vue'
+import { ref, reactive, watch, watchEffect, onMounted, computed } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import { useGetPrograms } from '@/composables/modules/programs/useGetPrograms'
 import ImageUpload from '@/components/ImageUpload.vue'
@@ -385,23 +397,54 @@ const form = reactive({
   redirectUrl: ''
 })
 
+const hasDraft = ref(false)
+const STORAGE_KEY = 'medlab_standalone_form_draft'
+
 // Load programs on mount
 onMounted(async () => {
   await getPrograms()
 })
 
-const STORAGE_KEY = 'medlab_standalone_form_draft'
-
 // Cache form changes to localStorage
 watch(form, (newVal) => {
   if (!props.form) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newVal))
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newVal))
+      hasDraft.value = true
+    } catch (e) {}
   }
 }, { deep: true })
+
+const resetFormToEmpty = () => {
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+  } catch (e) {}
+  hasDraft.value = false
+  Object.assign(form, {
+    title: '',
+    slug: '',
+    bannerImage: '',
+    description: '',
+    instructions: '',
+    isActive: true,
+    programId: null,
+    fields: [],
+    successMessage: '',
+    redirectUrl: ''
+  })
+}
+
+const handleDiscard = () => {
+  if (props.mode !== 'edit') {
+    resetFormToEmpty()
+  }
+  emit('cancel')
+}
 
 // Initialize form with data if editing
 watchEffect(() => {
   if (props.form) {
+    hasDraft.value = false
     Object.assign(form, {
       title: props.form.title || '',
       slug: props.form.slug || '',
@@ -416,30 +459,19 @@ watchEffect(() => {
     })
   } else {
     // Check for draft in localStorage
-    const savedDraft = localStorage.getItem(STORAGE_KEY)
-    if (savedDraft) {
-      try {
+    try {
+      const savedDraft = localStorage.getItem(STORAGE_KEY)
+      if (savedDraft) {
         const draft = JSON.parse(savedDraft)
         Object.assign(form, draft)
+        hasDraft.value = true
         return // Skip default reset
-      } catch (e) {
-        console.error('Failed to parse form draft', e)
       }
+    } catch (e) {
+      console.error('Failed to parse form draft', e)
     }
 
-    // Reset form for new form if no draft
-    Object.assign(form, {
-      title: '',
-      slug: '',
-      bannerImage: '',
-      description: '',
-      instructions: '',
-      isActive: true,
-      programId: null,
-      fields: [],
-      successMessage: '',
-      redirectUrl: ''
-    })
+    resetFormToEmpty()
   }
 })
 
@@ -475,15 +507,58 @@ const removeOption = (field: any, index: number) => {
 }
 
 const handleSubmit = () => {
-  // Clean up form data before submitting
-  const formData = {
-    ...form,
-    programId: form.programId || undefined,
-    isStandalone: !form.programId
+  // Clean up form fields before submitting
+  const cleanFields = (form.fields || []).map((field: any) => {
+    const cleanField: any = {
+      id: field.id || uuidv4(),
+      label: field.label ? String(field.label).trim() : '',
+      type: field.type || 'text',
+      required: Boolean(field.required),
+      placeholder: field.placeholder ? String(field.placeholder).trim() : undefined,
+      description: field.description ? String(field.description).trim() : undefined,
+      allowOther: Boolean(field.allowOther),
+    }
+
+    if (['select', 'radio', 'checkbox'].includes(cleanField.type)) {
+      cleanField.options = (field.options || [])
+        .map((opt: string) => (typeof opt === 'string' ? opt.trim() : opt))
+        .filter((opt: string) => opt && opt.length > 0)
+    } else {
+      cleanField.options = []
+    }
+
+    return cleanField
+  })
+
+  const cleanProgramId =
+    form.programId &&
+    form.programId !== 'null' &&
+    form.programId !== 'undefined' &&
+    form.programId !== ''
+      ? form.programId
+      : undefined
+
+  let cleanRedirectUrl = form.redirectUrl ? String(form.redirectUrl).trim() : undefined
+  if (cleanRedirectUrl === '') cleanRedirectUrl = undefined
+
+  let cleanSlug = form.slug ? String(form.slug).trim() : undefined
+  if (cleanSlug === '') cleanSlug = undefined
+
+  const formData: any = {
+    title: form.title ? String(form.title).trim() : 'Untitled Form',
+    slug: cleanSlug,
+    bannerImage: form.bannerImage ? String(form.bannerImage).trim() : undefined,
+    description: form.description ? String(form.description).trim() : undefined,
+    instructions: form.instructions ? String(form.instructions).trim() : undefined,
+    isActive: Boolean(form.isActive),
+    programId: cleanProgramId,
+    isStandalone: !cleanProgramId,
+    fields: cleanFields,
+    successMessage: form.successMessage ? String(form.successMessage).trim() : undefined,
+    redirectUrl: cleanRedirectUrl
   }
-  
+
   emit('save', formData)
-  localStorage.removeItem(STORAGE_KEY)
 }
 </script>
 

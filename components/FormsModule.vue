@@ -423,23 +423,47 @@ const handleSaveForm = async (formData: any) => {
       delete cleanedFormData.accessToken
       delete cleanedFormData.programTitle
       
-      await updateForm(selectedForm.value._id, cleanedFormData)
-      showToast({
-        title: "Form Updated",
-        message: "Your changes have been successfully saved.",
-        toastType: "success",
-      })
+      const updated = await updateForm(selectedForm.value._id, cleanedFormData)
+      if (updated && (updated._id || updated.slug)) {
+        showToast({
+          title: "Form Updated",
+          message: "Your changes have been successfully saved.",
+          toastType: "success",
+        })
+        closeModal()
+        await getForms()
+      } else {
+        showToast({
+          title: "Update Failed",
+          message: "Could not update form. Please verify the inputs.",
+          toastType: "error",
+        })
+      }
     } else {
       const result = await createForm(formData)
-      if (result) {
+      if (result && (result._id || result.slug)) {
+        try {
+          localStorage.removeItem('medlab_standalone_form_draft')
+        } catch (e) {}
         generatedLink.value = `https://www.medlabconvo.com/forms/submit/${result.slug}`
         showLinkModal.value = true
+        closeModal()
+        await getForms()
+      } else {
+        showToast({
+          title: "Creation Failed",
+          message: "Could not create form. Please check your inputs.",
+          toastType: "error",
+        })
       }
     }
-    await getForms()
-    closeModal()
   } catch (error) {
     console.error('Error saving form:', error)
+    showToast({
+      title: "Error",
+      message: "An unexpected error occurred while saving the form.",
+      toastType: "error",
+    })
   }
 }
 

@@ -15,16 +15,22 @@ export const useCreateForm = () => {
     success.value = false
 
     try {
-      const response = await forms_api.$_create_form(formPayload)
+      const response: any = await forms_api.$_create_form(formPayload)
+      if (response?.type === 'ERROR' || ![200, 201].includes(response?.status)) {
+        const errorMsg = response?.data?.message || 'Failed to create form'
+        error.value = Array.isArray(errorMsg) ? errorMsg.join('. ') : errorMsg
+        return null
+      }
+
       if ([200, 201].includes(response?.status)) {
         success.value = true
         formData.value = response.data
-
+        return response.data
       }
-      return response.data
+      return null
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to create form'
-      throw err
+      return null
     } finally {
       loading.value = false
     }
