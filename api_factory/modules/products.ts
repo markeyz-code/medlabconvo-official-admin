@@ -48,7 +48,7 @@ export type Product = {
   stock?: number
   isbn?: string
   publisher?: string
-  publicationDate?: Date
+  publicationDate?: string | Date
   pages?: number
   duration?: number
   instructor?: string
@@ -81,7 +81,7 @@ export type CreateProductData = {
   stock?: number
   isbn?: string
   publisher?: string
-  publicationDate?: Date
+  publicationDate?: string | Date
   pages?: number
   duration?: number
   instructor?: string

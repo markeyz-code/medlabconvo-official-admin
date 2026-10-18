@@ -556,6 +556,15 @@ const handleSubmit = async () => {
   }
 
   try {
+    const pubDateStr = form.publicationDate ? String(form.publicationDate).trim() : '';
+    let formattedPubDate: string | undefined = undefined;
+    if (pubDateStr) {
+      const parsed = new Date(pubDateStr);
+      if (!isNaN(parsed.getTime())) {
+        formattedPubDate = parsed.toISOString();
+      }
+    }
+
     const cleanedForm: any = {
       ...form,
       price: numPrice,
@@ -566,7 +575,7 @@ const handleSubmit = async () => {
       isDigital: Boolean(form.isDigital),
       features: (form.features || []).map((feature: string) => feature.trim()).filter(Boolean),
       tags: (form.tags || []).map((tag: string) => tag.trim()).filter(Boolean),
-      publicationDate: form.publicationDate ? new Date(form.publicationDate) : undefined
+      publicationDate: formattedPubDate
     }
 
     // Optional originalPrice
@@ -587,6 +596,9 @@ const handleSubmit = async () => {
         cleanedForm.pages = Number(form.pages);
       } else {
         delete cleanedForm.pages;
+      }
+      if (!cleanedForm.publicationDate) {
+        delete cleanedForm.publicationDate;
       }
     } else {
       delete cleanedForm.isbn;
