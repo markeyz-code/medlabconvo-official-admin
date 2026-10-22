@@ -184,7 +184,9 @@
                     { label: 'Radio', value: 'radio' },
                     { label: 'Checkbox', value: 'checkbox' },
                     { label: 'Date', value: 'date' },
-                    { label: 'File', value: 'file' }
+                    { label: 'File', value: 'file' },
+                    { label: 'Phone', value: 'phone' },
+                    { label: 'URL / Link', value: 'url' }
                   ]"
                   position="top"
                 />

@@ -1,7 +1,7 @@
 import { GATEWAY_ENDPOINT } from "../axios.config"
 
 // Type Definitions
-export type FormFieldType = 'text' | 'email' | 'number' | 'textarea' | 'select' | 'radio' | 'checkbox' | 'date' | 'file'
+export type FormFieldType = 'text' | 'email' | 'number' | 'textarea' | 'select' | 'radio' | 'checkbox' | 'date' | 'file' | 'phone' | 'url'
 
 export type FormField = {
   id: string

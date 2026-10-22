@@ -330,8 +330,8 @@ import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // Composables
 const { forms, loading, getForms } = useGetForms()
-const { createForm } = useCreateForm()
-const { updateForm } = useUpdateForm()
+const { createForm, error: createError } = useCreateForm()
+const { updateForm, error: updateError } = useUpdateForm()
 const { softDeleteForm } = useSoftDeleteForm()
 const { showToast } = useCustomToast()
 
@@ -435,7 +435,7 @@ const handleSaveForm = async (formData: any) => {
       } else {
         showToast({
           title: "Update Failed",
-          message: "Could not update form. Please verify the inputs.",
+          message: updateError.value || "Could not update form. Please verify the inputs.",
           toastType: "error",
         })
       }
@@ -452,7 +452,7 @@ const handleSaveForm = async (formData: any) => {
       } else {
         showToast({
           title: "Creation Failed",
-          message: "Could not create form. Please check your inputs.",
+          message: createError.value || "Could not create form. Please check your inputs.",
           toastType: "error",
         })
       }
