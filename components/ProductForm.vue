@@ -261,11 +261,11 @@
           </div>
         </section>
 
-        <!-- Digital Delivery -->
-        <section v-if="form.isDigital" class="pt-6 border-t border-slate-50">
-          <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Fulfillment linkage</h4>
+        <!-- Purchase & Fulfillment Linkage -->
+        <section class="pt-6 border-t border-slate-50">
+          <h4 class="text-sm font-bold text-slate-400 mb-4 px-1">Purchase & Fulfillment linkage</h4>
           <div class="space-y-4">
-            <AnimatedInput v-model="form.downloadUrl" id="dlUrl" label="Secured Download Gateway (URL)" type="url" position="top" />
+            <AnimatedInput v-model="form.downloadUrl" id="dlUrl" label="Purchase / Selar Link or Download Gateway (URL)" type="url" position="top" />
             <AnimatedInput v-model="form.previewUrl" id="prevUrl" label="Public Asset Preview (URL)" type="url" position="bottom" />
           </div>
         </section>
@@ -625,7 +625,9 @@ const handleSubmit = async () => {
       delete cleanedForm.weight;
       delete cleanedForm.dimensions;
     } else {
-      delete cleanedForm.downloadUrl;
+      if (!cleanedForm.downloadUrl) {
+        delete cleanedForm.downloadUrl;
+      }
       if (form.weight !== '' && form.weight !== null && form.weight !== undefined && !isNaN(Number(form.weight)) && Number(form.weight) > 0) {
         cleanedForm.weight = Number(form.weight);
       } else {

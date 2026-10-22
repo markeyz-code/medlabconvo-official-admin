@@ -221,19 +221,19 @@
         </div>
       </div>
   
-      <!-- Digital Content -->
-      <div v-if="product.isDigital" class="mb-8">
-        <h3 class="text-lg font-semibold text-slate-900 mb-4">Digital Content</h3>
+      <!-- Digital Content & Fulfillment Links -->
+      <div v-if="product.isDigital || product.downloadUrl || product.previewUrl" class="mb-8">
+        <h3 class="text-lg font-semibold text-slate-900 mb-4">Purchase & Fulfillment Links</h3>
         <div class="bg-slate-50 rounded-lg p-6 space-y-4">
           <div v-if="product.downloadUrl" class="flex items-center justify-between">
-            <span class="text-slate-700">Download Link:</span>
+            <span class="text-slate-700">Purchase / Download Link:</span>
             <a
               :href="product.downloadUrl"
               target="_blank"
               class="text-indigo-600 hover:text-indigo-700 inline-flex items-center space-x-1"
             >
               <Download class="w-4 h-4" />
-              <span>Download</span>
+              <span>Open Link</span>
             </a>
           </div>
           <div v-if="product.previewUrl" class="flex items-center justify-between">
