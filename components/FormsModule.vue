@@ -35,8 +35,10 @@
 
     <!-- Forms Grid/Table Container -->
     <div class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-sm border border-slate-200 shadow-slate-200/50">
-      <div class="overflow-x-auto">
-        <table class="stack-table min-w-full divide-y divide-slate-100 text-sm">
+      <AdminTableLoading v-if="loading" :columns="6" :rows="6" label="Loading forms" />
+
+      <div v-else-if="filteredForms?.length" class="overflow-x-auto">
+        <table class="admin-table stack-table min-w-full divide-y divide-slate-100 text-sm">
           <thead class="bg-slate-50/50">
             <tr>
               <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-sm">
@@ -172,28 +174,24 @@
         </table>
       </div>
 
-      <!-- Empty State -->
-      <div v-if="!loading && filteredForms?.length === 0" class="text-center py-32">
-        <div class="w-24 h-24 bg-slate-50 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6 shadow-inner">
-          <Icon name="lucide:clipboard-list" class="w-10 h-10 text-slate-200" />
-        </div>
-        <h3 class="text-xl font-bold text-slate-900">No forms found</h3>
-        <p class="text-slate-400 mt-2 max-w-sm mx-auto font-medium">We couldn't find any programme forms matching your current filters.</p>
-        <button 
-          @click="searchQuery = ''; statusFilter = ''" 
-          class="mt-8 text-[#27628C] font-black text-xs  tracking-normal hover:underline"
+      <AdminEmptyState
+        v-else
+        icon="lucide:clipboard-list"
+        title="No forms found"
+        description="No programme forms match the current search or filters."
+      >
+        <button
+          v-if="searchQuery || statusFilter"
+          class="btn btn-outline"
+          @click="searchQuery = ''; statusFilter = ''"
         >
           Clear all filters
         </button>
-      </div>
-      
-      <!-- Loading State Overlay -->
-      <div v-if="loading" class="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center z-10">
-        <div class="flex flex-col items-center">
-          <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin"></div>
-          <span class="mt-4 text-xs font-black text-[#27628C]  tracking-normal">Syncing...</span>
-        </div>
-      </div>
+        <button v-else-if="hasPermission('forms:create')" class="btn btn-primary" @click="openCreateModal">
+          <Icon name="lucide:plus" class="w-4 h-4" />
+          Create form
+        </button>
+      </AdminEmptyState>
     </div>
 
     <!-- Side Drawers -->
@@ -328,6 +326,8 @@ import FormBuilder from '@/components/FormBuilder.vue'
 import FormSubmissions from '@/components/FormSubmissions.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import { useUser } from '@/composables/modules/auth/user'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 const { hasPermission } = useUser()
 

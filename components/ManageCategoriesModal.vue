@@ -25,7 +25,17 @@
 
       <!-- Categories List -->
       <div class="border rounded-2xl overflow-hidden bg-white">
-        <table class="stack-table w-full text-left border-collapse">
+        <AdminTableLoading v-if="loading" :columns="2" :rows="3" label="Loading categories" />
+
+        <AdminEmptyState
+          v-else-if="categories.length === 0"
+          icon="lucide:tags"
+          title="No categories defined"
+          description="Add a category using the field above."
+          compact
+        />
+
+        <table v-else class="admin-table stack-table w-full text-left border-collapse">
           <thead>
             <tr class="bg-slate-50 border-b">
               <th class="px-6 py-4 text-sm font-bold text-slate-400 ">Category Name</th>
@@ -33,13 +43,6 @@
             </tr>
           </thead>
           <tbody class="divide-y">
-            <tr v-if="loading" v-for="i in 3" :key="i" class="animate-pulse">
-              <td class="px-6 py-4"><div class="h-4 bg-slate-100 rounded w-1/3"></div></td>
-              <td class="px-6 py-4"><div class="h-4 bg-slate-100 rounded w-8 ml-auto"></div></td>
-            </tr>
-            <tr v-else-if="categories.length === 0">
-              <td colspan="2" class="px-6 py-10 text-center text-slate-400 text-sm">No categories defined yet.</td>
-            </tr>
             <tr v-for="cat in categories" :key="cat._id" class="hover:bg-slate-50 transition-colors">
               <td class="px-6 py-4 text-sm font-medium text-slate-700">{{ cat.name }}</td>
               <td class="px-6 py-4 text-right">
@@ -65,6 +68,8 @@ import { useCategories } from '@/composables/modules/publications/useCategories'
 import Modal from '@/components/Modal.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import Icon from '@/components/Icon.vue'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 const props = defineProps<{
   modelValue: boolean

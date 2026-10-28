@@ -16,13 +16,10 @@
     </div>
 
     <!-- Page Grid List -->
-    <div v-if="loading" class="flex flex-col items-center justify-center py-24 space-y-4">
-      <div class="w-12 h-12 rounded-full border-4 border-slate-50 border-t-[#27628C] animate-spin"></div>
-      <p class="text-sm font-bold text-slate-400 animate-pulse">Loading content...</p>
-    </div>
+    <AdminTableLoading card v-if="loading" :columns="5" :rows="5" label="Loading website content" />
 
     <div v-else-if="cmsPages.length" class="bg-white rounded-[32px] border border-slate-100 overflow-hidden shadow-sm">
-      <table class="stack-table w-full text-left border-collapse">
+      <table class="admin-table stack-table w-full text-left border-collapse">
         <thead>
           <tr class="bg-slate-50/50 border-b border-slate-100/50 hidden md:table-row">
             <th class="px-6 py-5 text-sm font-black  tracking-normal text-slate-400">Page Identity</th>
@@ -88,20 +85,18 @@
       </table>
     </div>
 
-    <!-- Empty State -->
-    <div v-else class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-[40px] border border-dashed border-slate-200">
-      <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mb-6">
-        <Icon name="lucide:layout" class="w-12 h-12 text-slate-100" />
-      </div>
-      <h3 class="text-xl font-bold text-slate-900 tracking-tight">No pages found</h3>
-      <p class="text-sm text-slate-500 mb-8 max-w-sm text-center leading-relaxed font-medium">Create a new page to manage its content and sections.</p>
-      <button v-if="hasPermission('cms:update')"
-        @click="openCreateModal"
-        class="px-10 py-4 bg-[#27628C] text-white rounded-2xl hover:bg-[#1B4A6B] transition-all font-bold text-sm"
-      >
+    <AdminEmptyState
+        card
+      v-else
+      icon="lucide:layout"
+      title="No pages found"
+      description="Create a new page to manage its content and sections."
+    >
+      <button v-if="hasPermission('cms:update')" class="btn btn-primary" @click="openCreateModal">
+        <Icon name="lucide:plus" class="w-4 h-4" />
         Create first page
       </button>
-    </div>
+    </AdminEmptyState>
 
     <!-- Slide-over for Edit/Create -->
     <SlideOver v-model="isSlideOverOpen" size="full" :title="isEditing ? 'Edit page' : 'Create page'">
@@ -205,6 +200,8 @@ import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import SlideOver from '@/components/SlideOver.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 import { useUser } from '@/composables/modules/auth/user'
 
 const { hasPermission } = useUser()

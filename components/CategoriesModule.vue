@@ -23,7 +23,21 @@
 
     <!-- Categories List -->
     <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden">
-      <table class="stack-table w-full text-left border-collapse">
+      <AdminTableLoading v-if="loading" :columns="2" :rows="4" label="Loading categories" />
+
+      <AdminEmptyState
+        v-else-if="categories.length === 0"
+        icon="lucide:tags"
+        title="No categories found"
+        description="Get started by creating your first Journo category."
+      >
+        <button v-if="hasPermission('publications:create')" class="btn btn-primary" @click="openCreateModal">
+          <Icon name="lucide:plus" class="w-4 h-4" />
+          Create category
+        </button>
+      </AdminEmptyState>
+
+      <table v-else class="admin-table stack-table w-full text-left border-collapse">
         <thead>
           <tr class="bg-slate-50 border-b border-slate-100">
             <th class="px-6 py-4 text-xs font-bold text-slate-400  tracking-wider">Category Name</th>
@@ -31,28 +45,6 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          <tr v-if="loading" v-for="i in 3" :key="i" class="animate-pulse">
-            <td class="px-6 py-4"><div class="h-4 bg-slate-100 rounded w-1/3"></div></td>
-            <td class="px-6 py-4"><div class="h-4 bg-slate-100 rounded w-8 ml-auto"></div></td>
-          </tr>
-          <tr v-else-if="categories.length === 0">
-            <td colspan="2" class="px-6 py-10 text-center">
-              <div class="flex flex-col items-center justify-center">
-                <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 mb-4">
-                  <Icon name="lucide:inbox" class="w-8 h-8" />
-                </div>
-                <h3 class="text-slate-900 font-bold mb-1">No categories found</h3>
-                <p class="text-slate-500 text-sm mb-4">Get started by creating your first category.</p>
-                <button v-if="hasPermission('publications:create')"
-                  @click="openCreateModal"
-                  class="px-6 py-2.5 bg-slate-100 text-slate-700 text-sm font-bold rounded-xl hover:bg-slate-200 transition-all flex items-center gap-2"
-                >
-                  <Icon name="lucide:plus" class="w-4 h-4" />
-                  <span>Create Category</span>
-                </button>
-              </div>
-            </td>
-          </tr>
           <tr v-for="cat in categories" :key="cat._id" class="hover:bg-slate-50/50 transition-colors group">
             <td class="px-6 py-4">
               <span class="text-sm font-bold text-slate-700">{{ cat.name }}</span>
@@ -151,6 +143,8 @@ import Modal from '@/components/Modal.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import Icon from '@/components/Icon.vue'
 import { useUser } from '@/composables/modules/auth/user'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 const { hasPermission } = useUser()
 

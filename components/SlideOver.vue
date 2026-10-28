@@ -2,7 +2,7 @@
   <Teleport to="body">
     <Transition name="sheet-root">
       <div v-if="modelValue" class="sheet-root" role="dialog" aria-modal="true" :aria-label="title">
-        <div class="sheet-backdrop" @click="close"></div>
+        <div class="sheet-backdrop" @click="handleBackdrop" />
 
         <Transition name="sheet-panel" appear>
           <section
@@ -10,7 +10,7 @@
             :class="['sheet-panel', sizeClass]"
             @click.stop
           >
-            <div class="sheet-grabber" aria-hidden="true"><span></span></div>
+            <div class="sheet-grabber" aria-hidden="true"><span /></div>
 
             <header class="sheet-head">
               <div class="sheet-head-copy">
@@ -19,7 +19,7 @@
                 <p v-if="description" class="sheet-description">{{ description }}</p>
               </div>
               <button class="sheet-close" type="button" aria-label="Close panel" @click="close">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="w-4 h-4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" class="w-4 h-4">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -49,11 +49,13 @@ const props = withDefaults(
     eyebrow?: string
     description?: string
     size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
+    closeOnBackdrop?: boolean
   }>(),
   {
     eyebrow: '',
     description: '',
     size: 'lg',
+    closeOnBackdrop: true,
   },
 )
 
@@ -105,6 +107,10 @@ const close = () => {
   emit('close')
 }
 
+const handleBackdrop = () => {
+  if (props.closeOnBackdrop) close()
+}
+
 onBeforeUnmount(() => {
   if (typeof window !== 'undefined') window.removeEventListener('keydown', onKeydown)
   if (props.modelValue) unlock()
@@ -124,22 +130,22 @@ onBeforeUnmount(() => {
 .sheet-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(6, 31, 48, 0.44);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  background: rgba(5, 27, 42, 0.46);
+  backdrop-filter: blur(7px) saturate(120%);
+  -webkit-backdrop-filter: blur(7px) saturate(120%);
 }
 
 .sheet-panel {
   position: relative;
-  width: 100%;
+  width: calc(100% - 16px);
   max-height: 92dvh;
+  margin: 0 8px calc(8px + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   background: #fff;
   border: 1px solid var(--mc-border);
-  border-bottom: 0;
-  border-radius: 24px 24px 0 0;
-  box-shadow: var(--mc-shadow-lg);
+  border-radius: 22px;
+  box-shadow: 0 32px 90px -32px rgba(4, 29, 47, 0.55), 0 4px 18px -8px rgba(4, 29, 47, 0.16);
   overflow: hidden;
   transform-origin: bottom center;
 }
@@ -147,11 +153,11 @@ onBeforeUnmount(() => {
 .sheet-grabber {
   display: flex;
   justify-content: center;
-  padding: 8px 0 2px;
+  padding: 9px 0 3px;
   flex-shrink: 0;
 }
 .sheet-grabber span {
-  width: 42px;
+  width: 40px;
   height: 4px;
   border-radius: 99px;
   background: #dbe6ee;
@@ -163,16 +169,17 @@ onBeforeUnmount(() => {
   align-items: flex-start;
   justify-content: space-between;
   gap: 14px;
-  padding: 12px 20px 14px;
+  padding: 11px 18px 15px;
   border-bottom: 1px solid var(--mc-border);
+  background: #fff;
 }
+
 .sheet-head-copy {
   min-width: 0;
 }
 .sheet-eyebrow {
-  font-family: var(--mc-font-heading);
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
+  font-size: 9px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--mc-brand);
   font-weight: 700;
@@ -180,7 +187,7 @@ onBeforeUnmount(() => {
 }
 .sheet-title {
   font-family: var(--mc-font-heading);
-  font-size: 19px;
+  font-size: 18px;
   line-height: 1.2;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -189,14 +196,15 @@ onBeforeUnmount(() => {
 }
 .sheet-description {
   margin-top: 4px;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.55;
   color: var(--mc-muted);
 }
+
 .sheet-close {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  width: 33px;
+  height: 33px;
+  border-radius: 9px;
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -215,7 +223,7 @@ onBeforeUnmount(() => {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 18px 20px 24px;
+  padding: 20px 22px 26px;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -224,7 +232,7 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+  padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--mc-border);
   background: #fbfdfe;
 }
@@ -240,71 +248,73 @@ onBeforeUnmount(() => {
 }
 
 .sheet-panel-enter-active {
-  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease;
+  transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease;
 }
 .sheet-panel-leave-active {
-  transition: transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.18s ease;
+  transition: transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.16s ease;
 }
 .sheet-panel-enter-from,
 .sheet-panel-leave-to {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(26px) scale(0.99);
 }
 
+/* Floating desktop panel — never glued to the viewport edge. */
 @media (min-width: 768px) {
   .sheet-root {
+    padding: 20px;
     align-items: stretch;
   }
   .sheet-panel {
-    height: 100%;
+    width: 100%;
+    height: calc(100dvh - 40px);
     max-height: none;
-    border-radius: 0;
-    border: 0;
-    border-left: 1px solid var(--mc-border);
-    box-shadow: -24px 0 70px -30px rgba(16, 42, 58, 0.3);
+    margin: 0 0 0 auto;
+    border-radius: 20px;
     transform-origin: right center;
   }
   .sheet-grabber {
     display: none;
   }
   .sheet-head {
-    padding: 22px 24px 18px;
+    padding: 18px 22px 15px;
   }
   .sheet-title {
-    font-size: 21px;
+    font-size: 20px;
   }
   .sheet-body {
-    padding: 22px 24px 32px;
+    padding: 20px 22px 26px;
   }
   .sheet-footer {
-    padding: 16px 24px;
+    padding: 14px 22px;
   }
   .sheet-panel-enter-from,
   .sheet-panel-leave-to {
-    opacity: 1;
-    transform: translateX(100%);
+    opacity: 0;
+    transform: translateX(34px) scale(0.985);
   }
 }
 
+/* Compact drawer widths. `full` is intentionally not full-viewport. */
 .sheet-sm {
-  max-width: 430px;
+  max-width: 380px;
 }
 .sheet-md {
-  max-width: 540px;
+  max-width: 460px;
 }
 .sheet-lg {
-  max-width: 680px;
+  max-width: 560px;
 }
 .sheet-xl {
-  max-width: 880px;
+  max-width: 620px;
 }
 .sheet-full {
-  max-width: 100%;
+  max-width: 680px;
 }
 
-@media (min-width: 1024px) {
-  .sheet-full {
-    max-width: min(92vw, 1200px);
+@media (max-width: 767px) {
+  .sheet-panel {
+    max-width: none;
   }
 }
 </style>

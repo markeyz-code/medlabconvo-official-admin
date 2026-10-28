@@ -161,28 +161,28 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 0;
+  padding: 8px;
 }
 
 .modal-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(6, 31, 48, 0.46);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  background: rgba(5, 27, 42, 0.48);
+  backdrop-filter: blur(7px) saturate(120%);
+  -webkit-backdrop-filter: blur(7px) saturate(120%);
 }
 
 .modal-panel {
   position: relative;
   width: 100%;
-  max-height: 92dvh;
+  max-width: 100%;
+  max-height: 90dvh;
   display: flex;
   flex-direction: column;
   background: #fff;
   border: 1px solid var(--mc-border);
-  border-bottom: 0;
-  border-radius: 24px 24px 0 0;
-  box-shadow: var(--mc-shadow-lg);
+  border-radius: 22px;
+  box-shadow: 0 32px 90px -32px rgba(4, 29, 47, 0.55), 0 4px 18px -8px rgba(4, 29, 47, 0.16);
   overflow: hidden;
   transform-origin: bottom center;
 }
@@ -190,11 +190,11 @@ onBeforeUnmount(() => {
 .modal-grabber {
   display: flex;
   justify-content: center;
-  padding: 8px 0 2px;
+  padding: 9px 0 3px;
   flex-shrink: 0;
 }
 .modal-grabber span {
-  width: 42px;
+  width: 40px;
   height: 4px;
   border-radius: 99px;
   background: #dbe6ee;
@@ -205,8 +205,8 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  padding: 14px 20px 14px;
+  gap: 14px;
+  padding: 11px 18px 15px;
   border-bottom: 1px solid var(--mc-border);
 }
 
@@ -214,9 +214,8 @@ onBeforeUnmount(() => {
   min-width: 0;
 }
 .modal-eyebrow {
-  font-family: var(--mc-font-heading);
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
+  font-size: 9px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--mc-brand);
   font-weight: 700;
@@ -224,7 +223,7 @@ onBeforeUnmount(() => {
 }
 .modal-title {
   font-family: var(--mc-font-heading);
-  font-size: 19px;
+  font-size: 18px;
   line-height: 1.2;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -233,15 +232,15 @@ onBeforeUnmount(() => {
 }
 .modal-description {
   margin-top: 4px;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.55;
   color: var(--mc-muted);
 }
 
 .modal-close {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  width: 33px;
+  height: 33px;
+  border-radius: 9px;
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -269,7 +268,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
-  padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+  padding: 13px 18px calc(13px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--mc-border);
   background: #fbfdfe;
 }
@@ -285,7 +284,7 @@ onBeforeUnmount(() => {
 }
 
 .modal-panel-enter-active {
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
 }
 .modal-panel-leave-active {
   transition: transform 0.2s cubic-bezier(0.4, 0, 1, 1), opacity 0.16s ease;
@@ -293,63 +292,58 @@ onBeforeUnmount(() => {
 .modal-panel-enter-from,
 .modal-panel-leave-to {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(24px) scale(0.99);
 }
 
-/* Desktop: centred card, no grabber. */
+/* Desktop: a floating centred card. */
 @media (min-width: 640px) {
   .modal-root {
     align-items: center;
-    padding: 32px 20px;
+    padding: 24px;
   }
   .modal-panel {
-    max-height: min(88vh, 920px);
-    border-radius: 22px;
-    border-bottom: 1px solid var(--mc-border);
+    max-height: min(88dvh, 900px);
+    border-radius: 20px;
   }
   .modal-grabber {
     display: none;
   }
   .modal-head {
-    padding: 20px 24px 16px;
+    padding: 18px 22px 15px;
   }
   .modal-title {
-    font-size: 21px;
+    font-size: 20px;
   }
   .modal-footer {
-    padding: 16px 24px;
+    padding: 14px 22px;
   }
   .modal-panel-enter-from,
   .modal-panel-leave-to {
-    transform: translateY(10px) scale(0.98);
+    transform: translateY(10px) scale(0.985);
   }
 }
 
 /* Sizes */
 .modal-sm {
-  max-width: 430px;
+  max-width: 420px;
 }
 .modal-md {
-  max-width: 560px;
+  max-width: 540px;
 }
 .modal-lg {
-  max-width: 720px;
+  max-width: 700px;
 }
 .modal-xl {
-  max-width: 940px;
+  max-width: 900px;
 }
 .modal-2xl {
-  max-width: 1180px;
+  max-width: 1080px;
 }
 .modal-full {
-  max-width: 1400px;
+  max-width: 1220px;
 }
 
-/* Mobile: full-width sheet. */
 @media (max-width: 639px) {
-  .modal-panel {
-    max-width: 100% !important;
-  }
   .modal-footer {
     flex-direction: column-reverse;
   }

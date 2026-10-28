@@ -48,21 +48,21 @@
 
     <!-- Members Table -->
     <div class="bg-white rounded-xl border border-slate-200 overflow-hidden relative min-h-[400px]">
-      <!-- Loading Overlay -->
-      <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
-         <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
-         <span class="text-sm font-medium  tracking-normal text-[#27628C]">Loading members...</span>
-      </div>
+      <AdminTableLoading v-if="loading" :columns="5" :rows="6" label="Loading team members" />
 
-      <div v-if="!loading && filteredMembers.length === 0" class="py-40 text-center">
-        <div class="w-24 h-24 bg-slate-50 rounded-[1.25rem] flex items-center justify-center mx-auto mb-8">
-           <Icon name="lucide:users-round" class="w-12 h-12 text-slate-200" />
-        </div>
-        <h3 class="text-xl font-medium text-slate-900  tracking-normal ">No Members Found</h3>
-        <p class="text-sm font-medium text-slate-400  tracking-normal mt-2">No team members match your current filters.</p>
-      </div>
+      <AdminEmptyState
+        v-else-if="filteredMembers.length === 0"
+        icon="lucide:users-round"
+        title="No team members found"
+        description="No team members match the current filters."
+      >
+        <button v-if="hasPermission('teams:create')" class="btn btn-primary" @click="openAddDrawer">
+          <Icon name="lucide:user-plus" class="w-4 h-4" />
+          Add team member
+        </button>
+      </AdminEmptyState>
 
-      <table v-else class="stack-table w-full text-left border-collapse">
+      <table v-else class="admin-table stack-table w-full text-left border-collapse">
         <thead>
           <tr class="border-b border-slate-100">
             <th class="px-10 py-8 text-sm font-medium  tracking-normal text-slate-400">Photo</th>
@@ -174,6 +174,8 @@ import SlideOver from '@/components/SlideOver.vue'
 import TeamMemberForm from '@/components/TeamMemberForm.vue'
 import TeamCategoryManager from '@/components/TeamCategoryManager.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 import { useUser } from '@/composables/modules/auth/user'
 
 const { hasPermission } = useUser()

@@ -78,14 +78,10 @@
 
     <!-- Subscriptions Ledger -->
     <div class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden relative">
-       <!-- Loading Overlay -->
-      <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center">
-        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
-        <span class="text-sm font-bold text-[#27628C]">Loading records...</span>
-      </div>
+      <AdminTableLoading v-if="loading" :columns="6" :rows="6" label="Loading subscriptions" />
 
-      <div class="overflow-x-auto text-sm">
-        <table class="stack-table w-full text-left border-separate border-spacing-0">
+      <div v-else-if="filteredSubscriptions.length" class="overflow-x-auto text-sm">
+        <table class="admin-table stack-table w-full text-left border-separate border-spacing-0">
           <thead>
             <tr class="bg-slate-50/50 text-sm font-bold text-slate-400">
               <th class="px-10 py-6 border-b border-slate-100">Email address</th>
@@ -149,14 +145,12 @@
         </table>
       </div>
       
-      <!-- Empty State -->
-      <div v-if="!loading && filteredSubscriptions.length === 0" class="py-32 text-center bg-slate-50/30">
-        <div class="w-24 h-24 bg-white rounded-[1.25rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-          <Icon name="lucide:newspaper" class="w-10 h-10 text-slate-100" />
-        </div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No records found</h3>
-        <p class="text-slate-400 text-sm font-medium max-w-[280px] mx-auto leading-relaxed">No subscriber identities found in the database.</p>
-      </div>
+      <AdminEmptyState
+        v-else
+        icon="lucide:mail"
+        title="No subscribers found"
+        description="No subscriber identities match the current filters."
+      />
     </div>
 
     <!-- Unsubscribe Confirmation Modal -->
@@ -189,6 +183,8 @@ import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Icon from '@/components/Icon.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 import { useUser } from '@/composables/modules/auth/user'
 
 const { hasPermission } = useUser()

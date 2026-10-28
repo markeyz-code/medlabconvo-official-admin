@@ -19,10 +19,6 @@ export const useGetSeasons = () => {
         const response = await labcast_api.$_get_seasons()
         if ([200, 201].includes(response?.status)) {
         seasons.value = response.data
-        showToast({
-                  title: "Success",
-                  toastType: "success",
-                });
         }
         return response.data
       } catch (err: any) {

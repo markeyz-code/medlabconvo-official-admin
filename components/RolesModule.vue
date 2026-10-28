@@ -27,14 +27,10 @@
 
     <!-- Roles Inventory -->
     <div class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden relative">
-      <!-- Loading Overlay -->
-      <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center">
-        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
-        <span class="text-sm font-bold text-[#27628C]">Loading roles...</span>
-      </div>
+      <AdminTableLoading v-if="loading" :columns="4" :rows="5" label="Loading roles" />
 
-      <div class="overflow-x-auto text-sm">
-        <table class="stack-table w-full text-left border-separate border-spacing-0">
+      <div v-else-if="filteredRoles.length" class="overflow-x-auto text-sm">
+        <table class="admin-table stack-table w-full text-left border-separate border-spacing-0">
           <thead>
             <tr class="bg-slate-50/50 text-sm font-bold text-slate-400">
               <th class="px-10 py-6 border-b border-slate-100">Role name</th>
@@ -92,25 +88,21 @@
         </table>
       </div>
       
-      <!-- Empty State -->
-      <div v-if="!loading && filteredRoles.length === 0" class="py-32 text-center bg-slate-50/30">
-        <div class="w-24 h-24 bg-white rounded-[1.25rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-          <Icon name="lucide:shield-check" class="w-10 h-10 text-slate-100" />
-        </div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No roles found</h3>
-        <p class="text-slate-400 text-sm font-medium max-w-[240px] mx-auto leading-relaxed">No administrative roles found in the database.</p>
-        <button
-          v-if="canCreate"
-          @click="openCreateModal"
-          class="mt-8 px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all active:scale-95"
-        >
+      <AdminEmptyState
+        v-else
+        icon="lucide:shield-check"
+        title="No roles found"
+        description="No administrative roles exist yet. Create the first role to scope access."
+      >
+        <button v-if="canCreate" class="btn btn-primary" @click="openCreateModal">
+          <Icon name="lucide:plus" class="w-4 h-4" />
           Create first role
         </button>
-      </div>
+      </AdminEmptyState>
     </div>
 
     <!-- Configuration Sheet -->
-    <SlideOver v-model="showModal" size="full" :title="isEditing ? 'Edit role' : 'Create role'">
+    <SlideOver v-model="showModal" size="lg" :title="isEditing ? 'Edit role' : 'Create role'">
       <div class="p-8 space-y-10">
         <div class="space-y-8">
            <AnimatedInput
@@ -134,11 +126,11 @@
 
         <div v-if="canReadPermissions" class="space-y-6">
           <div class="flex items-center justify-between px-1">
-            <label class="text-sm font-bold text-slate-400">Permissions matrix</label>
-            <span class="text-sm font-bold text-blue-600">{{ form.permissions.length }} selected</span>
+            <label class="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">Permissions matrix</label>
+            <span class="text-xs font-semibold text-[#27628C]">{{ form.permissions.length }} selected</span>
           </div>
           
-          <div class="bg-slate-50/50 border border-slate-100 rounded-[1.25rem] p-6 max-h-[400px] overflow-y-auto custom-scrollbar">
+          <div class="bg-slate-50/50 border border-slate-100 rounded-2xl p-3 max-h-[320px] overflow-y-auto custom-scrollbar">
             <div v-if="permsLoading" class="text-center py-12 flex flex-col items-center">
               <div class="w-8 h-8 border-2 border-slate-200 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
               <span class="text-sm font-bold text-slate-400">Loading permissions...</span>
@@ -146,31 +138,31 @@
             <div v-else-if="permissions.length === 0" class="text-center py-12">
               <p class="text-sm font-bold text-slate-400">No permissions found</p>
             </div>
-            <div v-else class="grid grid-cols-1 gap-3">
+            <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-2">
               <label 
                 v-for="perm in permissions" 
                 :key="perm._id" 
                 :class="[
-                  'flex items-start space-x-4 p-5 rounded-2xl transition-all cursor-pointer border',
+                  'flex items-start gap-3 p-3.5 rounded-xl transition-all cursor-pointer border',
                   form.permissions.includes(perm.name) 
                     ? 'bg-white border-[#27628C] ring-1 ring-[#27628C]' 
-                    : 'bg-white border-slate-50 hover:border-slate-200'
+                    : 'bg-white border-slate-100 hover:border-[#27628C]/30'
                 ]"
               >
-                <div class="relative flex items-center mt-1">
+                <div class="relative flex items-center mt-0.5 flex-shrink-0">
                   <input
                     type="checkbox"
                     :value="perm.name"
                     v-model="form.permissions"
-                    class="peer h-5 w-5 cursor-pointer appearance-none rounded-lg border border-slate-200 bg-slate-50 transition-all checked:bg-[#27628C] checked:border-[#27628C] outline-none"
+                    class="peer h-4 w-4 cursor-pointer appearance-none rounded-md border border-slate-300 bg-white transition-all checked:bg-[#27628C] checked:border-[#27628C] outline-none"
                   />
                   <div class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100">
                     <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"/></svg>
                   </div>
                 </div>
-                <div class="flex-1">
-                  <div class="text-sm font-bold text-slate-900 font-mono mb-1">{{ perm.name }}</div>
-                  <div class="text-sm font-medium text-slate-500 leading-relaxed">{{ perm.description || `${perm.action} authorization for ${perm.resource}.` }}</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[12px] font-semibold text-slate-900 mb-0.5 truncate">{{ perm.name }}</div>
+                  <div class="text-[11px] font-medium text-slate-500 leading-snug line-clamp-2">{{ perm.description || `${perm.action} authorization for ${perm.resource}.` }}</div>
                 </div>
               </label>
             </div>
@@ -232,6 +224,8 @@ import Icon from '@/components/Icon.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import { useUser } from '@/composables/modules/auth/user'
 import { roleLabel } from '@/utils/permissions'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 // State
 const searchQuery = ref('')

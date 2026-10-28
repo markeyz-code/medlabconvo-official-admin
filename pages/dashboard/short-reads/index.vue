@@ -1,28 +1,37 @@
 <template>
   <div class="space-y-6">
-    <div class="flex justify-between items-center">
-      <div>
-        <h2 class="text-lg font-bold text-gray-900">Short Reads</h2>
-        <p class="text-gray-500">Manage Zikoko-style short read stories.</p>
-      </div>
-      <NuxtLink v-if="hasPermission('short_reads:create')" to="/dashboard/short-reads/create" class="px-4 py-2 bg-[#27628C] text-white rounded-lg hover:bg-opacity-90">
-        Create Short Read
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <p class="text-sm text-slate-500">
+        <span class="font-semibold text-slate-900">{{ shortReads.length }}</span>
+        story {{ shortReads.length === 1 ? 'carousel' : 'carousels' }} in the library
+      </p>
+      <NuxtLink
+        v-if="hasPermission('short_reads:create')"
+        to="/dashboard/short-reads/create"
+        class="btn btn-primary w-full sm:w-auto"
+      >
+        <Icon name="lucide:plus" class="w-4 h-4" />
+        Create short read
       </NuxtLink>
     </div>
 
-    <div class="bg-white rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.02)] border border-gray-100 overflow-hidden">
-      <div v-if="loading" class="flex justify-center items-center py-20">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#27628C]"></div>
-      </div>
-      <div v-else-if="!shortReads.length" class="text-center py-20 text-gray-500">
-        <div class="mb-4 text-gray-400">
-          <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-        </div>
-        <h3 class="text-lg font-medium text-gray-900">No short reads found</h3>
-        <p class="mt-1 text-sm text-gray-500">Get started by creating a new Zikoko-style short read.</p>
-      </div>
+    <div class="bg-white rounded-[18px] border border-slate-100 overflow-hidden">
+      <AdminTableLoading v-if="loading" :columns="4" :rows="5" label="Loading short reads" />
+
+      <AdminEmptyState
+        v-else-if="!shortReads.length"
+        icon="lucide:layers"
+        title="No short reads found"
+        description="Get started by creating a new short-form story carousel."
+      >
+        <NuxtLink v-if="hasPermission('short_reads:create')" to="/dashboard/short-reads/create" class="btn btn-primary">
+          <Icon name="lucide:plus" class="w-4 h-4" />
+          Create short read
+        </NuxtLink>
+      </AdminEmptyState>
+
       <div v-else class="table-scroll">
-        <table class="w-full text-left border-collapse stack-table">
+        <table class="admin-table w-full text-left border-collapse stack-table">
           <thead>
             <tr class="bg-gray-50/50 border-b border-gray-100 text-xs  tracking-wider text-gray-500">
               <th class="py-4 px-6 font-semibold">Story Details</th>
@@ -95,6 +104,9 @@ import { ref, onMounted } from 'vue'
 import { useGetShortReads } from '@/composables/modules/short-reads/useGetShortReads'
 import { useDeleteShortRead } from '@/composables/modules/short-reads/useDeleteShortRead'
 import { useUser } from '@/composables/modules/auth/user'
+import Icon from '@/components/Icon.vue'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 const { shortReads, loading, getShortReads } = useGetShortReads()
 const { deleteShortRead } = useDeleteShortRead()

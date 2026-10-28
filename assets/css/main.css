@@ -439,6 +439,16 @@
   }
 }
 
+/* Drawers/modals own their padding: flatten direct legacy wrappers. */
+.sheet-body > .p-8,
+.sheet-body > .p-6,
+.sheet-body > .p-7,
+.modal-body > .p-8,
+.modal-body > .p-6,
+.modal-body > .p-7 {
+  padding: 0 !important;
+}
+
 /* ==========================================================================
    Legacy utility normalisation
    ========================================================================== */
@@ -572,6 +582,344 @@ html {
   opacity: 0;
 }
 
+
+/* ==========================================================================
+   Unified data tables
+   ========================================================================== */
+.admin-table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  font-family: var(--mc-font-body) !important;
+  font-size: 13px !important;
+  color: var(--mc-body) !important;
+  table-layout: auto;
+}
+
+.admin-table thead th {
+  font-family: var(--mc-font-body) !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--mc-subtle) !important;
+  background: #f8fbfd !important;
+  padding: 12px 16px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--mc-border) !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+}
+
+.admin-table tbody td {
+  font-family: var(--mc-font-body) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+  color: var(--mc-body) !important;
+  padding: 14px 16px !important;
+  border: 0 !important;
+  border-bottom: 1px solid #eef4f8 !important;
+  vertical-align: middle !important;
+  white-space: normal !important;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: 0 !important;
+}
+.admin-table tbody tr {
+  transition: background-color 0.15s ease !important;
+}
+.admin-table tbody tr:hover {
+  background: #fbfdfe !important;
+}
+
+/* One type scale across every table, regardless of legacy utilities. */
+.admin-table tbody td .text-xl,
+.admin-table tbody td .text-lg,
+.admin-table tbody td .text-base {
+  font-family: var(--mc-font-body) !important;
+  font-size: 13.5px !important;
+  line-height: 1.35 !important;
+  font-weight: 600 !important;
+}
+.admin-table tbody td .text-sm {
+  font-family: var(--mc-font-body) !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+.admin-table tbody td .text-xs {
+  font-family: var(--mc-font-body) !important;
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+}
+.admin-table tbody td .font-black,
+.admin-table tbody td .font-extrabold,
+.admin-table tbody td .font-bold {
+  font-weight: 600 !important;
+}
+.admin-table tbody td .font-medium {
+  font-weight: 500 !important;
+}
+.admin-table tbody td .font-mono,
+.admin-table tbody td code {
+  font-family: var(--mc-font-body) !important;
+  letter-spacing: 0 !important;
+}
+
+/* Consistent avatars / thumbnails inside rows. */
+.admin-table tbody td .w-14,
+.admin-table tbody td .w-16,
+.admin-table tbody td .w-12 {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  border-radius: 10px !important;
+}
+.admin-table tbody td .w-14.text-white,
+.admin-table tbody td .w-16.text-white,
+.admin-table tbody td .w-12.text-white {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+/* Consistent square icon actions in every table. */
+.admin-table tbody td button[title],
+.admin-table tbody td a[title] {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9px !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  color: var(--mc-muted) !important;
+  box-shadow: none !important;
+}
+
+.admin-table tbody td button[title]:hover,
+.admin-table tbody td a[title]:hover {
+  background: var(--mc-brand-50) !important;
+  border-color: var(--mc-brand-100) !important;
+  color: var(--mc-brand) !important;
+}
+
+.admin-table tbody td button[title*="Delete"]:hover,
+.admin-table tbody td button[title*="Remove"]:hover,
+.admin-table tbody td button[title*="delete"]:hover,
+.admin-table tbody td button[title*="remove"]:hover {
+  background: var(--mc-danger-soft) !important;
+  border-color: #fecaca !important;
+  color: var(--mc-danger) !important;
+}
+
+.admin-table tbody td button[title] svg,
+.admin-table tbody td a[title] svg {
+  color: inherit !important;
+}
+.admin-table tbody td button[title] svg,
+.admin-table tbody td a[title] svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* Make every table card consistent. */
+.admin-content .bg-white:has(.admin-table) {
+  border-radius: 18px !important;
+  border-color: var(--mc-border) !important;
+  box-shadow: var(--mc-shadow-sm) !important;
+}
+
+/* One card radius across the admin canvas. */
+.admin-content .bg-white.border {
+  border-radius: 18px !important;
+}
+
+@media (max-width: 767px) {
+  .admin-table,
+  .admin-table tbody td {
+    font-size: 12.5px !important;
+  }
+  .admin-table tbody td .text-xl,
+  .admin-table tbody td .text-lg,
+  .admin-table tbody td .text-base {
+    font-size: 13px !important;
+  }
+  .admin-table tbody td .text-sm {
+    font-size: 11.5px !important;
+  }
+  .admin-table tbody td .text-xs {
+    font-size: 10.5px !important;
+  }
+  .admin-table tbody td .w-14,
+  .admin-table tbody td .w-16,
+  .admin-table tbody td .w-12 {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+  }
+  .admin-table tbody td button[title],
+  .admin-table tbody td a[title] {
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+  }
+}
+
+/* ==========================================================================
+   Shared empty & loading states
+   ========================================================================== */
+.admin-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(36px, 7vw, 64px) 24px;
+  gap: 0;
+}
+.admin-empty-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--mc-brand-50);
+  border: 1px solid var(--mc-brand-100);
+  color: var(--mc-brand);
+  margin-bottom: 14px;
+}
+.admin-empty-icon svg {
+  width: 24px;
+  height: 24px;
+}
+.admin-empty-title {
+  font-family: var(--mc-font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--mc-ink);
+  margin: 0 0 5px;
+}
+.admin-empty-copy {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--mc-muted);
+  max-width: 340px;
+  margin: 0;
+}
+.admin-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+.admin-empty-state.is-card {
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  border-radius: 18px;
+  box-shadow: var(--mc-shadow-sm);
+}
+.admin-empty-state.is-compact {
+  padding: 28px 16px;
+}
+.admin-empty-state.is-compact .admin-empty-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  margin-bottom: 10px;
+}
+.admin-empty-state.is-compact .admin-empty-title {
+  font-size: 14px;
+}
+
+.admin-table-loading {
+  padding: 18px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.admin-table-loading.is-card {
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  border-radius: 18px;
+  box-shadow: var(--mc-shadow-sm);
+}
+.admin-table-loading.is-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(3px);
+  justify-content: center;
+  padding: 24px;
+}
+.atl-row,
+.atl-head {
+  display: grid;
+  grid-template-columns: repeat(var(--columns, 5), minmax(0, 1fr));
+  gap: 14px;
+  align-items: center;
+}
+.atl-head {
+  padding: 4px 0 12px;
+  border-bottom: 1px solid var(--mc-border);
+}
+.atl-line {
+  height: 9px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #eef4f8 20%, #f7fbfd 42%, #eef4f8 64%);
+  background-size: 220% 100%;
+  animation: atl-shimmer 1.5s linear infinite;
+}
+.atl-head .atl-line {
+  height: 7px;
+  opacity: 0.8;
+}
+.atl-row {
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f8fb;
+}
+.atl-row:last-of-type {
+  border-bottom: 0;
+}
+.atl-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 10px auto 0;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--mc-subtle);
+}
+.atl-spinner {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 2px solid var(--mc-brand-100);
+  border-top-color: var(--mc-brand);
+  animation: spin 0.7s linear infinite;
+}
+@keyframes atl-shimmer {
+  to { background-position: -220% 0; }
+}
+
+.admin-skeleton-card {
+  background: linear-gradient(90deg, #eef4f8 20%, #f8fbfd 42%, #eef4f8 64%);
+  background-size: 220% 100%;
+  border: 1px solid var(--mc-border);
+  border-radius: 18px;
+  animation: atl-shimmer 1.5s linear infinite;
+}
+
 /* ==========================================================================
    Responsive behaviour
    ========================================================================== */
@@ -596,15 +944,15 @@ html {
   .stack-table tr {
     background: #fff;
     border: 1px solid var(--mc-border);
-    border-radius: 16px;
-    padding: 8px 2px;
-    margin-bottom: 12px;
-    box-shadow: var(--mc-shadow-sm);
+    border-radius: 15px;
+    padding: 4px 0;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 2px rgba(16, 42, 58, 0.03);
   }
 
   .stack-table tbody td {
     border: 0 !important;
-    padding: 9px 16px !important;
+    padding: 8px 14px !important;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -612,6 +960,26 @@ html {
     text-align: right;
     white-space: normal !important;
     max-width: none !important;
+  }
+
+  .stack-table tbody td:first-child {
+    display: block !important;
+    text-align: left !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1px dashed #eef4f8 !important;
+  }
+
+  .stack-table tbody td:first-child::before {
+    display: none !important;
+  }
+
+  .stack-table tbody td:first-child > * {
+    max-width: 100% !important;
+  }
+
+  .stack-table tbody td:first-child > div.flex {
+    justify-content: flex-start !important;
+    align-items: center !important;
   }
 
   .stack-table tbody td[data-label]::before {

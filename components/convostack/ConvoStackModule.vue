@@ -46,9 +46,11 @@
       </div>
     </div>
 
+    <AdminTableLoading card v-if="loading" :columns="6" :rows="6" label="Loading publications" />
+
     <!-- Publications Table -->
-    <div v-if="!loading && filteredPublications.length > 0" class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-      <table class="stack-table w-full text-left">
+    <div v-else-if="filteredPublications.length" class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+      <table class="admin-table stack-table w-full text-left">
         <thead>
           <tr class="border-b border-slate-100 bg-slate-50/50">
             <th class="px-6 py-4 text-xs font-semibold text-slate-500">Publication</th>
@@ -132,26 +134,18 @@
       </table>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="flex flex-col items-center justify-center py-24 space-y-4">
-      <div class="w-12 h-12 rounded-full border-4 border-slate-50 border-t-[#27628C] animate-spin"></div>
-      <p class="text-sm font-bold text-slate-400 animate-pulse">Loading publications...</p>
-    </div>
-
-    <!-- Empty State -->
-    <div v-else-if="filteredPublications.length === 0" class="flex flex-col items-center justify-center py-24 bg-white rounded-[40px] border border-dashed border-slate-200">
-      <div class="w-24 h-24 bg-slate-50 rounded-3xl flex items-center justify-center mb-6">
-        <Icon name="lucide:sparkles" class="w-12 h-12 text-slate-200" />
-      </div>
-      <h3 class="text-lg font-bold text-slate-900 tracking-tight">No publications found</h3>
-      <p class="text-sm text-slate-500 mb-8 max-w-sm text-center leading-relaxed">Your publication archive is currently empty. Start by creating your first post.</p>
-      <button v-if="hasPermission('convostack:create')"
-        @click="openEditor(null)"
-        class="px-10 py-4 bg-[#27628C] text-white rounded-2xl hover:bg-[#1B4A6B] transition-all font-bold text-sm"
-      >
+    <AdminEmptyState
+        card
+      v-else
+      icon="lucide:book-open"
+      title="No publications found"
+      description="Your publication archive is empty. Start by creating your first post."
+    >
+      <button v-if="hasPermission('convostack:create')" class="btn btn-primary" @click="openEditor(null)">
+        <Icon name="lucide:plus" class="w-4 h-4" />
         Create first publication
       </button>
-    </div>
+    </AdminEmptyState>
 
 
     <!-- Delete Confirmation -->
@@ -171,71 +165,43 @@
       </div>
     </Modal>
 
-    <!-- Comments Sliding Drawer -->
-    <Teleport to="body">
-      <Transition
-        enter-active-class="transform transition ease-in-out duration-300"
-        enter-from-class="translate-x-full"
-        enter-to-class="translate-x-0"
-        leave-active-class="transform transition ease-in-out duration-200"
-        leave-from-class="translate-x-0"
-        leave-to-class="translate-x-full"
-      >
-        <div v-if="showCommentsModal" class="fixed inset-y-0 right-0 z-[110] w-full max-w-md bg-white shadow-[0_0_40px_rgba(0,0,0,0.1)] flex flex-col border-l border-slate-100">
-          <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-            <div>
-              <h2 class="text-lg font-bold text-slate-900 tracking-tight">Reader Comments</h2>
-              <p class="text-xs font-semibold text-slate-400 mt-1 truncate max-w-[280px]">On: {{ selectedPublicationForComments?.title }}</p>
-            </div>
-            <button @click="closeComments" class="p-2.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-all">
-              <Icon name="lucide:x" class="w-5 h-5" />
-            </button>
-          </div>
+    <!-- Comments Drawer -->
+    <SlideOver
+      v-model="showCommentsModal"
+      title="Reader comments"
+      :description="selectedPublicationForComments?.title ? `On: ${selectedPublicationForComments.title}` : ''"
+      size="md"
+      @close="closeComments"
+    >
+      <AdminTableLoading v-if="commentsLoading" :columns="2" :rows="4" label="Loading comments" />
 
-          <div class="flex-1 overflow-y-auto bg-slate-50/30 p-6">
-            <div v-if="commentsLoading" class="flex flex-col items-center justify-center h-full space-y-3">
-               <div class="w-8 h-8 rounded-full border-2 border-slate-200 border-t-[#27628C] animate-spin"></div>
-               <span class="text-xs font-bold text-slate-400">Loading discourse...</span>
-            </div>
-            
-            <div v-else-if="comments.length === 0" class="flex flex-col items-center justify-center h-full text-center px-4">
-              <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
-                <Icon name="lucide:message-circle" class="w-8 h-8 text-slate-300" />
-              </div>
-              <h4 class="text-base font-bold text-slate-700">No Comments Yet</h4>
-              <p class="text-xs text-slate-400 font-medium mt-1">This publication hasn't sparked any discourse.</p>
-            </div>
+      <AdminEmptyState
+        v-else-if="comments.length === 0"
+        icon="lucide:message-circle"
+        title="No comments yet"
+        description="This publication hasn't sparked any discussion."
+        compact
+      />
 
-            <div v-else class="space-y-4">
-              <div v-for="(comment, index) in comments" :key="index" class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative group">
-                <div class="flex justify-between items-start mb-3">
-                  <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#27628C] to-[#0a527c] text-white flex items-center justify-center text-xs font-bold shadow-inner">
-                      {{ comment.authorName?.charAt(0) || 'U' }}
-                    </div>
-                    <div>
-                      <p class="text-sm font-bold text-slate-900 leading-none">{{ comment.authorName || 'Unknown User' }}</p>
-                      <p class="text-sm font-semibold text-slate-400 mt-1">{{ formatDateTime(comment.createdAt) }}</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="text-slate-600 text-sm leading-relaxed whitespace-pre-wrap pl-11">{{ comment.content }}</div>
-              </div>
+      <div v-else class="space-y-3">
+        <div
+          v-for="(comment, index) in comments"
+          :key="index"
+          class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm"
+        >
+          <div class="flex items-center gap-3 mb-2.5">
+            <div class="w-8 h-8 rounded-lg bg-[#27628C] text-white flex items-center justify-center text-[11px] font-bold shrink-0">
+              {{ comment.authorName?.charAt(0) || 'U' }}
+            </div>
+            <div class="min-w-0">
+              <p class="text-[12.5px] font-semibold text-slate-900 leading-none truncate">{{ comment.authorName || 'Unknown user' }}</p>
+              <p class="text-[10.5px] font-medium text-slate-400 mt-1">{{ formatDateTime(comment.createdAt) }}</p>
             </div>
           </div>
+          <div class="text-[12.5px] leading-relaxed text-slate-600 whitespace-pre-wrap">{{ comment.content }}</div>
         </div>
-      </Transition>
-      <Transition
-        enter-active-class="transition-opacity ease-linear duration-300"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition-opacity ease-linear duration-200"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
-      >
-        <div v-if="showCommentsModal" @click="closeComments" class="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-[100]"></div>
-      </Transition>
-    </Teleport>
+      </div>
+    </SlideOver>
   </div>
 </template>
 
@@ -250,10 +216,13 @@ import { useRouter } from '#imports'
 import { useGetConvoStackComments } from '@/composables/modules/convostack/useGetConvoStackComments'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 import Modal from '@/components/Modal.vue'
+import SlideOver from '@/components/SlideOver.vue'
 import Icon from '@/components/Icon.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import { useUser } from '@/composables/modules/auth/user'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 const { hasPermission } = useUser()
 

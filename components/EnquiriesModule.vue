@@ -32,15 +32,15 @@
 
     <!-- Enquiries Registry -->
     <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div v-for="i in 6" :key="i" class="h-64 bg-slate-100/50 rounded-[1.25rem] animate-pulse"></div>
+      <div v-for="i in 6" :key="i" class="admin-skeleton-card h-64"></div>
     </div>
 
-    <div v-else-if="filteredEnquiries.length === 0" class="py-32 text-center bg-white rounded-[1.5rem] border border-slate-100">
-      <div class="w-24 h-24 bg-slate-50 rounded-[1.25rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-        <Icon name="lucide:mail-open" class="w-10 h-10 text-slate-100" />
-      </div>
-      <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No enquiries found</h3>
-      <p class="text-slate-400 text-sm font-medium max-w-[280px] mx-auto leading-relaxed">No active enquiries or support tickets found in the database.</p>
+    <div v-else-if="filteredEnquiries.length === 0" class="bg-white rounded-[18px] border border-slate-100 overflow-hidden">
+      <AdminEmptyState
+        icon="lucide:messages-square"
+        title="No enquiries found"
+        description="No active enquiries or support tickets match the current filters."
+      />
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -173,6 +173,7 @@ import SelectInput from '@/components/ui/SelectInput.vue'
 import Icon from '@/components/Icon.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import { useUser } from '@/composables/modules/auth/user'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
 
 const { hasPermission } = useUser()
 

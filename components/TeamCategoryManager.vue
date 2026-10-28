@@ -35,11 +35,17 @@
 
     <!-- List Area -->
     <div class="bg-white rounded-xl border border-slate-200 overflow-hidden relative min-h-[200px]">
-      <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
-         <div class="w-8 h-8 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-2"></div>
-      </div>
-      
-      <table class="stack-table w-full text-left border-collapse">
+      <AdminTableLoading v-if="loading" :columns="3" :rows="3" label="Loading categories" />
+
+      <AdminEmptyState
+        v-else-if="categories.length === 0"
+        icon="lucide:tags"
+        title="No categories found"
+        description="Create a category using the form above."
+        compact
+      />
+
+      <table v-else class="admin-table stack-table w-full text-left border-collapse">
         <thead>
           <tr class="bg-slate-50 border-b border-slate-100">
             <th class="px-6 py-4 text-sm font-medium text-slate-500">Category Name</th>
@@ -62,9 +68,6 @@
               </div>
             </td>
           </tr>
-          <tr v-if="!loading && categories.length === 0">
-            <td colspan="3" class="px-6 py-8 text-center text-slate-500">No categories found.</td>
-          </tr>
         </tbody>
       </table>
     </div>
@@ -77,6 +80,8 @@ import { teams_api, type TeamCategory } from '@/api_factory/modules/teams'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import Icon from '@/components/Icon.vue'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 const emit = defineEmits(['changed', 'close'])
 const { showToast } = useCustomToast()

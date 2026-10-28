@@ -209,32 +209,24 @@
       </draggable>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="flex items-center justify-center py-16">
-      <div class="relative">
-        <div class="animate-spin rounded-full h-12 w-12 border-4 border-amber-200"></div>
-        <div class="animate-spin rounded-full h-12 w-12 border-4 border-amber-600 border-t-transparent absolute top-0 left-0"></div>
-      </div>
-    </div>
+    <AdminTableLoading card v-if="loading" :columns="4" :rows="5" label="Loading publications" />
 
-    <!-- Empty State -->
-    <div v-else-if="filteredPublications.length === 0" class="text-center py-16">
-      <div class="w-24 h-24 mx-auto mb-6 bg-slate-100 rounded-full flex items-center justify-center">
-        <FileText class="w-12 h-12 text-slate-400" />
-      </div>
-      <h3 class="text-lg font-semibold text-slate-900 mb-2">No publications found</h3>
-      <p class="text-slate-500 mb-6">
-        {{ searchQuery || statusFilter ? 'Try adjusting your search or filters' : 'Get started by creating your first publication' }}
-      </p>
+    <AdminEmptyState
+        card
+      v-else-if="filteredPublications.length === 0"
+      icon="lucide:file-text"
+      title="No publications found"
+      :description="searchQuery || statusFilter ? 'Try adjusting your search or filters.' : 'Get started by creating your first publication.'"
+    >
       <button
-        v-if="!searchQuery && !statusFilter"
+        v-if="!searchQuery && !statusFilter && hasPermission('publications:create')"
+        class="btn btn-primary"
         @click="openCreateModal"
-        class="px-6 py-3 bg-primary text-white rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-200 inline-flex items-center space-x-2"
       >
-        <Plus class="w-5 h-5" />
-        <span>Create Publication</span>
+        <Plus class="w-4 h-4" />
+        Create publication
       </button>
-    </div>
+    </AdminEmptyState>
 
     <!-- Reorder Error Toast -->
     <div
@@ -304,6 +296,8 @@ import { usePublishPublication } from '@/composables/modules/publications/usePub
 import { useSoftDeletePublication } from '@/composables/modules/publications/useSoftDeletePublication'
 import { useReorderPublication } from '@/composables/modules/publications/useReorderPublication'
 import { useUser } from '@/composables/modules/auth/user'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 const { hasPermission } = useUser()
 

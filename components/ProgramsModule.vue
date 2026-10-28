@@ -51,7 +51,7 @@
     <!-- Programs Registry (Table Layout) -->
     <div v-if="!loading && programs.length > 0" class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-sm relative">
       <div class="overflow-x-auto">
-        <table class="stack-table w-full text-left border-separate border-spacing-0">
+        <table class="admin-table stack-table w-full text-left border-separate border-spacing-0">
           <thead>
             <tr class="bg-slate-50/50 text-sm font-black  tracking-normal text-slate-400">
               <th class="px-8 py-6 border-b border-slate-100">Image</th>
@@ -176,29 +176,20 @@
       </div>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="flex flex-col items-center justify-center py-32 space-y-4">
-      <div class="relative w-14 h-14">
-        <div class="absolute inset-0 rounded-full border-4 border-slate-50"></div>
-        <div class="absolute inset-0 rounded-full border-4 border-t-[#27628C] animate-spin"></div>
-      </div>
-      <span class="text-sm font-black  tracking-normal text-slate-400 animate-pulse">Synchronizing curricula...</span>
-    </div>
+    <AdminTableLoading card v-if="loading" :columns="7" :rows="5" label="Loading programmes" />
 
-    <!-- Empty State -->
-    <div v-else-if="programs.length === 0" class="flex flex-col items-center justify-center py-32 bg-slate-50/50 rounded-[1.75rem] border border-dashed border-slate-200">
-      <div class="w-24 h-24 bg-white rounded-[1.25rem] shadow-sm flex items-center justify-center mb-8">
-        <Icon name="lucide:graduation-cap" class="w-10 h-10 text-slate-100" />
-      </div>
-      <h3 class="text-lg font-black text-[#27628C] mb-2 tracking-normal">No Programs Found</h3>
-      <p class="text-slate-400 mb-10 max-w-sm text-center leading-relaxed font-bold text-sm">Your educational portfolio is currently empty. Start by launching your first scientific curriculum.</p>
-      <button v-if="hasPermission('programs:create')"
-        @click="openCreateModal"
-        class="px-10 py-4 bg-[#27628C] text-white rounded-2xl hover:bg-[#1B4A6B] transition-all font-bold text-sm shadow-sm border border-slate-200 active:scale-95"
-      >
-        Launch New Program
+    <AdminEmptyState
+        card
+      v-else-if="programs.length === 0"
+      icon="lucide:graduation-cap"
+      title="No programmes found"
+      description="Your educational portfolio is empty. Start by launching your first programme."
+    >
+      <button v-if="hasPermission('programs:create')" class="btn btn-primary" @click="openCreateModal">
+        <Icon name="lucide:plus" class="w-4 h-4" />
+        Launch new programme
       </button>
-    </div>
+    </AdminEmptyState>
 
     <!-- SlideOver for Edit/Create -->
     <SlideOver v-model="showModal" size="full" :title="selectedProgram ? 'Edit Program' : 'New Program'">
@@ -332,6 +323,8 @@ import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Modal from '@/components/Modal.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 import { useUser } from '@/composables/modules/auth/user'
 
 const { hasPermission } = useUser()

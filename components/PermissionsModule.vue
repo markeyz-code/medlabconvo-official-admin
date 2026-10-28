@@ -27,14 +27,10 @@
 
     <!-- Permissions Registry -->
     <div class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden relative">
-      <!-- Loading Overlay -->
-      <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center">
-        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
-        <span class="text-sm font-bold text-[#27628C]">Loading permissions...</span>
-      </div>
+      <AdminTableLoading v-if="loading" :columns="4" :rows="7" label="Loading permissions" />
 
-      <div class="overflow-x-auto text-sm">
-        <table class="stack-table w-full text-left border-separate border-spacing-0">
+      <div v-else-if="filteredPermissions.length" class="overflow-x-auto text-sm">
+        <table class="admin-table stack-table w-full text-left border-separate border-spacing-0">
           <thead>
             <tr class="bg-slate-50/50 text-sm font-bold text-slate-400">
               <th class="px-10 py-6 border-b border-slate-100">Permission name</th>
@@ -66,25 +62,21 @@
         </table>
       </div>
       
-      <!-- Empty State -->
-      <div v-if="!loading && filteredPermissions.length === 0" class="py-32 text-center bg-slate-50/30">
-        <div class="w-24 h-24 bg-white rounded-[1.25rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-          <Icon name="lucide:key" class="w-10 h-10 text-slate-100" />
-        </div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No permissions found</h3>
-        <p class="text-slate-400 text-sm font-medium max-w-[240px] mx-auto leading-relaxed">The system is currently using default access controls.</p>
-        <button
-          v-if="canCreate"
-          @click="openCreateModal"
-          class="mt-8 px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all active:scale-95"
-        >
+      <AdminEmptyState
+        v-else
+        icon="lucide:key-round"
+        title="No permissions found"
+        description="The system is currently using default access controls."
+      >
+        <button v-if="canCreate" class="btn btn-primary" @click="openCreateModal">
+          <Icon name="lucide:plus" class="w-4 h-4" />
           Create first permission
         </button>
-      </div>
+      </AdminEmptyState>
     </div>
 
     <!-- Injection Sheet -->
-    <SlideOver v-model="showModal" size="full" title="Create permission">
+    <SlideOver v-model="showModal" size="lg" title="Create permission">
       <div class="p-8 space-y-10">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <AnimatedInput
@@ -161,6 +153,8 @@ import SlideOver from '@/components/SlideOver.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import Icon from '@/components/Icon.vue'
 import { useUser } from '@/composables/modules/auth/user'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 // State
 const searchQuery = ref('')

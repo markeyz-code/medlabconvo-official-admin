@@ -18,7 +18,7 @@
       <!-- Submissions Table -->
       <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="stack-table w-full">
+          <table class="admin-table stack-table w-full">
             <thead class="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th class="px-4 py-3 text-left text-sm font-medium text-slate-500 ">Date</th>
@@ -70,10 +70,13 @@
         </div>
   
         <!-- Empty State -->
-        <div v-if="submissions.length === 0" class="text-center py-12">
-          <Icon name="lucide:file-text" class="w-12 h-12 text-slate-400 mx-auto mb-4" />
-          <p class="text-slate-500">No submissions yet</p>
-        </div>
+        <AdminEmptyState
+          v-if="submissions.length === 0"
+          icon="lucide:file-text"
+          title="No submissions yet"
+          description="Responses to this form will appear here."
+          compact
+        />
       </div>
   
       <!-- Submission Detail Modal -->

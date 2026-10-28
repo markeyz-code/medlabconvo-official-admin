@@ -41,13 +41,10 @@
 
     <!-- Users Registry -->
     <div class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden relative">
-      <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center">
-        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
-        <span class="text-sm font-bold text-[#27628C]">Loading users...</span>
-      </div>
+      <AdminTableLoading v-if="loading" :columns="5" :rows="6" label="Loading users" />
 
-      <div class="overflow-x-auto text-sm">
-        <table class="stack-table w-full text-left border-separate border-spacing-0">
+      <div v-else-if="filteredUsers.length" class="overflow-x-auto text-sm">
+        <table class="admin-table stack-table w-full text-left border-separate border-spacing-0">
           <thead>
             <tr class="bg-slate-50/50 text-sm font-bold text-slate-400">
               <th class="px-10 py-6 border-b border-slate-100">User details</th>
@@ -111,14 +108,17 @@
         </table>
       </div>
       
-      <!-- Empty State -->
-      <div v-if="!loading && filteredUsers.length === 0" class="py-32 text-center bg-slate-50/30">
-        <div class="w-24 h-24 bg-white rounded-[1.25rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-          <Icon name="lucide:users" class="w-10 h-10 text-slate-100" />
-        </div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No users found</h3>
-        <p class="text-slate-400 text-sm font-medium max-w-[280px] mx-auto leading-relaxed">No administrative users found in the current directory.</p>
-      </div>
+      <AdminEmptyState
+        v-else
+        icon="lucide:users"
+        title="No users found"
+        description="No administrative users match the current directory or filters."
+      >
+        <button v-if="hasPermission('users:create')" class="btn btn-primary" @click="openCreateModal">
+          <Icon name="lucide:user-plus" class="w-4 h-4" />
+          Add user
+        </button>
+      </AdminEmptyState>
     </div>
 
     <!-- Invite User Modal -->
@@ -184,7 +184,7 @@
     </Modal>
 
     <!-- Configure Personnel (SlideOver) -->
-    <SlideOver v-model="showModal" size="full" title="User settings">
+    <SlideOver v-model="showModal" size="lg" title="User settings">
       <UserForm
         :user="selectedUser"
         @save="handleSaveUser"
@@ -221,6 +221,8 @@ import Modal from '@/components/Modal.vue'
 import Icon from '@/components/Icon.vue'
 import UserForm from '@/components/userForm.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 // State
 const searchQuery = ref('')

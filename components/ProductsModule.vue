@@ -88,8 +88,8 @@
     </div>
 
     <!-- Products View -->
-    <div v-if="allProductsLoading" :class="viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8' : 'space-y-4'">
-      <div v-for="i in 8" :key="i" class="bg-slate-50 rounded-2xl animate-pulse" :class="viewMode === 'grid' ? 'h-80' : 'h-24'"></div>
+    <div v-if="allProductsLoading" class="bg-white rounded-3xl border border-slate-100 overflow-hidden">
+      <AdminTableLoading :columns="6" :rows="6" label="Loading inventory" />
     </div>
 
     <div v-else-if="currentProducts?.length">
@@ -109,7 +109,7 @@
       <!-- Tabular/List View -->
       <div v-else class="bg-white rounded-3xl border border-slate-100 overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="stack-table w-full text-left border-collapse">
+          <table class="admin-table stack-table w-full text-left border-collapse">
             <thead>
               <tr class="bg-slate-50/50 border-b border-slate-100 text-xs font-bold text-slate-400 tracking-wider">
                 <th class="p-4 pl-6 font-bold">Product</th>
@@ -169,20 +169,18 @@
       </div>
     </div>
 
-    <!-- Empty State -->
-    <div v-else class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
-      <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mb-6">
-        <Icon name="lucide:shopping-bag" class="w-10 h-10 text-slate-100" />
-      </div>
-      <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No products found</h3>
-      <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Your inventory is currently empty. Add your first product to get started.</p>
-      <button v-if="hasPermission('products:create')"
-        @click="openCreateModal"
-        class="px-8 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all font-bold text-sm"
-      >
+    <AdminEmptyState
+        card
+      v-else
+      icon="lucide:package"
+      title="No products found"
+      description="Your inventory is empty or no products match the current filters."
+    >
+      <button v-if="hasPermission('products:create')" class="btn btn-primary" @click="openCreateModal">
+        <Icon name="lucide:plus" class="w-4 h-4" />
         Add first product
       </button>
-    </div>
+    </AdminEmptyState>
 
     <!-- Pagination -->
     <div v-if="currentProducts?.length && totalProductCount > perPage" class="flex items-center justify-between pt-8 border-t border-slate-100">
@@ -261,6 +259,8 @@ import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import ProductCard from '@/components/ProductCard.vue'
 import ProductForm from '@/components/ProductForm.vue'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 import SlideOver from '@/components/SlideOver.vue'
 import Modal from '@/components/Modal.vue'
 import BatchImportForm from '@/components/BatchImportForm.vue'

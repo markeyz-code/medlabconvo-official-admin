@@ -106,26 +106,20 @@
       </div>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="flex flex-col items-center justify-center py-24 space-y-4">
-      <div class="w-12 h-12 rounded-full border-4 border-slate-50 border-t-[#27628C] animate-spin"></div>
-      <span class="text-sm font-bold text-slate-400 animate-pulse">Loading blog posts...</span>
-    </div>
+    <AdminTableLoading card v-if="loading" :columns="4" :rows="5" label="Loading blog posts" />
 
-    <!-- Empty State -->
-    <div v-else-if="filteredBlogs.length === 0" class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
-      <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mb-6">
-        <Icon name="lucide:file-text" class="w-10 h-10 text-slate-100" />
-      </div>
-      <h3 class="text-xl font-bold text-slate-900 mb-2">No blog posts found</h3>
-      <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Create a new blog post to display content on the website.</p>
-      <button v-if="hasPermission('blogs:create')"
-        @click="openCreateModal"
-        class="px-8 py-3 bg-white border border-slate-200 text-slate-900 rounded-xl hover:bg-slate-50 transition-all font-bold text-sm"
-      >
+    <AdminEmptyState
+        card
+      v-else-if="filteredBlogs.length === 0"
+      icon="lucide:newspaper"
+      title="No blog posts found"
+      description="Create a new blog post to display content on the website."
+    >
+      <button v-if="hasPermission('blogs:create')" class="btn btn-primary" @click="openCreateModal">
+        <Icon name="lucide:plus" class="w-4 h-4" />
         Create first post
       </button>
-    </div>
+    </AdminEmptyState>
 
     <!-- Create/Edit Blog SlideOver -->
     <SlideOver v-model="showModal" size="full" :title="selectedBlog ? 'Edit post' : 'Create post'">
@@ -161,6 +155,8 @@ import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import { useUser } from '@/composables/modules/auth/user'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 const { hasPermission } = useUser()
 

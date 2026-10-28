@@ -57,7 +57,9 @@
       <div class="p-8">
         <h3 class="text-xl font-bold text-slate-900 mb-8 tracking-tight">System activity</h3>
         
-        <div class="space-y-6">
+        <AdminTableLoading v-if="loading" :columns="4" :rows="6" label="Loading audit history" />
+
+        <div v-else-if="filteredAuditLogs?.length" class="space-y-6">
           <div
             v-for="log in filteredAuditLogs"
             :key="log._id"
@@ -104,22 +106,12 @@
         </div>
       </div>
       
-      <!-- Loading State -->
-      <div v-if="loading" class="flex items-center justify-center py-20 bg-white/80 absolute inset-0 z-10">
-        <div class="flex flex-col items-center">
-          <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
-          <span class="text-sm font-bold text-slate-400">Loading history...</span>
-        </div>
-      </div>
-      
-      <!-- Empty State -->
-      <div v-else-if="filteredAuditLogs?.length === 0" class="text-center py-24">
-        <div class="w-20 h-20 bg-slate-50 rounded-[1.25rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
-          <Icon name="lucide:shield-check" class="w-10 h-10 text-slate-100" />
-        </div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No activity found</h3>
-        <p class="text-slate-400 text-sm font-medium">There are no records matching your search criteria.</p>
-      </div>
+      <AdminEmptyState
+        v-if="!loading && filteredAuditLogs?.length === 0"
+        icon="lucide:shield-check"
+        title="No activity found"
+        description="There are no audit records matching the current filters."
+      />
     </div>
 
     <!-- Load More Button -->
@@ -141,6 +133,8 @@ import { useGetAuditLogs } from '@/composables/modules/audit/useGetAuditLogs'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Icon from '~/components/Icon.vue'
+import AdminEmptyState from '@/components/AdminEmptyState.vue'
+import AdminTableLoading from '@/components/AdminTableLoading.vue'
 
 // Composables
 const { auditLogs, loading, getAuditLogs } = useGetAuditLogs()

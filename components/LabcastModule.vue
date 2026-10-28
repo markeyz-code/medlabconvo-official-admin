@@ -53,7 +53,7 @@
 
     <!-- Episodes Grid -->
     <div v-if="labcastsLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-      <div v-for="i in 8" :key="i" class="bg-slate-50 rounded-2xl h-80 animate-pulse"></div>
+      <div v-for="i in 8" :key="i" class="admin-skeleton-card h-80"></div>
     </div>
 
     <div v-else-if="labcasts?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -95,20 +95,18 @@
       </div>
     </div>
 
-    <!-- Empty State -->
-    <div v-else class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-[40px] border border-dashed border-slate-200">
-      <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mb-6">
-        <Icon name="lucide:mic" class="w-10 h-10 text-slate-100" />
-      </div>
-      <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No episodes found</h3>
-      <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Your podcast library is currently empty. Upload your first episode to get started.</p>
-      <button v-if="hasPermission('labcast:create')"
-        @click="openCreateModal"
-        class="px-8 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all font-bold text-sm"
-      >
+    <AdminEmptyState
+        card
+      v-else
+      icon="lucide:mic"
+      title="No episodes found"
+      description="Your podcast library is empty. Upload your first episode to get started."
+    >
+      <button v-if="hasPermission('labcast:create')" class="btn btn-primary" @click="openCreateModal">
+        <Icon name="lucide:plus" class="w-4 h-4" />
         Upload first episode
       </button>
-    </div>
+    </AdminEmptyState>
 
     <!-- SlideOver for Create/Edit -->
     <SlideOver v-model="showModal" size="full" :title="editingEpisode ? 'Edit episode' : 'New episode'">
@@ -161,6 +159,7 @@ import SelectInput from "@/components/ui/SelectInput.vue"
 import Icon from "@/components/Icon.vue"
 import SlideOver from "@/components/SlideOver.vue"
 import ConfirmModal from "@/components/ConfirmModal.vue"
+import AdminEmptyState from "@/components/AdminEmptyState.vue"
 import { useUser } from '@/composables/modules/auth/user'
 
 const { hasPermission } = useUser()

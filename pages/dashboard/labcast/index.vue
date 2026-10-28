@@ -415,22 +415,18 @@
 
   
           <!-- Empty State -->
-          <div v-else class="text-center py-16">
-            <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm border border-slate-100 border border-white/20 p-12 max-w-md mx-auto">
-              <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Icon name="lucide:podcast" class="w-10 h-10 text-blue-500" />
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-2">No episodes found</h3>
-              <p class="text-gray-600 mb-8">Get started by creating your first amazing episode.</p>
-              <button
-                @click="showCreateModal = true"
-                class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-sm border border-slate-100"
-              >
-                <Icon name="lucide:plus" class="w-5 h-5 mr-2" />
-                Create First Episode
-              </button>
-            </div>
-          </div>
+          <AdminEmptyState
+        card
+            v-else
+            icon="lucide:podcast"
+            title="No episodes found"
+            description="Get started by creating your first LabCast episode."
+          >
+            <button v-if="hasPermission('labcast:create')" class="btn btn-primary" @click="showCreateModal = true">
+              <Icon name="lucide:plus" class="w-4 h-4" />
+              Create first episode
+            </button>
+          </AdminEmptyState>
         </div>
   
         <!-- Enhanced Pagination -->
@@ -474,27 +470,9 @@
       </div>
   
       <!-- Preview Modal -->
-      <Teleport to="body">
-        <div
-          v-if="showPreviewModal"
-          class="fixed inset-0 z-50 flex items-center justify-center p-4"
-        >
-          <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"></div>
-          <div class="relative bg-white rounded-3xl shadow-sm border border-slate-200 max-w-4xl w-full max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100">
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between p-6 border-b border-gray-100">
-              <h2 class="text-xl font-bold text-gray-900">Episode Preview</h2>
-              <button
-                @click="closePreviewModal"
-                class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all duration-200"
-              >
-                <!-- <Icon name="lucide:x" class="w-6 h-6" /> -->
-                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path></svg>
-              </button>
-            </div>
-  
-            <!-- Modal Content -->
-            <div v-if="previewingEpisode" class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+      <Modal v-model="showPreviewModal" title="Episode preview" size="2xl" @update:model-value="closePreviewModal">
+        <div v-if="previewingEpisode" class="p-5 sm:p-6">
+
               <div class="grid lg:grid-cols-3 gap-8">
                 <!-- Main Content -->
                 <div class="lg:col-span-2 space-y-6">
@@ -638,7 +616,7 @@
                     </button>
                     <button
                       @click="deleteEpisode(previewingEpisode)"
-                      class="w-full flex items-center justify-center gap-3 px-4 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-all duration-200 font-medium"
+                      class="btn btn-danger w-full"
                     >
                       <!-- <Icon name="lucide:trash-2" class="w-5 h-5" /> -->
                       <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>
@@ -647,10 +625,8 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
         </div>
-      </Teleport>
+      </Modal>
   
       <!-- Delete Confirmation Modal -->
       <ConfirmModal
@@ -683,11 +659,15 @@ definePageMeta({
   import { ref, computed, onMounted } from 'vue'
   import { useDebounceFn } from '@vueuse/core'
   import { useGetLabCasts } from "@/composables/modules/labcast/useGetLabCasts"
+  import { useUser } from '@/composables/modules/auth/user'
+  import AdminEmptyState from '@/components/AdminEmptyState.vue'
   import { useGetSeasons } from "@/composables/modules/labcast/useGetSeasons"
   import { useSearchEpisodes } from "@/composables/modules/labcast/useSearchEpisodes"
   import { useUpdateLabCast } from "@/composables/modules/labcast/useUpdateLabCast"
   import { useDeleteLabCast } from "@/composables/modules/labcast/useDeleteLabCast"
   import { useReorderLabcasts } from '@/composables/modules/labcast/useReorderLabcasts'
+
+  const { hasPermission } = useUser()
   
 
   const {

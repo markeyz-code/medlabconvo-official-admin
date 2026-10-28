@@ -169,42 +169,25 @@
         </div>
       </div>
   
-      <!-- Image Modal -->
-      <Teleport to="body">
-        <Transition
-          enter-active-class="transition-opacity duration-300"
-          enter-from-class="opacity-0"
-          enter-to-class="opacity-100"
-          leave-active-class="transition-opacity duration-200"
-          leave-from-class="opacity-100"
-          leave-to-class="opacity-0"
-        >
-          <div
-            v-if="selectedImage"
-            class="fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center p-4"
-            @click="closeImageModal"
-          >
-            <div class="relative max-w-4xl max-h-full">
-              <img
-                :src="selectedImage"
-                alt="Program image"
-                class="max-w-full max-h-full object-contain rounded-lg"
-              />
-              <button
-                @click="closeImageModal"
-                class="absolute top-4 right-4 p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-75 transition-colors"
-              >
-                <X class="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </Transition>
-      </Teleport>
+      <!-- Image preview -->
+      <Modal
+        :model-value="!!selectedImage"
+        title="Program image"
+        size="2xl"
+        @update:model-value="closeImageModal"
+      >
+        <img
+          :src="selectedImage"
+          alt="Program image"
+          class="w-full max-h-[72vh] object-contain rounded-xl bg-slate-50"
+        />
+      </Modal>
     </div>
   </template>
   
   <script setup lang="ts">
   import { ref } from 'vue'
+  import Modal from '@/components/Modal.vue'
   import { 
     X, Edit, Clock, Users, Calendar, Check, ArrowRight 
   } from 'lucide-vue-next'
