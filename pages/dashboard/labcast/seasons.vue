@@ -141,8 +141,10 @@
   import Icon from '@/components/Icon.vue'
   
  definePageMeta({
-    layout: 'dashboard'
-  })
+  layout: 'dashboard',
+  middleware: 'auth',
+  permission: 'labcast:read'
+})
   
   const showSeasonModal = ref(false)
   const selectedSeason = ref<number | null>(null)

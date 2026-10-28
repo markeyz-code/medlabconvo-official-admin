@@ -19,6 +19,7 @@ import RolesModule from '@/components/RolesModule.vue'
 
 definePageMeta({
   layout: 'dashboard',
-  middleware: 'auth'
+  middleware: 'auth',
+  permission: 'roles:read'
 })
 </script>

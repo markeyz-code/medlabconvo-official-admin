@@ -1,16 +1,16 @@
 <template>
-   <Dashboard>
-        <template v-slot:header-actions>
-            <button
-              @click="showCreateModal = true"
-              class="group relative inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-sm border border-slate-100 hover:shadow-sm border border-slate-200"
-            >
-              <Icon name="lucide:plus" class="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-200" />
-              Add Episode
-              <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400 to-indigo-400 opacity-0 group-hover:opacity-20 transition-opacity duration-200"></div>
-            </button>
-        </template>
-      <div class="min-h-screen">
+  <div class="labcast-page">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Library</p>
+        <p class="text-sm text-slate-500">Search, filter and publish your episode catalogue.</p>
+      </div>
+      <button class="btn btn-primary w-full sm:w-auto" @click="showCreateModal = true">
+        <Icon name="lucide:plus" class="w-4 h-4" />
+        Add episode
+      </button>
+    </div>
+<div class="min-h-screen">
 
 
 
@@ -652,43 +652,15 @@
         </div>
       </Teleport>
   
-      <!-- Enhanced Delete Confirmation Modal -->
-      <Teleport to="body">
-        <div
-          v-if="showDeleteModal"
-          class="fixed inset-0 z-50 flex items-center justify-center p-4"
-        >
-          <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"></div>
-          <div class="relative bg-white rounded-3xl shadow-sm border border-slate-200 max-w-md w-full transform transition-all duration-300 scale-100">
-            <div class="p-8 text-center">
-              <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Icon name="lucide:trash-2" class="w-8 h-8 text-red-500" />
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-2">Delete Episode</h3>
-              <p class="text-gray-600 mb-8">
-                Are you sure you want to delete 
-                <span class="font-semibold">"{{ deletingEpisode?.title }}"</span>? 
-                This action cannot be undone.
-              </p>
-              <div class="flex gap-3">
-                <button
-                  @click="showDeleteModal = false"
-                  class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium"
-                >
-                  Cancel
-                </button>
-                <button
-                  @click="confirmDelete"
-                  class="flex-1 px-4 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-all duration-200 font-medium"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Teleport>
-  
+      <!-- Delete Confirmation Modal -->
+      <ConfirmModal
+        v-model="showDeleteModal"
+        title="Delete episode"
+        :message="`Delete “${deletingEpisode?.title || 'this episode'}”? This cannot be undone.`"
+        confirm-text="Delete episode"
+        @confirm="confirmDelete"
+      />
+
       <!-- Create/Edit Modal Placeholder -->
       <LabcastEpisodeModal
         v-model="showCreateModal"
@@ -696,10 +668,17 @@
         @saved="handleEpisodeSaved"
       />
     </div>
-   </Dashboard>
-  </template>
+   </div>
+</template>
   
   <script setup lang="ts">
+
+definePageMeta({
+  layout: 'dashboard',
+  middleware: 'auth',
+  permission: 'labcast:read'
+})
+
   import type { LabCast } from '@/types/labcast'
   import { ref, computed, onMounted } from 'vue'
   import { useDebounceFn } from '@vueuse/core'
@@ -710,7 +689,6 @@
   import { useDeleteLabCast } from "@/composables/modules/labcast/useDeleteLabCast"
   import { useReorderLabcasts } from '@/composables/modules/labcast/useReorderLabcasts'
   
-  import Dashboard from '@/layouts/dashboard.vue' 
 
   const {
     loading: reorderLoading, 

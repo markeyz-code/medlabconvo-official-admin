@@ -1,243 +1,310 @@
 <template>
   <Teleport to="body">
-    <transition name="slideover">
-      <div v-if="modelValue" class="slideover-root">
-        <!-- Backdrop -->
-        <transition name="slideover-backdrop">
-          <div 
-            v-if="modelValue"
-            class="slideover-backdrop" 
-            aria-hidden="true"
-          ></div>
-        </transition>
+    <Transition name="sheet-root">
+      <div v-if="modelValue" class="sheet-root" role="dialog" aria-modal="true" :aria-label="title">
+        <div class="sheet-backdrop" @click="close"></div>
 
-        <!-- Panel -->
-        <transition name="slideover-panel">
-          <div 
+        <Transition name="sheet-panel" appear>
+          <section
             v-if="modelValue"
-            :class="['slideover-panel', sizeClass]"
+            :class="['sheet-panel', sizeClass]"
+            @click.stop
           >
-            <!-- Header -->
-            <div class="slideover-header">
-              <div class="slideover-header-content">
-                <div class="slideover-header-indicator"></div>
-                <h2 class="slideover-title">{{ title }}</h2>
+            <div class="sheet-grabber" aria-hidden="true"><span></span></div>
+
+            <header class="sheet-head">
+              <div class="sheet-head-copy">
+                <p v-if="eyebrow" class="sheet-eyebrow">{{ eyebrow }}</p>
+                <h2 class="sheet-title">{{ title }}</h2>
+                <p v-if="description" class="sheet-description">{{ description }}</p>
               </div>
-              <button 
-                @click="close"
-                class="slideover-close"
-                aria-label="Close panel"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <button class="sheet-close" type="button" aria-label="Close panel" @click="close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
               </button>
+            </header>
+
+            <div class="sheet-body scrollbar-slim">
+              <slot />
             </div>
 
-            <!-- Body -->
-            <div class="slideover-body">
-              <slot></slot>
-            </div>
-          </div>
-        </transition>
+            <footer v-if="$slots.footer" class="sheet-footer">
+              <slot name="footer" />
+            </footer>
+          </section>
+        </Transition>
       </div>
-    </transition>
+    </Transition>
   </Teleport>
 </template>
 
 <script setup lang="ts">
-import { watch, onUnmounted, computed } from 'vue'
+import { computed, onBeforeUnmount, watch } from 'vue'
 
-const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false
+const props = withDefaults(
+  defineProps<{
+    modelValue: boolean
+    title: string
+    eyebrow?: string
+    description?: string
+    size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  }>(),
+  {
+    eyebrow: '',
+    description: '',
+    size: 'lg',
   },
-  title: {
-    type: String,
-    required: true
-  },
-  size: {
-    type: String as () => 'sm' | 'md' | 'lg' | 'xl' | 'full',
-    default: 'lg'
+)
+
+const emit = defineEmits<{
+  'update:modelValue': [value: boolean]
+  close: []
+}>()
+
+const sizeClass = computed(() => `sheet-${props.size}`)
+
+let lockCount = 0
+
+const lock = () => {
+  if (typeof document === 'undefined') return
+  lockCount += 1
+  document.body.style.overflow = 'hidden'
+  document.body.classList.add('modal-open')
+}
+const unlock = () => {
+  if (typeof document === 'undefined') return
+  lockCount = Math.max(0, lockCount - 1)
+  if (lockCount === 0) {
+    document.body.style.overflow = ''
+    document.body.classList.remove('modal-open')
   }
-})
+}
 
-const emit = defineEmits(['update:modelValue', 'close'])
+const onKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && props.modelValue) close()
+}
 
-const sizeClass = computed(() => {
-  return `slideover-${props.size}`
-})
+watch(
+  () => props.modelValue,
+  (open) => {
+    if (typeof window === 'undefined') return
+    if (open) {
+      lock()
+      window.addEventListener('keydown', onKeydown)
+    } else {
+      unlock()
+      window.removeEventListener('keydown', onKeydown)
+    }
+  },
+  { immediate: true },
+)
 
 const close = () => {
   emit('update:modelValue', false)
   emit('close')
 }
 
-watch(() => props.modelValue, (isOpen) => {
-  document.body.style.overflow = isOpen ? 'hidden' : ''
-})
-
-onUnmounted(() => {
-  document.body.style.overflow = ''
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') window.removeEventListener('keydown', onKeydown)
+  if (props.modelValue) unlock()
 })
 </script>
 
 <style scoped>
-.slideover-root {
+.sheet-root {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 120;
   display: flex;
+  align-items: flex-end;
   justify-content: flex-end;
 }
 
-.slideover-backdrop {
-  position: fixed;
+.sheet-backdrop {
+  position: absolute;
   inset: 0;
-  background: rgba(3, 57, 88, 0.18);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(6, 31, 48, 0.44);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
-.slideover-panel {
+.sheet-panel {
   position: relative;
-  height: 100%;
+  width: 100%;
+  max-height: 92dvh;
   display: flex;
   flex-direction: column;
-  background: #ffffff;
-  border-left: 1px solid rgba(0, 0, 0, 0.04);
-  pointer-events: auto;
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  border-bottom: 0;
+  border-radius: 24px 24px 0 0;
+  box-shadow: var(--mc-shadow-lg);
+  overflow: hidden;
+  transform-origin: bottom center;
 }
 
-/* Sizes */
-.slideover-sm { width: 100%; max-width: 380px; }
-.slideover-md { width: 100%; max-width: 480px; }
-.slideover-lg { width: 100%; max-width: 640px; }
-.slideover-xl { width: 100%; max-width: 800px; }
-.slideover-full { width: 100%; max-width: 50vw; }
-
-/* Header */
-.slideover-header {
+.sheet-grabber {
   display: flex;
-  align-items: center;
+  justify-content: center;
+  padding: 8px 0 2px;
+  flex-shrink: 0;
+}
+.sheet-grabber span {
+  width: 42px;
+  height: 4px;
+  border-radius: 99px;
+  background: #dbe6ee;
+}
+
+.sheet-head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 12px 20px;
-  border-bottom: 1px solid #f1f5f9;
-  flex-shrink: 0;
+  gap: 14px;
+  padding: 12px 20px 14px;
+  border-bottom: 1px solid var(--mc-border);
 }
-
-.slideover-header-content {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.sheet-head-copy {
+  min-width: 0;
 }
-
-.slideover-header-indicator {
-  width: 3px;
-  height: 20px;
-  background: #033958;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.slideover-title {
-  font-size: 15px;
+.sheet-eyebrow {
+  font-family: var(--mc-font-heading);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mc-brand);
   font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+.sheet-title {
+  font-family: var(--mc-font-heading);
+  font-size: 19px;
   line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--mc-ink);
   margin: 0;
 }
-
-.slideover-close {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
+.sheet-description {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--mc-muted);
+}
+.sheet-close {
+  width: 34px;
+  height: 34px;
   border-radius: 10px;
-  border: 1px solid #f1f5f9;
-  background: #ffffff;
-  color: #94a3b8;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  display: grid;
+  place-items: center;
   flex-shrink: 0;
+  color: var(--mc-muted);
+  background: #f7fafc;
+  border: 1px solid var(--mc-border);
+  transition: all 0.18s ease;
 }
-
-.slideover-close:hover {
-  background: #fef2f2;
+.sheet-close:hover {
+  color: var(--mc-danger);
+  background: var(--mc-danger-soft);
   border-color: #fecaca;
-  color: #ef4444;
-  transform: rotate(90deg);
 }
 
-/* Body */
-.slideover-body {
+.sheet-body {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 16px;
+  padding: 18px 20px 24px;
+  -webkit-overflow-scrolling: touch;
 }
 
-.slideover-body::-webkit-scrollbar {
-  width: 4px;
+.sheet-footer {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--mc-border);
+  background: #fbfdfe;
 }
 
-.slideover-body::-webkit-scrollbar-track {
-  background: transparent;
+/* Transition */
+.sheet-root-enter-active,
+.sheet-root-leave-active {
+  transition: opacity 0.22s ease;
 }
-
-.slideover-body::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 4px;
-}
-
-.slideover-body::-webkit-scrollbar-thumb:hover {
-  background: #cbd5e1;
-}
-
-/* Transitions */
-.slideover-enter-active,
-.slideover-leave-active {
-  transition: opacity 0.25s ease;
-}
-.slideover-enter-from,
-.slideover-leave-to {
+.sheet-root-enter-from,
+.sheet-root-leave-to {
   opacity: 0;
 }
 
-.slideover-backdrop-enter-active {
-  transition: opacity 0.3s ease;
+.sheet-panel-enter-active {
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease;
 }
-.slideover-backdrop-leave-active {
-  transition: opacity 0.2s ease;
+.sheet-panel-leave-active {
+  transition: transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.18s ease;
 }
-.slideover-backdrop-enter-from,
-.slideover-backdrop-leave-to {
+.sheet-panel-enter-from,
+.sheet-panel-leave-to {
   opacity: 0;
+  transform: translateY(30px);
 }
 
-.slideover-panel-enter-active {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.slideover-panel-leave-active {
-  transition: transform 0.25s cubic-bezier(0.4, 0, 1, 1);
-}
-.slideover-panel-enter-from {
-  transform: translateX(100%);
-}
-.slideover-panel-leave-to {
-  transform: translateX(100%);
+@media (min-width: 768px) {
+  .sheet-root {
+    align-items: stretch;
+  }
+  .sheet-panel {
+    height: 100%;
+    max-height: none;
+    border-radius: 0;
+    border: 0;
+    border-left: 1px solid var(--mc-border);
+    box-shadow: -24px 0 70px -30px rgba(16, 42, 58, 0.3);
+    transform-origin: right center;
+  }
+  .sheet-grabber {
+    display: none;
+  }
+  .sheet-head {
+    padding: 22px 24px 18px;
+  }
+  .sheet-title {
+    font-size: 21px;
+  }
+  .sheet-body {
+    padding: 22px 24px 32px;
+  }
+  .sheet-footer {
+    padding: 16px 24px;
+  }
+  .sheet-panel-enter-from,
+  .sheet-panel-leave-to {
+    opacity: 1;
+    transform: translateX(100%);
+  }
 }
 
-/* Responsive */
-@media (max-width: 640px) {
-  .slideover-sm,
-  .slideover-md,
-  .slideover-lg,
-  .slideover-xl {
-    max-width: 100%;
+.sheet-sm {
+  max-width: 430px;
+}
+.sheet-md {
+  max-width: 540px;
+}
+.sheet-lg {
+  max-width: 680px;
+}
+.sheet-xl {
+  max-width: 880px;
+}
+.sheet-full {
+  max-width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .sheet-full {
+    max-width: min(92vw, 1200px);
   }
 }
 </style>

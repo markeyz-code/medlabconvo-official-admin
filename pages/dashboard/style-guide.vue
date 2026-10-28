@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
     <!-- Introduction Section -->
-    <section class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-64 h-64 bg-[#033958]/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+    <section class="bg-white p-10 rounded-[1.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-[#27628C]/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
       <div class="relative z-10">
         <h1 class="text-lg font-black text-slate-900  tracking-normal mb-4">Laboratory Style Guide</h1>
         <p class="text-slate-500 font-medium max-w-2xl leading-relaxed antialiased">
@@ -21,7 +21,7 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Animated Inputs -->
-        <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-8">
+        <div class="bg-white p-8 rounded-[1.25rem] border border-slate-100 shadow-sm space-y-8">
           <h3 class="text-sm font-black text-slate-900  tracking-normal border-b border-slate-50 pb-4">Animated Inputs</h3>
           <div class="space-y-6">
             <AnimatedInput v-model="demoText" label="Full Legal Name" id="demo1" type="text" />
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Select & Toggles -->
-        <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-8">
+        <div class="bg-white p-8 rounded-[1.25rem] border border-slate-100 shadow-sm space-y-8">
           <h3 class="text-sm font-black text-slate-900  tracking-normal border-b border-slate-50 pb-4">Standardized Selectors</h3>
           <div class="space-y-6">
             <SelectInput 
@@ -67,13 +67,13 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="bg-[#033958] p-10 rounded-[2.5rem] text-white space-y-6 relative overflow-hidden group">
+        <div class="bg-[#27628C] p-10 rounded-[1.5rem] text-white space-y-6 relative overflow-hidden group">
           <div class="relative z-10">
             <h3 class="text-xl font-black  tracking-normal mb-4">Protocol Slide-Over</h3>
             <p class="text-blue-100/60 text-sm font-medium leading-relaxed mb-8">The standard full-height sheet for entity creation and modification. Maintains focus and context.</p>
             <button 
               @click="showSheet = true"
-              class="px-8 py-4 bg-white text-[#033958] rounded-2xl font-black text-sm  tracking-normal hover:bg-blue-50 transition-all flex items-center space-x-3 active:scale-95 shadow-sm border border-slate-200 shadow-blue-900/40"
+              class="px-8 py-4 bg-white text-[#27628C] rounded-2xl font-black text-sm  tracking-normal hover:bg-blue-50 transition-all flex items-center space-x-3 active:scale-95 shadow-sm border border-slate-200 shadow-blue-900/40"
             >
               <Icon name="lucide:sparkles" class="w-4 h-4" />
               <span>Trigger Protocol Sheet</span>
@@ -82,7 +82,7 @@
           <Icon name="lucide:plus-square" class="absolute -bottom-10 -right-10 w-48 h-48 text-white/5 opacity-0 group-hover:opacity-10 transition-opacity duration-700" />
         </div>
 
-        <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6 flex flex-col justify-center">
+        <div class="bg-white p-10 rounded-[1.5rem] border border-slate-100 shadow-sm space-y-6 flex flex-col justify-center">
             <h3 class="text-xl font-black text-slate-900  tracking-normal mb-4">System Modals</h3>
             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-8">Used for destructive actions or important confirmations. Immediate attention required.</p>
             <div class="flex space-x-4">
@@ -106,7 +106,7 @@
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        <div class="bg-white p-8 rounded-[2rem] border border-slate-50 shadow-sm border-l-4 border-l-emerald-500">
+        <div class="bg-white p-8 rounded-[1.25rem] border border-slate-50 shadow-sm border-l-4 border-l-emerald-500">
           <p class="text-sm font-black text-slate-400  tracking-normal mb-2">Systems Online</p>
           <div class="flex items-center justify-between">
             <span class="text-lg font-black text-slate-900 tracking-normal">99.8%</span>
@@ -116,7 +116,7 @@
           </div>
         </div>
 
-        <div class="bg-white p-8 rounded-[2rem] border border-slate-50 shadow-sm border-l-4 border-l-blue-500">
+        <div class="bg-white p-8 rounded-[1.25rem] border border-slate-50 shadow-sm border-l-4 border-l-blue-500">
           <p class="text-sm font-black text-slate-400  tracking-normal mb-2">Acquisition</p>
           <div class="flex items-center justify-between">
             <span class="text-lg font-black text-slate-900 tracking-normal">1,204</span>
@@ -126,7 +126,7 @@
           </div>
         </div>
 
-        <div class="bg-slate-900 p-8 rounded-[2rem] text-white relative overflow-hidden">
+        <div class="bg-slate-900 p-8 rounded-[1.25rem] text-white relative overflow-hidden">
              <div class="relative z-10">
                 <p class="text-sm font-black text-white/40  tracking-normal mb-2">Dark Protocol</p>
                 <div class="flex items-center justify-between">
@@ -139,7 +139,7 @@
              <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
         </div>
 
-        <div class="bg-white p-8 rounded-[2rem] border border-slate-50 shadow-sm border-l-4 border-l-rose-500">
+        <div class="bg-white p-8 rounded-[1.25rem] border border-slate-50 shadow-sm border-l-4 border-l-rose-500">
           <p class="text-sm font-black text-slate-400  tracking-normal mb-2">Threat Vector</p>
           <div class="flex items-center justify-between">
             <span class="text-lg font-black text-slate-900 tracking-normal">ZERO</span>
@@ -154,8 +154,8 @@
     <!-- Components Reference -->
     <SlideOver v-model="showSheet" title="Deployment Sheet (Example)">
       <div class="p-8 space-y-10">
-         <div class="bg-slate-50 p-8 rounded-[2rem] border border-slate-100 flex flex-col items-center justify-center space-y-4">
-            <div class="w-16 h-16 bg-[#033958] rounded-2xl flex items-center justify-center text-white shadow-sm border border-slate-200 shadow-blue-900/40">
+         <div class="bg-slate-50 p-8 rounded-[1.25rem] border border-slate-100 flex flex-col items-center justify-center space-y-4">
+            <div class="w-16 h-16 bg-[#27628C] rounded-2xl flex items-center justify-center text-white shadow-sm border border-slate-200 shadow-blue-900/40">
               <Icon name="lucide:box" class="w-8 h-8" />
             </div>
             <p class="text-sm font-black text-slate-900  tracking-tight">Context Retention Protocol</p>
@@ -168,7 +168,7 @@
          </div>
 
          <div class="flex justify-end pt-10 border-t border-slate-50 gap-4">
-            <button @click="showSheet = false" class="px-10 py-5 bg-[#033958] text-white rounded-2xl font-black text-sm  tracking-normal shadow-sm border border-slate-200 active:scale-95 w-full">Close Protocol</button>
+            <button @click="showSheet = false" class="px-10 py-5 bg-[#27628C] text-white rounded-2xl font-black text-sm  tracking-normal shadow-sm border border-slate-200 active:scale-95 w-full">Close Protocol</button>
          </div>
       </div>
     </SlideOver>
@@ -201,7 +201,8 @@ import Icon from '@/components/Icon.vue'
 
 definePageMeta({
   layout: 'dashboard',
-  middleware: 'auth'
+  middleware: 'auth',
+  permission: 'dashboard:view'
 })
 
 // Demo State

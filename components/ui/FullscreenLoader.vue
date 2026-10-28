@@ -8,7 +8,7 @@
         <!-- Logo Container with Spinning Border -->
         <div class="relative w-32 h-32 flex items-center justify-center">
           <!-- Animated Spinner Ring -->
-          <div class="absolute inset-0 rounded-full border-4 border-t-[#033958] border-r-transparent border-b-[#3BAB22] border-l-transparent animate-spin-slow"></div>
+          <div class="absolute inset-0 rounded-full border-4 border-t-[#27628C] border-r-transparent border-b-[#27628C] border-l-transparent animate-spin-slow"></div>
           
           <!-- Inner Pulse Circle -->
           <div class="absolute inset-2 rounded-full bg-white  flex items-center justify-center overflow-hidden animate-pulse-gentle">
@@ -18,13 +18,13 @@
 
         <!-- Loading Text -->
         <div class="mt-8 text-center">
-          <h2 class="text-[#033958] font-bold text-xl tracking-wider  animate-bounce-subtle">
+          <h2 class="text-[#27628C] font-bold text-xl tracking-wider  animate-bounce-subtle">
             Processing
           </h2>
           <div class="flex space-x-1 mt-2 justify-center">
-            <div class="w-1.5 h-1.5 bg-[#3BAB22] rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-            <div class="w-1.5 h-1.5 bg-[#3BAB22] rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-            <div class="w-1.5 h-1.5 bg-[#3BAB22] rounded-full animate-bounce"></div>
+            <div class="w-1.5 h-1.5 bg-[#27628C] rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+            <div class="w-1.5 h-1.5 bg-[#27628C] rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+            <div class="w-1.5 h-1.5 bg-[#27628C] rounded-full animate-bounce"></div>
           </div>
         </div>
       </div>

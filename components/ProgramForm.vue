@@ -16,7 +16,7 @@
             class="absolute top-4 left-1/2 w-full h-[1px] bg-slate-100 -z-10"
           >
             <div 
-              class="h-full bg-[#033958] transition-all duration-500"
+              class="h-full bg-[#27628C] transition-all duration-500"
               :style="{ width: currentStep > index ? '100%' : '0%' }"
             ></div>
           </div>
@@ -26,7 +26,7 @@
             :class="[
               'w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 cursor-pointer',
               currentStep === index 
-                ? 'bg-[#033958] text-white ring-4 ring-[#033958]/10' 
+                ? 'bg-[#27628C] text-white ring-4 ring-[#27628C]/10' 
                 : currentStep > index 
                 ? 'bg-green-500 text-white' 
                 : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-slate-100'
@@ -38,7 +38,7 @@
           <span
             :class="[
               'mt-3 text-sm font-bold transition-colors duration-500',
-              currentStep >= index ? 'text-[#033958]' : 'text-slate-300'
+              currentStep >= index ? 'text-[#27628C]' : 'text-slate-300'
             ]"
           >
             {{ step.title }}
@@ -157,7 +157,7 @@
         <section>
           <div class="flex items-center justify-between mb-4">
             <h4 class="text-sm font-bold text-slate-400 px-1">Specific focus areas</h4>
-            <button @click="addFocusArea" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add area</button>
+            <button @click="addFocusArea" type="button" class="text-[#27628C] text-sm font-bold hover:underline">Add area</button>
           </div>
           <div class="space-y-3">
             <div
@@ -188,7 +188,7 @@
         <section>
           <div class="flex items-center justify-between mb-4">
             <h4 class="text-sm font-bold text-slate-400 px-1">Learning outcomes</h4>
-            <button @click="addOutcome" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add outcome</button>
+            <button @click="addOutcome" type="button" class="text-[#27628C] text-sm font-bold hover:underline">Add outcome</button>
           </div>
           <div class="space-y-3">
             <div
@@ -219,7 +219,7 @@
         <section>
           <div class="flex items-center justify-between mb-4">
             <h4 class="text-sm font-bold text-slate-400 px-1">Program Schedule</h4>
-            <button @click="addResponsibility" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add schedule</button>
+            <button @click="addResponsibility" type="button" class="text-[#27628C] text-sm font-bold hover:underline">Add schedule</button>
           </div>
           <div class="space-y-3">
             <div
@@ -279,7 +279,7 @@
         <section>
           <div class="flex items-center justify-between mb-6">
             <h4 class="text-sm font-bold text-slate-400 px-1">Program highlights</h4>
-            <button @click="addHighlight" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add highlight</button>
+            <button @click="addHighlight" type="button" class="text-[#27628C] text-sm font-bold hover:underline">Add highlight</button>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div
@@ -323,7 +323,7 @@
         </header>
 
         <section class="space-y-6">
-          <div v-for="(speaker, index) in form.speakers" :key="index" class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 relative group focus-within:z-20">
+          <div v-for="(speaker, index) in form.speakers" :key="index" class="p-6 bg-slate-50 rounded-[1.25rem] border border-slate-100 relative group focus-within:z-20">
             <button
               @click="removeSpeaker(index)"
               type="button"
@@ -372,7 +372,7 @@
           <button
             @click="addSpeaker"
             type="button"
-            class="w-full py-6 bg-white border-2 border-dashed border-slate-100 rounded-[2rem] text-slate-400 font-bold text-sm hover:border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center space-x-3"
+            class="w-full py-6 bg-white border-2 border-dashed border-slate-100 rounded-[1.25rem] text-slate-400 font-bold text-sm hover:border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center space-x-3"
           >
             <Icon name="lucide:plus-circle" class="w-6 h-6" />
             <span>Add expert speaker</span>
@@ -393,7 +393,7 @@
               <button
                 @click="addFormField"
                 type="button"
-                class="px-6 py-3 bg-[#033958] text-white rounded-xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-2"
+                class="px-6 py-3 bg-[#27628C] text-white rounded-xl font-bold text-sm hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center space-x-2"
               >
                 <Icon name="lucide:plus" class="w-4 h-4" />
                 <span>Add Field</span>
@@ -408,7 +408,7 @@
               >
                 <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-50">
                   <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-[#033958] font-bold text-sm">
+                    <div class="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-[#27628C] font-bold text-sm">
                       {{ index + 1 }}
                     </div>
                     <h4 class="font-bold text-slate-900">Field Configuration</h4>
@@ -459,15 +459,15 @@
                     />
                     <div class="flex items-center px-6 bg-white border-l border-slate-50">
                       <label class="flex items-center group cursor-pointer">
-                        <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#033958] transition-colors">
+                        <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#27628C] transition-colors">
                           <input
                             v-model="field.required"
                             type="checkbox"
                             class="absolute opacity-0 w-full h-full cursor-pointer z-10"
                           />
-                          <div v-if="field.required" class="w-2.5 h-2.5 bg-[#033958] rounded-sm"></div>
+                          <div v-if="field.required" class="w-2.5 h-2.5 bg-[#27628C] rounded-sm"></div>
                         </div>
-                        <span class="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#033958] transition-colors">Mark as required</span>
+                        <span class="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#27628C] transition-colors">Mark as required</span>
                       </label>
                     </div>
                   </div>
@@ -483,15 +483,15 @@
                     />
                     <div v-if="['select', 'radio', 'checkbox'].includes(field.type)" class="flex items-center px-6 bg-white">
                       <label class="flex items-center group cursor-pointer">
-                        <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#033958] transition-colors">
+                        <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#27628C] transition-colors">
                           <input
                             v-model="field.allowOther"
                             type="checkbox"
                             class="absolute opacity-0 w-full h-full cursor-pointer z-10"
                           />
-                          <div v-if="field.allowOther" class="w-2.5 h-2.5 bg-[#033958] rounded-sm"></div>
+                          <div v-if="field.allowOther" class="w-2.5 h-2.5 bg-[#27628C] rounded-sm"></div>
                         </div>
-                        <span class="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#033958] transition-colors">Allow "Other"</span>
+                        <span class="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#27628C] transition-colors">Allow "Other"</span>
                       </label>
                     </div>
                   </div>
@@ -504,7 +504,7 @@
                     <button
                       @click="addFormFieldOption(field)"
                       type="button"
-                      class="text-[#033958] hover:text-[#022f42] text-sm font-bold flex items-center space-x-1"
+                      class="text-[#27628C] hover:text-[#1B4A6B] text-sm font-bold flex items-center space-x-1"
                     >
                       <Icon name="lucide:plus" class="w-3.5 h-3.5" />
                       <span>Add Option</span>
@@ -615,7 +615,7 @@
             v-if="currentStep < steps.length - 1"
             type="button"
             @click="nextStep"
-            class="px-10 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-3"
+            class="px-10 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center space-x-3"
           >
             <span>Continue</span>
             <Icon name="lucide:arrow-right" class="w-4 h-4" />
@@ -625,7 +625,7 @@
             v-else
             type="submit"
             :disabled="isSubmitting"
-            class="px-10 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-3"
+            class="px-10 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center space-x-3"
           >
             <div v-if="isSubmitting" class="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white"></div>
             <span>{{ program ? 'Update Program' : 'Publish Program' }}</span>

@@ -1,6 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
 import { useUser } from "@/composables/modules/auth/user";
 import { useCustomToast } from '@/composables/core/useCustomToast'
+import { permissionForRequest } from "@/utils/permissions"
 
 const $GATEWAY_ENDPOINT_WITHOUT_VERSION = import.meta.env
   .VITE_BASE_URL as string;
@@ -53,9 +54,25 @@ const instanceArray = [
 
 instanceArray.forEach((instance) => {
   instance.interceptors.request.use((config: any) => {
-    const { token } = useUser();
+    const { token, hasPermission } = useUser();
     if (token.value) {
       config.headers.Authorization = `Bearer ${token.value}`;
+
+      // Defence in depth: never let the browser fire an admin request the
+      // current session cannot perform, even if a button is accidentally shown.
+      const required = permissionForRequest(config.method || "get", config.url || "")
+      if (required && !hasPermission(required)) {
+        if (typeof window !== "undefined") {
+          const { showToast } = useCustomToast()
+          showToast({
+            title: "Access denied",
+            message: `You do not have permission to perform this action (${required}).`,
+            toastType: "error",
+            duration: 4000,
+          })
+        }
+        return Promise.reject(new axios.Cancel(`Missing permission: ${required}`))
+      }
     }
     return config;
   });
@@ -65,6 +82,10 @@ instanceArray.forEach((instance) => {
       return response;
     },
     (err: any) => {
+      if (axios.isCancel(err)) {
+        return Promise.reject(err)
+      }
+
       const { logOut } = useUser();
       const { showToast } = useCustomToast();
       

@@ -16,6 +16,8 @@
 import ProductsModule from '@/components/ProductsModule.vue'
 
 definePageMeta({
-  layout: 'dashboard'
+  layout: 'dashboard',
+  middleware: 'auth',
+  permission: 'products:read'
 })
 </script>

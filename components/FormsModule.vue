@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-8">
     <!-- Header Actions -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white/50 backdrop-blur-md p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white/50 backdrop-blur-md p-6 rounded-[1.25rem] border border-slate-100 shadow-sm">
       <div class="flex items-center space-x-6 flex-1 w-full max-w-2xl">
         <div class="flex-1">
           <AnimatedInput
@@ -22,9 +22,9 @@
           />
         </div>
       </div>
-      <button
+      <button v-if="hasPermission('forms:create')"
         @click="openCreateModal"
-        class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-[#033958] to-[#044d77] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-3"
+        class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-[#27628C] to-[#044d77] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-3"
       >
         <div class="bg-white/20 p-1 rounded-lg">
           <Plus class="w-4 h-4" />
@@ -34,9 +34,9 @@
     </div>
 
     <!-- Forms Grid/Table Container -->
-    <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm border border-slate-200 shadow-slate-200/50">
+    <div class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-sm border border-slate-200 shadow-slate-200/50">
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-slate-100 text-sm">
+        <table class="stack-table min-w-full divide-y divide-slate-100 text-sm">
           <thead class="bg-slate-50/50">
             <tr>
               <th scope="col" class="px-8 py-6 text-left font-black text-slate-400  tracking-normal text-sm">
@@ -68,7 +68,7 @@
               <!-- Title & Description -->
               <td class="px-8 py-6 whitespace-nowrap">
                 <div class="flex flex-col">
-                  <div class="font-bold text-slate-900 text-base group-hover:text-[#033958] transition-colors">
+                  <div class="font-bold text-slate-900 text-base group-hover:text-[#27628C] transition-colors">
                     {{ form.title || 'Untitled Professional Form' }}
                   </div>
                   <div class="text-slate-400 text-xs mt-1 max-w-xs truncate font-medium">
@@ -79,7 +79,7 @@
 
               <!-- Status -->
               <td class="px-8 py-6 whitespace-nowrap">
-                <button
+                <button v-if="hasPermission('forms:update')"
                   @click="toggleFormStatus(form)"
                   :disabled="togglingFormId === form._id"
                   :class="[
@@ -104,7 +104,7 @@
               <!-- Configuration (Fields) -->
               <td class="px-8 py-6 whitespace-nowrap">
                 <div class="flex items-center space-x-2">
-                  <div class="p-2 bg-blue-50 rounded-lg text-[#033958]">
+                  <div class="p-2 bg-blue-50 rounded-lg text-[#27628C]">
                     <Icon name="lucide:layout" class="w-4 h-4" />
                   </div>
                   <span class="font-bold text-slate-700">{{ form.fields?.length || 0 }}</span>
@@ -144,7 +144,7 @@
               <!-- Actions -->
               <td class="px-8 py-6 whitespace-nowrap text-right">
                 <div class="flex items-center justify-end space-x-2">
-                  <button
+                  <button v-if="hasPermission('forms:update')"
                     @click="editForm(form, 'edit')"
                     class="p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-blue-600 hover:border-blue-200 hover:shadow-md rounded-xl transition-all duration-300"
                     title="Configure form"
@@ -158,7 +158,7 @@
                   >
                     <Icon name="lucide:bar-chart-3" class="w-4.5 h-4.5" />
                   </button>
-                  <button
+                  <button v-if="hasPermission('forms:delete')"
                     @click="deleteForm(form._id)"
                     class="p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-red-600 hover:border-red-200 hover:shadow-md rounded-xl transition-all duration-300"
                     title="Remove form"
@@ -174,14 +174,14 @@
 
       <!-- Empty State -->
       <div v-if="!loading && filteredForms?.length === 0" class="text-center py-32">
-        <div class="w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 shadow-inner">
+        <div class="w-24 h-24 bg-slate-50 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6 shadow-inner">
           <Icon name="lucide:clipboard-list" class="w-10 h-10 text-slate-200" />
         </div>
         <h3 class="text-xl font-bold text-slate-900">No forms found</h3>
         <p class="text-slate-400 mt-2 max-w-sm mx-auto font-medium">We couldn't find any programme forms matching your current filters.</p>
         <button 
           @click="searchQuery = ''; statusFilter = ''" 
-          class="mt-8 text-[#033958] font-black text-xs  tracking-normal hover:underline"
+          class="mt-8 text-[#27628C] font-black text-xs  tracking-normal hover:underline"
         >
           Clear all filters
         </button>
@@ -190,8 +190,8 @@
       <!-- Loading State Overlay -->
       <div v-if="loading" class="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center z-10">
         <div class="flex flex-col items-center">
-          <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin"></div>
-          <span class="mt-4 text-xs font-black text-[#033958]  tracking-normal">Syncing...</span>
+          <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin"></div>
+          <span class="mt-4 text-xs font-black text-[#27628C]  tracking-normal">Syncing...</span>
         </div>
       </div>
     </div>
@@ -226,12 +226,12 @@
     <Modal v-model="showLinkModal" title="Gateway Activation" size="md">
       <div v-if="generatedLink" class="p-0 overflow-hidden">
         <!-- Hero Header -->
-        <div class="bg-gradient-to-br from-[#033958] to-[#044d77] p-10 text-center relative overflow-hidden">
+        <div class="bg-gradient-to-br from-[#27628C] to-[#044d77] p-10 text-center relative overflow-hidden">
           <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
           <Icon name="lucide:zap" class="w-32 h-32 text-white/5 absolute -top-8 -right-8 rotate-12" />
           
           <div class="relative z-10 space-y-4">
-            <div class="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20 flex items-center justify-center mx-auto shadow-sm border border-slate-200">
+            <div class="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[1.25rem] border border-white/20 flex items-center justify-center mx-auto shadow-sm border border-slate-200">
               <Icon name="lucide:rocket" class="w-10 h-10 text-white" />
             </div>
             <div>
@@ -259,11 +259,11 @@
                 <input
                   :value="generatedLink.split('/').pop()"
                   readonly
-                  class="flex-1 bg-transparent border-none text-sm font-black text-[#033958] focus:ring-0 cursor-default truncate py-4"
+                  class="flex-1 bg-transparent border-none text-sm font-black text-[#27628C] focus:ring-0 cursor-default truncate py-4"
                 />
                 <button
                   @click="copyGeneratedLink"
-                  class="px-6 py-4 bg-[#033958] text-white rounded-[1.2rem] font-bold text-xs hover:bg-[#022a41] transition-all active:scale-95 flex items-center gap-2 shadow-sm border border-slate-100"
+                  class="px-6 py-4 bg-[#27628C] text-white rounded-[1.2rem] font-bold text-xs hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center gap-2 shadow-sm border border-slate-100"
                 >
                   <Icon :name="isCopied ? 'lucide:check' : 'lucide:copy'" class="w-4 h-4" />
                   <span>{{ isCopied ? 'Copied' : 'Copy' }}</span>
@@ -301,7 +301,7 @@
             <a 
               :href="generatedLink" 
               target="_blank"
-              class="text-xs font-black  tracking-normal text-[#033958] flex items-center gap-2 hover:gap-3 transition-all"
+              class="text-xs font-black  tracking-normal text-[#27628C] flex items-center gap-2 hover:gap-3 transition-all"
             >
               View Live Form
               <Icon name="lucide:external-link" class="w-4 h-4" />
@@ -327,6 +327,9 @@ import SlideOver from '@/components/SlideOver.vue'
 import FormBuilder from '@/components/FormBuilder.vue'
 import FormSubmissions from '@/components/FormSubmissions.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import { useUser } from '@/composables/modules/auth/user'
+
+const { hasPermission } = useUser()
 
 // Composables
 const { forms, loading, getForms } = useGetForms()

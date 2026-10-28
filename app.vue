@@ -9,6 +9,6 @@
 
 <style>
 body {
-    font-family: 'Roobert PRO', sans-serif;
+    font-family: 'Satoshi', 'Inter', sans-serif;
 }
 </style>

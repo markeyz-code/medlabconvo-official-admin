@@ -4,7 +4,7 @@
     <!-- Conditional View: List vs Builder -->
     <div v-if="!isBuilding" class="space-y-8">
       <!-- Action Header -->
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-8 rounded-[2rem] border border-slate-100">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-8 rounded-[1.25rem] border border-slate-100">
         <div class="flex items-center gap-6">
           <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-[#27628C]">
             <Icon name="lucide:megaphone" class="w-8 h-8" />
@@ -15,7 +15,7 @@
           </div>
         </div>
 
-        <button
+        <button v-if="hasPermission('campaigns:create')"
           @click="startBuilding"
           class="px-8 py-4 bg-gray-900 text-white rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all flex items-center gap-3 shadow-sm border border-slate-200 shadow-gray-900/10 group"
         >
@@ -25,14 +25,14 @@
       </div>
 
       <!-- Campaigns List Table -->
-      <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden relative shadow-sm">
+      <div class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden relative shadow-sm">
         <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center">
           <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
           <p class="text-sm font-black text-[#27628C]  tracking-normal animate-pulse">Syncing Engine...</p>
         </div>
 
         <div class="overflow-x-auto">
-          <table class="w-full text-left border-separate border-spacing-0">
+          <table class="stack-table w-full text-left border-separate border-spacing-0">
             <thead>
               <tr class="bg-slate-50/50 text-sm font-black text-slate-400  tracking-normal">
                 <th class="px-10 py-6 border-b border-slate-100">Campaign Identity</th>
@@ -84,13 +84,13 @@
           
           <!-- Empty State -->
           <div v-if="!loading && campaigns.length === 0" class="py-32 text-center bg-slate-50/10">
-            <div class="w-32 h-32 bg-white rounded-[3rem] flex items-center justify-center mx-auto mb-8 border border-slate-200 shadow-sm relative">
-               <div class="absolute inset-0 bg-[#27628B]/5 rounded-full blur-2xl"></div>
+            <div class="w-32 h-32 bg-white rounded-[1.75rem] flex items-center justify-center mx-auto mb-8 border border-slate-200 shadow-sm relative">
+               <div class="absolute inset-0 bg-[#27628C]/5 rounded-full blur-2xl"></div>
                <Icon name="lucide:mail-open" class="w-14 h-14 text-slate-100 relative z-10" />
             </div>
             <h3 class="text-lg font-black text-slate-900 mb-4 tracking-tight">Zero Campaigns Detected</h3>
             <p class="text-slate-400 text-sm font-bold max-w-sm mx-auto leading-relaxed">Your message queue is currently empty. Initiate your first marketing blast to begin engaging with the community.</p>
-            <button @click="startBuilding" class="mt-10 px-10 py-5 bg-[#27628C] text-white rounded-[1.5rem] font-black text-xs  tracking-normal hover:scale-105 active:scale-95 transition-all shadow-sm border border-slate-200 shadow-blue-900/20">
+            <button v-if="hasPermission('campaigns:create')" @click="startBuilding" class="mt-10 px-10 py-5 bg-[#27628C] text-white rounded-[1.5rem] font-black text-xs  tracking-normal hover:scale-105 active:scale-95 transition-all shadow-sm border border-slate-200 shadow-blue-900/20">
                Craft First Identity
             </button>
           </div>
@@ -121,6 +121,9 @@ import { useEmailCampaigns } from '@/composables/modules/emails/useEmailCampaign
 import CampaignBuilder from '@/components/CampaignBuilder.vue'
 import Icon from '@/components/Icon.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import { useUser } from '@/composables/modules/auth/user'
+
+const { hasPermission } = useUser()
 
 const { campaigns, loading, getCampaigns, sendCampaign } = useEmailCampaigns()
 const isBuilding = ref(false)

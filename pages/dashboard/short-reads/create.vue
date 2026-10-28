@@ -5,7 +5,7 @@
         <h2 class="text-lg font-bold text-gray-900">Create Short Read</h2>
         <p class="text-gray-500">Build an immersive swipeable carousel.</p>
       </div>
-      <button @click="submit" :disabled="loading" class="px-4 py-2 bg-[#033958] text-white rounded-lg disabled:opacity-50">
+      <button @click="submit" :disabled="loading" class="px-4 py-2 bg-[#27628C] text-white rounded-lg disabled:opacity-50">
         {{ loading ? 'Saving...' : 'Save Short Read' }}
       </button>
     </div>
@@ -80,7 +80,8 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'dashboard',
-  middleware: 'auth'
+  middleware: 'auth',
+  permission: 'short_reads:create'
 })
 
 import { ref } from 'vue'

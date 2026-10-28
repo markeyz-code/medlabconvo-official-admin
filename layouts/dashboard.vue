@@ -1,561 +1,1591 @@
 <template>
-  <div class="min-h-screen bg-[#F8FAFC] font-sans text-slate-900">
-    <!-- Access Denied State for Members -->
-    <div v-if="user?.role === 'member'" class="fixed inset-0 bg-white z-[100] flex items-center justify-center p-6 lg:p-10">
-      <div class="max-w-xl w-full text-center space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-        <div class="relative w-40 h-40 mx-auto group">
-          <div class="absolute inset-0 bg-red-100 rounded-[3rem] rotate-12 group-hover:rotate-0 transition-transform duration-700"></div>
-          <div class="absolute inset-0 bg-red-50 rounded-[3rem] -rotate-6 group-hover:rotate-0 transition-transform duration-700 delay-100"></div>
-          <div class="relative w-full h-full bg-white rounded-[3rem] border-2 border-red-100 flex items-center justify-center shadow-sm border border-slate-200 shadow-red-900/10">
-            <Icon name="lucide:shield-off" class="w-16 h-16 text-red-600" />
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <h1 class="text-lg font-bold text-slate-900 tracking-tight">Access Restricted</h1>
-          <p class="text-slate-500 text-lg font-medium leading-relaxed">
-            Members are not allowed access to the admin portal. Please reach out to the administrators to update your role.
-          </p>
-          <div class="pt-4 flex flex-col items-center gap-2">
-            <div class="px-4 py-2 bg-slate-50 rounded-full border border-slate-200 flex items-center gap-3">
-              <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-              <span class="text-xs font-bold text-slate-500  tracking-normal">Unauthorized Account</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="pt-8">
-          <button
-            @click="confirmLogout"
-            class="px-12 py-4 bg-[#033958] text-white rounded-2xl font-bold hover:bg-[#022a41] hover:scale-105 transition-all duration-300 shadow-sm border border-slate-200 shadow-[#033958]/20 flex items-center gap-3 mx-auto"
-          >
-            <Icon name="lucide:log-out" class="w-5 h-5" />
-            <span>Return to Portal</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Authorized Content -->
-    <template v-else>
-      <!-- Mobile Overlay -->
-      <div
-        v-if="sidebarOpen && isMobile"
-        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 lg:hidden"
+  <div class="admin-shell">
+    <!-- Mobile drawer overlay -->
+    <Transition name="fade">
+      <button
+        v-if="isMobile && sidebarOpen"
+        class="sidebar-scrim"
+        aria-label="Close navigation"
         @click="closeSidebar"
-      ></div>
+      />
+    </Transition>
 
-      <!-- Navigation Sidebar -->
-      <aside 
-        class="fixed left-0 top-0 h-full bg-white text-slate-800 z-40 border-r border-slate-100 transition-all duration-300" :class="[isMobile && !sidebarOpen ? '-translate-x-full' : 'translate-x-0', isSidebarMinimized ? 'w-20' : 'w-64']"
-        
-      >
-        <!-- Logo Section -->
-        <div class="flex items-center h-20 px-6 border-b border-slate-50 mb-4 overflow-hidden" :class="isSidebarMinimized ? 'justify-center px-0' : ''">
-          <div class="flex items-center space-x-3 shrink-0">
-            <img src="@/assets/img/logo.jpeg" class="h-10 w-10 rounded-md ring-2 ring-slate-50 shrink-0" />
-            <span v-if="!isSidebarMinimized" class="font-medium text-lg truncate text-slate-900 transition-opacity duration-300">MedLabConvo</span>
-          </div>
-        </div>
+    <!-- Sidebar -->
+    <aside
+      class="admin-sidebar"
+      :class="[
+        sidebarOpen ? 'is-open' : '',
+        isMobile ? '' : collapsed ? 'is-collapsed' : '',
+      ]"
+      aria-label="Primary navigation"
+    >
+      <div class="sidebar-brand">
+        <NuxtLink to="/dashboard" class="brand-link" @click="closeSidebar">
+          <span class="brand-mark">
+            <img src="@/assets/img/logo.jpeg" alt="MedLabConvo" />
+          </span>
+          <span v-if="!collapsed || isMobile" class="brand-copy">
+            <span class="brand-name">MedLabConvo</span>
+            <span class="brand-sub">Admin console</span>
+          </span>
+        </NuxtLink>
 
-        <!-- Navigation Menu -->
-        <nav class="px-3 pb-20 space-y-1 overflow-y-auto max-h-[calc(100vh-80px)] custom-scrollbar">
-          <template v-for="item in navigationItems" :key="item.path || item.name">
-            <!-- Divider -->
-            <div v-if="item.type === 'divider'" class="py-4 px-4">
-              <div class="h-px bg-slate-100 w-full"></div>
-              <span v-if="!isSidebarMinimized" class="text-sm font-medium text-slate-400 tracking-wider mt-3 block">Security & Access</span>
-            </div>
+        <button
+          v-if="!isMobile"
+          class="collapse-btn"
+          :aria-label="collapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+          @click="toggleCollapse"
+        >
+          <Icon :name="collapsed ? 'lucide:chevrons-right' : 'lucide:chevrons-left'" class="w-4 h-4" />
+        </button>
 
-            <!-- Nav Link with Children -->
-            <div v-else-if="item.children" class="space-y-1">
+        <button
+          v-else
+          class="collapse-btn"
+          aria-label="Close navigation"
+          @click="closeSidebar"
+        >
+          <Icon name="lucide:x" class="w-4 h-4" />
+        </button>
+      </div>
+
+      <nav class="sidebar-nav scrollbar-slim">
+        <template v-for="section in visibleNavigation" :key="section.label">
+          <p v-if="!collapsed || isMobile" class="nav-section-label">{{ section.label }}</p>
+          <div v-else class="nav-section-rule"></div>
+
+          <template v-for="item in section.items" :key="item.path || item.name">
+            <div v-if="item.children" class="nav-group">
               <button
-                @click="toggleMenu(item.name)"
-                :class="[
-                  'w-full group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 relative text-slate-500 hover:bg-slate-50 hover:text-slate-900',
-                  item.children.some(child => isActive(child.path)) ? 'bg-slate-50 text-[#033958]' : ''
-                ]"
+                class="nav-item nav-group-trigger"
+                :class="{ 'nav-item-active': isChildActive(item) }"
+                :title="collapsed ? item.name : undefined"
+                @click="toggleGroup(item.name)"
               >
-                <div class="flex items-center" :class="isSidebarMinimized ? 'justify-center w-full' : ''">
-                  <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 text-slate-400 group-hover:text-slate-900', item.children.some(child => isActive(child.path)) ? 'text-[#033958]' : '']" />
-                  <span v-if="!isSidebarMinimized" class="ml-4 font-medium text-sm tracking-tight">{{ item.name }}</span>
-                </div>
-                <Icon 
-                  v-if="!isSidebarMinimized"
-                  name="lucide:chevron-down" 
-                  :class="['w-4 h-4 transition-transform duration-300', expandedMenus.includes(item.name) ? 'rotate-180' : '']"
+                <Icon :name="item.icon" class="nav-icon" />
+                <span v-if="!collapsed || isMobile" class="nav-text">{{ item.name }}</span>
+                <Icon
+                  v-if="!collapsed || isMobile"
+                  name="lucide:chevron-down"
+                  class="nav-chevron"
+                  :class="{ 'rotate-180': expandedGroups.includes(item.name) || isChildActive(item) }"
                 />
               </button>
-              
-              <div 
-                v-show="expandedMenus.includes(item.name)"
-                class="pl-12 pr-4 py-1 space-y-1"
+
+              <div
+                v-show="(!collapsed || isMobile) && (expandedGroups.includes(item.name) || isChildActive(item))"
+                class="nav-children"
               >
                 <NuxtLink
-                  v-for="child in item.children"
+                  v-for="child in permittedChildren(item)"
                   :key="child.path"
                   :to="child.path"
-                  :class="[
-                    'block px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300',
-                    isActive(child.path)
-                      ? 'bg-[#033958] text-white'
-                      : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
-                  ]"
-                  @click="isMobile && closeSidebar()"
+                  class="nav-child"
+                  :class="{ 'nav-child-active': isActive(child.path) }"
+                  @click="closeSidebar"
                 >
+                  <span class="nav-child-dot"></span>
                   {{ child.name }}
                 </NuxtLink>
               </div>
             </div>
 
-            <!-- Standard Nav Link -->
             <NuxtLink
               v-else
               :to="item.path"
-              :class="[
-                'group flex items-center px-4 py-3 rounded-xl transition-all duration-300 relative',
-                isActive(item.path) 
-                  ? 'bg-[#033958] text-white' 
-                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
-              ]"
-              @click="isMobile && closeSidebar()"
+              class="nav-item"
+              :class="{ 'nav-item-active': isActive(item.path) }"
+              :title="collapsed ? item.name : undefined"
+              @click="closeSidebar"
             >
-              <Icon :name="item.icon" :class="['w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110', isActive(item.path) ? 'text-white' : 'text-slate-400 group-hover:text-slate-900']" />
-              <span class="ml-4 font-medium text-sm tracking-tight">{{ item.name }}</span>
-              
-              <span 
-                v-if="item.badge && item.badge > 0" 
-                class="ml-auto px-2 py-0.5 text-sm font-medium rounded-lg bg-slate-100 text-slate-700"
+              <Icon :name="item.icon" class="nav-icon" />
+              <span v-if="!collapsed || isMobile" class="nav-text">{{ item.name }}</span>
+              <span
+                v-if="(!collapsed || isMobile) && item.badge"
+                class="nav-badge"
               >
                 {{ item.badge }}
               </span>
             </NuxtLink>
           </template>
-        </nav>
+        </template>
+      </nav>
 
-        <!-- Logout Section -->
-        <div class="absolute bottom-0 left-0 right-0 p-3 bg-white border-t border-slate-100">
+      <div class="sidebar-footer">
+        <button class="user-chip" @click="openUserMenu">
+          <span class="avatar">{{ initials }}</span>
+          <span v-if="!collapsed || isMobile" class="user-chip-copy">
+            <span class="user-chip-name">{{ user?.firstName }} {{ user?.lastName }}</span>
+            <span class="user-chip-role">{{ roleLabel }}</span>
+          </span>
+          <Icon
+            v-if="!collapsed || isMobile"
+            name="lucide:more-vertical"
+            class="w-4 h-4 ml-auto text-slate-400"
+          />
+        </button>
+        <button
+          v-if="!collapsed || isMobile"
+          class="signout-btn"
+          @click="showLogoutModal = true"
+        >
+          <Icon name="lucide:log-out" class="w-4 h-4" />
+          Sign out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main" :class="isMobile ? '' : collapsed ? 'main-collapsed' : 'main-expanded'">
+      <header class="admin-header">
+        <div class="header-left">
           <button
-            @click="showLogoutModal = true"
-            class="w-full flex items-center px-4 py-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-all font-medium text-sm group border border-red-100"
+            class="icon-button mobile-only"
+            aria-label="Open navigation"
+            @click="openSidebar"
           >
-            <Icon name="lucide:log-out" class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            <span class="ml-3 font-semibold text-sm">Sign out</span>
+            <Icon name="lucide:menu" class="w-5 h-5" />
           </button>
+
+          <div class="header-context">
+            <p class="header-eyebrow">{{ activeSectionLabel }}</p>
+            <h1 class="header-title">{{ currentPageTitle }}</h1>
+          </div>
         </div>
-      </aside>
 
-      <!-- Main Content Area -->
-      <main :class="[
-        'transition-all duration-300 min-h-screen flex flex-col',
-        isMobile ? 'ml-0' : (isSidebarMinimized ? 'ml-20' : 'ml-64')
-      ]">
-        <!-- Top Header -->
-        <header class="h-20 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-20">
-          <div class="flex items-center space-x-6 w-full max-w-xl">
-            <button
-              @click="toggleSidebar"
-              class="lg:hidden p-2 rounded-lg hover:bg-slate-50 text-slate-600"
-            >
-              <Icon name="lucide:menu" class="w-6 h-6" />
-            </button>
-            <button
-              @click="showSearchModal = true"
-              class="hidden sm:flex items-center space-x-2 px-4 py-2 bg-slate-50 rounded-xl border border-slate-200 hover:bg-slate-100 transition-all text-slate-500 w-full"
-            >
-              <Icon name="lucide:search" class="w-4 h-4" />
-              <span class="text-sm font-medium">Search anything... (Cmd+K)</span>
-            </button>
-            <!-- <div>
-              <h1 class="text-xl font-medium text-slate-900 leading-tight">{{ currentPageTitle }}</h1>
-              <div class="flex items-center text-sm text-slate-500 mt-0.5 font-medium ">
-                <span>Admin</span>
-                <Icon name="lucide:chevron-right" class="w-3 h-3 mx-2 opacity-50" />
-                <span class="text-blue-600">{{ currentPageTitle }}</span>
-              </div>
-            </div> -->
+        <div class="header-actions">
+          <button class="search-trigger" @click="showSearchModal = true">
+            <Icon name="lucide:search" class="w-4 h-4" />
+            <span class="search-label">Search anything…</span>
+            <kbd class="search-kbd">⌘K</kbd>
+          </button>
+
+          <button class="icon-button search-icon-mobile" aria-label="Search" @click="showSearchModal = true">
+            <Icon name="lucide:search" class="w-5 h-5" />
+          </button>
+
+          <div class="live-pill mobile-hide">
+            <span class="live-dot"></span>
+            Live
           </div>
-          
-          <div class="flex items-center space-x-4">
-            <!-- Quick Action -->
-            <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-200">
-              <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-              <span class="text-sm font-medium text-slate-600">System Live</span>
-            </div>
 
-            <!-- Vertical Divider -->
-            <div class="w-px h-8 bg-slate-200 mx-2"></div>
-
-            <!-- User Profile -->
-            <div class="flex items-center space-x-3 pl-2">
-              <div class="text-right hidden sm:block">
-                <p class="text-sm font-medium text-slate-900 leading-none mb-1">{{ user?.firstName }} {{ user?.lastName }}</p>
-                <p class="text-sm font-medium text-blue-600 ">{{ user?.role?.replace('_', ' ') || 'Admin' }}</p>
-              </div>
-              <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white font-medium ring-4 ring-slate-50 border border-white/10">
-                {{ userInitials }}
-              </div>
+          <div class="header-user" @click="openUserMenu">
+            <span class="avatar avatar-sm">{{ initials }}</span>
+            <div class="header-user-copy mobile-hide">
+              <span class="header-user-name">{{ user?.firstName }} {{ user?.lastName }}</span>
+              <span class="header-user-role">{{ roleLabel }}</span>
             </div>
+            <Icon name="lucide:chevron-down" class="w-4 h-4 text-slate-400 mobile-hide" />
           </div>
-        </header>
+        </div>
 
-        <!-- Page Content Content -->
-        <div class="flex-1 p-6 md:p-8 lg:p-10 max-w-[1600px] mx-auto w-full">
-          <!-- Page Title Description -->
-          <div class="mb-10 pb-6 border-b border-slate-200 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div>
-              <h2 class="text-lg font-medium text-slate-900 mb-2 leading-tight tracking-tight">{{ currentPageTitle }}</h2>
-              <p class="text-slate-400 text-sm font-medium max-w-2xl leading-relaxed antialiased">{{ currentPageDescription }}</p>
+        <!-- User dropdown -->
+        <Transition name="dropdown">
+          <div v-if="userMenuOpen" class="user-menu">
+            <div class="user-menu-head">
+              <span class="avatar">{{ initials }}</span>
+              <div class="min-w-0">
+                <p class="user-menu-name">{{ user?.firstName }} {{ user?.lastName }}</p>
+                <p class="user-menu-email">{{ user?.email }}</p>
+              </div>
             </div>
+            <div class="user-menu-meta">
+              <span class="badge badge-brand">{{ roleLabel }}</span>
+              <span class="user-menu-perms">{{ permissions.length }} permissions</span>
+            </div>
+            <button class="user-menu-item" @click="refreshAccess">
+              <Icon name="lucide:refresh-cw" class="w-4 h-4" />
+              Refresh access
+            </button>
+            <button class="user-menu-item" @click="goToFirstAllowed">
+              <Icon name="lucide:layout-dashboard" class="w-4 h-4" />
+              My dashboard
+            </button>
+            <button class="user-menu-item is-danger" @click="showLogoutModal = true; userMenuOpen = false">
+              <Icon name="lucide:log-out" class="w-4 h-4" />
+              Sign out
+            </button>
+          </div>
+        </Transition>
+      </header>
+
+      <main class="admin-content">
+        <div class="content-header">
+          <div class="content-heading">
+            <p class="content-eyebrow">{{ activeSectionLabel }}</p>
+            <h2 class="content-title">{{ currentPageTitle }}</h2>
+            <p class="content-description">{{ currentPageDescription }}</p>
+          </div>
+          <div class="content-actions">
             <slot name="header-actions" />
           </div>
-
-          <slot />
         </div>
+
+        <slot />
       </main>
-    </template>
 
-    <!-- Logout Confirmation Modal -->
-    <Modal v-model="showLogoutModal" title="Security Confirmation" size="sm">
-      <div class="p-6">
-        <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Icon name="lucide:alert-triangle" class="w-8 h-8 text-red-600" />
+      <!-- Mobile bottom navigation -->
+      <nav v-if="isMobile" class="mobile-tabbar" aria-label="Quick navigation">
+        <NuxtLink
+          v-for="item in mobileTabs"
+          :key="item.path"
+          :to="item.path"
+          class="mobile-tab"
+          :class="{ 'mobile-tab-active': isActive(item.path) }"
+        >
+          <Icon :name="item.icon" class="w-5 h-5" />
+          <span>{{ item.short }}</span>
+        </NuxtLink>
+        <button class="mobile-tab" :class="{ 'mobile-tab-active': sidebarOpen }" @click="openSidebar">
+          <Icon name="lucide:menu" class="w-5 h-5" />
+          <span>More</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Logout confirmation -->
+    <Modal v-model="showLogoutModal" title="Sign out of the console?" size="sm">
+      <div class="confirm-copy">
+        <div class="confirm-icon is-danger">
+          <Icon name="lucide:log-out" class="w-6 h-6" />
         </div>
-        <div class="text-center mb-10">
-          <h3 class="text-xl font-medium text-slate-900 mb-2 tracking-tight">Ready to leave?</h3>
-          <p class="text-slate-400 text-sm font-medium leading-relaxed">Your current session will be terminated and you'll need to re-authenticate to access the portal.</p>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-4">
-          <button
-            @click="showLogoutModal = false"
-            class="px-4 py-2.5 text-sm font-medium text-slate-500 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-all border border-slate-100"
-          >
-            Stay Active
-          </button>
-          <button
-            @click="confirmLogout"
-            :disabled="logoutLoading"
-            class="px-4 py-2.5 text-sm font-medium text-white bg-red-600 rounded-2xl hover:bg-red-700 transition-all flex items-center justify-center space-x-2"
-          >
-            <div v-if="logoutLoading" class="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white"></div>
-            <span>{{ logoutLoading ? 'Leaving...' : 'Confirm Signout' }}</span>
-          </button>
-        </div>
+        <p>
+          Your session will be terminated on this device. You'll need to sign in with
+          a new verification code to return.
+        </p>
       </div>
+      <template #footer>
+        <button class="btn btn-outline w-full sm:w-auto" @click="showLogoutModal = false">
+          Stay signed in
+        </button>
+        <button class="btn btn-danger w-full sm:w-auto" :disabled="logoutLoading" @click="confirmLogout">
+          <span v-if="logoutLoading" class="spinner"></span>
+          {{ logoutLoading ? 'Signing out…' : 'Yes, sign out' }}
+        </button>
+      </template>
     </Modal>
 
-    <!-- Search Modal -->
-    <Modal v-model="showSearchModal" title="Global Search" size="md" paddingClass="p-3 sm:p-4">
-      <div class="space-y-4">
-        <div class="relative">
-          <Icon name="lucide:search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input 
-            v-model="searchQuery" 
-            type="text" 
-            placeholder="Search for users, programs, roles..." 
-            class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#033958] focus:border-transparent outline-none transition-all text-slate-900 placeholder:text-slate-400"
-            autofocus
+    <!-- Command palette -->
+    <Modal v-model="showSearchModal" title="Search the console" size="lg">
+      <div class="search-modal">
+        <div class="search-field">
+          <Icon name="lucide:search" class="w-5 h-5 text-slate-400" />
+          <input
+            ref="searchInputRef"
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search pages, sections and actions…"
+            class="search-input"
+            @keydown.down.prevent="moveSearch(1)"
+            @keydown.up.prevent="moveSearch(-1)"
+            @keydown.enter.prevent="openHighlightedResult"
           />
+          <button v-if="searchQuery" class="icon-button" aria-label="Clear search" @click="searchQuery = ''">
+            <Icon name="lucide:x" class="w-4 h-4" />
+          </button>
         </div>
-        <div class="max-h-64 overflow-y-auto space-y-2 mt-4 custom-scrollbar">
-          <template v-if="filteredSearchResults.length > 0">
-            <NuxtLink 
-              v-for="res in filteredSearchResults" 
-              :key="res.path" 
-              :to="res.path"
-              @click="showSearchModal = false"
-              class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 group"
-            >
-              <div class="w-8 h-8 rounded-lg bg-[#033958]/5 text-[#033958] flex items-center justify-center shrink-0 group-hover:bg-[#033958]/10 transition-colors">
-                <Icon :name="res.icon || 'lucide:file'" class="w-4 h-4" />
-              </div>
-              <div class="flex-1 min-w-0">
-                <h4 class="text-sm font-medium text-slate-900 truncate">{{ res.name }}</h4>
-                <p v-if="res.parent" class="text-xs text-slate-500 truncate">{{ res.parent }}</p>
-              </div>
-              <Icon name="lucide:chevron-right" class="w-4 h-4 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </NuxtLink>
-          </template>
-          <div v-else-if="searchQuery" class="text-center py-8 text-slate-500">
-            No results found for "{{ searchQuery }}"
+
+        <div class="search-results scrollbar-slim">
+          <p class="search-group-label">
+            {{ searchQuery ? 'Results' : 'All accessible sections' }}
+          </p>
+          <NuxtLink
+            v-for="(result, index) in filteredResults"
+            :key="result.path"
+            :to="result.path"
+            class="search-result"
+            :class="{ 'is-highlighted': index === searchHighlight }"
+            @click="showSearchModal = false"
+            @mouseenter="searchHighlight = index"
+          >
+            <span class="search-result-icon">
+              <Icon :name="result.icon || 'lucide:file'" class="w-4 h-4" />
+            </span>
+            <span class="search-result-copy">
+              <span class="search-result-name">{{ result.name }}</span>
+              <span v-if="result.parent" class="search-result-parent">{{ result.parent }}</span>
+            </span>
+            <Icon name="lucide:arrow-up-right" class="w-4 h-4 text-slate-300" />
+          </NuxtLink>
+
+          <div v-if="filteredResults.length === 0" class="search-empty">
+            <Icon name="lucide:search-x" class="w-8 h-8 text-slate-300" />
+            <p>No sections match “{{ searchQuery }}”.</p>
           </div>
-          
+        </div>
+
+        <div class="search-hints">
+          <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+          <span><kbd>↵</kbd> open</span>
+          <span><kbd>esc</kbd> close</span>
         </div>
       </div>
     </Modal>
-    <!-- Global Loading Overlay -->
-    <transition name="fade">
-      <div v-if="globalLoading" class="fixed inset-0 bg-[#033958]/10 backdrop-blur-sm flex items-center justify-center z-[100]">
-        <div class="bg-white rounded-[2rem] p-10 border border-slate-100 flex flex-col items-center">
-          <div class="relative w-16 h-16 mb-6">
-            <div class="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
-            <div class="absolute inset-0 border-4 border-[#033958] rounded-full border-t-transparent animate-spin"></div>
-          </div>
-          <span class="text-slate-900 font-medium text-sm">Loading...</span>
+
+    <!-- Global route loader -->
+    <Transition name="fade">
+      <div v-if="globalLoading" class="global-loader">
+        <div class="global-loader-card">
+          <span class="spinner spinner-lg"></span>
+          <span>Loading…</span>
         </div>
       </div>
-    </transition>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, provide, onMounted, onUnmounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { computed, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Icon from '~/components/Icon.vue'
 import Modal from '~/components/Modal.vue'
 import { useLogout } from '@/composables/modules/auth/useLogout'
 import { useUser } from '@/composables/modules/auth/user'
-import { useGetUsers } from '@/composables/modules/users/useGetUsers'
-import { useGetEnquiries } from '@/composables/modules/enquires/useGetEnquiries'
-import { useGetSubscriptions } from '@/composables/modules/subscriptions/useGetSubscriptions'
-import { useGetBlogs } from '@/composables/modules/blogs/useGetBlogs'
-import { useGetTeamMembers } from '@/composables/modules/teams/useGetTeamMembers'
-import { useGetPublications } from '@/composables/modules/publications/useGetPublications'
-import { useGetLabCasts } from '@/composables/modules/labcast/useGetLabCasts'
-import { useGetProducts } from '@/composables/modules/products/useGetProducts'
-import { useGetPrograms } from '@/composables/modules/programs/useGetPrograms'
-import { useGetForms } from '@/composables/modules/forms/useGetForms'
-import { useGetAuditLogs } from '@/composables/modules/audit/useGetAuditLogs'
-import { useGetConvoStacks } from '@/composables/modules/convostack/useGetConvoStacks'
-import { roles_api } from '@/api_factory/modules/roles'
+import { useSession } from '@/composables/useSession'
+import { landingRouteFor } from '@/utils/routePermissions'
 
-// Composables
-const { users, getUsers } = useGetUsers()
-const { enquiries, getEnquiries } = useGetEnquiries()
-const { subscriptions, getSubscriptions } = useGetSubscriptions()
-const { blogs, getBlogs } = useGetBlogs()
-const { teamMembers, getTeamMembers } = useGetTeamMembers()
-const { publications, getPublications } = useGetPublications()
-const { labcasts, getLabCasts } = useGetLabCasts()
-const { products, getProducts } = useGetProducts()
-const { programs, getPrograms } = useGetPrograms()
-const { forms, getForms } = useGetForms()
-const { auditLogs, getAuditLogs } = useGetAuditLogs()
-const { publications: convoStacks, getPublications: getConvoStacks } = useGetConvoStacks()
+interface NavItem {
+  name: string
+  path?: string
+  short?: string
+  icon: string
+  permission?: string
+  children?: NavItem[]
+  badge?: number | string
+}
 
-const router = useRouter()
+interface NavSection {
+  label: string
+  items: NavItem[]
+}
+
 const route = useRoute()
+const router = useRouter()
 const { logout, loading: logoutLoading } = useLogout()
-const { user } = useUser()
-
-// Reactive data
+const { user, permissions, hasPermission, roleLabel } = useUser()
+const { refreshUser } = useSession()
 
 const isMobile = ref(false)
-const sidebarOpen = ref(true)
-const isSidebarMinimized = ref(false)
-const toggleSidebarMinimize = () => { isSidebarMinimized.value = !isSidebarMinimized.value }
+const sidebarOpen = ref(false)
+const collapsed = ref(false)
+const userMenuOpen = ref(false)
+const showLogoutModal = ref(false)
 const showSearchModal = ref(false)
 const searchQuery = ref('')
+const searchHighlight = ref(0)
+const searchInputRef = ref<HTMLInputElement | null>(null)
+const expandedGroups = ref<string[]>(['Journo'])
+const globalLoading = ref(false)
+
+provide('globalLoading', globalLoading)
+
+const NAVIGATION: NavSection[] = [
+  {
+    label: 'Overview',
+    items: [
+      { name: 'Dashboard', path: '/dashboard', short: 'Home', icon: 'lucide:layout-dashboard', permission: 'dashboard:view' },
+    ],
+  },
+  {
+    label: 'Audience',
+    items: [
+      { name: 'Users', path: '/dashboard/users', short: 'Users', icon: 'lucide:users', permission: 'users:read' },
+      { name: 'Enquiries', path: '/dashboard/enquiries', short: 'Inbox', icon: 'lucide:messages-square', permission: 'enquiries:read' },
+      { name: 'Subscriptions', path: '/dashboard/subscriptions', short: 'Subs', icon: 'lucide:mail', permission: 'subscriptions:read' },
+      { name: 'Campaigns', path: '/dashboard/campaigns', icon: 'lucide:send', permission: 'campaigns:read' },
+    ],
+  },
+  {
+    label: 'Content',
+    items: [
+      {
+        name: 'Journo',
+        icon: 'lucide:file-text',
+        permission: 'publications:read',
+        children: [
+          { name: 'All Journos', path: '/dashboard/publications', icon: 'lucide:file-text', permission: 'publications:read' },
+          { name: 'Categories', path: '/dashboard/publications/categories', icon: 'lucide:tags', permission: 'publications:read' },
+        ],
+      },
+      { name: 'Convo Stack', path: '/dashboard/convostack', icon: 'lucide:book-open', permission: 'convostack:read' },
+      { name: 'LabCast', path: '/dashboard/labcast', icon: 'lucide:mic', permission: 'labcast:read' },
+      { name: 'Blogs', path: '/dashboard/blogs', icon: 'lucide:newspaper', permission: 'blogs:read' },
+      { name: 'Short Reads', path: '/dashboard/short-reads', icon: 'lucide:layers', permission: 'short_reads:read' },
+      { name: 'Programs', path: '/dashboard/programs', icon: 'lucide:graduation-cap', permission: 'programs:read' },
+      { name: 'Inventory', path: '/dashboard/products', icon: 'lucide:archive', permission: 'products:read' },
+      { name: 'Forms', path: '/dashboard/forms', icon: 'lucide:clipboard-list', permission: 'forms:read' },
+      { name: 'CMS', path: '/dashboard/cms', icon: 'lucide:copy', permission: 'cms:read' },
+    ],
+  },
+  {
+    label: 'Organisation',
+    items: [
+      { name: 'About Us', path: '/dashboard/teams', icon: 'lucide:users-round', permission: 'teams:read' },
+      { name: 'Leadership', path: '/dashboard/leadership', icon: 'lucide:user-round-cog', permission: 'teams:read' },
+    ],
+  },
+  {
+    label: 'Security & access',
+    items: [
+      { name: 'Roles', path: '/dashboard/access-control/roles', icon: 'lucide:shield-check', permission: 'roles:read' },
+      { name: 'Permissions', path: '/dashboard/access-control/permissions', icon: 'lucide:key-round', permission: 'permissions:read' },
+      { name: 'Audit logs', path: '/dashboard/audit', icon: 'lucide:fingerprint', permission: 'audit:read' },
+    ],
+  },
+]
+
+const visibleNavigation = computed<NavSection[]>(() =>
+  NAVIGATION.map((section) => ({
+    ...section,
+    items: section.items.filter((item) => {
+      if (item.children) {
+        return item.children.some((child) => hasPermission(child.permission || item.permission || ''))
+      }
+      return hasPermission(item.permission || '')
+    }),
+  })).filter((section) => section.items.length > 0),
+)
+
+const permittedChildren = (item: NavItem) =>
+  (item.children || []).filter((child) => hasPermission(child.permission || item.permission || ''))
 
 const flattenedNavigation = computed(() => {
-  const result = []
-  RAW_NAVIGATION_ITEMS.forEach(item => {
-    if (item.type === 'divider') return
-    
-    // Add the parent if it has a valid path
-    if (item.path) {
-      result.push({ name: item.name, path: item.path, icon: item.icon, parent: null })
-    }
-    
-    // Add children if they exist
-    if (item.children) {
-      item.children.forEach(child => {
-        if (child.path) {
-          result.push({ name: child.name, path: child.path, icon: item.icon || 'lucide:file', parent: item.name })
-        }
+  const result: Array<{ name: string; path: string; icon?: string; parent?: string }> = []
+  visibleNavigation.value.forEach((section) => {
+    section.items.forEach((item) => {
+      if (item.path) result.push({ name: item.name, path: item.path, icon: item.icon })
+      permittedChildren(item).forEach((child) => {
+        if (child.path) result.push({ name: child.name, path: child.path, icon: child.icon || item.icon, parent: item.name })
       })
-    }
+    })
   })
   return result
 })
 
-const filteredSearchResults = computed(() => {
-  if (!searchQuery.value) return flattenedNavigation.value // By default return all navigations
-  
+const filteredResults = computed(() => {
+  if (!searchQuery.value.trim()) return flattenedNavigation.value
   const query = searchQuery.value.toLowerCase()
-  return flattenedNavigation.value.filter(item => 
-    item.name.toLowerCase().includes(query) || (item.parent && item.parent.toLowerCase().includes(query))
+  return flattenedNavigation.value.filter(
+    (item) =>
+      item.name.toLowerCase().includes(query) ||
+      (item.parent || '').toLowerCase().includes(query),
   )
 })
 
-const globalLoading = ref(false)
-const showLogoutModal = ref(false)
-const expandedMenus = ref<string[]>([])
+const mobileTabs = computed(() => {
+  const preferred = ['/dashboard', '/dashboard/users', '/dashboard/publications', '/dashboard/enquiries']
+  const all = flattenedNavigation.value.filter((item) => !item.parent)
+  const selected: Array<{ name: string; path: string; icon: string; short: string }> = []
 
-const toggleMenu = (name: string) => {
-  if (expandedMenus.value.includes(name)) {
-    expandedMenus.value = expandedMenus.value.filter(n => n !== name)
-  } else {
-    expandedMenus.value.push(name)
-  }
-}
-
-const isActive = (path: string) => {
-  if (!path) return false;
-  if (path === '/dashboard') {
-    return route.path === '/dashboard';
-  }
-  return route.path === path || route.path.startsWith(`${path}/`);
-}
-
-// Navigation items
-const { hasPermission } = useUser()
-
-const RAW_NAVIGATION_ITEMS = [
-  { name: 'Dashboard', path: '/dashboard', icon: 'lucide:layout-grid', badge: null, permission: 'dashboard:view' },
-  { name: 'Users', path: '/dashboard/users', icon: 'lucide:users', badge: null, permission: 'users:read' },
-  { name: 'About Us', path: '/dashboard/teams', icon: 'lucide:users-2', badge: null, permission: 'teams:read' },
-  { name: 'Enquiries', path: '/dashboard/enquiries', icon: 'lucide:messages-square', badge: null, permission: 'enquiries:read' },
-  { name: 'Subscriptions', path: '/dashboard/subscriptions', icon: 'lucide:mail', badge: null, permission: 'subscriptions:read' },
-  { name: 'Campaigns', path: '/dashboard/campaigns', icon: 'lucide:send', badge: null, permission: 'campaigns:read' },
-  { 
-    name: 'Journo', 
-    icon: 'lucide:file-text', 
-    badge: null, 
-    permission: 'publications:read',
-    children: [
-      { name: 'All Journos', path: '/dashboard/publications' },
-      { name: 'Categories', path: '/dashboard/publications/categories' }
-    ]
-  },
-  { name: 'Convo Stack', path: '/dashboard/convostack', icon: 'lucide:book-open', badge: null, permission: 'convostack:read' },
-  { name: 'LabCast', path: '/dashboard/labcast', icon: 'lucide:mic', badge: null, permission: 'labcast:read' },
-  { name: 'Inventory', path: '/dashboard/products', icon: 'lucide:archive', badge: null, permission: 'products:read' },
-  { name: 'Programs', path: '/dashboard/programs', icon: 'lucide:graduation-cap', badge: null, permission: 'programs:read' },
-  { name: 'Blogs', path: '/dashboard/blogs', icon: 'lucide:newspaper', badge: null, permission: 'blogs:read' },
-  { name: 'Forms', path: '/dashboard/forms', icon: 'lucide:clipboard-list', badge: null, permission: 'forms:read' },
-  { name: 'CMS', path: '/dashboard/cms', icon: 'lucide:copy', badge: null, permission: 'cms:read' },
-  { name: 'Short Reads', path: '/dashboard/short-reads', icon: 'lucide:layers', badge: null, permission: 'short_reads:read' },
-  
-  // Separator / Section for Access Control
-  { name: 'divider', path: '', icon: '', badge: null, type: 'divider', permission: 'roles:read' },
-  { name: 'Roles', path: '/dashboard/access-control/roles', icon: 'lucide:shield-check', badge: null, permission: 'roles:read' },
-  { name: 'Permissions', path: '/dashboard/access-control/permissions', icon: 'lucide:key', badge: null, permission: 'permissions:read' },
-  { name: 'Audit Logs', path: '/dashboard/audit', icon: 'lucide:fingerprint', badge: null, permission: 'audit:read' },
-]
-
-const navigationItems = computed(() => {
-  const itemsWithBadges = RAW_NAVIGATION_ITEMS.map(item => {
-    switch (item.name) {
-      case 'Users': return { ...item, badge: users.value?.length }
-      case 'About Us': return { ...item, badge: teamMembers.value?.length }
-      case 'Enquiries': return { ...item, badge: enquiries.value?.length }
-      case 'Subscriptions': return { ...item, badge: subscriptions.value?.length }
-      case 'Journo': return { ...item, badge: publications.value?.length }
-      case 'Convo Stack': return { ...item, badge: convoStacks.value?.length }
-      case 'LabCast': return { ...item, badge: labcasts.value?.length }
-      case 'Inventory': return { ...item, badge: products.value?.length }
-      case 'Programs': return { ...item, badge: programs.value?.length }
-      case 'Blogs': return { ...item, badge: blogs.value?.length }
-      case 'Forms': return { ...item, badge: forms.value?.length }
-      case 'Audit Logs': return { ...item, badge: auditLogs.value?.length }
-      default: return item
-    }
+  preferred.forEach((path) => {
+    const item = all.find((entry) => entry.path === path)
+    if (item) selected.push({ ...item, icon: item.icon || 'lucide:circle', short: item.name.split(' ')[0] })
   })
-  return itemsWithBadges.filter(item => !item.permission || hasPermission(item.permission))
+
+  for (const item of all) {
+    if (selected.length >= 4) break
+    if (!selected.some((entry) => entry.path === item.path)) {
+      selected.push({ ...item, icon: item.icon || 'lucide:circle', short: item.name.split(' ')[0] })
+    }
+  }
+  return selected.slice(0, 4)
 })
+
+const PAGE_TITLES: Record<string, string> = {
+  '/dashboard': 'Dashboard',
+  '/dashboard/users': 'Users',
+  '/dashboard/teams': 'About us',
+  '/dashboard/leadership': 'Leadership',
+  '/dashboard/enquiries': 'Enquiries',
+  '/dashboard/subscriptions': 'Subscriptions',
+  '/dashboard/campaigns': 'Campaigns',
+  '/dashboard/publications': 'Journo',
+  '/dashboard/publications/categories': 'Journo categories',
+  '/dashboard/convostack': 'Convo Stack',
+  '/dashboard/labcast': 'LabCast',
+  '/dashboard/blogs': 'Blogs',
+  '/dashboard/short-reads': 'Short Reads',
+  '/dashboard/programs': 'Programs',
+  '/dashboard/products': 'Inventory',
+  '/dashboard/forms': 'Forms',
+  '/dashboard/cms': 'CMS',
+  '/dashboard/audit': 'Audit logs',
+  '/dashboard/access-control/roles': 'Roles',
+  '/dashboard/access-control/permissions': 'Permissions',
+  '/dashboard/style-guide': 'Design system',
+}
+
+const PAGE_DESCRIPTIONS: Record<string, string> = {
+  '/dashboard': 'Live platform health, content velocity and the actions that need your attention.',
+  '/dashboard/users': 'Manage admin accounts, roles and access state across the console.',
+  '/dashboard/teams': 'Maintain the public team profiles, categories and leadership directory.',
+  '/dashboard/leadership': 'Curate the leadership directory and public organisation structure.',
+  '/dashboard/enquiries': 'Read, triage and resolve messages from the public website.',
+  '/dashboard/subscriptions': 'Manage newsletter subscribers and mailing list health.',
+  '/dashboard/campaigns': 'Compose, preview and send email campaigns to your audience.',
+  '/dashboard/publications': 'Review, approve and publish Journo research submissions.',
+  '/dashboard/publications/categories': 'Organise Journo content into reader-friendly categories.',
+  '/dashboard/convostack': 'Publish long-form academic conversations and resources.',
+  '/dashboard/labcast': 'Manage LabCast seasons, episodes, guests and publishing state.',
+  '/dashboard/blogs': 'Draft, review and publish editorial blog posts.',
+  '/dashboard/short-reads': 'Manage short-form story carousels and cover images.',
+  '/dashboard/programs': 'Run programmes, registration windows and applications.',
+  '/dashboard/products': 'Manage the inventory, pricing and publication state of products.',
+  '/dashboard/forms': 'Build forms, publish them and review submissions.',
+  '/dashboard/cms': 'Control dynamic copy and page content across the website.',
+  '/dashboard/audit': 'Inspect the immutable record of administrative actions.',
+  '/dashboard/access-control/roles': 'Define roles and the permissions bundled into each one.',
+  '/dashboard/access-control/permissions': 'Inspect the granular permission catalogue.',
+  '/dashboard/style-guide': 'Reference the typography, colour and component system.',
+}
 
 const currentPageTitle = computed(() => {
-  const item = navigationItems.value.find(item => item.path === route.path)
-  return item?.name || 'Admin Console'
+  if (PAGE_TITLES[route.path]) return PAGE_TITLES[route.path]
+  const match = flattenedNavigation.value
+    .filter((item) => route.path === item.path || route.path.startsWith(`${item.path}/`))
+    .sort((a, b) => b.path.length - a.path.length)[0]
+  if (match) return match.name
+  if (route.path.includes('/create')) return 'Create new'
+  if (route.path.includes('/short-reads/')) return 'Edit short read'
+  if (route.path.includes('/convostack/')) return 'Edit Convo Stack'
+  if (route.path.includes('/leadership/')) return 'Edit team member'
+  return 'Admin console'
 })
 
-const currentPageDescription = computed(() => {
-  const descriptions = {
-    '/dashboard': 'View real-time platform statistics and activity.',
-    '/dashboard/users': 'Manage user accounts, roles, and access permissions.',
-    '/dashboard/enquiries': 'Respond to customer support tickets and enquiries.',
-    '/dashboard/subscriptions': 'Manage your newsletter subscribers and mailing lists.',
-    '/dashboard/campaigns': 'Design and send email campaigns to your audience.',
-    '/dashboard/teams': 'Manage your team members, leadership profiles, and organizational structure.',
-    '/dashboard/labcast': 'Manage your podcast episodes and labcast content.',
-    '/dashboard/publications': 'Manage research papers, academic publications, and Journo articles.',
-    '/dashboard/convostack': 'Manage and organize Convo Stack content and academic resources.',
-    '/dashboard/cms': 'Manage all dynamic content and pages across your platform seamlessly.',
-    '/dashboard/audit': 'View security logs and system activity history.',
-    '/dashboard/short-reads': 'Manage Zikoko-style short read carousels and cover images.',
-    '/dashboard/access-control/roles': 'Define group-based permissions and system roles.',
-    '/dashboard/access-control/permissions': 'Manage individual granular system permissions.',
-    '/dashboard/style-guide': 'Developer reference for medlabconvo design components.'
-  }
-  return descriptions[route.path as keyof typeof descriptions] || 'Manage your MedLabConvo platform settings.'
+const currentPageDescription = computed(
+  () => PAGE_DESCRIPTIONS[route.path] || 'Manage your MedLabConvo platform settings and content.',
+)
+
+const activeSectionLabel = computed(() => {
+  const section = visibleNavigation.value.find((entry) =>
+    entry.items.some((item) => isActive(item.path || '') || (item.children || []).some((child) => isActive(child.path || ''))),
+  )
+  return section?.label || 'Console'
 })
 
-const userInitials = computed(() => {
-  if (!user.value) return 'U'
-  const first = user.value.firstName?.charAt(0) || ''
-  const last = user.value.lastName?.charAt(0) || ''
-  return (first + last).toUpperCase()
+const initials = computed(() => {
+  const first = user.value?.firstName?.charAt(0) || ''
+  const last = user.value?.lastName?.charAt(0) || ''
+  return (first + last || user.value?.email?.charAt(0) || 'A').toUpperCase()
 })
 
-// Methods
-const checkMobile = () => {
-  isMobile.value = window.innerWidth < 1024
-  if (isMobile.value) sidebarOpen.value = false
-  else sidebarOpen.value = true
+const isActive = (path: string) => {
+  if (!path) return false
+  if (path === '/dashboard') return route.path === '/dashboard'
+  return route.path === path || route.path.startsWith(`${path}/`)
 }
 
-const toggleSidebar = () => sidebarOpen.value = !sidebarOpen.value
-const closeSidebar = () => { if (isMobile.value) sidebarOpen.value = false }
+const isChildActive = (item: NavItem) => (item.children || []).some((child) => isActive(child.path || ''))
+
+const toggleGroup = (name: string) => {
+  expandedGroups.value = expandedGroups.value.includes(name)
+    ? expandedGroups.value.filter((group) => group !== name)
+    : [...expandedGroups.value, name]
+}
+
+const openSidebar = () => {
+  sidebarOpen.value = true
+  if (typeof document !== 'undefined') document.body.classList.add('drawer-open')
+}
+const closeSidebar = () => {
+  if (!isMobile.value) return
+  sidebarOpen.value = false
+  if (typeof document !== 'undefined') document.body.classList.remove('drawer-open')
+}
+const toggleCollapse = () => {
+  collapsed.value = !collapsed.value
+  if (typeof localStorage !== 'undefined') localStorage.setItem('mc-sidebar-collapsed', String(collapsed.value))
+}
+
+const openUserMenu = () => {
+  userMenuOpen.value = !userMenuOpen.value
+}
+
+const goToFirstAllowed = () => {
+  userMenuOpen.value = false
+  router.push(landingRouteFor(hasPermission))
+}
+
+const refreshAccess = async () => {
+  userMenuOpen.value = false
+  await refreshUser(true)
+  if (!hasPermission('dashboard:view')) router.push('/dashboard/forbidden')
+}
 
 const confirmLogout = async () => {
   try {
     await logout()
     showLogoutModal.value = false
     router.push('/')
-  } catch (error) {
-    console.error('Logout failed:', error)
+  } catch {
     showLogoutModal.value = false
   }
 }
 
-provide('globalLoading', globalLoading)
+const moveSearch = (direction: number) => {
+  if (!filteredResults.value.length) return
+  searchHighlight.value =
+    (searchHighlight.value + direction + filteredResults.value.length) % filteredResults.value.length
+}
 
-onMounted(async () => {
-  checkMobile()
-  window.addEventListener('resize', checkMobile)
-  
-  window.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-      e.preventDefault()
-      showSearchModal.value = true
-    }
-  })
-  
-  // Auto-expand menus with active children
-  navigationItems.value.forEach(item => {
-    if (item.children && item.children.some(child => isActive(child.path))) {
-      if (!expandedMenus.value.includes(item.name)) {
-        expandedMenus.value.push(item.name)
-      }
-    }
-  })
-  
-  // Sync permissions if super_admin
-  if (user.value?.role === 'super_admin') {
-    const perms = RAW_NAVIGATION_ITEMS
-      .map(item => item.permission)
-      .filter(p => !!p)
-    try {
-      await roles_api.$_sync_permissions(perms as string[])
-    } catch (e) {
-      console.error('Permission sync failed:', e)
-    }
+const openHighlightedResult = () => {
+  const result = filteredResults.value[searchHighlight.value]
+  if (!result) return
+  showSearchModal.value = false
+  router.push(result.path)
+}
+
+const syncViewport = () => {
+  isMobile.value = typeof window !== 'undefined' && window.innerWidth < 1024
+  if (!isMobile.value) {
+    sidebarOpen.value = true
+    if (typeof document !== 'undefined') document.body.classList.remove('drawer-open')
+  } else {
+    sidebarOpen.value = false
   }
+}
 
-  // Data is loaded lazily on their respective pages now to prevent massive layout blocking
+const onKeydown = (event: KeyboardEvent) => {
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+    event.preventDefault()
+    showSearchModal.value = true
+  }
+  if (event.key === 'Escape') {
+    showSearchModal.value = false
+    userMenuOpen.value = false
+    closeSidebar()
+  }
+}
+
+const onDocumentClick = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  if (userMenuOpen.value && !target.closest('.header-user') && !target.closest('.user-menu')) {
+    userMenuOpen.value = false
+  }
+}
+
+watch(route, () => {
+  closeSidebar()
+  userMenuOpen.value = false
 })
 
-onUnmounted(() => window.removeEventListener('resize', checkMobile))
+watch(showSearchModal, async (open) => {
+  if (!open) return
+  searchQuery.value = ''
+  searchHighlight.value = 0
+  await nextTick()
+  searchInputRef.value?.focus()
+})
+
+onMounted(() => {
+  syncViewport()
+  if (typeof localStorage !== 'undefined') {
+    collapsed.value = localStorage.getItem('mc-sidebar-collapsed') === 'true'
+  }
+  window.addEventListener('resize', syncViewport)
+  window.addEventListener('keydown', onKeydown)
+  document.addEventListener('click', onDocumentClick)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', syncViewport)
+  window.removeEventListener('keydown', onKeydown)
+  document.removeEventListener('click', onDocumentClick)
+  if (typeof document !== 'undefined') document.body.classList.remove('drawer-open')
+})
 </script>
 
-<style>
-.custom-scrollbar::-webkit-scrollbar { width: 4px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.05); border-radius: 10px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.1); }
+<style scoped>
+.admin-shell {
+  min-height: 100vh;
+  background: var(--mc-bg);
+}
 
-.fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+/* ----------------------------- Sidebar ----------------------------- */
+.admin-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 60;
+  width: 272px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-right: 1px solid var(--mc-border);
+  transition: width 0.25s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-sidebar.is-collapsed {
+  width: 80px;
+}
+
+.sidebar-brand {
+  height: var(--mc-header-height);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--mc-border);
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid var(--mc-border);
+  background: var(--mc-brand-50);
+  display: grid;
+  place-items: center;
+}
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.brand-name {
+  font-family: var(--mc-font-heading);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  color: var(--mc-ink);
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.brand-sub {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mc-subtle);
+  margin-top: 2px;
+}
+
+.collapse-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: var(--mc-muted);
+  border: 1px solid var(--mc-border);
+  background: #fff;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+.collapse-btn:hover {
+  color: var(--mc-brand);
+  background: var(--mc-brand-50);
+  border-color: var(--mc-brand-100);
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 12px 22px;
+}
+
+.nav-section-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--mc-subtle);
+  padding: 18px 10px 7px;
+}
+.nav-section-label:first-child {
+  padding-top: 4px;
+}
+.nav-section-rule {
+  height: 1px;
+  background: var(--mc-border);
+  margin: 14px 8px;
+}
+
+.nav-item {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 11px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Scoped styles win over the global `.nav-item` background, so restate the
+   active treatment here (it would otherwise be white-on-white). */
+.nav-item.nav-item-active {
+  background: var(--mc-brand);
+  color: #fff;
+  box-shadow: 0 10px 22px -14px rgba(39, 98, 140, 0.9);
+}
+.nav-item.nav-item-active:hover {
+  background: var(--mc-brand-600);
+  color: #fff;
+}
+.nav-item.nav-item-active .nav-icon {
+  opacity: 1;
+}
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+.nav-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nav-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  color: var(--mc-brand-700);
+  background: var(--mc-brand-50);
+}
+.nav-item-active .nav-badge {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+}
+.nav-chevron {
+  width: 15px;
+  height: 15px;
+  margin-left: auto;
+  transition: transform 0.2s ease;
+  opacity: 0.7;
+}
+
+.admin-sidebar.is-collapsed .nav-item {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.nav-children {
+  padding: 2px 0 6px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nav-child {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  color: var(--mc-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.18s ease;
+}
+.nav-child:hover {
+  color: var(--mc-brand-700);
+  background: var(--mc-brand-50);
+}
+.nav-child.nav-child-active {
+  color: var(--mc-brand-700);
+  background: var(--mc-brand-50);
+  font-weight: 600;
+}
+.nav-child-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.sidebar-footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--mc-border);
+  padding: 12px;
+  background: #fff;
+}
+
+.user-chip {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 13px;
+  border: 1px solid transparent;
+  background: transparent;
+  text-align: left;
+  transition: all 0.18s ease;
+}
+.user-chip:hover {
+  background: var(--mc-brand-50);
+  border-color: var(--mc-brand-100);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--mc-brand);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+.user-chip-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.user-chip-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--mc-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-chip-role {
+  font-size: 10.5px;
+  color: var(--mc-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.signout-btn {
+  width: 100%;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--mc-danger);
+  border: 0;
+  background: transparent;
+  transition: background 0.18s ease;
+}
+.signout-btn:hover {
+  background: var(--mc-danger-soft);
+}
+
+.admin-sidebar.is-collapsed .sidebar-footer {
+  padding: 10px 8px;
+}
+.admin-sidebar.is-collapsed .user-chip {
+  justify-content: center;
+  padding: 8px 0;
+}
+
+/* ----------------------------- Main ----------------------------- */
+.admin-main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: padding-left 0.25s ease;
+}
+.main-expanded {
+  padding-left: 272px;
+}
+.main-collapsed {
+  padding-left: 80px;
+}
+
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--mc-header-height);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 clamp(16px, 3vw, 34px);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--mc-border);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.header-context {
+  min-width: 0;
+}
+.header-eyebrow {
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mc-subtle);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.header-title {
+  font-family: var(--mc-font-heading);
+  font-size: 17px;
+  line-height: 1.15;
+  font-weight: 600;
+  color: var(--mc-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  border: 1px solid var(--mc-border);
+  background: #fff;
+  color: var(--mc-muted);
+  display: grid;
+  place-items: center;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+}
+.icon-button:hover {
+  color: var(--mc-brand);
+  border-color: var(--mc-brand-100);
+  background: var(--mc-brand-50);
+}
+
+.search-trigger {
+  display: none;
+  align-items: center;
+  gap: 9px;
+  height: 38px;
+  padding: 0 10px 0 12px;
+  border-radius: 11px;
+  border: 1px solid var(--mc-border);
+  background: #f8fbfd;
+  color: var(--mc-muted);
+  font-size: 12.5px;
+  transition: all 0.18s ease;
+}
+.search-trigger:hover {
+  border-color: var(--mc-brand-200);
+  background: #fff;
+}
+.search-label {
+  min-width: 128px;
+  text-align: left;
+}
+.search-kbd {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 5px;
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  color: var(--mc-subtle);
+}
+.search-icon-mobile {
+  display: grid;
+}
+
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--mc-success-soft);
+  color: var(--mc-success);
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid #bbf7d0;
+}
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mc-success);
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.12);
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+.header-user:hover {
+  background: var(--mc-brand-50);
+}
+.header-user-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.header-user-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--mc-ink);
+}
+.header-user-role {
+  font-size: 10.5px;
+  color: var(--mc-muted);
+}
+
+.user-menu {
+  position: absolute;
+  top: calc(var(--mc-header-height) - 6px);
+  right: clamp(16px, 3vw, 34px);
+  width: 264px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  border-radius: 16px;
+  box-shadow: var(--mc-shadow-lg);
+  z-index: 70;
+}
+.user-menu-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+}
+.user-menu-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mc-ink);
+}
+.user-menu-email {
+  font-size: 11px;
+  color: var(--mc-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-menu-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px 10px;
+  border-bottom: 1px solid var(--mc-border);
+  margin-bottom: 6px;
+}
+.user-menu-perms {
+  font-size: 10.5px;
+  color: var(--mc-subtle);
+}
+.user-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--mc-body);
+  background: transparent;
+  border: 0;
+  text-align: left;
+}
+.user-menu-item:hover {
+  background: var(--mc-brand-50);
+  color: var(--mc-brand-700);
+}
+.user-menu-item.is-danger {
+  color: var(--mc-danger);
+}
+.user-menu-item.is-danger:hover {
+  background: var(--mc-danger-soft);
+}
+
+/* ----------------------------- Content ----------------------------- */
+.admin-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: clamp(18px, 3vw, 34px);
+  padding-bottom: 48px;
+}
+
+.content-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(18px, 2.6vw, 30px);
+}
+.content-eyebrow {
+  font-size: 9.5px;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--mc-brand);
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+.content-title {
+  font-family: var(--mc-font-heading);
+  font-size: clamp(25px, 3.3vw, 38px);
+  line-height: 1.05;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--mc-ink);
+}
+.content-description {
+  margin-top: 8px;
+  max-width: 640px;
+  color: var(--mc-muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.content-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ----------------------------- Mobile ----------------------------- */
+.sidebar-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  background: rgba(3, 30, 48, 0.42);
+  backdrop-filter: blur(3px);
+  border: 0;
+}
+
+.mobile-tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--mc-border);
+}
+.mobile-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 2px;
+  border-radius: 10px;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--mc-muted);
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+}
+.mobile-tab-active {
+  color: var(--mc-brand);
+  background: var(--mc-brand-50);
+}
+
+.global-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(3px);
+}
+.global-loader-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  box-shadow: var(--mc-shadow);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mc-ink);
+}
+
+.confirm-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 6px 0 2px;
+  color: var(--mc-muted);
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+.confirm-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--mc-brand-50);
+  color: var(--mc-brand);
+}
+.confirm-icon.is-danger {
+  background: var(--mc-danger-soft);
+  color: var(--mc-danger);
+}
+
+.search-modal {
+  display: flex;
+  flex-direction: column;
+}
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px 12px;
+  border-bottom: 1px solid var(--mc-border);
+}
+.search-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--mc-ink);
+  padding: 6px 0;
+}
+.search-results {
+  max-height: min(52vh, 420px);
+  overflow-y: auto;
+  padding: 8px 0 4px;
+}
+.search-group-label {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--mc-subtle);
+  padding: 8px 10px;
+}
+.search-result {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.12s ease;
+}
+.search-result.is-highlighted,
+.search-result:hover {
+  background: var(--mc-brand-50);
+}
+.search-result-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  color: var(--mc-brand);
+  flex-shrink: 0;
+}
+.search-result-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.search-result-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mc-ink);
+}
+.search-result-parent {
+  font-size: 10.5px;
+  color: var(--mc-subtle);
+}
+.search-empty {
+  padding: 38px 16px;
+  text-align: center;
+  color: var(--mc-muted);
+  font-size: 12.5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.search-hints {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px solid var(--mc-border);
+  color: var(--mc-subtle);
+  font-size: 10.5px;
+}
+.search-hints kbd {
+  display: inline-block;
+  padding: 1px 5px;
+  margin-right: 4px;
+  border-radius: 4px;
+  background: #f4f8fb;
+  border: 1px solid var(--mc-border);
+  color: var(--mc-muted);
+  font-size: 9.5px;
+  font-weight: 700;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+.spinner-lg {
+  width: 20px;
+  height: 20px;
+  border-color: var(--mc-brand-100);
+  border-top-color: var(--mc-brand);
+}
+.global-loader-card .spinner {
+  border-color: var(--mc-brand-100);
+  border-top-color: var(--mc-brand);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.18s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+}
+
+@media (min-width: 768px) {
+  .search-trigger {
+    display: flex;
+  }
+  .search-icon-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .admin-sidebar {
+    transform: translateX(0) !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .admin-sidebar {
+    width: min(86vw, 318px);
+    transform: translateX(-102%);
+    box-shadow: var(--mc-shadow-lg);
+  }
+  .admin-sidebar.is-open {
+    transform: translateX(0);
+  }
+  .main-expanded,
+  .main-collapsed {
+    padding-left: 0;
+  }
+  .admin-content {
+    padding-bottom: 96px;
+  }
+  .header-title {
+    font-size: 16px;
+  }
+  .header-eyebrow {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .content-header {
+    align-items: flex-start;
+  }
+  .content-title {
+    font-size: 26px;
+  }
+  .content-actions {
+    width: 100%;
+  }
+  .content-actions > * {
+    flex: 1;
+  }
+  .header-actions {
+    gap: 6px;
+  }
+  .user-menu {
+    right: 12px;
+    left: 12px;
+    width: auto;
+  }
+}
 </style>

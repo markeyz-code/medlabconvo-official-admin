@@ -1,5 +1,5 @@
 <template>
-  <div class="group bg-white rounded-2xl border border-slate-100 overflow-hidden hover:border-[#033958]/20 hover: hover:[#033958]/5 transition-all duration-500 relative flex flex-col h-full">
+  <div class="group bg-white rounded-2xl border border-slate-100 overflow-hidden hover:border-[#27628C]/20 hover: hover:[#27628C]/5 transition-all duration-500 relative flex flex-col h-full">
     <!-- Product Image Area -->
     <div class="relative h-56 bg-slate-50 overflow-hidden">
       <img
@@ -26,7 +26,7 @@
         ]">
           {{ product.status }}
         </span>
-        <span v-if="product.isDigital" class="px-3 py-1.5 text-sm font-bold rounded-full bg-[#033958]/10 text-[#033958] border border-[#033958]/20 backdrop-blur-md inline-flex items-center space-x-1">
+        <span v-if="product.isDigital" class="px-3 py-1.5 text-sm font-bold rounded-full bg-[#27628C]/10 text-[#27628C] border border-[#27628C]/20 backdrop-blur-md inline-flex items-center space-x-1">
           <Icon name="lucide:download-cloud" class="w-3 h-3" />
           <span>Digital product</span>
         </span>
@@ -40,7 +40,7 @@
 
       <!-- Sale Badge -->
       <div v-if="product.originalPrice && product.originalPrice > product.price" class="absolute bottom-4 right-4">
-        <span class="px-3 py-2 text-sm font-bold bg-[#033958] text-white rounded-xl">
+        <span class="px-3 py-2 text-sm font-bold bg-[#27628C] text-white rounded-xl">
           -{{ Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) }}%
         </span>
       </div>
@@ -50,11 +50,11 @@
     <div class="p-6 flex flex-col flex-1">
       <div class="mb-4">
         <div class="flex items-start justify-between gap-2 mb-2">
-          <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#033958] transition-colors duration-300 line-clamp-1 leading-tight">
+          <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#27628C] transition-colors duration-300 line-clamp-1 leading-tight">
             {{ product.name }}
           </h3>
           <div class="flex items-center space-x-1 transition-opacity duration-300">
-            <button @click="editProduct" class="p-2 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-lg transition-all">
+            <button @click="editProduct" class="p-2 text-slate-400 hover:text-[#27628C] hover:bg-[#27628C]/5 rounded-lg transition-all">
               <Icon name="lucide:pencil" class="w-4 h-4" />
             </button>
             <button @click="deleteProduct" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all">

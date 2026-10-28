@@ -1,70 +1,109 @@
 <template>
-  <div class="h-screen overflow-hidden flex text-gray-900 bg-white">
-    <!-- Left: Image Cover -->
-    <div class="hidden lg:flex lg:w-1/2 relative bg-[#033958] overflow-hidden items-end p-12">
-      <img src="@/assets/img/auth-bg.png" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay" />
-      <div class="absolute inset-0 bg-gradient-to-t from-[#033958] via-[#033958]/80 to-transparent"></div>
-      
-      <div class="relative z-10 w-full max-w-lg mb-12">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl mb-8 overflow-hidden shadow-sm border border-slate-200 p-1">
-          <img src="@/assets/img/logo.jpeg" class="w-full h-full object-cover rounded-xl" />
-        </div>
-        <h1 class="text-lg font-bold text-white mb-4 leading-tight">Advanced Security Verification</h1>
-        <p class="text-lg text-blue-100/80">Protecting your administrative access with multi-factor authentication.</p>
-      </div>
-    </div>
+  <div class="auth-shell">
+    <section class="auth-brand-panel">
+      <img src="@/assets/img/auth-bg.png" alt="" class="auth-brand-image" />
+      <div class="auth-brand-overlay"></div>
 
-    <!-- Right: Form Area -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 md:p-16 lg:p-24 overflow-y-auto">
-      <div class="w-full max-w-[440px]">
-        
-        <div class="w-20 h-20 bg-[#f0fdf4] rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-emerald-50">
-          <Icon name="lucide:shield-check" class="w-10 h-10 text-[#3BAB22]" />
-        </div>
-        
-        <h2 class="text-lg font-extrabold text-[#033958] mb-4 tracking-tight">Security Code</h2>
-        <p class="text-gray-900 mb-10 font-medium">
-          We've sent a 6-digit verification code to <br/>
-          <span class="text-[#033958] font-bold">{{ email }}</span>
+      <div class="auth-brand-top">
+        <span class="auth-logo">
+          <img src="@/assets/img/logo.jpeg" alt="MedLabConvo" />
+        </span>
+        <span class="auth-logo-copy">
+          <strong>MedLabConvo</strong>
+          <small>Admin console</small>
+        </span>
+      </div>
+
+      <div class="auth-brand-bottom">
+        <p class="auth-brand-eyebrow">Two-step verification</p>
+        <h1 class="auth-brand-title">
+          A second lock on the
+          <span>console door.</span>
+        </h1>
+        <p class="auth-brand-copy">
+          Every sign-in is confirmed with a one-time code sent to your official
+          MedLabConvo inbox. Nothing moves until you approve it.
         </p>
 
-        <div class="mb-8">
-          <UiVerifyEmailOtpInput 
-            v-model="otpCode" 
+        <div class="auth-brand-points">
+          <div class="auth-brand-point">
+            <Icon name="lucide:key-round" class="w-4 h-4" />
+            <span>One-time code</span>
+          </div>
+          <div class="auth-brand-point">
+            <Icon name="lucide:clock-3" class="w-4 h-4" />
+            <span>Expires in 10 minutes</span>
+          </div>
+          <div class="auth-brand-point">
+            <Icon name="lucide:shield-check" class="w-4 h-4" />
+            <span>Audited sign-in</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-form-panel">
+      <div class="auth-form-wrap">
+        <div class="auth-mobile-logo">
+          <span class="auth-logo">
+            <img src="@/assets/img/logo.jpeg" alt="MedLabConvo" />
+          </span>
+          <span class="auth-logo-copy">
+            <strong>MedLabConvo</strong>
+            <small>Admin console</small>
+          </span>
+        </div>
+
+        <div class="auth-heading">
+          <p class="auth-eyebrow">Check your inbox</p>
+          <h2 class="auth-title">Enter your security code</h2>
+          <p class="auth-subtitle">
+            We sent a 6-digit code to
+            <strong class="text-slate-900">{{ email }}</strong>.
+            Enter it below to finish signing in.
+          </p>
+        </div>
+
+        <div class="otp-shell">
+          <UiVerifyEmailOtpInput
+            v-model="otpCode"
             :error="otpError"
             :autoSubmit="false"
           />
         </div>
 
-        <button
-          @click="verify"
-          :disabled="isLoading || !otpCode || otpCode?.length !== 6"
-          class="w-full bg-[#033958] hover:bg-[#044a73] text-white py-3 px-4 rounded-xl font-semibold text-base transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-        >
-          <div v-if="isLoading" class="flex items-center justify-center space-x-2">
-            <div class="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white"></div>
-            <span>Verifying...</span>
+        <Transition name="shake">
+          <div v-if="otpError" class="auth-error">
+            <Icon name="lucide:alert-circle" class="w-4 h-4 shrink-0" />
+            <span>{{ otpError }}</span>
           </div>
-          <span v-else>Verify Code</span>
+        </Transition>
+
+        <button
+          type="button"
+          class="auth-submit"
+          :disabled="isLoading || !otpCode || otpCode.length !== 6"
+          @click="verify"
+        >
+          <span v-if="isLoading" class="auth-spinner"></span>
+          <span>{{ isLoading ? 'Verifying…' : 'Verify and enter' }}</span>
+          <Icon v-if="!isLoading" name="lucide:arrow-right" class="w-4 h-4" />
         </button>
 
-        <div class="mt-8 text-center pt-8 border-t border-gray-100">
-          <p class="text-gray-900 text-sm font-medium">
+        <div class="auth-footer">
+          <p>
             Didn't receive the code?
-            <button 
-              @click="resendOtp" 
-              class="text-[#3BAB22] font-bold hover:underline transition-all ml-1"
-              :disabled="isLoading"
-            >
-              Resend Code
+            <button type="button" class="auth-link" :disabled="isLoading" @click="resendOtp">
+              Send a new one
             </button>
           </p>
-          <NuxtLink to="/" class="block mt-6 text-gray-400 font-bold text-sm hover:text-[#033958] transition-colors">
-            Cancel and Return to Login
-          </NuxtLink>
+          <NuxtLink to="/" class="auth-link block mt-3">Back to sign in</NuxtLink>
+          <p class="auth-legal">
+            The code expires after 10 minutes. Never share it with anyone.
+          </p>
         </div>
       </div>
-    </div>
+    </section>
 
     <UiFullscreenLoader :isVisible="isLoading" />
   </div>
@@ -73,47 +112,58 @@
 <script setup lang="ts">
 definePageMeta({
   layout: false,
-  auth: false
+  auth: false,
 })
 
 import { useLoader } from '@/composables/core/useLoader'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 import { useUser } from '@/composables/modules/auth/user'
+import { useSession } from '@/composables/useSession'
+import { landingRouteFor } from '@/utils/routePermissions'
 import { auth_api } from '@/api_factory/modules/auth'
 
 const router = useRouter()
 const route = useRoute()
 const { isLoading, showLoader, hideLoader } = useLoader()
 const { showToast } = useCustomToast()
+const { refreshUser } = useSession()
 
 const email = ref((route.query.email as string) || '')
 const otpCode = ref('')
 const otpError = ref('')
 
 onMounted(() => {
-  if (!email.value) {
-    router.push('/')
-  }
+  if (!email.value) router.push('/')
 })
 
 const verify = async () => {
-  if (!otpCode.value || otpCode.value?.length !== 6) return
+  if (!otpCode.value || otpCode.value.length !== 6) return
 
   try {
     showLoader()
     otpError.value = ''
     const response = await auth_api.$_verify_login_otp({
       email: email.value,
-      otp: otpCode.value
+      otp: otpCode.value,
     })
-    
+
     if (response.data?.access_token) {
       const auth = useUser()
       auth.createUser(response.data)
-      showToast({ title: "Authenticated", message: "Secure login successful.", toastType: "success" })
+      await refreshUser(true)
+      const canEnterAdmin = auth.isAdmin.value
+
+      showToast({
+        title: canEnterAdmin ? 'Authenticated' : 'Limited access',
+        message: canEnterAdmin
+          ? 'Secure login successful.'
+          : 'Your account does not have admin permissions yet.',
+        toastType: canEnterAdmin ? 'success' : 'warning',
+      })
+
       setTimeout(() => {
-        router.push('/dashboard')
-      }, 500)
+        router.push(canEnterAdmin ? landingRouteFor(auth.hasPermission) : '/dashboard/forbidden')
+      }, 400)
     }
   } catch (err: any) {
     otpError.value = err.response?.data?.message || 'Invalid verification code'
@@ -123,14 +173,25 @@ const verify = async () => {
 }
 
 const resendOtp = async () => {
-    try {
-        showLoader()
-        // To resend login OTP, they need to re-login, but since we don't have the password here,
-        // we might ideally have a resend endpoint. If not, we just redirect back to login.
-        showToast({ title: "Session Expired", message: "Please log in again to receive a new code.", toastType: "info" });
-        router.push('/')
-    } finally {
-        hideLoader()
-    }
+  try {
+    showLoader()
+    showToast({
+      title: 'Sign in again',
+      message: 'For a new code, restart the sign-in process.',
+      toastType: 'info',
+    })
+    router.push('/')
+  } finally {
+    hideLoader()
+  }
 }
 </script>
+
+<style scoped>
+.otp-shell {
+  padding: 4px 0 14px;
+}
+.otp-shell :deep(input) {
+  font-family: var(--mc-font-heading);
+}
+</style>

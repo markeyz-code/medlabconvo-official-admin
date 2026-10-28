@@ -17,7 +17,7 @@
       <!-- Main Input Container -->
       <div 
         :class="[
-          'w-full py-5 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus-within:outline-none focus-within:ring-1 focus-within:ring-[#3BAB22] focus-within:border-[#3BAB22] transition-all duration-300 flex items-center gap-3',
+          'w-full py-5 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus-within:outline-none focus-within:ring-1 focus-within:ring-[#27628C] focus-within:border-[#27628C] transition-all duration-300 flex items-center gap-3',
           roundedClasses,
           disabled ? 'opacity-50 cursor-not-allowed' : '',
           (hasError || errorMessage) ? 'border-[0.5px] ring-red-500 border-red-500' : ''
@@ -73,7 +73,7 @@
                     v-model="searchQuery"
                     type="text"
 
-                    class="w-full pl-10 pr-3 py-2.5 bg-white border-[0.5px] border-gray-200 rounded-lg focus:border-[#3BAB22] focus:ring-1 focus:ring-[#3BAB22] outline-none text-base placeholder-gray-400"
+                    class="w-full pl-10 pr-3 py-2.5 bg-white border-[0.5px] border-gray-200 rounded-lg focus:border-[#27628C] focus:ring-1 focus:ring-[#27628C] outline-none text-base placeholder-gray-400"
                     @click.stop
                   />
                 </div>

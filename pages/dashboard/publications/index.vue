@@ -6,8 +6,9 @@
   
   
  definePageMeta({
-    layout: 'dashboard',
-    middleware: 'auth'
-  })
+  layout: 'dashboard',
+  middleware: 'auth',
+  permission: 'publications:read'
+})
   </script>
   

@@ -17,7 +17,7 @@
         :readonly="readonly"
         :rows="rows"
         :class="[
-          'w-full py-4 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus:outline-none focus:ring-1 focus:ring-[#033958] focus:border-[#033958] transition-all duration-300 resize-none',
+          'w-full py-4 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus:outline-none focus:ring-1 focus:ring-[#27628C] focus:border-[#27628C] transition-all duration-300 resize-none',
           roundedClasses,
           disabled ? 'opacity-50 cursor-not-allowed' : '',
           (hasError || (errorMessage && showError)) ? 'border-[0.5px] ring-red-500 border-red-500' : ''
@@ -38,7 +38,7 @@
         :readonly="readonly || type === 'date' || type === 'time' || type === 'datetime-local'"
         :autocomplete="autocomplete"
         :class="[
-          'w-full py-4 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus:outline-none focus:ring-1 focus:ring-[#033958] focus:border-[#033958] transition-all duration-300',
+          'w-full py-4 px-3 bg-[#1A1A1B09] border-[0.5px] border-transparent focus:outline-none focus:ring-1 focus:ring-[#27628C] focus:border-[#27628C] transition-all duration-300',
           roundedClasses,
           disabled ? 'opacity-50 cursor-not-allowed' : '',
           (type === 'date' || type === 'time' || type === 'datetime-local') ? 'cursor-pointer' : '',
@@ -93,7 +93,7 @@
           class="bg-white rounded-3xl  w-full max-w-md overflow-hidden transform"
           @click.stop
         >
-          <div class="bg-gradient-to-br from-[#033958] to-[#055a8c] p-6 text-white">
+          <div class="bg-gradient-to-br from-[#27628C] to-[#1F5378] p-6 text-white">
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-xl font-bold">Select Date</h3>
               <button 
@@ -127,7 +127,7 @@
                 <select 
                   v-model="currentMonth" 
                   @click.stop
-                  class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 border-2 border-transparent hover:border-[#033958] rounded-xl font-bold focus:outline-none focus:border-[#033958] transition-all"
+                  class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 border-2 border-transparent hover:border-[#27628C] rounded-xl font-bold focus:outline-none focus:border-[#27628C] transition-all"
                 >
                   <option v-for="(m, i) in months" :key="i" :value="i">{{ m }}</option>
                 </select>
@@ -135,7 +135,7 @@
                 <select 
                   v-model="currentYear" 
                   @click.stop
-                  class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 border-2 border-transparent hover:border-[#033958] rounded-xl font-bold focus:outline-none focus:border-[#033958] transition-all"
+                  class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 border-2 border-transparent hover:border-[#27628C] rounded-xl font-bold focus:outline-none focus:border-[#27628C] transition-all"
                 >
                   <option v-for="y in yearRange" :key="y" :value="y">{{ y }}</option>
                 </select>
@@ -174,7 +174,7 @@
             <button 
               type="button" 
               @click.stop="setToday" 
-              class="px-5 py-2.5 text-sm text-[#033958] hover:text-white hover:bg-[#033958] font-bold rounded-xl transition-all border-2 border-[#033958]"
+              class="px-5 py-2.5 text-sm text-[#27628C] hover:text-white hover:bg-[#27628C] font-bold rounded-xl transition-all border-2 border-[#27628C]"
             >
               Today
             </button>
@@ -201,7 +201,7 @@
           class="bg-white rounded-3xl  w-full max-w-sm overflow-hidden transform"
           @click.stop
         >
-          <div class="bg-gradient-to-br from-[#033958] to-[#055a8c] p-6 text-white">
+          <div class="bg-gradient-to-br from-[#27628C] to-[#1F5378] p-6 text-white">
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-xl font-bold">Select Time</h3>
               <button 
@@ -234,7 +234,7 @@
                   @focus="$event.target.select()" 
                   @click.stop 
                   maxlength="2"
-                  class="w-20 text-center text-lg font-bold border-2 border-gray-200 focus:border-[#033958] rounded-2xl py-4 focus:outline-none focus:ring-4 focus:ring-[#033958]/20 transition-all bg-gray-50"
+                  class="w-20 text-center text-lg font-bold border-2 border-gray-200 focus:border-[#27628C] rounded-2xl py-4 focus:outline-none focus:ring-4 focus:ring-[#27628C]/20 transition-all bg-gray-50"
                 />
                 <button type="button" @click.stop="decHour" class="p-3 hover:bg-gray-100 rounded-xl mt-3 transition-all group">
                   <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" class="group-hover:scale-110 transition-transform">
@@ -258,7 +258,7 @@
                   @focus="$event.target.select()" 
                   @click.stop 
                   maxlength="2"
-                  class="w-20 text-center text-lg font-bold border-2 border-gray-200 focus:border-[#033958] rounded-2xl py-4 focus:outline-none focus:ring-4 focus:ring-[#033958]/20 transition-all bg-gray-50"
+                  class="w-20 text-center text-lg font-bold border-2 border-gray-200 focus:border-[#27628C] rounded-2xl py-4 focus:outline-none focus:ring-4 focus:ring-[#27628C]/20 transition-all bg-gray-50"
                 />
                 <button type="button" @click.stop="decMin" class="p-3 hover:bg-gray-100 rounded-xl mt-3 transition-all group">
                   <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" class="group-hover:scale-110 transition-transform">
@@ -275,7 +275,7 @@
                 :class="[
                   'flex-1 px-6 py-4 text-lg font-bold rounded-2xl transition-all transform',
                   selectedPeriod === 'AM' 
-                    ? 'bg-[#033958] text-white  scale-105' 
+                    ? 'bg-[#27628C] text-white  scale-105' 
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 ]"
               >
@@ -287,7 +287,7 @@
                 :class="[
                   'flex-1 px-6 py-4 text-lg font-bold rounded-2xl transition-all transform',
                   selectedPeriod === 'PM' 
-                    ? 'bg-[#033958] text-white  scale-105' 
+                    ? 'bg-[#27628C] text-white  scale-105' 
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 ]"
               >
@@ -300,7 +300,7 @@
             <button 
               type="button" 
               @click.stop="setNow"
-              class="px-5 py-2.5 text-sm text-[#033958] hover:text-white hover:bg-[#033958] font-bold rounded-xl transition-all border-2 border-[#033958]"
+              class="px-5 py-2.5 text-sm text-[#27628C] hover:text-white hover:bg-[#27628C] font-bold rounded-xl transition-all border-2 border-[#27628C]"
             >
               Now
             </button>
@@ -315,7 +315,7 @@
               <button 
                 type="button" 
                 @click.stop="confirmTimeValue"
-                class="px-6 py-2.5 text-sm text-white bg-[#033958] hover:bg-[#022f42] rounded-xl font-bold  hover: transition-all"
+                class="px-6 py-2.5 text-sm text-white bg-[#27628C] hover:bg-[#1B4A6B] rounded-xl font-bold  hover: transition-all"
               >
                 Confirm
               </button>
@@ -336,7 +336,7 @@
           class="bg-white rounded-3xl  w-full max-w-4xl my-8 overflow-hidden transform"
           @click.stop
         >
-          <div class="bg-gradient-to-br from-[#033958] to-[#055a8c] p-6 text-white">
+          <div class="bg-gradient-to-br from-[#27628C] to-[#1F5378] p-6 text-white">
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-lg font-bold">Select Date & Time</h3>
               <button 
@@ -357,7 +357,7 @@
           <div class="p-6 md:p-8 grid md:grid-cols-2 gap-8">
             <div>
               <h4 class="text-lg font-bold mb-4 flex items-center gap-2">
-                <span class="p-2 bg-[#033958]/10 rounded-lg">📅</span> DATE
+                <span class="p-2 bg-[#27628C]/10 rounded-lg">📅</span> DATE
               </h4>
               
               <div class="flex items-center justify-between mb-4">
@@ -367,10 +367,10 @@
                   </svg>
                 </button>
                 <div class="flex gap-2">
-                  <select v-model="currentMonth" @click.stop class="px-3 py-2 bg-gray-50 border-2 border-transparent hover:border-[#033958] rounded-xl font-bold text-sm">
+                  <select v-model="currentMonth" @click.stop class="px-3 py-2 bg-gray-50 border-2 border-transparent hover:border-[#27628C] rounded-xl font-bold text-sm">
                     <option v-for="(m, i) in months" :key="i" :value="i">{{ m.slice(0,3) }}</option>
                   </select>
-                  <select v-model="currentYear" @click.stop class="px-3 py-2 bg-gray-50 border-2 border-transparent hover:border-[#033958] rounded-xl font-bold text-sm">
+                  <select v-model="currentYear" @click.stop class="px-3 py-2 bg-gray-50 border-2 border-transparent hover:border-[#27628C] rounded-xl font-bold text-sm">
                     <option v-for="y in yearRange" :key="y" :value="y">{{ y }}</option>
                   </select>
                 </div>
@@ -400,7 +400,7 @@
             
             <div>
               <h4 class="text-lg font-bold mb-4 flex items-center gap-2">
-                <span class="p-2 bg-[#033958]/10 rounded-lg">🕐</span> TIME
+                <span class="p-2 bg-[#27628C]/10 rounded-lg">🕐</span> TIME
               </h4>
               
               <div class="flex items-center justify-center gap-4 mb-6">
@@ -417,7 +417,7 @@
                     @focus="$event.target.select()" 
                     @click.stop 
                     maxlength="2"
-                    class="w-16 text-center text-lg font-bold border-2 border-gray-200 focus:border-[#033958] rounded-xl py-3 focus:outline-none bg-gray-50"
+                    class="w-16 text-center text-lg font-bold border-2 border-gray-200 focus:border-[#27628C] rounded-xl py-3 focus:outline-none bg-gray-50"
                   />
                   <button type="button" @click.stop="decHour" class="p-2 hover:bg-gray-100 rounded-lg mt-2">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -439,7 +439,7 @@
                     @focus="$event.target.select()" 
                     @click.stop 
                     maxlength="2"
-                    class="w-16 text-center text-lg font-bold border-2 border-gray-200 focus:border-[#033958] rounded-xl py-3 focus:outline-none bg-gray-50"
+                    class="w-16 text-center text-lg font-bold border-2 border-gray-200 focus:border-[#27628C] rounded-xl py-3 focus:outline-none bg-gray-50"
                   />
                   <button type="button" @click.stop="decMin" class="p-2 hover:bg-gray-100 rounded-lg mt-2">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -453,14 +453,14 @@
                 <button 
                   type="button" 
                   @click.stop="setPeriod('AM')"
-                  :class="['flex-1 px-4 py-3 text-base font-bold rounded-xl transition-all', selectedPeriod === 'AM' ? 'bg-[#033958] text-white ' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
+                  :class="['flex-1 px-4 py-3 text-base font-bold rounded-xl transition-all', selectedPeriod === 'AM' ? 'bg-[#27628C] text-white ' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
                 >
                   AM
                 </button>
                 <button 
                   type="button" 
                   @click.stop="setPeriod('PM')"
-                  :class="['flex-1 px-4 py-3 text-base font-bold rounded-xl transition-all', selectedPeriod === 'PM' ? 'bg-[#033958] text-white ' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
+                  :class="['flex-1 px-4 py-3 text-base font-bold rounded-xl transition-all', selectedPeriod === 'PM' ? 'bg-[#27628C] text-white ' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
                 >
                   PM
                 </button>
@@ -472,7 +472,7 @@
             <button 
               type="button" 
               @click.stop="setDTNow"
-              class="px-5 py-2.5 text-sm text-[#033958] hover:text-white hover:bg-[#033958] font-bold rounded-xl transition-all border-2 border-[#033958]"
+              class="px-5 py-2.5 text-sm text-[#27628C] hover:text-white hover:bg-[#27628C] font-bold rounded-xl transition-all border-2 border-[#27628C]"
             >
               Now
             </button>
@@ -487,7 +487,7 @@
               <button 
                 type="button" 
                 @click.stop="confirmDTValue"
-                class="px-6 py-2.5 text-sm text-white bg-[#033958] hover:bg-[#022f42] rounded-xl font-bold  transition-all"
+                class="px-6 py-2.5 text-sm text-white bg-[#27628C] hover:bg-[#1B4A6B] rounded-xl font-bold  transition-all"
               >
                 Confirm
               </button>
@@ -657,8 +657,8 @@ function getDayClass(day: CalendarDay) {
   return [
     'aspect-square p-2 text-sm font-semibold rounded-xl transition-all relative',
     day.isCurrentMonth ? 'hover:bg-gray-100 hover:scale-105 cursor-pointer' : 'text-gray-300 opacity-40 cursor-not-allowed',
-    day.isToday && !day.isSelected ? 'bg-blue-50 text-[#033958] ring-2 ring-[#033958] ring-inset font-bold' : '',
-    day.isSelected ? 'bg-[#033958] text-white  scale-105' : ''
+    day.isToday && !day.isSelected ? 'bg-blue-50 text-[#27628C] ring-2 ring-[#27628C] ring-inset font-bold' : '',
+    day.isSelected ? 'bg-[#27628C] text-white  scale-105' : ''
   ]
 }
 
@@ -666,8 +666,8 @@ function getDTDayClass(day: CalendarDay) {
   return [
     'aspect-square p-2 text-sm font-medium rounded-lg transition-all',
     day.isCurrentMonth ? 'hover:bg-gray-100 cursor-pointer' : 'text-gray-300 opacity-30 cursor-not-allowed',
-    day.isToday && !day.isSelected ? 'border-2 border-[#033958] text-[#033958] font-bold' : '',
-    day.isSelected ? 'bg-[#033958] text-white ' : ''
+    day.isToday && !day.isSelected ? 'border-2 border-[#27628C] text-[#27628C] font-bold' : '',
+    day.isSelected ? 'bg-[#27628C] text-white ' : ''
   ]
 }
 

@@ -1,94 +1,142 @@
 <template>
   <Teleport to="body">
-    <Transition
-      enter-active-class="transition-opacity duration-300 ease-out"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition-opacity duration-200 ease-in"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div v-if="modelValue" class="fixed inset-0 z-50 overflow-y-auto">
-        <!-- Backdrop -->
-        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" @click="handleBackdropClick"></div>
+    <Transition name="modal-root">
+      <div
+        v-if="modelValue"
+        class="modal-root"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="title"
+        @click.self="handleBackdropClick"
+      >
+        <div class="modal-backdrop" @click="handleBackdropClick"></div>
 
-        <!-- Modal Container -->
-        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-          <Transition
-            enter-active-class="transition-all duration-300 ease-out"
-            enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            enter-to-class="opacity-100 translate-y-0 sm:scale-100"
-            leave-active-class="transition-all duration-200 ease-in"
-            leave-from-class="opacity-100 translate-y-0 sm:scale-100"
-            leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        <Transition name="modal-panel" appear>
+          <div
+            v-if="modelValue"
+            :class="['modal-panel', sizeClass]"
+            @click.stop
           >
-            <div
-              v-if="modelValue"
-              :class="[
-                'relative transform overflow-hidden rounded-[2.5rem] bg-white text-left shadow-sm border border-slate-200 transition-all my-8 w-full',
-                sizeClass
-              ]"
-            >
-              <!-- Header -->
-              <div class="flex items-center justify-between px-8 py-6 border-b border-slate-50">
-                <div class="flex items-center space-x-3">
-                  <div class="w-1.5 h-6 bg-[#033958] rounded-full"></div>
-                  <h3 class="text-lg font-bold text-slate-900 tracking-tight">{{ title }}</h3>
-                </div>
-                <button
-                  @click="close"
-                  class="p-2 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-all active:scale-90"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              <!-- Content -->
-              <div class="max-h-[80vh] overflow-y-auto">
-                <div :class="paddingClass">
-                  <slot />
-                </div>
-              </div>
+            <!-- Mobile drag handle -->
+            <div class="modal-grabber" aria-hidden="true">
+              <span></span>
             </div>
-          </Transition>
-        </div>
+
+            <header class="modal-head">
+              <div class="modal-head-copy">
+                <p v-if="eyebrow" class="modal-eyebrow">{{ eyebrow }}</p>
+                <h3 class="modal-title">{{ title }}</h3>
+                <p v-if="description" class="modal-description">{{ description }}</p>
+              </div>
+              <button
+                class="modal-close"
+                type="button"
+                aria-label="Close dialog"
+                @click="close"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </header>
+
+            <div class="modal-body scrollbar-slim" :class="paddingClass">
+              <slot />
+            </div>
+
+            <footer v-if="$slots.footer" class="modal-footer">
+              <slot name="footer" />
+            </footer>
+          </div>
+        </Transition>
       </div>
     </Transition>
   </Teleport>
 </template>
 
 <script setup lang="ts">
-import { computed, watch, onUnmounted } from 'vue'
+import { computed, onBeforeUnmount, watch } from 'vue'
 
 interface Props {
   modelValue: boolean
   title: string
+  eyebrow?: string
+  description?: string
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
   closeOnOutsideClick?: boolean
   paddingClass?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  eyebrow: '',
+  description: '',
   size: 'md',
   closeOnOutsideClick: true,
-  paddingClass: 'p-6 lg:p-8'
+  paddingClass: 'p-5 sm:p-6',
 })
 
-const emit = defineEmits(['update:modelValue', 'close'])
+const emit = defineEmits<{
+  'update:modelValue': [value: boolean]
+  close: []
+}>()
 
-const sizeClass = computed(() => {
-  switch (props.size) {
-    case 'sm': return 'max-w-md'
-    case 'md': return 'max-w-xl'
-    case 'lg': return 'max-w-3xl'
-    case 'xl': return 'max-w-5xl'
-    case '2xl': return 'max-w-7xl'
-    case 'full': return 'max-w-[95vw]'
-    default: return 'max-w-xl'
+const sizeClass = computed(
+  () =>
+    ({
+      sm: 'modal-sm',
+      md: 'modal-md',
+      lg: 'modal-lg',
+      xl: 'modal-xl',
+      '2xl': 'modal-2xl',
+      full: 'modal-full',
+    })[props.size],
+)
+
+let lockCount = 0
+
+const lockScroll = () => {
+  if (typeof document === 'undefined') return
+  lockCount += 1
+  document.body.style.overflow = 'hidden'
+  document.body.classList.add('modal-open')
+}
+
+const unlockScroll = () => {
+  if (typeof document === 'undefined') return
+  lockCount = Math.max(0, lockCount - 1)
+  if (lockCount === 0) {
+    document.body.style.overflow = ''
+    document.body.classList.remove('modal-open')
   }
-})
+}
+
+const onKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && props.modelValue) close()
+}
+
+const bind = () => {
+  if (typeof window === 'undefined') return
+  window.addEventListener('keydown', onKeydown)
+}
+
+const unbind = () => {
+  if (typeof window === 'undefined') return
+  window.removeEventListener('keydown', onKeydown)
+}
+
+watch(
+  () => props.modelValue,
+  (open) => {
+    if (open) {
+      lockScroll()
+      bind()
+    } else {
+      unlockScroll()
+      unbind()
+    }
+  },
+  { immediate: true },
+)
 
 const close = () => {
   emit('update:modelValue', false)
@@ -96,41 +144,217 @@ const close = () => {
 }
 
 const handleBackdropClick = () => {
-  if (props.closeOnOutsideClick) {
-    close()
-  }
+  if (props.closeOnOutsideClick) close()
 }
 
-// Prevent scrolling when modal is open
-watch(() => props.modelValue, (val) => {
-  if (val) {
-    document.body.style.overflow = 'hidden'
-  } else {
-    document.body.style.overflow = ''
-  }
-})
-
-onUnmounted(() => {
-  document.body.style.overflow = ''
+onBeforeUnmount(() => {
+  unbind()
+  if (props.modelValue) unlockScroll()
 })
 </script>
 
 <style scoped>
-/* Custom scrollbar for modal content */
-.max-h-\[80vh\]::-webkit-scrollbar {
-  width: 6px;
+.modal-root {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
 }
 
-.max-h-\[80vh\]::-webkit-scrollbar-track {
-  background: transparent;
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 31, 48, 0.46);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
-.max-h-\[80vh\]::-webkit-scrollbar-thumb {
-  background: #f1f5f9;
+.modal-panel {
+  position: relative;
+  width: 100%;
+  max-height: 92dvh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  border-bottom: 0;
+  border-radius: 24px 24px 0 0;
+  box-shadow: var(--mc-shadow-lg);
+  overflow: hidden;
+  transform-origin: bottom center;
+}
+
+.modal-grabber {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 2px;
+  flex-shrink: 0;
+}
+.modal-grabber span {
+  width: 42px;
+  height: 4px;
+  border-radius: 99px;
+  background: #dbe6ee;
+}
+
+.modal-head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px 14px;
+  border-bottom: 1px solid var(--mc-border);
+}
+
+.modal-head-copy {
+  min-width: 0;
+}
+.modal-eyebrow {
+  font-family: var(--mc-font-heading);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mc-brand);
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+.modal-title {
+  font-family: var(--mc-font-heading);
+  font-size: 19px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--mc-ink);
+  margin: 0;
+}
+.modal-description {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--mc-muted);
+}
+
+.modal-close {
+  width: 34px;
+  height: 34px;
   border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: var(--mc-muted);
+  background: #f7fafc;
+  border: 1px solid var(--mc-border);
+  transition: all 0.18s ease;
+}
+.modal-close:hover {
+  color: var(--mc-danger);
+  background: var(--mc-danger-soft);
+  border-color: #fecaca;
 }
 
-.max-h-\[80vh\]::-webkit-scrollbar-thumb:hover {
-  background: #e2e8f0;
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--mc-border);
+  background: #fbfdfe;
+}
+
+/* Animations */
+.modal-root-enter-active,
+.modal-root-leave-active {
+  transition: opacity 0.22s ease;
+}
+.modal-root-enter-from,
+.modal-root-leave-to {
+  opacity: 0;
+}
+
+.modal-panel-enter-active {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+.modal-panel-leave-active {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 1, 1), opacity 0.16s ease;
+}
+.modal-panel-enter-from,
+.modal-panel-leave-to {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+/* Desktop: centred card, no grabber. */
+@media (min-width: 640px) {
+  .modal-root {
+    align-items: center;
+    padding: 32px 20px;
+  }
+  .modal-panel {
+    max-height: min(88vh, 920px);
+    border-radius: 22px;
+    border-bottom: 1px solid var(--mc-border);
+  }
+  .modal-grabber {
+    display: none;
+  }
+  .modal-head {
+    padding: 20px 24px 16px;
+  }
+  .modal-title {
+    font-size: 21px;
+  }
+  .modal-footer {
+    padding: 16px 24px;
+  }
+  .modal-panel-enter-from,
+  .modal-panel-leave-to {
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+/* Sizes */
+.modal-sm {
+  max-width: 430px;
+}
+.modal-md {
+  max-width: 560px;
+}
+.modal-lg {
+  max-width: 720px;
+}
+.modal-xl {
+  max-width: 940px;
+}
+.modal-2xl {
+  max-width: 1180px;
+}
+.modal-full {
+  max-width: 1400px;
+}
+
+/* Mobile: full-width sheet. */
+@media (max-width: 639px) {
+  .modal-panel {
+    max-width: 100% !important;
+  }
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+  .modal-footer > * {
+    width: 100%;
+  }
 }
 </style>

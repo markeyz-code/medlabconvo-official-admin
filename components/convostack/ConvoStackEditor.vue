@@ -1,18 +1,18 @@
 <template>
   <div class="flex flex-col h-full min-h-screen">
     <!-- Editor Header -->
-    <div class="sticky top-0 z-10 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center space-x-4">
-        <button @click="$emit('cancel')" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all">
+    <div class="sticky top-0 z-10 bg-white border-b border-slate-200 px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div class="flex items-center space-x-3 sm:space-x-4 min-w-0">
+        <button @click="$emit('cancel')" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all flex-shrink-0">
           <Icon name="lucide:x" class="w-5 h-5" />
         </button>
-        <div>
-          <h2 class="text-lg font-bold text-slate-900">{{ publication ? 'Edit Publication' : 'New Publication' }}</h2>
-          <p class="text-sm text-slate-400 font-medium">Convo Stack Editor</p>
+        <div class="min-w-0">
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 truncate">{{ publication ? 'Edit Publication' : 'New Publication' }}</h2>
+          <p class="text-xs sm:text-sm text-slate-400 font-medium">Convo Stack Editor</p>
         </div>
       </div>
-      <div class="flex items-center space-x-3">
-        <div class="w-40">
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <div class="flex-1 sm:w-40 sm:flex-none">
           <SelectInput
             v-model="form.status"
             label="Status"
@@ -28,9 +28,9 @@
           @click="handleSave"
           :disabled="!isValid"
           :class="[
-            'px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 flex items-center space-x-2 active:scale-95',
+            'flex-1 sm:flex-none justify-center px-4 sm:px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 flex items-center space-x-2 active:scale-95',
             isValid
-              ? 'bg-[#033958] text-white hover:bg-[#022f42]'
+              ? 'bg-[#27628C] text-white hover:bg-[#1B4A6B]'
               : 'bg-slate-100 text-slate-400 cursor-not-allowed'
           ]"
         >
@@ -42,7 +42,7 @@
 
     <!-- Editor Body -->
     <div class="flex-1 overflow-y-auto bg-slate-100">
-      <div class="max-w-5xl mx-auto py-12 px-6 space-y-12">
+      <div class="max-w-5xl mx-auto py-6 sm:py-10 lg:py-12 px-4 sm:px-6 space-y-8 sm:space-y-12">
 
         <!-- Cover Image Upload -->
         <div class="relative group">
@@ -53,13 +53,13 @@
               <button @click="form.coverImage = ''" class="px-4 py-2 bg-red-500/90 backdrop-blur text-white rounded-xl font-bold text-sm hover:bg-red-600 transition-all transform hover:scale-105">Remove</button>
             </div>
           </div>
-          <div v-else-if="uploadingCover" class="relative rounded-3xl border-2 border-dashed border-[#033958] bg-slate-50 aspect-[21/9] flex flex-col items-center justify-center animate-pulse">
-            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#033958] mb-3"></div>
-            <p class="text-sm font-bold text-[#033958]">Uploading publication...</p>
+          <div v-else-if="uploadingCover" class="relative rounded-3xl border-2 border-dashed border-[#27628C] bg-slate-50 aspect-[21/9] flex flex-col items-center justify-center animate-pulse">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#27628C] mb-3"></div>
+            <p class="text-sm font-bold text-[#27628C]">Uploading publication...</p>
           </div>
-          <div v-else class="relative rounded-3xl border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50 hover:border-[#033958] transition-all aspect-[21/9] flex flex-col items-center justify-center cursor-pointer group/upload" @click="triggerCoverUpload">
+          <div v-else class="relative rounded-3xl border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50 hover:border-[#27628C] transition-all aspect-[21/9] flex flex-col items-center justify-center cursor-pointer group/upload" @click="triggerCoverUpload">
             <div class="p-4 bg-slate-50 rounded-2xl group-hover/upload:bg-slate-100 transition-colors mb-4">
-              <Icon name="lucide:image" class="w-12 h-12 text-slate-300 group-hover/upload:text-[#033958] transition-colors" />
+              <Icon name="lucide:image" class="w-12 h-12 text-slate-300 group-hover/upload:text-[#27628C] transition-colors" />
             </div>
             <p class="text-sm font-bold text-slate-500">Upload cover image</p>
             <p class="text-sm text-slate-400 mt-2 font-medium">Recommended: landscape (21:9)</p>
@@ -68,7 +68,7 @@
         </div>
 
         <!-- Document Header (Substack Style) -->
-        <div class="bg-white rounded-3xl p-10 md:p-14 border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
+        <div class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-10 md:p-14 border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
           <div>
             <label class="text-sm font-bold text-slate-400  tracking-normal mb-2 block ml-1">Main Title</label>
             <input
@@ -104,10 +104,10 @@
         </div>
 
         <!-- Substack Raw HTML Integration (High Fidelity) -->
-        <div class="bg-[#033958]/5 rounded-3xl p-8 border border-[#033958]/10 space-y-4">
+        <div class="bg-[#27628C]/5 rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-[#27628C]/10 space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white shadow-sm border border-slate-100">
+              <div class="w-10 h-10 bg-[#27628C] rounded-xl flex items-center justify-center text-white shadow-sm border border-slate-100">
                 <Icon name="lucide:code-2" class="w-5 h-5" />
               </div>
               <div>
@@ -124,7 +124,7 @@
             v-model="form.bodyHtml"
             rows="6"
 
-            class="w-full p-6 bg-white border border-slate-200 rounded-2xl text-sm font-mono text-slate-600 focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-inner"
+            class="w-full p-6 bg-white border border-slate-200 rounded-2xl text-sm font-mono text-slate-600 focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-inner"
           ></textarea>
           <p class="text-sm text-slate-400 font-medium">Note: If this field contains data, the standard content block engine below will be ignored on the user-facing side.</p>
         </div>
@@ -140,7 +140,7 @@
           <div
             v-for="(block, index) in form.contentBlocks"
             :key="index"
-            class="group relative bg-white border border-slate-200 rounded-3xl p-8 hover:border-indigo-400 hover: hover:-500/10 transition-all duration-300 transform hover:-translate-y-1"
+            class="group relative bg-white border border-slate-200 rounded-2xl sm:rounded-3xl p-4 sm:p-8 hover:border-indigo-400 hover: hover:-500/10 transition-all duration-300 transform hover:-translate-y-1"
           >
             <!-- Block Controls (Sleeker) -->
             <div class="absolute -top-4 right-8 transition-all duration-200 flex items-center space-x-1 bg-white rounded-2xl  border border-slate-100 p-1.5 z-10">
@@ -185,29 +185,29 @@
                 </div>
               </div>
               <div v-else-if="blockUploading[index]" class="border-2 border-dashed border-slate-100 rounded-2xl p-16 flex flex-col items-center justify-center bg-white animate-pulse">
-                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#033958] mb-3"></div>
-                <span class="text-sm text-[#033958] font-bold">Uploading...</span>
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#27628C] mb-3"></div>
+                <span class="text-sm text-[#27628C] font-bold">Uploading...</span>
               </div>
-              <div v-else class="border-2 border-dashed border-slate-200 rounded-2xl p-16 flex flex-col items-center justify-center bg-slate-50/50 cursor-pointer hover:bg-white hover:border-[#033958] transition-all group/inner" @click="triggerBlockImageUpload(index)">
+              <div v-else class="border-2 border-dashed border-slate-200 rounded-2xl p-16 flex flex-col items-center justify-center bg-slate-50/50 cursor-pointer hover:bg-white hover:border-[#27628C] transition-all group/inner" @click="triggerBlockImageUpload(index)">
                 <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-4 group-hover/inner:scale-110 transition-transform">
                   <Icon name="lucide:image" class="w-8 h-8 text-slate-300" />
                 </div>
                 <span class="text-sm text-slate-400 font-bold">Add image</span>
               </div>
               <input :ref="el => setBlockImageRef(index, el)" type="file" accept="image/*" class="hidden" @change="e => handleBlockImageUpload(e, index)" />
-              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
             </div>
 
             <!-- Video Block -->
             <div v-if="block.type === 'video'" class="space-y-6">
               <div class="relative">
                 <Icon name="lucide:link" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
-                <input v-model="block.content" type="text" class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+                <input v-model="block.content" type="text" class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
               </div>
               <div v-if="block.content && isEmbeddableVideo(block.content)" class="rounded-2xl overflow-hidden  aspect-video bg-black">
                 <iframe :src="getEmbedUrl(block.content)" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
               </div>
-              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
             </div>
 
             <!-- Quote Block -->
@@ -221,7 +221,7 @@
                   class="relative z-10 w-full px-6 py-6 bg-indigo-50/50 border-l-4 border-indigo-500 rounded-r-3xl text-xl font-bold  text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"
                 ></textarea>
               </div>
-              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
             </div>
 
             <!-- Divider -->
@@ -255,11 +255,11 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="space-y-2">
               <label class="text-sm font-bold text-slate-400 ml-1">Category</label>
-              <input v-model="form.category" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+              <input v-model="form.category" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
             </div>
             <div class="space-y-2">
               <label class="text-xs font-semibold text-slate-500 ml-1">Estimated read time (min)</label>
-              <input v-model.number="form.readTime" type="number" min="1" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+              <input v-model.number="form.readTime" type="number" min="1" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
             </div>
           </div>
 
@@ -289,9 +289,9 @@
           <!-- Authors Management -->
           <div class="space-y-2 border-t border-slate-50 pt-8">
             <label class="text-xs font-semibold text-slate-500 ml-1">Authors (separated by commas)</label>
-            <input v-model="authorsInput" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+            <input v-model="authorsInput" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
             <div v-if="form.authors.length" class="flex flex-wrap gap-2 mt-3">
-              <span v-for="(author, i) in form.authors" :key="i" class="px-3 py-1.5 bg-blue-50 text-[#033958] text-sm font-bold rounded-full border border-blue-100 flex items-center space-x-2">
+              <span v-for="(author, i) in form.authors" :key="i" class="px-3 py-1.5 bg-blue-50 text-[#27628C] text-sm font-bold rounded-full border border-blue-100 flex items-center space-x-2">
                 <span>{{ author }}</span>
                 <button @click="form.authors.splice(i, 1); authorsInput = form.authors.join(', ')" class="hover:text-rose-500 transition-colors"><Icon name="lucide:x" class="w-3 h-3" /></button>
               </span>
@@ -301,7 +301,7 @@
 
           <div class="space-y-2">
             <label class="text-xs font-semibold text-slate-500 ml-1">Tags (separated by commas)</label>
-            <input v-model="tagsInput" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+            <input v-model="tagsInput" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
             <div v-if="form.tags.length" class="flex flex-wrap gap-2 mt-3">
               <span v-for="(tag, i) in form.tags" :key="i" class="px-3 py-1.5 bg-slate-50 text-slate-700 text-sm font-bold rounded-full border border-slate-200 flex items-center space-x-2">
                 <span>{{ tag }}</span>
@@ -313,15 +313,15 @@
           <div class="grid grid-cols-1 gap-8 opacity-60 hover:opacity-100 transition-opacity">
             <div class="space-y-2">
               <label class="text-xs font-semibold text-slate-500 ml-1">SEO title override</label>
-              <input v-model="form.metaTitle" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+              <input v-model="form.metaTitle" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
             </div>
             <div class="space-y-2">
               <label class="text-xs font-semibold text-slate-500 ml-1">Meta description</label>
-              <textarea v-model="form.metaDescription" rows="3" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none resize-none transition-all shadow-sm"></textarea>
+              <textarea v-model="form.metaDescription" rows="3" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none resize-none transition-all shadow-sm"></textarea>
             </div>
             <div class="space-y-2">
               <label class="text-xs font-semibold text-slate-500 ml-1">Canonical URL (for Substack migration)</label>
-              <input v-model="form.canonicalUrl" type="url" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all shadow-sm" />
+              <input v-model="form.canonicalUrl" type="url" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
             </div>
             <div class="space-y-2">
               <label class="text-xs font-semibold text-slate-500 ml-1">Substack External ID</label>

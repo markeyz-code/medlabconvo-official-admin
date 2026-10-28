@@ -27,7 +27,7 @@
           />
         </div>
       </div>
-      <button
+      <button v-if="hasPermission('publications:create')"
         @click="openCreateModal"
         class="w-full sm:w-auto px-6 py-2.5 bg-primary text-white rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-200 flex items-center justify-center space-x-2  hover: transform hover:-translate-y-0.5"
       >
@@ -58,7 +58,7 @@
         <template #item="{ element: publication, index }">
           <div
             :class="[
-              'bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-md transition-all duration-300 group relative',
+              'bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 hover:shadow-md transition-all duration-300 group relative',
               {
                 'cursor-move': !searchQuery && !statusFilter,
                 'cursor-not-allowed opacity-60': reorderLoading
@@ -68,12 +68,12 @@
             <!-- Mobile/Desktop Drag Handle -->
             <div 
               v-if="!searchQuery && !statusFilter" 
-              class="drag-handle absolute left-2 top-1/2 transform -translate-y-1/2 p-2 cursor-move text-slate-300 hover:text-amber-500 transition-colors"
+              class="drag-handle hidden lg:block absolute left-2 top-1/2 transform -translate-y-1/2 p-2 cursor-move text-slate-300 hover:text-amber-500 transition-colors"
             >
               <GripVertical class="w-5 h-5" />
             </div>
 
-            <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4" :class="{ 'ml-8': !searchQuery && !statusFilter }">
+            <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4" :class="{ 'lg:ml-8': !searchQuery && !statusFilter }">
               <!-- Main Content -->
               <div class="flex-1 space-y-4">
                 <!-- Header -->
@@ -139,10 +139,10 @@
             </div>
             
             <!-- Action Buttons -->
-            <div class="flex lg:flex-col items-center lg:items-end gap-2">
+            <div class="flex flex-wrap lg:flex-col items-center lg:items-end gap-2 w-full lg:w-auto justify-end">
               <!-- Reorder Buttons (Mobile Friendly) -->
               <div v-if="!searchQuery && !statusFilter" class="flex lg:flex-col gap-1 mr-2 lg:mr-0 border-r lg:border-r-0 lg:border-b border-slate-100 pr-2 lg:pr-0 pb-0 lg:pb-2">
-                <button
+                <button v-if="hasPermission('publications:update')"
                   @click="moveItem(index, 'up')"
                   :disabled="index === 0 || reorderLoading"
                   class="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg disabled:opacity-30 transition-all"
@@ -150,7 +150,7 @@
                 >
                   <ChevronUp class="w-5 h-5" />
                 </button>
-                <button
+                <button v-if="hasPermission('publications:update')"
                   @click="moveItem(index, 'down')"
                   :disabled="index === localPublications.length - 1 || reorderLoading"
                   class="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg disabled:opacity-30 transition-all"
@@ -170,7 +170,7 @@
               </button>
               
               <!-- Edit Button -->
-              <button
+              <button v-if="hasPermission('publications:update')"
                 @click="editPublication(publication)"
                 class="p-2.5 text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition-all duration-200 group/btn"
                 title="Edit"
@@ -180,9 +180,10 @@
               
               <!-- Aggressive Status Dropdown -->
               <select
+                v-if="hasPermission('publications:update')"
                 :value="publication.status"
                 @change="handleAggressiveStatusUpdate(publication, $event.target.value)"
-                class="p-2 text-sm border-2 border-amber-500 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none font-semibold text-slate-700 bg-amber-50 cursor-pointer transition-all duration-200 hover:bg-amber-100"
+                class="p-2 text-sm border-2 border-amber-500 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none font-semibold text-slate-700 bg-amber-50 cursor-pointer transition-all duration-200 hover:bg-amber-100 max-w-full"
                 title="Update Status Aggressively"
               >
                 <option value="draft">Draft</option>
@@ -194,7 +195,7 @@
               </select>
               
               <!-- Delete Button -->
-              <button
+              <button v-if="hasPermission('publications:delete')"
                 @click="confirmDelete(publication)"
                 class="p-2.5 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 group/btn"
                 title="Delete"
@@ -241,7 +242,7 @@
       class="fixed bottom-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg  z-50 flex items-center space-x-2"
     >
       <span>{{ reorderError }}</span>
-      <button @click="resetReorderState" class="text-white hover:text-red-200">
+      <button v-if="hasPermission('publications:update')" @click="resetReorderState" class="text-white hover:text-red-200">
         <X class="w-4 h-4" />
       </button>
     </div>
@@ -252,7 +253,7 @@
       class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg  z-50 flex items-center space-x-2"
     >
       <span>Publications reordered successfully!</span>
-      <button @click="resetReorderState" class="text-white hover:text-green-200">
+      <button v-if="hasPermission('publications:update')" @click="resetReorderState" class="text-white hover:text-green-200">
         <X class="w-4 h-4" />
       </button>
     </div>
@@ -302,6 +303,9 @@ import { useApprovePublication } from '@/composables/modules/publications/useApp
 import { usePublishPublication } from '@/composables/modules/publications/usePublishPublication'
 import { useSoftDeletePublication } from '@/composables/modules/publications/useSoftDeletePublication'
 import { useReorderPublication } from '@/composables/modules/publications/useReorderPublication'
+import { useUser } from '@/composables/modules/auth/user'
+
+const { hasPermission } = useUser()
 
 // Composables
 const { publications, loading, getPublications } = useGetPublications()

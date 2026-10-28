@@ -1,164 +1,198 @@
 <template>
-  <div class="h-screen overflow-hidden flex text-gray-900 bg-white">
-    <!-- Left: Image Cover -->
-    <div class="hidden lg:flex lg:w-1/2 relative bg-[#033958] overflow-hidden items-end p-12">
-      <img src="@/assets/img/auth-bg.png" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay" />
-      <div class="absolute inset-0 bg-gradient-to-t from-[#033958] via-[#033958]/80 to-transparent"></div>
-      
-      <div class="relative z-10 w-full max-w-lg mb-12">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl mb-8 overflow-hidden shadow-sm border border-slate-200 p-1">
-          <img src="@/assets/img/logo.jpeg" class="w-full h-full object-cover rounded-xl" />
-        </div>
-        <h1 class="text-lg font-bold text-white mb-4 leading-tight">Empowering Healthcare with Intelligent Conversations</h1>
-        <p class="text-lg text-blue-100/80">Login to the MedLabConvo administrative console to manage departments, users, and oversee the platform's core operations securely.</p>
+  <div class="auth-shell">
+    <!-- Brand panel -->
+    <section class="auth-brand-panel">
+      <img src="@/assets/img/auth-bg.png" alt="" class="auth-brand-image" />
+      <div class="auth-brand-overlay"></div>
+
+      <div class="auth-brand-top">
+        <span class="auth-logo">
+          <img src="@/assets/img/logo.jpeg" alt="MedLabConvo" />
+        </span>
+        <span class="auth-logo-copy">
+          <strong>MedLabConvo</strong>
+          <small>Admin console</small>
+        </span>
       </div>
-    </div>
 
-    <!-- Right: Form Area -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 md:p-16 lg:p-24 overflow-y-auto">
-      <div class="w-full max-w-[440px]">
-        
-        <h2 class="text-lg font-extrabold text-[#033958] mb-2 tracking-tight">Welcome Back</h2>
-        <p class="text-gray-900 mb-10 font-medium">Log in to your admin dashboard.</p>
+      <div class="auth-brand-bottom">
+        <p class="auth-brand-eyebrow">Operations · Editorial · Community</p>
+        <h1 class="auth-brand-title">
+          One calm place to run the
+          <span>MedLabConvo</span> platform.
+        </h1>
+        <p class="auth-brand-copy">
+          Manage people, publish research, and keep every public surface moving —
+          with access scoped precisely to each role.
+        </p>
 
-        <!-- Login Form -->
-        <form @submit.prevent="handleLogin" class="space-y-6">
-          <UiAnimatedInput
-            label="Email Address"
-            id="email"
-            v-model="loginForm.email"
-            type="email"
-            required
-          ></UiAnimatedInput>
+        <div class="auth-brand-points">
+          <div class="auth-brand-point">
+            <Icon name="lucide:shield-check" class="w-4 h-4" />
+            <span>Role-based access</span>
+          </div>
+          <div class="auth-brand-point">
+            <Icon name="lucide:activity" class="w-4 h-4" />
+            <span>Audited actions</span>
+          </div>
+          <div class="auth-brand-point">
+            <Icon name="lucide:smartphone" class="w-4 h-4" />
+            <span>Works on mobile</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-          <UiAnimatedInput
-            id="password"
-            label="Password"
-            v-model="loginForm.password"
-            type="password"
-            required
-          ></UiAnimatedInput>
+    <!-- Form panel -->
+    <section class="auth-form-panel">
+      <div class="auth-form-wrap">
+        <div class="auth-mobile-logo">
+          <span class="auth-logo">
+            <img src="@/assets/img/logo.jpeg" alt="MedLabConvo" />
+          </span>
+          <span class="auth-logo-copy">
+            <strong>MedLabConvo</strong>
+            <small>Admin console</small>
+          </span>
+        </div>
 
-          <div class="flex items-center justify-between mt-2">
-            <label class="flex items-center cursor-pointer group">
+        <div class="auth-heading">
+          <p class="auth-eyebrow">Secure sign in</p>
+          <h2 class="auth-title">Welcome back</h2>
+          <p class="auth-subtitle">
+            Enter your MedLabConvo email to receive a one-time verification code.
+          </p>
+        </div>
+
+        <form class="auth-form" @submit.prevent="handleLogin">
+          <label class="auth-field">
+            <span class="auth-label">Email address</span>
+            <span class="auth-input-wrap">
+              <Icon name="lucide:mail" class="auth-input-icon" />
               <input
-                v-model="loginForm.rememberMe"
-                type="checkbox"
-                class="custom-checkbox"
+                v-model="loginForm.email"
+                type="email"
+                autocomplete="email"
+                required
+                placeholder="you@medlabconvo.com"
+                class="auth-input"
               />
-              <span class="ml-2 text-sm text-gray-900 group-hover:text-gray-700 transition-colors font-medium">Remember me</span>
+            </span>
+          </label>
+
+          <label class="auth-field">
+            <span class="auth-label">Password</span>
+            <span class="auth-input-wrap">
+              <Icon name="lucide:lock" class="auth-input-icon" />
+              <input
+                v-model="loginForm.password"
+                :type="showPassword ? 'text' : 'password'"
+                autocomplete="current-password"
+                required
+                placeholder="Enter your password"
+                class="auth-input pr-12"
+              />
+              <button
+                type="button"
+                class="auth-eye"
+                :aria-label="showPassword ? 'Hide password' : 'Show password'"
+                @click="showPassword = !showPassword"
+              >
+                <Icon :name="showPassword ? 'lucide:eye-off' : 'lucide:eye'" class="w-4 h-4" />
+              </button>
+            </span>
+          </label>
+
+          <div class="auth-row">
+            <label class="auth-remember">
+              <input v-model="loginForm.rememberMe" type="checkbox" class="custom-checkbox" />
+              <span>Remember this device</span>
             </label>
-            <NuxtLink to="/forgot-password" class="text-sm text-[#033958] hover:text-[#044a73] font-bold transition-colors underline-offset-4 hover:underline">
-              Forgot Password?
-            </NuxtLink>
+            <NuxtLink to="/forgot-password" class="auth-link">Forgot password?</NuxtLink>
           </div>
 
-          <transition name="shake">
-            <div v-if="error" class="bg-red-50 border border-red-100 rounded-xl p-3 flex items-center space-x-3">
-              <Icon name="lucide:alert-circle" class="w-5 h-5 text-red-500" />
-              <span class="text-red-800 text-sm font-medium">{{ error }}</span>
+          <Transition name="shake">
+            <div v-if="error" class="auth-error">
+              <Icon name="lucide:alert-circle" class="w-4 h-4 shrink-0" />
+              <span>{{ error }}</span>
             </div>
-          </transition>
+          </Transition>
 
-          <button
-            type="submit"
-            :disabled="loading"
-            class="w-full bg-[#033958] hover:bg-[#044a73] text-white mt-8 py-2.5 px-6 rounded-2xl font-bold text-lg transition-all duration-300 active:scale-[0.98] disabled:opacity-50 shadow-md"
-          >
-            <div v-if="loading" class="flex items-center justify-center space-x-3">
-              <div class="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white"></div>
-              <span>Verifying Credentials...</span>
-            </div>
-            <span v-else class="flex items-center justify-center">
-              Sign In
-              <Icon name="lucide:arrow-right" class="ml-2 w-5 h-5" />
-            </span>
+          <button type="submit" :disabled="loading" class="auth-submit">
+            <span v-if="loading" class="auth-spinner"></span>
+            <span>{{ loading ? 'Sending your code…' : 'Continue securely' }}</span>
+            <Icon v-if="!loading" name="lucide:arrow-right" class="w-4 h-4" />
           </button>
         </form>
 
-        <div class="mt-10 text-center pt-8 border-t border-gray-100">
-          <p class="text-gray-900 font-medium text-sm">
-            Don't have an account?
-            <NuxtLink to="/signup" class="text-[#3BAB22] hover:text-[#2d851a] font-bold underline-offset-4 hover:underline transition-all ml-1">
-              Join here
-            </NuxtLink>
+        <div class="auth-footer">
+          <p>
+            Access is invitation-only. Need an account?
+            <span>Contact a super admin.</span>
+          </p>
+          <p class="auth-legal">
+            Protected by one-time codes and role-based authorisation.
           </p>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
-// Meta — must be at top level
 definePageMeta({
   layout: false,
-  auth: false
+  auth: false,
 })
 
 import Icon from '@/components/Icon.vue'
 import { useLogin } from '@/composables/modules/auth/useLogin'
 import { useUser } from '@/composables/modules/auth/user'
+import { landingRouteFor } from '@/utils/routePermissions'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 
-// Composables
 const router = useRouter()
 const { loading, error, success, login } = useLogin()
+const showPassword = ref(false)
 
-// Reactive data
 const loginForm = ref({
   email: '',
   password: '',
-  rememberMe: false
+  rememberMe: false,
 })
 
-// Methods
 const handleLogin = async () => {
   if (!loginForm.value.email || !loginForm.value.password) {
-    const { showToast } = useCustomToast();
-    showToast({ title: "Validation Error", message: "Please enter your email and password.", toastType: "error" });
-    return;
+    const { showToast } = useCustomToast()
+    showToast({
+      title: 'Missing details',
+      message: 'Enter your email and password to continue.',
+      toastType: 'error',
+    })
+    return
   }
+
   try {
     const response: any = await login({
       email: loginForm.value.email,
-      password: loginForm.value.password
+      password: loginForm.value.password,
     })
-    
+
     if (response?.requiresOtp) {
       router.push({ path: '/verify-login', query: { email: loginForm.value.email } })
     } else if (success.value) {
-      router.push('/dashboard')
+      const { hasPermission } = useUser()
+      router.push(landingRouteFor(hasPermission))
     }
   } catch (err: any) {
-    console.error('Login failed:', err)
     if (err?.response?.data?.requiresOtp) {
       router.push({ path: '/verify-login', query: { email: loginForm.value.email } })
     }
   }
 }
 
-// Lifecycle
 onMounted(() => {
-  const { isLoggedIn } = useUser()
-  if (isLoggedIn.value) {
-    router.push('/dashboard')
-  }
-})
-
-onUnmounted(() => {
+  const { isLoggedIn, hasPermission } = useUser()
+  if (isLoggedIn.value) router.push(landingRouteFor(hasPermission))
 })
 </script>
-
-<style scoped>
-/* Error shake animation */
-.shake-enter-active {
-  animation: shake 0.6s ease-in-out;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-</style>

@@ -45,7 +45,7 @@
           :value="modelValue"
           type="tel"
 
-          class="w-full px-3 py-4 bg-[#1A1A1B09] border-none rounded-r-lg focus:border-[0.5px] focus:border-[#3BAB22] outline-none text-lg"
+          class="w-full px-3 py-4 bg-[#1A1A1B09] border-none rounded-r-lg focus:border-[0.5px] focus:border-[#27628C] outline-none text-lg"
           :class="errorMessage ? 'border-red-500' : 'border-gray-300'"
           @input="onPhoneInput"
           @blur="handleBlur"

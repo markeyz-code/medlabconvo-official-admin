@@ -45,7 +45,7 @@
       </div>
       <button
         @click="refreshAuditLogs"
-        class="w-full md:w-auto px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-3 active:scale-95"
+        class="w-full md:w-auto px-8 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1F5378] transition-all flex items-center justify-center space-x-3 active:scale-95"
       >
         <Icon name="lucide:refresh-cw" class="w-4 h-4" />
         <span>Refresh</span>
@@ -107,14 +107,14 @@
       <!-- Loading State -->
       <div v-if="loading" class="flex items-center justify-center py-20 bg-white/80 absolute inset-0 z-10">
         <div class="flex flex-col items-center">
-          <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
+          <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
           <span class="text-sm font-bold text-slate-400">Loading history...</span>
         </div>
       </div>
       
       <!-- Empty State -->
       <div v-else-if="filteredAuditLogs?.length === 0" class="text-center py-24">
-        <div class="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
+        <div class="w-20 h-20 bg-slate-50 rounded-[1.25rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
           <Icon name="lucide:shield-check" class="w-10 h-10 text-slate-100" />
         </div>
         <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No activity found</h3>
@@ -202,7 +202,7 @@ const getActionColor = (action: string) => {
     delete: 'bg-rose-500',
     soft_delete: 'bg-amber-500',
     restore: 'bg-indigo-500',
-    login: 'bg-[#033958]',
+    login: 'bg-[#27628C]',
     logout: 'bg-slate-400'
   }
   return colors[action as keyof typeof colors] || 'bg-slate-400'

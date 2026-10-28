@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <!-- Action Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-8 rounded-[2rem] border border-slate-100">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-8 rounded-[1.25rem] border border-slate-100">
       <div class="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
         <div class="w-full md:w-80">
           <AnimatedInput
@@ -29,7 +29,7 @@
         </button>
         <button
           @click="refreshSubscriptions"
-          class="flex-1 md:flex-none px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-3 group active:scale-95"
+          class="flex-1 md:flex-none px-8 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1F5378] transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
           <Icon name="lucide:refresh-cw" class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
           <span>Refresh</span>
@@ -39,19 +39,19 @@
 
     <!-- Subscriptions Metrics -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div class="bg-white rounded-[2rem] border border-slate-100 p-8 hover:border-slate-200 transition-all duration-500 group">
+      <div class="bg-white rounded-[1.25rem] border border-slate-100 p-8 hover:border-slate-200 transition-all duration-500 group">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-bold text-slate-400 mb-2">Total audience</p>
             <p class="text-lg font-bold text-slate-900 tracking-normal">{{ totalSubscribers }}</p>
           </div>
-          <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:bg-[#033958] group-hover:text-white transition-colors duration-500 border border-slate-100">
+          <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:bg-[#27628C] group-hover:text-white transition-colors duration-500 border border-slate-100">
             <Icon name="lucide:users" class="w-8 h-8" />
           </div>
         </div>
       </div>
       
-      <div class="bg-white rounded-[2rem] border border-slate-100 p-8 hover:border-emerald-100 transition-all duration-500 group">
+      <div class="bg-white rounded-[1.25rem] border border-slate-100 p-8 hover:border-emerald-100 transition-all duration-500 group">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-bold text-slate-400 mb-2">Active subscribers</p>
@@ -63,7 +63,7 @@
         </div>
       </div>
       
-      <div class="bg-white rounded-[2rem] border border-slate-100 p-8 hover:border-blue-100 transition-all duration-500 group">
+      <div class="bg-white rounded-[1.25rem] border border-slate-100 p-8 hover:border-blue-100 transition-all duration-500 group">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-bold text-slate-400 mb-2">New this month</p>
@@ -77,15 +77,15 @@
     </div>
 
     <!-- Subscriptions Ledger -->
-    <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden relative">
+    <div class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden relative">
        <!-- Loading Overlay -->
       <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center">
-        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
-        <span class="text-sm font-bold text-[#033958]">Loading records...</span>
+        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
+        <span class="text-sm font-bold text-[#27628C]">Loading records...</span>
       </div>
 
       <div class="overflow-x-auto text-sm">
-        <table class="w-full text-left border-separate border-spacing-0">
+        <table class="stack-table w-full text-left border-separate border-spacing-0">
           <thead>
             <tr class="bg-slate-50/50 text-sm font-bold text-slate-400">
               <th class="px-10 py-6 border-b border-slate-100">Email address</th>
@@ -135,7 +135,7 @@
                   >
                     <Icon name="lucide:ban" class="w-5 h-5" />
                   </button>
-                  <button
+                  <button v-if="hasPermission('subscriptions:delete')"
                     @click="deleteSubscription(subscription._id)"
                     class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                     title="Delete record"
@@ -151,7 +151,7 @@
       
       <!-- Empty State -->
       <div v-if="!loading && filteredSubscriptions.length === 0" class="py-32 text-center bg-slate-50/30">
-        <div class="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
+        <div class="w-24 h-24 bg-white rounded-[1.25rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
           <Icon name="lucide:newspaper" class="w-10 h-10 text-slate-100" />
         </div>
         <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No records found</h3>
@@ -189,6 +189,9 @@ import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Icon from '@/components/Icon.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import { useUser } from '@/composables/modules/auth/user'
+
+const { hasPermission } = useUser()
 
 // Composables
 const { subscriptions, loading, getSubscriptions } = useGetSubscriptions()

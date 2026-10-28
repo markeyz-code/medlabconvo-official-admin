@@ -71,7 +71,7 @@
       <div v-if="previewData?.length" class="space-y-4">
         <h4 class="font-medium text-gray-900">Preview ({{ previewData.length }} products)</h4>
         <div class="max-h-64 overflow-auto border border-gray-200 rounded-lg">
-          <table class="min-w-full divide-y divide-gray-200">
+          <table class="stack-table min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-4 py-2 text-left text-sm font-medium text-gray-900 ">Name</th>

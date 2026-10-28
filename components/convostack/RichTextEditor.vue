@@ -1,5 +1,5 @@
 <template>
-  <div class="rich-text-editor border border-slate-300 rounded-xl overflow-hidden bg-white focus-within:ring-2 focus-within:ring-[#033958]/20 focus-within:border-[#033958] transition-all">
+  <div class="rich-text-editor border border-slate-300 rounded-xl overflow-hidden bg-white focus-within:ring-2 focus-within:ring-[#27628C]/20 focus-within:border-[#27628C] transition-all">
     <!-- Toolbar -->
     <div v-if="editor" class="flex flex-wrap items-center gap-1 px-3 py-2 border-b border-slate-100 bg-slate-50/80 backdrop-blur-md sticky top-0 z-10">
       <!-- Text Style -->

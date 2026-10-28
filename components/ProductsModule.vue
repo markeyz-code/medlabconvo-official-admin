@@ -39,16 +39,16 @@
           </button>
         </div>
 
-        <button
+        <button v-if="hasPermission('products:create')"
           @click="showBatchModal = true"
           class="flex-1 md:flex-none px-6 py-3 border border-slate-200 text-slate-900 rounded-xl hover:bg-slate-50 transition-all font-bold text-sm flex items-center justify-center space-x-2"
         >
           <Icon name="lucide:upload" class="w-5 h-4" />
           <span>Batch Import</span>
         </button>
-        <button
+        <button v-if="hasPermission('products:create')"
           @click="openCreateModal"
-          class="flex-1 md:flex-none px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
+          class="flex-1 md:flex-none px-6 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all duration-300 flex items-center justify-center space-x-3 group"
         >
           <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
           <span class="font-bold text-sm">Add Product</span>
@@ -66,7 +66,7 @@
         :class="[
           'px-4 py-2 text-sm font-bold  tracking-normal rounded-full transition-all duration-300 border',
           activeQuickFilter === filter.id 
-            ? 'bg-[#033958] text-white border-[#033958]' 
+            ? 'bg-[#27628C] text-white border-[#27628C]' 
             : 'bg-white text-slate-400 border-slate-100 hover:border-slate-200'
         ]"
       >
@@ -109,7 +109,7 @@
       <!-- Tabular/List View -->
       <div v-else class="bg-white rounded-3xl border border-slate-100 overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
+          <table class="stack-table w-full text-left border-collapse">
             <thead>
               <tr class="bg-slate-50/50 border-b border-slate-100 text-xs font-bold text-slate-400 tracking-wider">
                 <th class="p-4 pl-6 font-bold">Product</th>
@@ -138,11 +138,11 @@
                 </td>
                 <td class="p-4 text-sm">
                   <div class="flex items-center gap-2">
-                    <button @click="handleUpdateStock(product.id || product._id, -1)" class="w-6 h-6 rounded border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100">
+                    <button v-if="hasPermission('products:update')" @click="handleUpdateStock(product.id || product._id, -1)" class="w-6 h-6 rounded border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100">
                       <Icon name="lucide:minus" class="w-3 h-3" />
                     </button>
                     <span class="font-bold text-slate-700 w-6 text-center">{{ product.stock || 0 }}</span>
-                    <button @click="handleUpdateStock(product.id || product._id, 1)" class="w-6 h-6 rounded border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100">
+                    <button v-if="hasPermission('products:update')" @click="handleUpdateStock(product.id || product._id, 1)" class="w-6 h-6 rounded border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100">
                       <Icon name="lucide:plus" class="w-3 h-3" />
                     </button>
                   </div>
@@ -154,10 +154,10 @@
                 </td>
                 <td class="p-4 pr-6">
                   <div class="flex items-center justify-end gap-2">
-                    <button @click="editProduct(product)" class="p-2 text-slate-400 hover:text-[#033958] hover:bg-slate-100 rounded-lg transition-all" title="Edit">
+                    <button v-if="hasPermission('products:update')" @click="editProduct(product)" class="p-2 text-slate-400 hover:text-[#27628C] hover:bg-slate-100 rounded-lg transition-all" title="Edit">
                       <Icon name="lucide:edit-2" class="w-4 h-4" />
                     </button>
-                    <button @click="deleteProductConfirm(product)" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Delete">
+                    <button v-if="hasPermission('products:delete')" @click="deleteProductConfirm(product)" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Delete">
                       <Icon name="lucide:trash-2" class="w-4 h-4" />
                     </button>
                   </div>
@@ -176,9 +176,9 @@
       </div>
       <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No products found</h3>
       <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Your inventory is currently empty. Add your first product to get started.</p>
-      <button
+      <button v-if="hasPermission('products:create')"
         @click="openCreateModal"
-        class="px-8 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all font-bold text-sm"
+        class="px-8 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all font-bold text-sm"
       >
         Add first product
       </button>
@@ -264,6 +264,9 @@ import ProductForm from '@/components/ProductForm.vue'
 import SlideOver from '@/components/SlideOver.vue'
 import Modal from '@/components/Modal.vue'
 import BatchImportForm from '@/components/BatchImportForm.vue'
+import { useUser } from '@/composables/modules/auth/user'
+
+const { hasPermission } = useUser()
 
 // Logic
 const { products, loading: productsLoading, totalCount, currentPage, filters, getProducts } = useGetProducts()

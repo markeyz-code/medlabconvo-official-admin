@@ -20,7 +20,7 @@
             leave-from-class="opacity-100 scale-100 translate-y-0"
             leave-to-class="opacity-0 scale-95 translate-y-4"
           >
-            <div v-if="modelValue" class="inline-block w-full max-w-md p-8 my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-[2.5rem] shadow-sm border border-slate-200">
+            <div v-if="modelValue" class="inline-block w-full max-w-md p-8 my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-[1.5rem] shadow-sm border border-slate-200">
               <div class="space-y-6">
                 <div>
                   <h3 class="text-lg font-black text-slate-900 tracking-normal ">{{ title }}</h3>
@@ -32,7 +32,7 @@
                     v-model="inputValue"
                     type="text"
                     ref="inputRef"
-                    class="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-[#033958] focus:bg-white rounded-2xl text-sm font-bold transition-all outline-none"
+                    class="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-[#27628C] focus:bg-white rounded-2xl text-sm font-bold transition-all outline-none"
 
                     @keyup.enter="confirm"
                   />
@@ -49,7 +49,7 @@
                   <button
                     @click="confirm"
                     type="button"
-                    class="flex-1 px-6 py-4 bg-[#033958] text-white rounded-2xl font-black text-sm  tracking-normal shadow-sm border border-slate-100 hover:bg-[#022a41] transition-all"
+                    class="flex-1 px-6 py-4 bg-[#27628C] text-white rounded-2xl font-black text-sm  tracking-normal shadow-sm border border-slate-100 hover:bg-[#1B4A6B] transition-all"
                   >
                     Confirm
                   </button>

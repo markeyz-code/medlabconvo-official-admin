@@ -68,13 +68,6 @@ export default defineNuxtConfig({
         { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
         { rel: "manifest", href: "/site.webmanifest" }
       ],
-      script: [
-        {
-          src: "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js",
-          type: "text/javascript",
-          defer: true
-        },
-      ],
     },
   },
 
@@ -82,11 +75,10 @@ export default defineNuxtConfig({
     transpile: ["lucide-vue-next"],
   },
 
-  css: ['/assets/font/stylesheet.css', "/assets/css/main.css"],
+  css: ['/assets/fonts/stylesheet.css', "/assets/css/main.css", "/assets/css/auth.css"],
 
   modules: [
     "@nuxtjs/tailwindcss",
-    "@nuxtjs/google-fonts",
     "@nuxtjs/robots",
     // "@vite-pwa/nuxt"
   ],
@@ -116,15 +108,6 @@ export default defineNuxtConfig({
     }
   },
 
-  googleFonts: {
-    families: {
-      "Inter": [400, 500, 600, 700],
-      "Poppins": [400, 500, 600, 700],
-      "Onest": [100, 200, 300, 400, 500, 600, 700, 800, 900],
-    },
-    display: "swap",
-    preload: true,
-  },
   nitro: {
     ssr: false,
   },

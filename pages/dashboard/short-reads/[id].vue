@@ -5,7 +5,7 @@
         <h2 class="text-lg font-bold text-gray-900">Edit Short Read</h2>
         <p class="text-gray-500">Update this carousel story.</p>
       </div>
-      <button @click="submit" :disabled="loading" class="px-4 py-2 bg-[#033958] text-white rounded-lg disabled:opacity-50">
+      <button @click="submit" :disabled="loading" class="px-4 py-2 bg-[#27628C] text-white rounded-lg disabled:opacity-50">
         {{ loading ? 'Saving...' : 'Update Short Read' }}
       </button>
     </div>
@@ -83,7 +83,8 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'dashboard',
-  middleware: 'auth'
+  middleware: 'auth',
+  permission: 'short_reads:update'
 })
 
 import { ref, onMounted } from 'vue'

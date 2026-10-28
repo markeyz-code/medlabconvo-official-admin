@@ -37,7 +37,7 @@
       <SelectInput
         v-model="form.role"
         label="User Role"
-        :options="['admin', 'editor', 'super_admin', 'executive_director', 'asst_executive_director', 'head_of_department', 'co_lead', 'member']"
+        :options="roleOptions"
       />
     </div>
 
@@ -51,7 +51,7 @@
       </button>
       <button
         type="submit"
-        class="px-10 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-3"
+        class="px-10 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center space-x-3"
       >
         <span>{{ user ? 'Save Changes' : 'Create User' }}</span>
       </button>
@@ -60,10 +60,38 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watchEffect } from 'vue';
+import { computed, onMounted, reactive, ref, watchEffect } from 'vue';
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import { useCustomToast } from '@/composables/core/useCustomToast'
+import { useGetRoles } from '@/composables/modules/roles/useGetRoles'
+import { useUser } from '@/composables/modules/auth/user'
+import { ROLE_LABELS } from '@/utils/permissions'
+
+const { roles, getRoles } = useGetRoles()
+const { role: currentRole, hasPermission } = useUser()
+const builtInRoles = [
+  'super_admin', 'executive_director', 'asst_executive_director',
+  'admin', 'head_of_department', 'co_lead', 'editor', 'member'
+]
+
+const roleOptions = computed(() => {
+  const names = Array.from(new Set([
+    ...builtInRoles,
+    ...(roles.value || []).map((role: any) => String(role.name || '').toLowerCase()).filter(Boolean),
+  ]))
+  const canAssignPrivileged = ['super_admin', 'executive_director'].includes(currentRole.value)
+  return names
+    .filter((name) => canAssignPrivileged || !['super_admin', 'executive_director'].includes(name))
+    .map((name) => ({
+      label: ROLE_LABELS[name] || name.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      value: name,
+    }))
+})
+
+onMounted(() => {
+  if (hasPermission('roles:read')) getRoles().catch(() => {})
+})
 
 interface Props {
   user?: any

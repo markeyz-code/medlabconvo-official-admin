@@ -1,7 +1,7 @@
 <template>
   <div class="-m-6 md:-m-8 lg:-m-10 bg-slate-100 min-h-screen relative">
     <div v-if="loading" class="absolute inset-0 flex flex-col items-center justify-center bg-white/50 backdrop-blur-sm z-50">
-      <div class="w-12 h-12 rounded-full border-4 border-slate-200 border-t-[#033958] animate-spin"></div>
+      <div class="w-12 h-12 rounded-full border-4 border-slate-200 border-t-[#27628C] animate-spin"></div>
       <p class="mt-4 text-sm font-bold text-slate-500">Loading publication...</p>
     </div>
     
@@ -28,7 +28,8 @@ import { convostack_api } from '@/api_factory/modules/convostack'
 
 definePageMeta({
   layout: 'dashboard',
-  middleware: 'auth'
+  middleware: 'auth',
+  permission: 'convostack:update'
 })
 
 const router = useRouter()

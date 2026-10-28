@@ -4,7 +4,7 @@
     <div class="bg-white/50 backdrop-blur-sm rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
       <div class="flex items-center justify-between mb-2">
         <div class="flex items-center space-x-3">
-          <div class="w-2 h-8 bg-[#033958] rounded-full"></div>
+          <div class="w-2 h-8 bg-[#27628C] rounded-full"></div>
           <h3 class="text-xl font-bold text-slate-900 tracking-tight">Basic Information</h3>
         </div>
         <button
@@ -118,7 +118,7 @@
         <button
           @click="addField"
           type="button"
-          class="px-6 py-3 bg-gradient-to-r from-[#033958] to-[#044d77] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-100 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-0.5 transition-all active:scale-95 flex items-center space-x-2"
+          class="px-6 py-3 bg-gradient-to-r from-[#27628C] to-[#044d77] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-100 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-0.5 transition-all active:scale-95 flex items-center space-x-2"
         >
           <Icon name="lucide:plus" class="w-4 h-4" />
           <span>Add Field</span>
@@ -137,14 +137,14 @@
             <div
               v-for="(field, index) in form.fields"
               :key="field.id"
-              class="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm hover:shadow-sm border border-slate-200 hover:border-blue-100 transition-all duration-500 group relative focus-within:z-50"
+              class="bg-white rounded-[1.25rem] p-6 border border-slate-100 shadow-sm hover:shadow-sm border border-slate-200 hover:border-blue-100 transition-all duration-500 group relative focus-within:z-50"
             >
             <!-- Field Number Badge (Glassmorphism style) -->
             <div class="absolute top-0 right-0 w-32 h-32 bg-slate-50/50 -mr-16 -mt-16 rounded-full group-hover:bg-blue-50/50 transition-colors duration-500"></div>
             
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-50 relative z-10">
               <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center text-[#033958] font-black text-lg shadow-inner">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center text-[#27628C] font-black text-lg shadow-inner">
                   {{ index + 1 }}
                 </div>
                 <div>
@@ -203,7 +203,7 @@
                 />
                 <div class="flex items-center px-8 bg-white">
                   <label class="flex items-center group cursor-pointer w-full py-4">
-                    <div class="relative flex items-center justify-center w-6 h-6 rounded-lg border-2 border-slate-200 group-hover:border-[#033958] transition-all duration-300 overflow-hidden">
+                    <div class="relative flex items-center justify-center w-6 h-6 rounded-lg border-2 border-slate-200 group-hover:border-[#27628C] transition-all duration-300 overflow-hidden">
                       <input
                         v-model="field.required"
                         type="checkbox"
@@ -211,12 +211,12 @@
                       />
                       <div 
                         v-if="field.required" 
-                        class="w-full h-full bg-gradient-to-br from-[#033958] to-[#044d77] flex items-center justify-center animate-in fade-in zoom-in duration-200"
+                        class="w-full h-full bg-gradient-to-br from-[#27628C] to-[#044d77] flex items-center justify-center animate-in fade-in zoom-in duration-200"
                       >
                         <Icon name="lucide:check" class="w-4 h-4 text-white" />
                       </div>
                     </div>
-                    <span class="ml-4 text-sm font-bold text-slate-600 group-hover:text-[#033958] transition-colors">Required Field</span>
+                    <span class="ml-4 text-sm font-bold text-slate-600 group-hover:text-[#27628C] transition-colors">Required Field</span>
                   </label>
                 </div>
               </div>
@@ -258,7 +258,7 @@
                 <button
                   @click="addOption(field)"
                   type="button"
-                  class="text-[#033958] hover:text-blue-700 text-xs font-black flex items-center space-x-2 bg-blue-50 px-4 py-2 rounded-full transition-all hover:scale-105"
+                  class="text-[#27628C] hover:text-blue-700 text-xs font-black flex items-center space-x-2 bg-blue-50 px-4 py-2 rounded-full transition-all hover:scale-105"
                 >
                   <Icon name="lucide:plus" class="w-3.5 h-3.5" />
                   <span>ADD OPTION</span>
@@ -303,7 +303,7 @@
           </div>
         </TransitionGroup>
         
-        <div v-if="form.fields.length === 0" class="text-center py-20 bg-white/50 backdrop-blur-sm rounded-[2.5rem] border border-dashed border-slate-200">
+        <div v-if="form.fields.length === 0" class="text-center py-20 bg-white/50 backdrop-blur-sm rounded-[1.5rem] border border-dashed border-slate-200">
           <Icon name="lucide:layout" class="w-16 h-16 text-slate-100 mx-auto mb-4" />
           <h4 class="text-lg font-bold text-slate-300">No fields added yet</h4>
           <p class="text-sm text-slate-400 mt-1 max-w-xs mx-auto">Click the "Add Field" button above to start building your form's data structure.</p>
@@ -312,7 +312,7 @@
     </div>
 
     <!-- Post-submission Config -->
-    <div class="bg-gradient-to-br from-white to-slate-50 rounded-[2rem] p-6 border border-slate-100 shadow-sm space-y-4">
+    <div class="bg-gradient-to-br from-white to-slate-50 rounded-[1.25rem] p-6 border border-slate-100 shadow-sm space-y-4">
       <div class="flex items-center space-x-3 mb-2">
         <div class="w-2 h-8 bg-emerald-500 rounded-full"></div>
         <h3 class="text-xl font-bold text-slate-900 tracking-tight">Success & Redirection</h3>
@@ -337,7 +337,7 @@
     </div>
 
     <!-- Form Actions -->
-    <div class="flex items-center justify-between pt-6 border-t border-slate-200 sticky bottom-0 bg-white/80 backdrop-blur-md pb-2 px-2 z-[60]">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-6 border-t border-slate-200 sticky bottom-0 bg-white/90 backdrop-blur-md pb-2 px-1 sm:px-2 z-[60]">
       <div class="flex flex-col">
         <span class="text-sm font-black text-slate-400  tracking-normal">Current Status</span>
         <div class="flex items-center space-x-2">
@@ -346,18 +346,18 @@
         </div>
       </div>
       
-      <div class="flex space-x-4">
+      <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
         <button
           type="button"
           @click="handleDiscard"
-          class="px-8 py-3 border-2 border-slate-200 text-slate-600 rounded-2xl font-bold text-sm hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95 cursor-pointer"
+          class="w-full sm:w-auto px-6 py-3 border-2 border-slate-200 text-slate-600 rounded-2xl font-bold text-sm hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95 cursor-pointer"
         >
           Discard Changes
         </button>
         <button
           @click="handleSubmit"
           type="button"
-          class="px-10 py-3 bg-gradient-to-r from-cyan-600 to-blue-700 text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center space-x-3 cursor-pointer"
+          class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-700 text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-3 cursor-pointer"
         >
           <Icon :name="mode === 'edit' ? 'lucide:save' : 'lucide:check-circle'" class="w-4 h-4" />
           <span>{{ mode === 'edit' ? 'Update' : 'Create' }} Professional Form</span>

@@ -18,7 +18,7 @@
       <!-- Submissions Table -->
       <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full">
+          <table class="stack-table w-full">
             <thead class="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th class="px-4 py-3 text-left text-sm font-medium text-slate-500 ">Date</th>
@@ -47,7 +47,7 @@
                   class="px-4 py-3 text-sm text-slate-600"
                 >
                   <template v-if="isUrl(getFieldValue(submission, field.id))">
-                    <a :href="getFieldValue(submission, field.id)" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#033958]/10 text-[#033958] rounded-lg hover:bg-[#033958]/20 transition-colors font-semibold text-xs">
+                    <a :href="getFieldValue(submission, field.id)" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#27628C]/10 text-[#27628C] rounded-lg hover:bg-[#27628C]/20 transition-colors font-semibold text-xs">
                       <Icon name="lucide:external-link" class="w-3.5 h-3.5" />
                       View File
                     </a>
@@ -97,7 +97,7 @@
             >
               <label class="block text-sm font-medium text-slate-700 mb-1">{{ response.fieldLabel }}</label>
               <div v-if="isUrl(response.value)" class="mt-1">
-                <a :href="response.value" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-colors font-medium text-sm shadow-sm">
+                <a :href="response.value" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-colors font-medium text-sm shadow-sm">
                   <Icon name="lucide:download" class="w-4 h-4" />
                   Preview / Download File
                 </a>

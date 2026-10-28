@@ -14,7 +14,7 @@
             class="absolute top-4 left-1/2 w-full h-[1px] bg-slate-100 -z-10"
           >
             <div 
-              class="h-full bg-[#033958] transition-all duration-500"
+              class="h-full bg-[#27628C] transition-all duration-500"
               :style="{ width: currentStep > index ? '100%' : '0%' }"
             ></div>
           </div>
@@ -24,7 +24,7 @@
             :class="[
               'w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 cursor-pointer',
               currentStep === index 
-                ? 'bg-[#033958] text-white ring-4 ring-[#033958]/10' 
+                ? 'bg-[#27628C] text-white ring-4 ring-[#27628C]/10' 
                 : currentStep > index 
                 ? 'bg-emerald-500 text-white' 
                 : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-slate-100'
@@ -36,7 +36,7 @@
           <span
             :class="[
               'mt-3 text-sm font-bold transition-colors duration-500 text-center px-1',
-              currentStep >= index ? 'text-[#033958]' : 'text-slate-300'
+              currentStep >= index ? 'text-[#27628C]' : 'text-slate-300'
             ]"
           >
             {{ step.title }}
@@ -115,13 +115,13 @@
 
         <section class="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-8">
           <label class="flex items-center group cursor-pointer">
-            <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#033958] transition-colors">
+            <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#27628C] transition-colors">
               <input
                 v-model="form.isDigital"
                 type="checkbox"
                 class="absolute opacity-0 w-full h-full cursor-pointer z-10"
               />
-              <div v-if="form.isDigital" class="w-2.5 h-2.5 bg-[#033958] rounded-sm"></div>
+              <div v-if="form.isDigital" class="w-2.5 h-2.5 bg-[#27628C] rounded-sm"></div>
             </div>
             <span class="ml-3 text-sm font-bold text-slate-700">Digital asset</span>
           </label>
@@ -275,7 +275,7 @@
           <div>
             <div class="flex items-center justify-between mb-4">
               <h4 class="text-sm font-bold text-slate-400 px-1">Core features</h4>
-              <button @click="addFeature" type="button" class="text-[#033958] text-sm font-bold hover:underline">Add</button>
+              <button @click="addFeature" type="button" class="text-[#27628C] text-sm font-bold hover:underline">Add</button>
             </div>
             <div class="space-y-3">
               <div v-for="(feature, index) in form.features" :key="index" class="flex items-center group">
@@ -369,7 +369,7 @@
             v-if="currentStep < steps.length - 1"
             @click="nextStep"
             type="button"
-            class="px-10 py-3 bg-[#033958] text-white text-sm font-bold rounded-xl hover:bg-[#022a41] transition-all active:scale-95 inline-flex items-center space-x-2"
+            class="px-10 py-3 bg-[#27628C] text-white text-sm font-bold rounded-xl hover:bg-[#1B4A6B] transition-all active:scale-95 inline-flex items-center space-x-2"
           >
             <span>Continue</span>
             <Icon name="lucide:arrow-right" class="w-4 h-4" />
@@ -379,7 +379,7 @@
             v-else
             type="submit"
             :disabled="isSubmitting"
-            class="px-12 py-3 bg-[#033958] text-white text-sm font-bold rounded-xl hover:bg-[#022a41] transition-all active:scale-95 disabled:opacity-50 inline-flex items-center space-x-3"
+            class="px-12 py-3 bg-[#27628C] text-white text-sm font-bold rounded-xl hover:bg-[#1B4A6B] transition-all active:scale-95 disabled:opacity-50 inline-flex items-center space-x-3"
           >
             <div v-if="isSubmitting" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
             <span>{{ product ? 'Update product' : 'Create product' }}</span>

@@ -15,8 +15,9 @@
 
       <div class="flex items-center gap-4 w-full md:w-auto">
         <button
+          v-if="canCreate"
           @click="openCreateModal"
-          class="flex-1 md:flex-none px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all flex items-center justify-center space-x-3 group active:scale-95"
+          class="flex-1 md:flex-none px-8 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
           <Icon name="lucide:plus-circle" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
           <span>Create Permission</span>
@@ -25,15 +26,15 @@
     </div>
 
     <!-- Permissions Registry -->
-    <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden relative">
+    <div class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden relative">
       <!-- Loading Overlay -->
       <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center">
-        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
-        <span class="text-sm font-bold text-[#033958]">Loading permissions...</span>
+        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
+        <span class="text-sm font-bold text-[#27628C]">Loading permissions...</span>
       </div>
 
       <div class="overflow-x-auto text-sm">
-        <table class="w-full text-left border-separate border-spacing-0">
+        <table class="stack-table w-full text-left border-separate border-spacing-0">
           <thead>
             <tr class="bg-slate-50/50 text-sm font-bold text-slate-400">
               <th class="px-10 py-6 border-b border-slate-100">Permission name</th>
@@ -67,12 +68,13 @@
       
       <!-- Empty State -->
       <div v-if="!loading && filteredPermissions.length === 0" class="py-32 text-center bg-slate-50/30">
-        <div class="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
+        <div class="w-24 h-24 bg-white rounded-[1.25rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
           <Icon name="lucide:key" class="w-10 h-10 text-slate-100" />
         </div>
         <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No permissions found</h3>
         <p class="text-slate-400 text-sm font-medium max-w-[240px] mx-auto leading-relaxed">The system is currently using default access controls.</p>
         <button
+          v-if="canCreate"
           @click="openCreateModal"
           class="mt-8 px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all active:scale-95"
         >
@@ -104,13 +106,13 @@
         <div class="space-y-4 pt-4 border-t border-slate-50">
           <label class="block text-sm font-bold text-slate-400 ml-1">Generated permission string</label>
           <div class="relative group">
-            <div class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#3BAB22] transition-colors">
+            <div class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#27628C] transition-colors">
               <Icon name="lucide:tag" class="w-5 h-5" />
             </div>
             <input
               v-model="form.name"
               type="text"
-              class="w-full pl-16 pr-8 py-5 bg-slate-50 border border-slate-100 rounded-2xl text-slate-700 font-mono text-sm outline-none transition-all focus:bg-white focus:border-[#3BAB22] focus:ring-1 focus:ring-[#3BAB22]"
+              class="w-full pl-16 pr-8 py-5 bg-slate-50 border border-slate-100 rounded-2xl text-slate-700 font-mono text-sm outline-none transition-all focus:bg-white focus:border-[#27628C] focus:ring-1 focus:ring-[#27628C]"
               readonly
             />
           </div>
@@ -125,7 +127,7 @@
           <textarea
             v-model="form.description"
             rows="4"
-            class="w-full p-6 bg-slate-50 border border-slate-100 rounded-3xl focus:ring-2 focus:ring-[#3BAB22] focus:bg-white font-medium text-slate-700 resize-none transition-all outline-none"
+            class="w-full p-6 bg-slate-50 border border-slate-100 rounded-3xl focus:ring-2 focus:ring-[#27628C] focus:bg-white font-medium text-slate-700 resize-none transition-all outline-none"
 
           ></textarea>
         </div>
@@ -140,7 +142,7 @@
           <button
             @click="handleSave"
             :disabled="createLoading || !form.name"
-            class="px-12 py-5 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] disabled:bg-slate-100 disabled:text-slate-400 transition-all flex items-center space-x-3 active:scale-95"
+            class="px-12 py-5 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] disabled:bg-slate-100 disabled:text-slate-400 transition-all flex items-center space-x-3 active:scale-95"
           >
             <div v-if="createLoading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
             <span>{{ createLoading ? 'Saving...' : 'Save Permission' }}</span>
@@ -158,6 +160,7 @@ import { useCreatePermission } from '@/composables/modules/roles/useCreatePermis
 import SlideOver from '@/components/SlideOver.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import Icon from '@/components/Icon.vue'
+import { useUser } from '@/composables/modules/auth/user'
 
 // State
 const searchQuery = ref('')
@@ -173,6 +176,8 @@ const form = ref({
 // Composables
 const { permissions, loading, getPermissions } = useGetPermissions()
 const { createPermission, loading: createLoading } = useCreatePermission()
+const { hasPermission } = useUser()
+const canCreate = computed(() => hasPermission('permissions:create'))
 
 // Computed
 const filteredPermissions = computed(() => {

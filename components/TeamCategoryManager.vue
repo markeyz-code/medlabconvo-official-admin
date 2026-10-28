@@ -26,7 +26,7 @@
           <button v-if="editingId" type="button" @click="resetForm" class="px-4 py-3 bg-white text-slate-500 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-sm font-medium">
             Cancel
           </button>
-          <button type="submit" :disabled="saving" class="px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all font-medium disabled:opacity-50 whitespace-nowrap text-sm">
+          <button type="submit" :disabled="saving" class="px-6 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all font-medium disabled:opacity-50 whitespace-nowrap text-sm">
             {{ saving ? 'Saving...' : (editingId ? 'Update' : 'Create') }}
           </button>
         </div>
@@ -36,10 +36,10 @@
     <!-- List Area -->
     <div class="bg-white rounded-xl border border-slate-200 overflow-hidden relative min-h-[200px]">
       <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
-         <div class="w-8 h-8 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-2"></div>
+         <div class="w-8 h-8 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-2"></div>
       </div>
       
-      <table class="w-full text-left border-collapse">
+      <table class="stack-table w-full text-left border-collapse">
         <thead>
           <tr class="bg-slate-50 border-b border-slate-100">
             <th class="px-6 py-4 text-sm font-medium text-slate-500">Category Name</th>
@@ -53,7 +53,7 @@
             <td class="px-6 py-4 text-center text-slate-500">{{ category.position }}</td>
             <td class="px-6 py-4 text-right">
               <div class="flex items-center justify-end space-x-2">
-                <button @click="editCategory(category)" class="p-2 text-[#033958] hover:bg-[#033958]/10 rounded-lg border border-transparent hover:border-[#033958]/20 transition-all" title="Edit">
+                <button @click="editCategory(category)" class="p-2 text-[#27628C] hover:bg-[#27628C]/10 rounded-lg border border-transparent hover:border-[#27628C]/20 transition-all" title="Edit">
                   <Icon name="lucide:square-pen" class="w-4 h-4" />
                 </button>
                 <button @click="deleteCategory(category._id)" class="p-2 text-rose-500 hover:bg-rose-100 rounded-lg border border-transparent hover:border-rose-200 transition-all" title="Delete">

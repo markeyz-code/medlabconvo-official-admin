@@ -21,16 +21,16 @@
         </div>
       </div>
       <div class="flex items-center space-x-4 w-full md:w-auto">
-        <button
+        <button v-if="hasPermission('labcast:create')"
           @click="showBatchModal = true"
           class="flex-1 md:flex-none px-6 py-3 border border-slate-200 text-slate-900 rounded-xl hover:bg-slate-50 transition-all font-bold text-sm flex items-center justify-center space-x-2"
         >
           <Icon name="lucide:upload" class="w-5 h-4" />
           <span>Batch upload</span>
         </button>
-        <button
+        <button v-if="hasPermission('labcast:create')"
           @click="openCreateModal"
-          class="flex-1 md:flex-none px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
+          class="flex-1 md:flex-none px-6 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all duration-300 flex items-center justify-center space-x-3 group"
         >
           <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
           <span class="font-bold text-sm">New Episode</span>
@@ -60,10 +60,10 @@
       <div
         v-for="episode in labcasts"
         :key="episode.id"
-        class="group bg-white rounded-3xl border border-slate-100 overflow-hidden hover:border-[#033958]/10 transition-all duration-500"
+        class="group bg-white rounded-3xl border border-slate-100 overflow-hidden hover:border-[#27628C]/10 transition-all duration-500"
       >
         <div class="relative h-48 bg-slate-50 overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-br from-[#033958]/5 to-transparent group-hover:scale-110 transition-transform duration-700"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-[#27628C]/5 to-transparent group-hover:scale-110 transition-transform duration-700"></div>
           <div class="absolute inset-0 flex items-center justify-center">
             <Icon name="lucide:mic" class="w-12 h-12 text-slate-100 group-hover:text-slate-200 transition-colors duration-500" />
           </div>
@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="p-6">
-          <h3 class="text-lg font-bold text-slate-900 mb-2 line-clamp-2 leading-tight group-hover:text-[#033958] transition-colors">{{ episode.title }}</h3>
+          <h3 class="text-lg font-bold text-slate-900 mb-2 line-clamp-2 leading-tight group-hover:text-[#27628C] transition-colors">{{ episode.title }}</h3>
           <p class="text-sm font-medium text-slate-500 mb-6 line-clamp-2">{{ episode.description }}</p>
           
           <div class="flex items-center justify-between pt-4 border-t border-slate-50">
@@ -83,10 +83,10 @@
               <span class="text-sm font-bold">{{ episode.duration || '00:00' }}</span>
             </div>
             <div class="flex items-center space-x-1 transition-opacity">
-              <button @click="editEpisode(episode)" class="p-2 text-slate-400 hover:text-[#033958] hover:bg-slate-50 rounded-lg">
+              <button v-if="hasPermission('labcast:update')" @click="editEpisode(episode)" class="p-2 text-slate-400 hover:text-[#27628C] hover:bg-slate-50 rounded-lg">
                 <Icon name="lucide:pencil" class="w-4 h-4" />
               </button>
-              <button @click="deleteConfirm(episode)" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg">
+              <button v-if="hasPermission('labcast:delete')" @click="deleteConfirm(episode)" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg">
                 <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
             </div>
@@ -102,9 +102,9 @@
       </div>
       <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No episodes found</h3>
       <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Your podcast library is currently empty. Upload your first episode to get started.</p>
-      <button
+      <button v-if="hasPermission('labcast:create')"
         @click="openCreateModal"
-        class="px-8 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all font-bold text-sm"
+        class="px-8 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all font-bold text-sm"
       >
         Upload first episode
       </button>
@@ -123,13 +123,13 @@
           <textarea
             v-model="form.description"
             rows="4"
-            class="w-full p-6 bg-slate-50 border border-slate-100 rounded-3xl focus:ring-2 focus:ring-[#033958] focus:bg-white font-medium text-slate-700 resize-none transition-all outline-none"
+            class="w-full p-6 bg-slate-50 border border-slate-100 rounded-3xl focus:ring-2 focus:ring-[#27628C] focus:bg-white font-medium text-slate-700 resize-none transition-all outline-none"
 
           ></textarea>
         </div>
         <div class="flex justify-end pt-8 gap-4 border-t border-slate-50">
           <button @click="showModal = false" class="px-8 py-3 text-sm font-bold text-slate-400 hover:text-slate-900">Cancel</button>
-          <button @click="handleSave" :disabled="createLoading || updateLoading" class="px-10 py-3 bg-[#033958] text-white rounded-xl font-bold text-sm hover:bg-[#022a41] transition-all active:scale-95 disabled:opacity-50">
+          <button @click="handleSave" :disabled="createLoading || updateLoading" class="px-10 py-3 bg-[#27628C] text-white rounded-xl font-bold text-sm hover:bg-[#1B4A6B] transition-all active:scale-95 disabled:opacity-50">
             {{ editingEpisode ? 'Save changes' : 'Create episode' }}
           </button>
         </div>
@@ -161,6 +161,9 @@ import SelectInput from "@/components/ui/SelectInput.vue"
 import Icon from "@/components/Icon.vue"
 import SlideOver from "@/components/SlideOver.vue"
 import ConfirmModal from "@/components/ConfirmModal.vue"
+import { useUser } from '@/composables/modules/auth/user'
+
+const { hasPermission } = useUser()
 
 const { createLabCast, loading: createLoading } = useCreateLabCast()
 const { labcasts, loading: labcastsLoading, getLabCasts } = useGetLabCasts()

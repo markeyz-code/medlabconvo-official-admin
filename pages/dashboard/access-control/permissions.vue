@@ -19,6 +19,7 @@ import PermissionsModule from '@/components/PermissionsModule.vue'
 
 definePageMeta({
   layout: 'dashboard',
-  middleware: 'auth'
+  middleware: 'auth',
+  permission: 'permissions:read'
 })
 </script>

@@ -8,6 +8,7 @@ import CampaignsModule from '~/components/CampaignsModule.vue'
 
 definePageMeta({
   layout: 'dashboard',
-  middleware: 'auth'
+  middleware: 'auth',
+  permission: 'campaigns:read'
 })
 </script>

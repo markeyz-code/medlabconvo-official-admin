@@ -158,8 +158,10 @@
   import { useDeleteLabCast } from "@/composables/modules/labcast/useDeleteLabCast"
   
  definePageMeta({
-    layout: 'dashboard'
-  })
+  layout: 'dashboard',
+  middleware: 'auth',
+  permission: 'labcast:read'
+})
   
   // Reactive state
   const showCreateModal = ref(false)

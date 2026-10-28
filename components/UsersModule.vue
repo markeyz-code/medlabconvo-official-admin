@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <!-- Action Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-8 rounded-[2rem] border border-slate-100">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-8 rounded-[1.25rem] border border-slate-100">
       <div class="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
         <div class="w-full md:w-80">
           <AnimatedInput
@@ -21,7 +21,7 @@
 
       <div class="flex items-center gap-4 w-full md:w-auto">
         <button
-          v-if="hasPermission('users:write')"
+          v-if="hasPermission('users:create')"
           @click="showInviteModal = true"
           class="flex-1 md:flex-none px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-bold text-sm hover:bg-slate-50 transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
@@ -29,9 +29,9 @@
           <span>Invite User</span>
         </button>
         <button
-          v-if="hasPermission('users:write')"
+          v-if="hasPermission('users:create')"
           @click="openCreateModal"
-          class="flex-1 md:flex-none px-8 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#044a73] transition-all flex items-center justify-center space-x-3 group active:scale-95"
+          class="flex-1 md:flex-none px-8 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1F5378] transition-all flex items-center justify-center space-x-3 group active:scale-95"
         >
           <Icon name="lucide:plus" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
           <span>Add User</span>
@@ -40,14 +40,14 @@
     </div>
 
     <!-- Users Registry -->
-    <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden relative">
+    <div class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden relative">
       <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center">
-        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
-        <span class="text-sm font-bold text-[#033958]">Loading users...</span>
+        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
+        <span class="text-sm font-bold text-[#27628C]">Loading users...</span>
       </div>
 
       <div class="overflow-x-auto text-sm">
-        <table class="w-full text-left border-separate border-spacing-0">
+        <table class="stack-table w-full text-left border-separate border-spacing-0">
           <thead>
             <tr class="bg-slate-50/50 text-sm font-bold text-slate-400">
               <th class="px-10 py-6 border-b border-slate-100">User details</th>
@@ -72,7 +72,7 @@
               </td>
               <td class="px-10 py-8 whitespace-nowrap ">
                 <span :class="['px-3 py-1.5 text-sm font-bold rounded-lg ring-1 ring-inset', getRoleBadgeStyle(user.role)]">
-                  {{ user.role?.replace('_', ' ') || 'standard' }}
+                  {{ roleLabel(user.role) || 'Standard' }}
                 </span>
               </td>
               <td class="px-10 py-8 whitespace-nowrap ">
@@ -89,15 +89,15 @@
               <td class="px-10 py-8 whitespace-nowrap text-right">
                 <div class="flex items-center justify-end space-x-1 text-slate-400">
                   <button
-                    v-if="hasPermission('users:write')"
+                    v-if="hasPermission('users:update')"
                     @click="editUser(user)"
-                    class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-xl transition-all"
+                    class="p-2 hover:text-[#27628C] hover:bg-slate-50 rounded-xl transition-all"
                     title="Edit user"
                   >
                     <Icon name="lucide:pencil" class="w-5 h-5" />
                   </button>
                   <button
-                    v-if="hasPermission('users:write')"
+                    v-if="hasPermission('users:delete')"
                     @click="deleteUser(user._id)"
                     class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                     title="Delete user"
@@ -113,7 +113,7 @@
       
       <!-- Empty State -->
       <div v-if="!loading && filteredUsers.length === 0" class="py-32 text-center bg-slate-50/30">
-        <div class="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
+        <div class="w-24 h-24 bg-white rounded-[1.25rem] flex items-center justify-center mx-auto mb-6 border border-slate-100">
           <Icon name="lucide:users" class="w-10 h-10 text-slate-100" />
         </div>
         <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No users found</h3>
@@ -124,13 +124,13 @@
     <!-- Invite User Modal -->
     <Modal v-model="showInviteModal" title="Invite new user" size="lg">
       <div class="p-8 space-y-10">
-        <div class="bg-slate-50 p-8 rounded-[2rem] border border-slate-100">
+        <div class="bg-slate-50 p-8 rounded-[1.25rem] border border-slate-100">
           <div class="flex items-start gap-4">
-             <div class="w-10 h-10 bg-[#033958] rounded-xl flex items-center justify-center text-white flex-shrink-0">
+             <div class="w-10 h-10 bg-[#27628C] rounded-xl flex items-center justify-center text-white flex-shrink-0">
                <Icon name="lucide:shield-check" class="w-6 h-6" />
              </div>
              <div>
-               <p class="text-[#033958] text-sm font-bold  tracking-normal mb-3">Invitation protocol</p>
+               <p class="text-[#27628C] text-sm font-bold  tracking-normal mb-3">Invitation protocol</p>
                <p class="text-slate-600 text-sm font-medium leading-relaxed">Send an invitation to a new team member. They will receive a link to set up their account with the specified role.</p>
              </div>
           </div>
@@ -150,7 +150,7 @@
           />
         </div>
 
-        <div v-if="invitationLink" class="bg-emerald-50 p-8 rounded-[2rem] border border-emerald-100 flex items-center justify-between gap-6 animate-in fade-in zoom-in-95">
+        <div v-if="invitationLink" class="bg-emerald-50 p-8 rounded-[1.25rem] border border-emerald-100 flex items-center justify-between gap-6 animate-in fade-in zoom-in-95">
           <div class="flex-1 min-w-0">
             <p class="text-emerald-800 text-sm font-bold  tracking-normal mb-3">Invitation link generated</p>
             <p class="text-emerald-700 text-sm truncate font-mono bg-white/50 px-4 py-2 rounded-lg border border-emerald-100">{{ invitationLink }}</p>
@@ -174,7 +174,7 @@
           <button
             @click="handleSendInvite"
             :disabled="inviteLoading || !inviteForm.email"
-            class="px-12 py-5 bg-[#3BAB22] text-white rounded-2xl font-bold text-sm hover:bg-[#2d851a] disabled:bg-slate-100 disabled:text-slate-400 transition-all flex items-center space-x-3 active:scale-95"
+            class="px-12 py-5 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1F5378] disabled:bg-slate-100 disabled:text-slate-400 transition-all flex items-center space-x-3 active:scale-95"
           >
             <div v-if="inviteLoading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
             <span>{{ inviteLoading ? 'Sending...' : 'Send invitation' }}</span>
@@ -207,10 +207,12 @@
 import { ref, onMounted, computed } from 'vue'
 import { useGetUsers } from '@/composables/modules/users/useGetUsers'
 import { useUser } from '@/composables/modules/auth/user'
+import { roleLabel } from '@/utils/permissions'
 import { useCreateUser } from '@/composables/modules/users/useCreateUser'
 import { useUpdateUser } from '@/composables/modules/users/useUpdateUser'
 import { useSoftDeleteUser } from '@/composables/modules/users/useSoftDeleteUser'
 import { useInvitations } from '@/composables/modules/users/useInvitations'
+import { useGetRoles } from '@/composables/modules/roles/useGetRoles'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
@@ -248,24 +250,35 @@ const availableRoles = [
   'editor'
 ]
 
-const availableRoleOptions = computed(() => [
-  { label: 'All roles', value: '' },
-  ...availableRoles.map(role => ({
-    label: role.replace(/_/g, ' ').charAt(0).toUpperCase() + role.replace(/_/g, ' ').slice(1),
-    value: role
-  }))
-])
+const { hasPermission } = useUser()
+const { roles: roleDirectory, getRoles: getRoleDirectory } = useGetRoles()
+
+const availableRoleOptions = computed(() => {
+  const names = Array.from(new Set([
+    ...availableRoles,
+    ...(roleDirectory.value || []).map((role: any) => String(role.name || '').toLowerCase()).filter(Boolean),
+  ]))
+  return [
+    { label: 'All roles', value: '' },
+    ...names.map(role => ({
+      label: role.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      value: role,
+    })),
+  ]
+})
 
 // Composables
 const { users, loading, getUsers } = useGetUsers()
-const { hasPermission } = useUser()
 const { createUser } = useCreateUser()
 const { updateUser } = useUpdateUser()
 const { softDeleteUser } = useSoftDeleteUser()
 const { sendInvitation, loading: inviteLoading, invitationLink } = useInvitations()
 const { showToast } = useCustomToast()
 
-onMounted(() => { getUsers() })
+onMounted(() => {
+  getUsers()
+  if (hasPermission('roles:read')) getRoleDirectory().catch(() => {})
+})
 
 // Computed
 const filteredUsers = computed(() => {
@@ -327,7 +340,7 @@ const copyInviteLink = () => {
 }
 
 const getUserRoleColor = (role: string) => {
-  if (role?.includes('admin')) return 'bg-[#033958]'
+  if (role?.includes('admin')) return 'bg-[#27628C]'
   if (role?.includes('director')) return 'bg-indigo-600'
   if (role?.includes('head')) return 'bg-purple-600'
   if (role?.includes('lead')) return 'bg-emerald-600'

@@ -27,7 +27,7 @@
       
       <button
         @click="openCreateModal"
-        class="w-full sm:w-auto px-10 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center justify-center space-x-3"
+        class="w-full sm:w-auto px-10 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center justify-center space-x-3"
       >
         <Plus class="w-4 h-4" />
         <span>Create Program</span>
@@ -48,7 +48,7 @@
         <template #item="{ element: program, index }">
           <div
             :class="[
-              'bg-white rounded-2xl border border-slate-100 overflow-hidden transition-all duration-300 group hover:border-[#033958]/20 relative',
+              'bg-white rounded-2xl border border-slate-100 overflow-hidden transition-all duration-300 group hover:border-[#27628C]/20 relative',
               { 'opacity-60 cursor-not-allowed': reorderLoading }
             ]"
           >
@@ -56,7 +56,7 @@
               <!-- Drag Handle -->
               <div 
                 v-if="!searchQuery && !statusFilter" 
-                class="drag-handle absolute left-0 top-0 bottom-0 w-8 flex items-center justify-center cursor-move text-slate-200 hover:text-[#033958] transition-colors bg-slate-50/50 hover:bg-slate-100/50 z-10"
+                class="drag-handle absolute left-0 top-0 bottom-0 w-8 flex items-center justify-center cursor-move text-slate-200 hover:text-[#27628C] transition-colors bg-slate-50/50 hover:bg-slate-100/50 z-10"
               >
                 <GripVertical class="w-5 h-5" />
               </div>
@@ -110,21 +110,21 @@
                 <div class="flex items-center space-x-1 ml-4 text-slate-400 group-hover:text-slate-500 transition-colors">
                   <button
                     @click="viewProgram(program)"
-                    class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-lg transition-all"
+                    class="p-2 hover:text-[#27628C] hover:bg-slate-50 rounded-lg transition-all"
                     title="View details"
                   >
                     <Eye class="w-5 h-5" />
                   </button>
                   <button
                     @click="editProgram(program)"
-                    class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-lg transition-all"
+                    class="p-2 hover:text-[#27628C] hover:bg-slate-50 rounded-lg transition-all"
                     title="Edit program"
                   >
                     <Edit class="w-5 h-5" />
                   </button>
                   <button
                     @click="getRegistrationLink(program._id)"
-                    class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-lg transition-all"
+                    class="p-2 hover:text-[#27628C] hover:bg-slate-50 rounded-lg transition-all"
                     title="Copy registration link"
                   >
                     <Link class="w-5 h-5" />
@@ -248,14 +248,14 @@
               <button 
                 @click="moveItem(index, 'up')" 
                 :disabled="index === 0 || reorderLoading"
-                class="flex-1 px-3 hover:bg-slate-50 text-slate-300 hover:text-[#033958] transition-colors disabled:opacity-10"
+                class="flex-1 px-3 hover:bg-slate-50 text-slate-300 hover:text-[#27628C] transition-colors disabled:opacity-10"
               >
                 <ChevronUp class="w-5 h-5" />
               </button>
               <button 
                 @click="moveItem(index, 'down')" 
                 :disabled="index === localPrograms.length - 1 || reorderLoading"
-                class="flex-1 px-3 hover:bg-slate-50 text-slate-300 hover:text-[#033958] transition-colors disabled:opacity-10"
+                class="flex-1 px-3 hover:bg-slate-50 text-slate-300 hover:text-[#27628C] transition-colors disabled:opacity-10"
               >
                 <ChevronDown class="w-5 h-5" />
               </button>
@@ -269,7 +269,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex items-center justify-center py-24">
       <div class="flex flex-col items-center">
-        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin"></div>
+        <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin"></div>
         <p class="text-sm font-bold text-slate-400 mt-4  tracking-normal">Loading programs...</p>
       </div>
     </div>
@@ -285,7 +285,7 @@
       </p>
       <button
         @click="openCreateModal"
-        class="px-10 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center justify-center space-x-3 mx-auto"
+        class="px-10 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center justify-center space-x-3 mx-auto"
       >
         <Plus class="w-4 h-4" />
         <span>Create your first program</span>
@@ -322,7 +322,7 @@
             />
             <button
               @click="copyToClipboard(registrationLink)"
-              class="px-6 py-4 bg-[#033958] text-white rounded-xl hover:bg-[#022f42] transition-all flex items-center space-x-2 text-sm font-bold active:scale-95"
+              class="px-6 py-4 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all flex items-center space-x-2 text-sm font-bold active:scale-95"
             >
               <Copy class="w-4 h-4" />
               <span>Copy</span>

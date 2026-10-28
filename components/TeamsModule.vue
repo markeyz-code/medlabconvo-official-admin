@@ -3,7 +3,7 @@
     <!-- Action Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8 bg-white p-10 rounded-xl border border-slate-200 relative overflow-hidden">
       <!-- Background Decor -->
-      <div class="absolute right-0 top-0 w-64 h-64 bg-[#033958]/5 blur-3xl rounded-full"></div>
+      <div class="absolute right-0 top-0 w-64 h-64 bg-[#27628C]/5 blur-3xl rounded-full"></div>
       
       <div class="relative z-10 space-y-2">
         <h2 class="text-xl font-medium text-slate-900 tracking-normal ">Team Management</h2>
@@ -11,16 +11,16 @@
       </div>
 
       <div class="relative z-10 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-        <button
+        <button v-if="hasPermission('teams:update')"
           @click="showCategoryDrawer = true"
-          class="flex-1 sm:flex-none px-8 py-3 bg-white text-[#033958] border border-[#033958] rounded-2xl font-medium text-sm tracking-normal hover:bg-slate-50 transition-all flex items-center justify-center space-x-2 active:scale-95"
+          class="flex-1 sm:flex-none px-8 py-3 bg-white text-[#27628C] border border-[#27628C] rounded-2xl font-medium text-sm tracking-normal hover:bg-slate-50 transition-all flex items-center justify-center space-x-2 active:scale-95"
         >
           <Icon name="lucide:settings" class="w-5 h-5" />
           <span>Manage Categories</span>
         </button>
-        <button
+        <button v-if="hasPermission('teams:create')"
           @click="openAddDrawer"
-          class="flex-1 sm:flex-none px-10 py-3 bg-[#033958] text-white rounded-2xl font-medium text-sm  tracking-normal hover:bg-[#022a41] transition-all flex items-center justify-center space-x-3 -2xl active:scale-95"
+          class="flex-1 sm:flex-none px-10 py-3 bg-[#27628C] text-white rounded-2xl font-medium text-sm  tracking-normal hover:bg-[#1B4A6B] transition-all flex items-center justify-center space-x-3 -2xl active:scale-95"
         >
           <Icon name="lucide:plus-circle" class="w-5 h-5" />
           <span>Add Team Member</span>
@@ -50,19 +50,19 @@
     <div class="bg-white rounded-xl border border-slate-200 overflow-hidden relative min-h-[400px]">
       <!-- Loading Overlay -->
       <div v-if="loading" class="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
-         <div class="w-12 h-12 border-4 border-slate-100 border-t-[#033958] rounded-full animate-spin mb-4"></div>
-         <span class="text-sm font-medium  tracking-normal text-[#033958]">Loading members...</span>
+         <div class="w-12 h-12 border-4 border-slate-100 border-t-[#27628C] rounded-full animate-spin mb-4"></div>
+         <span class="text-sm font-medium  tracking-normal text-[#27628C]">Loading members...</span>
       </div>
 
       <div v-if="!loading && filteredMembers.length === 0" class="py-40 text-center">
-        <div class="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-8">
+        <div class="w-24 h-24 bg-slate-50 rounded-[1.25rem] flex items-center justify-center mx-auto mb-8">
            <Icon name="lucide:users-round" class="w-12 h-12 text-slate-200" />
         </div>
         <h3 class="text-xl font-medium text-slate-900  tracking-normal ">No Members Found</h3>
         <p class="text-sm font-medium text-slate-400  tracking-normal mt-2">No team members match your current filters.</p>
       </div>
 
-      <table v-else class="w-full text-left border-collapse">
+      <table v-else class="stack-table w-full text-left border-collapse">
         <thead>
           <tr class="border-b border-slate-100">
             <th class="px-10 py-8 text-sm font-medium  tracking-normal text-slate-400">Photo</th>
@@ -85,11 +85,11 @@
             <td class="px-10 py-8">
                <div class="flex flex-col">
                   <span class="text-lg font-medium text-slate-900   tracking-normal">{{ member.name }}</span>
-                  <span class="text-sm font-medium text-[#033958]  tracking-normal">{{ member.title }}</span>
+                  <span class="text-sm font-medium text-[#27628C]  tracking-normal">{{ member.title }}</span>
                </div>
             </td>
             <td class="px-10 py-8 text-center sm:text-left">
-               <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#033958] text-white text-[9px] font-medium  tracking-normal rounded-lg">
+               <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#27628C] text-white text-[9px] font-medium  tracking-normal rounded-lg">
                   {{ member.roleCategory || 'General' }}
                </div>
             </td>
@@ -98,14 +98,14 @@
             </td>
             <td class="px-10 py-8 text-right">
                <div class="flex items-center justify-end space-x-3 transition-all">
-                  <button 
+                  <button v-if="hasPermission('teams:update')" 
                     @click="openEditDrawer(member)"
-                    class="p-3 text-[#033958] hover:bg-[#033958]/10 rounded-xl border border-slate-100 transition-all -sm"
+                    class="p-3 text-[#27628C] hover:bg-[#27628C]/10 rounded-xl border border-slate-100 transition-all -sm"
                     title="Edit Member"
                   >
                     <Icon name="lucide:square-pen" class="w-5 h-5" />
                   </button>
-                  <button 
+                  <button v-if="hasPermission('teams:delete')" 
                     @click="handleDelete(member._id!)" 
                     class="p-3 text-rose-500 hover:bg-rose-100 rounded-xl border border-slate-100 transition-all -sm"
                     title="Delete Member"
@@ -174,6 +174,9 @@ import SlideOver from '@/components/SlideOver.vue'
 import TeamMemberForm from '@/components/TeamMemberForm.vue'
 import TeamCategoryManager from '@/components/TeamCategoryManager.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import { useUser } from '@/composables/modules/auth/user'
+
+const { hasPermission } = useUser()
 
 const { showToast } = useCustomToast()
 

@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-[#033958]/10 flex items-center justify-center text-[#033958]">
+        <div class="w-10 h-10 rounded-xl bg-[#27628C]/10 flex items-center justify-center text-[#27628C]">
           <Icon name="lucide:tags" class="w-5 h-5" />
         </div>
         <div>
@@ -12,9 +12,9 @@
         </div>
       </div>
       
-      <button
+      <button v-if="hasPermission('publications:create')"
         @click="openCreateModal"
-        class="px-6 py-3 bg-[#033958] text-white text-sm font-bold rounded-xl hover:bg-[#022a41] transition-all flex items-center gap-2"
+        class="px-6 py-3 bg-[#27628C] text-white text-sm font-bold rounded-xl hover:bg-[#1B4A6B] transition-all flex items-center gap-2"
       >
         <Icon name="lucide:plus" class="w-4 h-4" />
         <span>New Category</span>
@@ -23,7 +23,7 @@
 
     <!-- Categories List -->
     <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden">
-      <table class="w-full text-left border-collapse">
+      <table class="stack-table w-full text-left border-collapse">
         <thead>
           <tr class="bg-slate-50 border-b border-slate-100">
             <th class="px-6 py-4 text-xs font-bold text-slate-400  tracking-wider">Category Name</th>
@@ -43,7 +43,7 @@
                 </div>
                 <h3 class="text-slate-900 font-bold mb-1">No categories found</h3>
                 <p class="text-slate-500 text-sm mb-4">Get started by creating your first category.</p>
-                <button
+                <button v-if="hasPermission('publications:create')"
                   @click="openCreateModal"
                   class="px-6 py-2.5 bg-slate-100 text-slate-700 text-sm font-bold rounded-xl hover:bg-slate-200 transition-all flex items-center gap-2"
                 >
@@ -59,14 +59,14 @@
             </td>
             <td class="px-6 py-4">
               <div class="flex items-center justify-end gap-2 transition-opacity">
-                <button
+                <button v-if="hasPermission('publications:update')"
                   @click="openEditModal(cat)"
-                  class="p-2 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/10 rounded-lg transition-all"
+                  class="p-2 text-slate-400 hover:text-[#27628C] hover:bg-[#27628C]/10 rounded-lg transition-all"
                   title="Edit category"
                 >
                   <Icon name="lucide:edit-2" class="w-4 h-4" />
                 </button>
-                <button
+                <button v-if="hasPermission('publications:delete')"
                   @click="openDeleteModal(cat)"
                   class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                   title="Delete category"
@@ -102,7 +102,7 @@
           <button
             type="submit"
             :disabled="saving"
-            class="px-6 py-2.5 bg-[#033958] text-white text-sm font-bold rounded-xl hover:bg-[#022a41] transition-all disabled:opacity-50 flex items-center gap-2"
+            class="px-6 py-2.5 bg-[#27628C] text-white text-sm font-bold rounded-xl hover:bg-[#1B4A6B] transition-all disabled:opacity-50 flex items-center gap-2"
           >
             <Icon v-if="saving" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
             <span>{{ editingCategory ? 'Save Changes' : 'Create Category' }}</span>
@@ -130,7 +130,7 @@
           >
             Cancel
           </button>
-          <button
+          <button v-if="hasPermission('publications:delete')"
             @click="handleDelete"
             :disabled="deleting"
             class="flex-1 px-4 py-2.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
@@ -150,6 +150,9 @@ import { useCategories } from '@/composables/modules/publications/useCategories'
 import Modal from '@/components/Modal.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import Icon from '@/components/Icon.vue'
+import { useUser } from '@/composables/modules/auth/user'
+
+const { hasPermission } = useUser()
 
 const { categories, loading, getCategories, createCategory, updateCategory, deleteCategory } = useCategories()
 

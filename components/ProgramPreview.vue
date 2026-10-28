@@ -1,13 +1,13 @@
 <template>
   <div class="space-y-12 pb-20">
     <!-- Hero Banner Section -->
-    <div class="relative h-80 rounded-[2.5rem] overflow-hidden group shadow-sm border border-slate-200">
+    <div class="relative h-80 rounded-[1.5rem] overflow-hidden group shadow-sm border border-slate-200">
       <img 
         :src="program?.image || '/placeholder-program.jpg'" 
         :alt="program?.title"
         class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
       />
-      <div class="absolute inset-0 bg-gradient-to-t from-[#033958] via-[#033958]/40 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-[#27628C] via-[#27628C]/40 to-transparent"></div>
       
       <!-- Status & Category Badges -->
       <div class="absolute top-8 left-8 flex gap-3">
@@ -49,8 +49,8 @@
       <!-- Left Column: Core Details -->
       <div class="lg:col-span-8 space-y-12">
         <!-- Overview -->
-        <section class="bg-white rounded-[2rem] p-10 border border-slate-100 shadow-sm">
-          <h3 class="text-xl font-bold text-[#033958] mb-6 flex items-center gap-3">
+        <section class="bg-white rounded-[1.25rem] p-10 border border-slate-100 shadow-sm">
+          <h3 class="text-xl font-bold text-[#27628C] mb-6 flex items-center gap-3">
             <Icon name="lucide:info" class="w-6 h-6 text-blue-500" />
             Program Overview
           </h3>
@@ -62,8 +62,8 @@
         <!-- Focus Areas & Outcomes -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Focus Areas -->
-          <section class="bg-slate-50 rounded-[2rem] p-8 border border-slate-100">
-            <h4 class="text-sm font-black  tracking-normal text-[#033958]/50 mb-6 px-1">Specialized focus</h4>
+          <section class="bg-slate-50 rounded-[1.25rem] p-8 border border-slate-100">
+            <h4 class="text-sm font-black  tracking-normal text-[#27628C]/50 mb-6 px-1">Specialized focus</h4>
             <div class="space-y-4">
               <div v-for="(area, idx) in program?.focusAreas" :key="idx" class="flex items-start gap-4 p-4 bg-white rounded-2xl border border-slate-100">
                 <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
@@ -75,7 +75,7 @@
           </section>
 
           <!-- Outcomes -->
-          <section class="bg-emerald-50/30 rounded-[2rem] p-8 border border-emerald-100/50">
+          <section class="bg-emerald-50/30 rounded-[1.25rem] p-8 border border-emerald-100/50">
             <h4 class="text-sm font-black  tracking-normal text-emerald-700/50 mb-6 px-1">Key outcomes</h4>
             <div class="space-y-4">
               <div v-for="(outcome, idx) in program?.outcomes" :key="idx" class="flex items-start gap-4 p-4 bg-white/60 rounded-2xl border border-emerald-100/50">
@@ -90,7 +90,7 @@
 
         <!-- Faculty Section -->
         <section v-if="program?.speakers?.length" class="space-y-6">
-          <h3 class="text-xl font-bold text-[#033958] px-2 flex items-center gap-3">
+          <h3 class="text-xl font-bold text-[#27628C] px-2 flex items-center gap-3">
             <Icon name="lucide:mic-2" class="w-6 h-6 text-purple-500" />
             Scientific Speakers
           </h3>
@@ -112,7 +112,7 @@
       <!-- Right Column: Metadata & Highlights -->
       <div class="lg:col-span-4 space-y-10">
         <!-- Highlights Card -->
-        <section class="bg-[#033958] rounded-[2.5rem] p-10 text-white shadow-sm border border-slate-200 relative overflow-hidden">
+        <section class="bg-[#27628C] rounded-[1.5rem] p-10 text-white shadow-sm border border-slate-200 relative overflow-hidden">
           <Icon name="lucide:sparkles" class="absolute -top-10 -right-10 w-40 h-40 text-white/5 rotate-12" />
           <h3 class="text-lg font-bold mb-8 flex items-center gap-3">
             <Icon name="lucide:zap" class="w-5 h-5 text-amber-400" />
@@ -127,11 +127,11 @@
         </section>
 
         <!-- Registration Context -->
-        <section class="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm space-y-6">
+        <section class="bg-white rounded-[1.25rem] p-8 border border-slate-100 shadow-sm space-y-6">
           <h4 class="text-sm font-black  tracking-normal text-slate-400 px-1">Internal workflow</h4>
           <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
             <div class="flex items-center gap-3 mb-2">
-              <Icon name="lucide:form-input" class="w-4 h-4 text-[#033958]" />
+              <Icon name="lucide:form-input" class="w-4 h-4 text-[#27628C]" />
               <span class="text-sm font-bold text-slate-900">Custom Registration</span>
             </div>
             <p class="text-xs text-slate-500 font-medium leading-relaxed">
@@ -141,7 +141,7 @@
           
           <button 
             @click="copyLink"
-            class="w-full py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center justify-center gap-3 shadow-sm border border-slate-100"
+            class="w-full py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center justify-center gap-3 shadow-sm border border-slate-100"
           >
             <Icon name="lucide:share-2" class="w-4 h-4" />
             Share Program Link

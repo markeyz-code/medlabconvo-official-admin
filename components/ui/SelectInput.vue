@@ -17,7 +17,7 @@
           @click="toggleDropdown"
           :class="[
             'w-full py-3 pt-5 px-4 bg-white border border-slate-200 flex justify-between items-center cursor-pointer',
-            'focus:outline-none focus:ring-0 focus:border-[#033958] transition-all duration-300 font-medium text-slate-900 rounded-2xl ',
+            'focus:outline-none focus:ring-0 focus:border-[#27628C] transition-all duration-300 font-medium text-slate-900 rounded-2xl ',
             roundedClasses,
             disabled ? 'opacity-50 cursor-not-allowed' : '',
             (hasError || (errorMessage && showError)) ? 'ring-1 ring-red-500 border-red-500' : ''
@@ -69,7 +69,7 @@
                   v-model="searchQuery"
                   type="text"
 
-                  class="w-full pl-9 pr-3 py-2.5 border-[0.5px] border-gray-200 rounded-lg focus:border-[#033958] outline-none text-sm transition-colors"
+                  class="w-full pl-9 pr-3 py-2.5 border-[0.5px] border-gray-200 rounded-lg focus:border-[#27628C] outline-none text-sm transition-colors"
                   @click.stop
                 />
               </div>
@@ -91,7 +91,7 @@
                     {{ getLabel(option) }}
                   </template>
                 </span>
-                <Icon v-if="getValue(option) === modelValue" name="lucide:check" class="w-4 h-4 text-[#033958]" />
+                <Icon v-if="getValue(option) === modelValue" name="lucide:check" class="w-4 h-4 text-[#27628C]" />
               </div>
               
               <!-- No results message -->

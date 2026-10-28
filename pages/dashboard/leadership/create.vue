@@ -4,7 +4,7 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
       <div class="space-y-2">
         <div class="flex items-center gap-2 text-sm font-black  tracking-normal text-slate-400">
-           <NuxtLink to="/dashboard/leadership" class="hover:text-[#033958] transition-colors">Team</NuxtLink>
+           <NuxtLink to="/dashboard/leadership" class="hover:text-[#27628C] transition-colors">Team</NuxtLink>
            <Icon name="lucide:chevron-right" class="w-3 h-3" />
            <span class="text-slate-900">New Member</span>
         </div>
@@ -16,7 +16,7 @@
         <button 
           @click="handleSubmit" 
           :disabled="submitting || !isFormValid"
-          class="px-12 py-4 bg-[#033958] text-white rounded-2xl font-black text-sm  tracking-normal shadow-sm border border-slate-200 hover:bg-[#022a41] transition-all disabled:opacity-50 flex items-center gap-3"
+          class="px-12 py-4 bg-[#27628C] text-white rounded-2xl font-black text-sm  tracking-normal shadow-sm border border-slate-200 hover:bg-[#1B4A6B] transition-all disabled:opacity-50 flex items-center gap-3"
         >
           <div v-if="submitting" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
           <span>Save Member</span>
@@ -27,7 +27,7 @@
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-12">
       <!-- Sidebar: Preview -->
       <div class="xl:col-span-1 space-y-8">
-        <div class="bg-white rounded-[3rem] border border-slate-100 p-10 shadow-sm border border-slate-200 space-y-8 sticky top-10">
+        <div class="bg-white rounded-[1.75rem] border border-slate-100 p-10 shadow-sm border border-slate-200 space-y-8 sticky top-10">
            <label class="text-sm font-black  tracking-normal text-slate-400 block px-1">Preview</label>
            
            <div class="relative aspect-square rounded-[3.5rem] bg-slate-50 border-4 border-dashed border-slate-100 overflow-hidden group">
@@ -38,13 +38,13 @@
               </div>
               <input type="file" @change="handleImageUpload" class="absolute inset-0 opacity-0 cursor-pointer z-10" />
               <div v-if="uploading" class="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-20">
-                 <div class="w-10 h-10 border-4 border-[#033958]/10 border-t-[#033958] rounded-full animate-spin"></div>
+                 <div class="w-10 h-10 border-4 border-[#27628C]/10 border-t-[#27628C] rounded-full animate-spin"></div>
               </div>
            </div>
 
            <div class="space-y-4">
               <h3 class="text-xl font-black text-slate-900 tracking-normal  ">{{ form.name || 'Member Name' }}</h3>
-              <p class="text-xs font-black text-[#033958]  tracking-normal truncate">{{ form.title || 'Job Title' }}</p>
+              <p class="text-xs font-black text-[#27628C]  tracking-normal truncate">{{ form.title || 'Job Title' }}</p>
               <div class="inline-flex px-3 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black  tracking-normal rounded-lg border border-emerald-100">
                  {{ form.roleCategory }}
               </div>
@@ -61,7 +61,7 @@
         <!-- Basic Information -->
         <section class="bg-white rounded-[3.5rem] p-10 md:p-14 border border-slate-100 shadow-sm border border-slate-200 space-y-10">
            <div class="flex items-center gap-4">
-              <div class="w-10 h-10 bg-[#033958] text-white rounded-xl flex items-center justify-center font-black ">01</div>
+              <div class="w-10 h-10 bg-[#27628C] text-white rounded-xl flex items-center justify-center font-black ">01</div>
               <h2 class="text-xl font-black text-slate-900  tracking-normal ">Basic Information</h2>
            </div>
 
@@ -94,7 +94,7 @@
                 <div class="w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center font-black ">02</div>
                 <h2 class="text-xl font-black text-slate-900  tracking-normal ">Achievements</h2>
               </div>
-              <button @click="addAchievement" class="text-sm font-black  tracking-normal text-[#033958] hover:text-black">Add Achievement</button>
+              <button @click="addAchievement" class="text-sm font-black  tracking-normal text-[#27628C] hover:text-black">Add Achievement</button>
            </div>
 
            <div class="space-y-6">
@@ -106,7 +106,7 @@
                     <Icon name="lucide:trash-2" class="w-5 h-5" />
                  </button>
               </div>
-              <div v-if="!form.achievements.length" class="py-20 border-2 border-dashed border-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-200">
+              <div v-if="!form.achievements.length" class="py-20 border-2 border-dashed border-slate-50 rounded-[1.5rem] flex flex-col items-center justify-center text-slate-200">
                  <Icon name="lucide:sparkles" class="w-12 h-12 mb-4" />
                  <p class="text-sm font-black  tracking-normal">No achievements added yet.</p>
               </div>
@@ -120,11 +120,11 @@
                 <div class="w-10 h-10 bg-blue-500 text-white rounded-xl flex items-center justify-center font-black ">03</div>
                 <h2 class="text-xl font-black text-slate-900  tracking-normal ">Social Profiles</h2>
               </div>
-              <button @click="addProfile" class="text-sm font-black  tracking-normal text-[#033958] hover:text-black">Add Profile</button>
+              <button @click="addProfile" class="text-sm font-black  tracking-normal text-[#27628C] hover:text-black">Add Profile</button>
            </div>
 
            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div v-for="(profile, idx) in form.profiles" :key="idx" class="relative bg-slate-50 p-6 rounded-[2.5rem] border border-slate-100 space-y-4">
+              <div v-for="(profile, idx) in form.profiles" :key="idx" class="relative bg-slate-50 p-6 rounded-[1.5rem] border border-slate-100 space-y-4">
                  <SelectInput 
                     v-model="profile.type" 
                     label="Platform type"
@@ -141,7 +141,7 @@
                     <Icon name="lucide:x" class="w-4 h-4" />
                  </button>
               </div>
-              <div v-if="!form.profiles.length" class="md:col-span-2 py-20 border-2 border-dashed border-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-200">
+              <div v-if="!form.profiles.length" class="md:col-span-2 py-20 border-2 border-dashed border-slate-50 rounded-[1.5rem] flex flex-col items-center justify-center text-slate-200">
                  <Icon name="lucide:globe" class="w-12 h-12 mb-4" />
                  <p class="text-sm font-black  tracking-normal">No social profiles added yet.</p>
               </div>
@@ -165,7 +165,8 @@ import Icon from '@/components/Icon.vue'
 
 definePageMeta({
   layout: 'dashboard',
-  middleware: 'auth'
+  middleware: 'auth',
+  permission: 'teams:create'
 })
 
 const router = useRouter()

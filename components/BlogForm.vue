@@ -57,27 +57,27 @@
 
       <section class="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex flex-wrap items-center gap-8">
         <label class="flex items-center group cursor-pointer">
-          <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#033958] transition-colors">
+          <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#27628C] transition-colors">
             <input
               v-model="form.isPublished"
               type="checkbox"
               class="absolute opacity-0 w-full h-full cursor-pointer z-10"
             />
-            <div v-if="form.isPublished" class="w-2.5 h-2.5 bg-[#033958] rounded-sm"></div>
+            <div v-if="form.isPublished" class="w-2.5 h-2.5 bg-[#27628C] rounded-sm"></div>
           </div>
-          <span class="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#033958] transition-colors">Publish immediately</span>
+          <span class="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#27628C] transition-colors">Publish immediately</span>
         </label>
         
         <label class="flex items-center group cursor-pointer">
-          <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#033958] transition-colors">
+          <div class="relative flex items-center justify-center w-5 h-5 rounded border-2 border-slate-300 group-hover:border-[#27628C] transition-colors">
             <input
               v-model="form.isFeatured"
               type="checkbox"
               class="absolute opacity-0 w-full h-full cursor-pointer z-10"
             />
-            <div v-if="form.isFeatured" class="w-2.5 h-2.5 bg-[#033958] rounded-sm"></div>
+            <div v-if="form.isFeatured" class="w-2.5 h-2.5 bg-[#27628C] rounded-sm"></div>
           </div>
-          <span class="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#033958] transition-colors">Featured post</span>
+          <span class="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#27628C] transition-colors">Featured post</span>
         </label>
       </section>
     </div>
@@ -92,7 +92,7 @@
       </button>
       <button
         type="submit"
-        class="px-10 py-3 bg-[#033958] text-white text-sm font-bold rounded-xl hover:bg-[#022a41] transition-all active:scale-95"
+        class="px-10 py-3 bg-[#27628C] text-white text-sm font-bold rounded-xl hover:bg-[#1B4A6B] transition-all active:scale-95"
       >
         {{ blog ? 'Save changes' : 'Publish blog' }}
       </button>

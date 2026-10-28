@@ -37,6 +37,10 @@ export type AuthResponse = {
 
 // API Factory
 export const auth_api = {
+  $_get_me: async () => {
+    return GATEWAY_ENDPOINT.get('/auth/me')
+  },
+
   $_login: async (credentials: LoginCredentials) => {
     const url = `/auth/login`
     return GATEWAY_ENDPOINT.post(url, credentials)

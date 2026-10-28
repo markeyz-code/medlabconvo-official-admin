@@ -39,9 +39,9 @@
           />
         </div>
       </div>
-      <button
+      <button v-if="hasPermission('programs:create')"
         @click="openCreateModal"
-        class="w-full md:w-auto px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3  hover: group"
+        class="w-full md:w-auto px-6 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all duration-300 flex items-center justify-center space-x-3  hover: group"
       >
         <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
         <span class="font-bold text-sm">New program</span>
@@ -49,9 +49,9 @@
     </div>
 
     <!-- Programs Registry (Table Layout) -->
-    <div v-if="!loading && programs.length > 0" class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm relative">
+    <div v-if="!loading && programs.length > 0" class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-sm relative">
       <div class="overflow-x-auto">
-        <table class="w-full text-left border-separate border-spacing-0">
+        <table class="stack-table w-full text-left border-separate border-spacing-0">
           <thead>
             <tr class="bg-slate-50/50 text-sm font-black  tracking-normal text-slate-400">
               <th class="px-8 py-6 border-b border-slate-100">Image</th>
@@ -80,7 +80,7 @@
               <!-- Program Identity -->
               <td class="px-8 py-6">
                 <div class="flex flex-col">
-                  <span class="text-sm font-bold text-slate-900 leading-none mb-1 group-hover:text-[#033958] transition-colors line-clamp-1">
+                  <span class="text-sm font-bold text-slate-900 leading-none mb-1 group-hover:text-[#27628C] transition-colors line-clamp-1">
                     {{ program.title }}
                   </span>
                   <span class="text-sm font-black  tracking-normal text-slate-400">{{ program.category || 'General' }}</span>
@@ -100,7 +100,7 @@
               <!-- Applicants -->
               <td class="px-8 py-6 text-center">
                 <div class="inline-flex flex-col items-center">
-                  <span class="text-sm font-black text-[#033958]">{{ program.applicationsCount || 0 }}</span>
+                  <span class="text-sm font-black text-[#27628C]">{{ program.applicationsCount || 0 }}</span>
                   <span class="text-sm font-bold text-slate-400">Total</span>
                 </div>
               </td>
@@ -125,9 +125,9 @@
                   >
                     <Icon name="lucide:eye" class="w-4 h-4" />
                   </button>
-                  <button
+                  <button v-if="hasPermission('programs:update')"
                     @click="editProgram(program)"
-                    class="p-2.5 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-xl transition-all"
+                    class="p-2.5 text-slate-400 hover:text-[#27628C] hover:bg-[#27628C]/5 rounded-xl transition-all"
                     title="Edit Program"
                   >
                     <Icon name="lucide:pencil" class="w-4 h-4" />
@@ -139,7 +139,7 @@
                   >
                     <Icon name="lucide:link" class="w-4 h-4" />
                   </button>
-                  <button
+                  <button v-if="hasPermission('programs:delete')"
                     @click="deleteProgram(program.id || program._id)"
                     class="p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                     title="Delete Permanently"
@@ -180,21 +180,21 @@
     <div v-if="loading" class="flex flex-col items-center justify-center py-32 space-y-4">
       <div class="relative w-14 h-14">
         <div class="absolute inset-0 rounded-full border-4 border-slate-50"></div>
-        <div class="absolute inset-0 rounded-full border-4 border-t-[#033958] animate-spin"></div>
+        <div class="absolute inset-0 rounded-full border-4 border-t-[#27628C] animate-spin"></div>
       </div>
       <span class="text-sm font-black  tracking-normal text-slate-400 animate-pulse">Synchronizing curricula...</span>
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="programs.length === 0" class="flex flex-col items-center justify-center py-32 bg-slate-50/50 rounded-[3rem] border border-dashed border-slate-200">
-      <div class="w-24 h-24 bg-white rounded-[2rem] shadow-sm flex items-center justify-center mb-8">
+    <div v-else-if="programs.length === 0" class="flex flex-col items-center justify-center py-32 bg-slate-50/50 rounded-[1.75rem] border border-dashed border-slate-200">
+      <div class="w-24 h-24 bg-white rounded-[1.25rem] shadow-sm flex items-center justify-center mb-8">
         <Icon name="lucide:graduation-cap" class="w-10 h-10 text-slate-100" />
       </div>
-      <h3 class="text-lg font-black text-[#033958] mb-2 tracking-normal">No Programs Found</h3>
+      <h3 class="text-lg font-black text-[#27628C] mb-2 tracking-normal">No Programs Found</h3>
       <p class="text-slate-400 mb-10 max-w-sm text-center leading-relaxed font-bold text-sm">Your educational portfolio is currently empty. Start by launching your first scientific curriculum.</p>
-      <button
+      <button v-if="hasPermission('programs:create')"
         @click="openCreateModal"
-        class="px-10 py-4 bg-[#033958] text-white rounded-2xl hover:bg-[#022a41] transition-all font-bold text-sm shadow-sm border border-slate-200 active:scale-95"
+        class="px-10 py-4 bg-[#27628C] text-white rounded-2xl hover:bg-[#1B4A6B] transition-all font-bold text-sm shadow-sm border border-slate-200 active:scale-95"
       >
         Launch New Program
       </button>
@@ -220,12 +220,12 @@
     <Modal v-model="showLinkModal" title="Program Connectivity" size="md">
       <div v-if="registrationLink" class="p-0 overflow-hidden">
         <!-- Hero Header -->
-        <div class="bg-[#033958] p-10 text-center relative overflow-hidden">
+        <div class="bg-[#27628C] p-10 text-center relative overflow-hidden">
           <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent"></div>
           <Icon name="lucide:link-2" class="w-32 h-32 text-white/5 absolute -top-8 -right-8 rotate-12" />
           
           <div class="relative z-10 space-y-4">
-            <div class="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20 flex items-center justify-center mx-auto shadow-sm border border-slate-200">
+            <div class="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[1.25rem] border border-white/20 flex items-center justify-center mx-auto shadow-sm border border-slate-200">
               <Icon name="lucide:globe" class="w-10 h-10 text-white" />
             </div>
             <div>
@@ -253,11 +253,11 @@
                 <input
                   :value="registrationLink.split('/').pop()"
                   readonly
-                  class="flex-1 bg-transparent border-none text-sm font-black text-[#033958] focus:ring-0 cursor-default truncate py-4"
+                  class="flex-1 bg-transparent border-none text-sm font-black text-[#27628C] focus:ring-0 cursor-default truncate py-4"
                 />
                 <button
                   @click="copyToClipboard(registrationLink)"
-                  class="px-6 py-4 bg-[#033958] text-white rounded-[1.2rem] font-bold text-xs hover:bg-[#022a41] transition-all active:scale-95 flex items-center gap-2 shadow-sm border border-slate-100"
+                  class="px-6 py-4 bg-[#27628C] text-white rounded-[1.2rem] font-bold text-xs hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center gap-2 shadow-sm border border-slate-100"
                 >
                   <Icon :name="copiedLink ? 'lucide:check' : 'lucide:copy'" class="w-4 h-4" />
                   <span>{{ copiedLink ? 'Copied' : 'Copy' }}</span>
@@ -295,7 +295,7 @@
             <a 
               :href="registrationLink" 
               target="_blank"
-              class="text-xs font-black  tracking-normal text-[#033958] flex items-center gap-2 hover:gap-3 transition-all"
+              class="text-xs font-black  tracking-normal text-[#27628C] flex items-center gap-2 hover:gap-3 transition-all"
             >
               Test Portal
               <Icon name="lucide:arrow-right" class="w-4 h-4" />
@@ -332,6 +332,9 @@ import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Modal from '@/components/Modal.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import { useUser } from '@/composables/modules/auth/user'
+
+const { hasPermission } = useUser()
 
 // Composables
 const { programs, loading, getPrograms, metadata, filters, setPage } = useGetPrograms()

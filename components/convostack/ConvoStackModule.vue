@@ -24,9 +24,9 @@
           />
         </div>
       </div>
-      <button
+      <button v-if="hasPermission('convostack:create')"
         @click="openEditor(null)"
-        class="w-full lg:w-auto px-8 py-3.5 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
+        class="w-full lg:w-auto px-8 py-3.5 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all duration-300 flex items-center justify-center space-x-3 group"
       >
         <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
         <span class="font-bold text-sm">New publication</span>
@@ -48,7 +48,7 @@
 
     <!-- Publications Table -->
     <div v-if="!loading && filteredPublications.length > 0" class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-      <table class="w-full text-left">
+      <table class="stack-table w-full text-left">
         <thead>
           <tr class="border-b border-slate-100 bg-slate-50/50">
             <th class="px-6 py-4 text-xs font-semibold text-slate-500">Publication</th>
@@ -91,7 +91,7 @@
             <!-- Author -->
             <td class="px-4 py-4 hidden lg:table-cell">
               <div class="flex items-center space-x-2">
-                <div class="w-7 h-7 rounded-full bg-[#033958] text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                <div class="w-7 h-7 rounded-full bg-[#27628C] text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
                   {{ pub.authorName?.charAt(0) || 'M' }}
                 </div>
                 <span class="text-xs font-medium text-slate-600">{{ pub.authorName || 'Unknown' }}</span>
@@ -116,13 +116,13 @@
                   <Icon name="lucide:message-square" class="w-4 h-4" />
                   <span v-if="pub.commentsCount > 0" class="absolute top-0 right-0 -mt-1 -mr-1 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></span>
                 </button>
-                <button @click="openEditor(pub)" class="p-2 text-slate-400 hover:text-[#033958] hover:bg-[#033958]/5 rounded-lg transition-all" title="Edit">
+                <button v-if="hasPermission('convostack:update')" @click="openEditor(pub)" class="p-2 text-slate-400 hover:text-[#27628C] hover:bg-[#27628C]/5 rounded-lg transition-all" title="Edit">
                   <Icon name="lucide:pencil" class="w-4 h-4" />
                 </button>
                 <button @click="copyPublicLink(pub)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Copy link">
                   <Icon name="lucide:link" class="w-4 h-4" />
                 </button>
-                <button @click="confirmDelete(pub)" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
+                <button v-if="hasPermission('convostack:delete')" @click="confirmDelete(pub)" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
                   <Icon name="lucide:trash-2" class="w-4 h-4" />
                 </button>
               </div>
@@ -134,7 +134,7 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-24 space-y-4">
-      <div class="w-12 h-12 rounded-full border-4 border-slate-50 border-t-[#033958] animate-spin"></div>
+      <div class="w-12 h-12 rounded-full border-4 border-slate-50 border-t-[#27628C] animate-spin"></div>
       <p class="text-sm font-bold text-slate-400 animate-pulse">Loading publications...</p>
     </div>
 
@@ -145,9 +145,9 @@
       </div>
       <h3 class="text-lg font-bold text-slate-900 tracking-tight">No publications found</h3>
       <p class="text-sm text-slate-500 mb-8 max-w-sm text-center leading-relaxed">Your publication archive is currently empty. Start by creating your first post.</p>
-      <button
+      <button v-if="hasPermission('convostack:create')"
         @click="openEditor(null)"
-        class="px-10 py-4 bg-[#033958] text-white rounded-2xl hover:bg-[#022a41] transition-all font-bold text-sm"
+        class="px-10 py-4 bg-[#27628C] text-white rounded-2xl hover:bg-[#1B4A6B] transition-all font-bold text-sm"
       >
         Create first publication
       </button>
@@ -194,7 +194,7 @@
 
           <div class="flex-1 overflow-y-auto bg-slate-50/30 p-6">
             <div v-if="commentsLoading" class="flex flex-col items-center justify-center h-full space-y-3">
-               <div class="w-8 h-8 rounded-full border-2 border-slate-200 border-t-[#033958] animate-spin"></div>
+               <div class="w-8 h-8 rounded-full border-2 border-slate-200 border-t-[#27628C] animate-spin"></div>
                <span class="text-xs font-bold text-slate-400">Loading discourse...</span>
             </div>
             
@@ -210,7 +210,7 @@
               <div v-for="(comment, index) in comments" :key="index" class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative group">
                 <div class="flex justify-between items-start mb-3">
                   <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#033958] to-[#0a527c] text-white flex items-center justify-center text-xs font-bold shadow-inner">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#27628C] to-[#0a527c] text-white flex items-center justify-center text-xs font-bold shadow-inner">
                       {{ comment.authorName?.charAt(0) || 'U' }}
                     </div>
                     <div>
@@ -253,6 +253,9 @@ import Modal from '@/components/Modal.vue'
 import Icon from '@/components/Icon.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
+import { useUser } from '@/composables/modules/auth/user'
+
+const { hasPermission } = useUser()
 
 const { publications, loading, getPublications } = useGetConvoStacks()
 const { getComments, comments, loading: commentsLoading } = useGetConvoStackComments()

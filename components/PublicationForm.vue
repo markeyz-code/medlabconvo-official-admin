@@ -98,7 +98,7 @@
             @drop.prevent="handleImageDrop"
             :class="[
               'relative border-2 border-dashed rounded-3xl p-10 transition-all duration-500 group cursor-pointer flex flex-col items-center justify-center space-y-4',
-              dragOver ? 'border-[#033958] bg-[#033958]/5' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-200'
+              dragOver ? 'border-[#27628C] bg-[#27628C]/5' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-200'
             ]"
           >
             <input
@@ -111,7 +111,7 @@
             />
             
             <div v-if="!imageUploading" class="contents text-center">
-              <div class="w-16 h-16 bg-white rounded-2xl  flex items-center justify-center text-slate-300 group-hover:text-[#033958] transition-colors">
+              <div class="w-16 h-16 bg-white rounded-2xl  flex items-center justify-center text-slate-300 group-hover:text-[#27628C] transition-colors">
                 <Icon name="lucide:image" class="w-8 h-8" />
               </div>
               <div>
@@ -121,8 +121,8 @@
             </div>
 
             <div v-else class="flex flex-col items-center space-y-4">
-              <div class="w-12 h-12 rounded-full border-2 border-slate-100 border-t-[#033958] animate-spin"></div>
-              <p class="text-sm font-bold text-[#033958]">Loading assets...</p>
+              <div class="w-12 h-12 rounded-full border-2 border-slate-100 border-t-[#27628C] animate-spin"></div>
+              <p class="text-sm font-bold text-[#27628C]">Loading assets...</p>
             </div>
           </div>
 
@@ -161,7 +161,7 @@
       <button
         type="submit"
         :disabled="isSubmitting"
-        class="px-10 py-3 bg-[#033958] text-white text-sm font-bold rounded-xl hover:bg-[#022a41] transition-all active:scale-95 disabled:opacity-50 inline-flex items-center space-x-3"
+        class="px-10 py-3 bg-[#27628C] text-white text-sm font-bold rounded-xl hover:bg-[#1B4A6B] transition-all active:scale-95 disabled:opacity-50 inline-flex items-center space-x-3"
       >
         <div v-if="isSubmitting" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
         <span>{{ publication ? 'Update publication' : 'Save publication' }}</span>

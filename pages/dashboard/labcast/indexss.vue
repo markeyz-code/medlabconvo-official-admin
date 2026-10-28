@@ -154,8 +154,10 @@
   import Icon from "@/components/Icon.vue"
   
  definePageMeta({
-    layout: 'dashboard'
-  })
+  layout: 'dashboard',
+  middleware: 'auth',
+  permission: 'labcast:read'
+})
   
   // Get LabCast statistics
   const {

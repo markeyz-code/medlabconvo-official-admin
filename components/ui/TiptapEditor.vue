@@ -1,5 +1,5 @@
 <template>
-  <div class="border-[1.5rem] border-[#F8FAFC] rounded-[2.5rem] overflow-hidden bg-white shadow-sm ring-1 ring-slate-100">
+  <div class="border-[1.5rem] border-[#F8FAFC] rounded-[1.5rem] overflow-hidden bg-white shadow-sm ring-1 ring-slate-100">
     <!-- Toolbar -->
     <div v-if="editor" class="flex flex-wrap items-center gap-1.5 p-3 bg-slate-50/80 border-b border-slate-100 backdrop-blur-sm sticky top-0 z-20">
       <!-- History -->
@@ -62,7 +62,7 @@
 
       <!-- Live Email Preview Overlay -->
       <div v-if="showPreview" class="absolute inset-0 z-30 bg-white overflow-y-auto p-10">
-        <div class="max-w-[600px] mx-auto border border-slate-100 rounded-[2rem] shadow-sm overflow-hidden bg-white">
+        <div class="max-w-[600px] mx-auto border border-slate-100 rounded-[1.25rem] shadow-sm overflow-hidden bg-white">
           <!-- Branded Wrapper Context -->
           <div class="bg-[#27628C] p-8 text-center">
             <h1 class="text-white text-xl font-black  tracking-normal">MedLabConvo</h1>

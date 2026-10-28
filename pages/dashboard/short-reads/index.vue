@@ -5,14 +5,14 @@
         <h2 class="text-lg font-bold text-gray-900">Short Reads</h2>
         <p class="text-gray-500">Manage Zikoko-style short read stories.</p>
       </div>
-      <NuxtLink to="/dashboard/short-reads/create" class="px-4 py-2 bg-[#033958] text-white rounded-lg hover:bg-opacity-90">
+      <NuxtLink v-if="hasPermission('short_reads:create')" to="/dashboard/short-reads/create" class="px-4 py-2 bg-[#27628C] text-white rounded-lg hover:bg-opacity-90">
         Create Short Read
       </NuxtLink>
     </div>
 
     <div class="bg-white rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.02)] border border-gray-100 overflow-hidden">
       <div v-if="loading" class="flex justify-center items-center py-20">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#033958]"></div>
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#27628C]"></div>
       </div>
       <div v-else-if="!shortReads.length" class="text-center py-20 text-gray-500">
         <div class="mb-4 text-gray-400">
@@ -21,8 +21,8 @@
         <h3 class="text-lg font-medium text-gray-900">No short reads found</h3>
         <p class="mt-1 text-sm text-gray-500">Get started by creating a new Zikoko-style short read.</p>
       </div>
-      <div v-else class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+      <div v-else class="table-scroll">
+        <table class="w-full text-left border-collapse stack-table">
           <thead>
             <tr class="bg-gray-50/50 border-b border-gray-100 text-xs  tracking-wider text-gray-500">
               <th class="py-4 px-6 font-semibold">Story Details</th>
@@ -42,7 +42,7 @@
                     </div>
                   </div>
                   <div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-[#033958] transition-colors line-clamp-1">{{ read.title }}</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-[#27628C] transition-colors line-clamp-1">{{ read.title }}</h3>
                     <p class="text-sm text-gray-500 mt-0.5">{{ read.slides?.length || 0 }} slides</p>
                   </div>
                 </div>
@@ -58,10 +58,10 @@
                   <a :href="`https://medlabconvo.com/short-reads/${read.slug || read._id}`" target="_blank" class="p-2 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors" title="Preview Live">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                   </a>
-                  <NuxtLink :to="`/dashboard/short-reads/${read._id}`" class="p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" title="Edit">
+                  <NuxtLink v-if="hasPermission('short_reads:update')" :to="`/dashboard/short-reads/${read._id}`" class="p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" title="Edit">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                   </NuxtLink>
-                  <button @click="handleDelete(read._id)" class="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors" title="Delete">
+                  <button v-if="hasPermission('short_reads:delete')" @click="handleDelete(read._id)" class="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors" title="Delete">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                   </button>
                 </div>
@@ -73,41 +73,32 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div v-if="isDeleteModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 w-full max-w-md overflow-hidden transform transition-all">
-        <div class="p-6">
-          <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-          </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-2">Delete Short Read</h3>
-          <p class="text-gray-500 text-sm">Are you sure you want to delete this short read? This action cannot be undone and will permanently remove this story from the platform.</p>
-        </div>
-        <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
-          <button @click="isDeleteModalOpen = false" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-            Cancel
-          </button>
-          <button @click="confirmDelete" :disabled="isDeleting" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2">
-            <svg v-if="isDeleting" class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            {{ isDeleting ? 'Deleting...' : 'Yes, Delete' }}
-          </button>
-        </div>
-      </div>
-    </div>
+    <ConfirmModal
+      v-model="isDeleteModalOpen"
+      title="Delete short read"
+      message="Are you sure you want to delete this short read? This permanently removes the story from the platform."
+      confirm-text="Delete short read"
+      :loading="isDeleting"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
   layout: 'dashboard',
-  middleware: 'auth'
+  middleware: 'auth',
+  permission: 'short_reads:read'
 })
 
 import { ref, onMounted } from 'vue'
 import { useGetShortReads } from '@/composables/modules/short-reads/useGetShortReads'
 import { useDeleteShortRead } from '@/composables/modules/short-reads/useDeleteShortRead'
+import { useUser } from '@/composables/modules/auth/user'
 
 const { shortReads, loading, getShortReads } = useGetShortReads()
 const { deleteShortRead } = useDeleteShortRead()
+const { hasPermission } = useUser()
 
 const isDeleteModalOpen = ref(false)
 const shortReadToDelete = ref<string | null>(null)

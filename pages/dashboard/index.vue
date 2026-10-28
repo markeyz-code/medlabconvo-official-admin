@@ -7,6 +7,7 @@ import DashboardOverview from '~/components/DashboardOverview.vue'
 
 definePageMeta({
   layout: 'dashboard',
-  middleware: 'auth'
+  middleware: 'auth',
+  permission: 'dashboard:view'
 })
 </script>

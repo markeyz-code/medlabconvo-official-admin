@@ -11,7 +11,7 @@
     </div>
 
     <!-- 1. Campaign Details -->
-    <div class="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
+    <div class="bg-white rounded-[1.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
       <h3 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-3">
         <span class="w-8 h-8 rounded-xl bg-blue-50 text-[#27628C] flex items-center justify-center text-xs">1</span>
         Campaign Details
@@ -60,7 +60,7 @@
     </div>
 
     <!-- 2. Content -->
-    <div class="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
+    <div class="bg-white rounded-[1.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
       <h3 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-3">
         <span class="w-8 h-8 rounded-xl bg-orange-50 text-[#DE6129] flex items-center justify-center text-xs">2</span>
         Content Builder
@@ -70,7 +70,7 @@
     </div>
 
     <!-- 3. Audience -->
-    <div class="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
+    <div class="bg-white rounded-[1.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
       <h3 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-3">
         <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs">3</span>
         Target Audience
@@ -99,7 +99,7 @@
     </div>
 
     <!-- 4. Schedule -->
-    <div class="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
+    <div class="bg-white rounded-[1.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
       <h3 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-3">
         <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs">4</span>
         Delivery Schedule

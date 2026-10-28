@@ -1,135 +1,188 @@
 <template>
-  <div class="space-y-10 animate-in fade-in duration-700">
-    <!-- KPI Metrics Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-5">
-      <NuxtLink
-        v-for="stat in allStats"
-        :key="stat.title"
-        :to="stat.link"
-        class="bg-white rounded-2xl p-5 border border-slate-100 hover:border-[#033958]/20 transition-all group overflow-hidden relative"
-      >
-        <div class="flex justify-between items-start mb-4">
-          <div :class="['p-2.5 rounded-xl ring-1 ring-inset', stat.bgColor]">
-            <Icon :name="stat.icon" :class="['w-5 h-5', stat.textColor]" />
-          </div>
-        </div>
-        <div>
-          <p class="text-slate-400 text-xs font-semibold mb-1">{{ stat.title }}</p>
-          <h3 class="text-lg font-bold text-slate-900 tracking-tight">{{ stat.value }}</h3>
-        </div>
-        <div class="absolute bottom-0 left-0 w-full h-0.5 bg-transparent group-hover:bg-[#033958] transition-all duration-300"></div>
-      </NuxtLink>
-    </div>
+  <div class="dashboard">
+    <!-- Welcome strip -->
+    <section class="welcome">
+      <div class="welcome-copy">
+        <p class="welcome-eyebrow">{{ greeting }}, {{ user?.firstName || 'Admin' }}</p>
+        <h2 class="welcome-title">
+          Here's what's happening across
+          <span>MedLabConvo</span> today.
+        </h2>
+        <p class="welcome-meta">
+          <span class="live-dot"></span>
+          {{ roleLabel }} access
+          <span class="welcome-divider"></span>
+          {{ accessibleStats.length }} sections available to you
+        </p>
+      </div>
+      <div class="welcome-actions">
+        <NuxtLink v-if="can('users:create')" to="/dashboard/users" class="welcome-action">
+          <span class="welcome-action-icon"><Icon name="lucide:user-plus" class="w-4 h-4" /></span>
+          <span>
+            <strong>Invite a teammate</strong>
+            <small>Add an admin with scoped access</small>
+          </span>
+          <Icon name="lucide:arrow-up-right" class="w-4 h-4 ml-auto opacity-50" />
+        </NuxtLink>
+        <NuxtLink v-else-if="can('publications:read')" to="/dashboard/publications" class="welcome-action">
+          <span class="welcome-action-icon"><Icon name="lucide:file-plus-2" class="w-4 h-4" /></span>
+          <span>
+            <strong>Review Journo</strong>
+            <small>Approve the latest submissions</small>
+          </span>
+          <Icon name="lucide:arrow-up-right" class="w-4 h-4 ml-auto opacity-50" />
+        </NuxtLink>
+      </div>
+    </section>
 
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-      <!-- Activity Feed -->
-      <div class="xl:col-span-2 bg-white rounded-2xl border border-slate-100 overflow-hidden">
-        <div class="p-6 border-b border-slate-50 flex items-center justify-between">
-          <div>
-            <h3 class="text-base font-bold text-slate-900">Recent activity</h3>
-            <p class="text-slate-400 text-sm font-medium">Last 8 administrative actions</p>
-          </div>
-          <Icon name="lucide:fingerprint" class="w-6 h-6 text-slate-200" />
+    <!-- KPI cards -->
+    <section>
+      <div class="section-head">
+        <div>
+          <h3 class="section-title">Platform pulse</h3>
+          <p class="section-sub">Counts are scoped to the sections you can access.</p>
         </div>
-        
-        <div class="divide-y divide-slate-50 max-h-[440px] overflow-y-auto custom-scrollbar">
-          <div
-            v-for="activity in (recentActivities as any)"
-            :key="activity._id"
-            class="px-6 py-4 flex items-start space-x-4 hover:bg-slate-50/50 transition-colors"
-          >
-            <div :class="['w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0', getActivityBg(activity.action)]">
-              <Icon :name="getActivityIcon(activity.action)" class="w-4 h-4 text-white" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-4 mb-1">
-                <p class="text-slate-900 font-semibold text-sm truncate">
-                  <span class="text-[#033958] bg-blue-50 px-1.5 py-0.5 rounded text-xs mr-1.5">{{ activity.action }}</span>
-                  {{ activity.resource?.replace('_', ' ') || 'system item' }}
-                </p>
-                <span class="text-xs font-medium text-slate-400 whitespace-nowrap">{{ formatRelativeTime(activity.createdAt) }}</span>
-              </div>
-              <p class="text-slate-400 text-xs leading-relaxed font-medium">
-                {{ formatActivityDescription(activity) }}
-              </p>
-            </div>
-          </div>
-          
-          <div v-if="!recentActivities?.length" class="py-16 text-center">
-            <Icon name="lucide:inbox" class="w-12 h-12 text-slate-200 mx-auto mb-3" />
-            <p class="text-slate-400 font-medium text-sm">No recent activity</p>
-          </div>
-        </div>
-        
-        <NuxtLink to="/dashboard/audit" class="block w-full py-4 text-center text-[#033958] font-semibold text-sm hover:bg-slate-50 transition-all border-t border-slate-50">
-          View all audit logs
+        <span v-if="loadingStats" class="inline-loading">
+          <span class="mini-spinner"></span>
+          Syncing
+        </span>
+      </div>
+
+      <div class="metric-grid">
+        <NuxtLink
+          v-for="stat in accessibleStats"
+          :key="stat.title"
+          :to="stat.link"
+          class="metric-card"
+        >
+          <span class="metric-icon" :style="{ background: stat.soft, color: stat.color }">
+            <Icon :name="stat.icon" class="w-5 h-5" />
+          </span>
+          <span class="metric-value">{{ stat.value }}</span>
+          <span class="metric-label">{{ stat.title }}</span>
+          <span class="metric-link">
+            Open
+            <Icon name="lucide:arrow-right" class="w-3.5 h-3.5" />
+          </span>
         </NuxtLink>
       </div>
 
-      <!-- Right Column -->
-      <div class="space-y-6">
-        <!-- Invite Card -->
-        <div class="bg-[#033958] rounded-2xl p-6 text-white relative overflow-hidden group">
-          <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-all duration-700"></div>
-          <h3 class="text-lg font-bold mb-3 relative z-10">Invite collaborator</h3>
-          <p class="text-blue-100/70 text-sm font-medium mb-6 leading-relaxed relative z-10">Expand your team by inviting new members with specific roles.</p>
-          <NuxtLink to="/dashboard/users" class="inline-flex items-center px-5 py-2.5 bg-[#3BAB22] text-white rounded-xl font-semibold text-sm hover:bg-[#2d851a] transition-all group/btn relative z-10">
-            <span>Send invitation</span>
-            <Icon name="lucide:send" class="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-          </NuxtLink>
+      <div v-if="accessibleStats.length === 0" class="dashboard-empty">
+        <Icon name="lucide:shield" class="w-8 h-8" />
+        <p>No dashboard sections are available for your role yet.</p>
+        <NuxtLink to="/dashboard/forbidden" class="btn btn-outline">See why</NuxtLink>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <!-- Activity -->
+      <div v-if="can('audit:read')" class="panel">
+        <div class="panel-head">
+          <div>
+            <h3 class="panel-title">Recent activity</h3>
+            <p class="panel-sub">Last administrative actions</p>
+          </div>
+          <span class="panel-chip">
+            <Icon name="lucide:fingerprint" class="w-3.5 h-3.5" />
+            Audit
+          </span>
         </div>
 
-        <!-- Content Distribution Chart -->
-        <div class="bg-white rounded-2xl border border-slate-100 p-6">
-          <h3 class="text-base font-bold text-slate-900 mb-5">Content distribution</h3>
-          <div class="space-y-3">
-            <div v-for="item in contentDistribution" :key="item.label" class="group">
-              <div class="flex items-center justify-between mb-1.5">
-                <span class="text-xs font-semibold text-slate-500">{{ item.label }}</span>
-                <span class="text-xs font-bold text-slate-900">{{ item.count }}</span>
-              </div>
-              <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div 
-                  :style="{ width: item.percentage + '%' }" 
-                  :class="['h-full rounded-full transition-all duration-700 group-hover:opacity-80', item.color]"
-                ></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Monthly Activity Sparkline -->
-        <div class="bg-white rounded-2xl border border-slate-100 p-6">
-          <div class="flex items-center justify-between mb-5">
-            <h3 class="text-base font-bold text-slate-900">Activity trend</h3>
-            <span class="text-xs font-medium text-slate-400">Last 7 days</span>
-          </div>
-          <div class="flex items-end justify-between gap-1.5 h-24">
-            <div 
-              v-for="(bar, i) in weeklyActivity" 
-              :key="i" 
-              class="flex-1 rounded-md transition-all duration-300 hover:opacity-80 cursor-default relative group/bar"
-              :style="{ height: bar.height + '%' }"
-              :class="bar.isToday ? 'bg-[#033958]' : 'bg-slate-200'"
-            >
-              <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-opacity text-sm font-bold text-slate-600 whitespace-nowrap">
-                {{ bar.count }}
-              </div>
-            </div>
-          </div>
-          <div class="flex justify-between mt-2">
-            <span v-for="(bar, i) in weeklyActivity" :key="'label-' + i" class="text-sm font-medium text-slate-400 flex-1 text-center">
-              {{ bar.day }}
+        <div class="activity-list scrollbar-slim">
+          <div v-for="activity in recentActivities" :key="activity._id || activity.id" class="activity-row">
+            <span class="activity-icon" :style="{ background: activityTone(activity.action).soft, color: activityTone(activity.action).color }">
+              <Icon :name="activityIcon(activity.action)" class="w-4 h-4" />
             </span>
+            <div class="activity-copy">
+              <p>
+                <span class="activity-action">{{ activity.action }}</span>
+                {{ (activity.resource || 'system item').replace(/_/g, ' ') }}
+              </p>
+              <span>{{ relativeTime(activity.createdAt) }}</span>
+            </div>
+          </div>
+
+          <div v-if="recentActivities.length === 0" class="activity-empty">
+            <Icon name="lucide:inbox" class="w-7 h-7" />
+            <p>No activity recorded yet.</p>
+          </div>
+        </div>
+
+        <NuxtLink to="/dashboard/audit" class="panel-link">
+          View all audit logs
+          <Icon name="lucide:arrow-right" class="w-3.5 h-3.5" />
+        </NuxtLink>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3 class="panel-title">Quick actions</h3>
+            <p class="panel-sub">Only what your role can do</p>
+          </div>
+          <span class="panel-chip">
+            <Icon name="lucide:zap" class="w-3.5 h-3.5" />
+            Shortcuts
+          </span>
+        </div>
+
+        <div class="quick-list">
+          <NuxtLink
+            v-for="action in quickActions"
+            :key="action.path"
+            :to="action.path"
+            class="quick-row"
+          >
+            <span class="quick-icon">
+              <Icon :name="action.icon" class="w-4 h-4" />
+            </span>
+            <span class="quick-copy">
+              <strong>{{ action.title }}</strong>
+              <small>{{ action.subtitle }}</small>
+            </span>
+            <Icon name="lucide:chevron-right" class="w-4 h-4 text-slate-300" />
+          </NuxtLink>
+
+          <div v-if="quickActions.length === 0" class="activity-empty">
+            <Icon name="lucide:lock" class="w-7 h-7" />
+            <p>No actions available for your role.</p>
           </div>
         </div>
       </div>
-    </div>
+
+      <!-- Distribution -->
+      <div v-if="distribution.length" class="panel">
+        <div class="panel-head">
+          <div>
+            <h3 class="panel-title">Content distribution</h3>
+            <p class="panel-sub">Relative volume by content type</p>
+          </div>
+          <span class="panel-chip">
+            <Icon name="lucide:chart-no-axes-column" class="w-3.5 h-3.5" />
+            Live
+          </span>
+        </div>
+        <div class="distribution">
+          <div v-for="item in distribution" :key="item.label" class="distribution-row">
+            <div class="distribution-meta">
+              <span>{{ item.label }}</span>
+              <strong>{{ item.count }}</strong>
+            </div>
+            <div class="distribution-track">
+              <span :style="{ width: `${item.percentage}%`, background: item.color }"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import Icon from '~/components/Icon.vue'
+import { useUser } from '@/composables/modules/auth/user'
 import { useGetUsers } from '@/composables/modules/users/useGetUsers'
 import { useGetEnquiries } from '@/composables/modules/enquires/useGetEnquiries'
 import { useGetSubscriptions } from '@/composables/modules/subscriptions/useGetSubscriptions'
@@ -143,122 +196,618 @@ import { useGetForms } from '@/composables/modules/forms/useGetForms'
 import { useGetAuditLogs } from '@/composables/modules/audit/useGetAuditLogs'
 import { useGetConvoStacks } from '@/composables/modules/convostack/useGetConvoStacks'
 
-const { users, getUsers } = useGetUsers()
-const { enquiries, getEnquiries } = useGetEnquiries()
-const { subscriptions, getSubscriptions } = useGetSubscriptions()
-const { blogs, getBlogs } = useGetBlogs()
-const { teamMembers, getTeamMembers } = useGetTeamMembers()
-const { publications, getPublications } = useGetPublications()
-const { labcasts, getLabCasts } = useGetLabCasts()
-const { products, getProducts } = useGetProducts()
-const { programs, getPrograms } = useGetPrograms()
-const { forms, getForms } = useGetForms()
-const { auditLogs, loading: loadingActivities, getAuditLogs } = useGetAuditLogs()
-const { publications: convoStacks, getPublications: getConvoStacks } = useGetConvoStacks()
+const { user, roleLabel, hasPermission } = useUser()
 
-// Real stats from actual API data
-const allStats = computed(() => [
-  { title: 'Users', value: users?.value?.length || 0, icon: 'lucide:users', bgColor: 'bg-blue-50 ring-blue-100', textColor: 'text-blue-600', link: '/dashboard/users' },
-  { title: 'Leadership', value: teamMembers?.value?.length || 0, icon: 'lucide:users-round', bgColor: 'bg-indigo-50 ring-indigo-100', textColor: 'text-indigo-600', link: '/dashboard/teams' },
-  { title: 'Subscribers', value: subscriptions?.value?.length || 0, icon: 'lucide:mail', bgColor: 'bg-emerald-50 ring-emerald-100', textColor: 'text-emerald-600', link: '/dashboard/subscriptions' },
-  { title: 'Enquiries', value: enquiries?.value?.length || 0, icon: 'lucide:message-square', bgColor: 'bg-amber-50 ring-amber-100', textColor: 'text-amber-600', link: '/dashboard/enquiries' },
-  { title: 'Journo', value: publications?.value?.length || 0, icon: 'lucide:file-text', bgColor: 'bg-purple-50 ring-purple-100', textColor: 'text-purple-600', link: '/dashboard/publications' },
-  { title: 'Blogs', value: blogs?.value?.length || 0, icon: 'lucide:newspaper', bgColor: 'bg-sky-50 ring-sky-100', textColor: 'text-sky-600', link: '/dashboard/blogs' },
-  { title: 'LabCast', value: labcasts?.value?.length || 0, icon: 'lucide:mic', bgColor: 'bg-pink-50 ring-pink-100', textColor: 'text-pink-600', link: '/dashboard/labcast' },
-  { title: 'Convo Stack', value: convoStacks?.value?.length || 0, icon: 'lucide:book-open', bgColor: 'bg-teal-50 ring-teal-100', textColor: 'text-teal-600', link: '/dashboard/convostack' },
-  { title: 'Products', value: products?.value?.length || 0, icon: 'lucide:archive', bgColor: 'bg-orange-50 ring-orange-100', textColor: 'text-orange-600', link: '/dashboard/products' },
-  { title: 'Programs', value: programs?.value?.length || 0, icon: 'lucide:graduation-cap', bgColor: 'bg-rose-50 ring-rose-100', textColor: 'text-rose-600', link: '/dashboard/programs' },
-  { title: 'Forms', value: forms?.value?.length || 0, icon: 'lucide:clipboard-list', bgColor: 'bg-cyan-50 ring-cyan-100', textColor: 'text-cyan-600', link: '/dashboard/forms' },
-  { title: 'Audit logs', value: auditLogs?.value?.length || 0, icon: 'lucide:fingerprint', bgColor: 'bg-slate-50 ring-slate-200', textColor: 'text-slate-600', link: '/dashboard/audit' },
-])
+const can = (permission: string) => hasPermission(permission)
 
-// Content distribution bar chart based on real data
-const contentDistribution = computed(() => {
-  const items = [
-    { label: 'Journo', count: publications?.value?.length || 0, color: 'bg-purple-500' },
-    { label: 'Blogs', count: blogs?.value?.length || 0, color: 'bg-sky-500' },
-    { label: 'LabCast episodes', count: labcasts?.value?.length || 0, color: 'bg-pink-500' },
-    { label: 'Convo Stack', count: convoStacks?.value?.length || 0, color: 'bg-teal-500' },
-    { label: 'Programs', count: programs?.value?.length || 0, color: 'bg-rose-500' },
-    { label: 'Products', count: products?.value?.length || 0, color: 'bg-orange-500' },
+const users = useGetUsers()
+const enquiries = useGetEnquiries()
+const subscriptions = useGetSubscriptions()
+const blogs = useGetBlogs()
+const teamMembers = useGetTeamMembers()
+const publications = useGetPublications()
+const labcasts = useGetLabCasts()
+const products = useGetProducts()
+const programs = useGetPrograms()
+const forms = useGetForms()
+const audit = useGetAuditLogs()
+const convoStacks = useGetConvoStacks()
+
+const loadingStats = ref(true)
+
+interface StatDefinition {
+  title: string
+  permission: string
+  link: string
+  icon: string
+  color: string
+  soft: string
+  value: () => number
+  load?: () => Promise<any>
+}
+
+const STAT_DEFINITIONS: StatDefinition[] = [
+  { title: 'Users', permission: 'users:read', link: '/dashboard/users', icon: 'lucide:users', color: '#27628c', soft: '#eff6fb', value: () => users.users.value?.length || 0, load: () => users.getUsers() },
+  { title: 'Leadership', permission: 'teams:read', link: '/dashboard/teams', icon: 'lucide:users-round', color: '#7c3aed', soft: '#f5f3ff', value: () => teamMembers.teamMembers.value?.length || 0, load: () => teamMembers.getTeamMembers() },
+  { title: 'Subscribers', permission: 'subscriptions:read', link: '/dashboard/subscriptions', icon: 'lucide:mail', color: '#15803d', soft: '#ecfdf3', value: () => subscriptions.subscriptions.value?.length || 0, load: () => subscriptions.getSubscriptions() },
+  { title: 'Enquiries', permission: 'enquiries:read', link: '/dashboard/enquiries', icon: 'lucide:message-square', color: '#b45309', soft: '#fffaeb', value: () => enquiries.enquiries.value?.length || 0, load: () => enquiries.getEnquiries() },
+  { title: 'Journo', permission: 'publications:read', link: '/dashboard/publications', icon: 'lucide:file-text', color: '#7c3aed', soft: '#f5f3ff', value: () => publications.publications.value?.length || 0, load: () => publications.getPublications() },
+  { title: 'Blogs', permission: 'blogs:read', link: '/dashboard/blogs', icon: 'lucide:newspaper', color: '#0369a1', soft: '#e0f2fe', value: () => blogs.blogs.value?.length || 0, load: () => blogs.getBlogs() },
+  { title: 'LabCast', permission: 'labcast:read', link: '/dashboard/labcast', icon: 'lucide:mic', color: '#be185d', soft: '#fdf2f8', value: () => labcasts.labcasts.value?.length || 0, load: () => labcasts.getLabCasts() },
+  { title: 'Convo Stack', permission: 'convostack:read', link: '/dashboard/convostack', icon: 'lucide:book-open', color: '#0f766e', soft: '#f0fdfa', value: () => convoStacks.publications.value?.length || 0, load: () => convoStacks.getPublications() },
+  { title: 'Products', permission: 'products:read', link: '/dashboard/products', icon: 'lucide:archive', color: '#c2410c', soft: '#fff7ed', value: () => products.products.value?.length || 0, load: () => products.getProducts() },
+  { title: 'Programs', permission: 'programs:read', link: '/dashboard/programs', icon: 'lucide:graduation-cap', color: '#be123c', soft: '#fff1f2', value: () => programs.programs.value?.length || 0, load: () => programs.getPrograms() },
+  { title: 'Forms', permission: 'forms:read', link: '/dashboard/forms', icon: 'lucide:clipboard-list', color: '#0e7490', soft: '#ecfeff', value: () => forms.forms.value?.length || 0, load: () => forms.getForms() },
+  { title: 'Audit logs', permission: 'audit:read', link: '/dashboard/audit', icon: 'lucide:fingerprint', color: '#475569', soft: '#f1f5f9', value: () => audit.auditLogs.value?.length || 0, load: () => audit.getAuditLogs() },
+]
+
+const accessibleStats = computed(() =>
+  STAT_DEFINITIONS.filter((stat) => can(stat.permission)).map((stat) => ({
+    ...stat,
+    value: stat.value(),
+  })),
+)
+
+const quickActions = computed(() => {
+  const actions = [
+    { title: 'Create a user', subtitle: 'Provision a new admin account', path: '/dashboard/users', icon: 'lucide:user-plus', permission: 'users:create' },
+    { title: 'Review Journo', subtitle: 'Approve pending publications', path: '/dashboard/publications', icon: 'lucide:file-check-2', permission: 'publications:update' },
+    { title: 'Send a campaign', subtitle: 'Compose an audience email', path: '/dashboard/campaigns', icon: 'lucide:send', permission: 'campaigns:create' },
+    { title: 'Publish a blog', subtitle: 'Draft and publish editorial content', path: '/dashboard/blogs', icon: 'lucide:newspaper', permission: 'blogs:create' },
+    { title: 'Add an episode', subtitle: 'Publish a new LabCast episode', path: '/dashboard/labcast', icon: 'lucide:mic', permission: 'labcast:create' },
+    { title: 'Manage roles', subtitle: 'Adjust role permissions', path: '/dashboard/access-control/roles', icon: 'lucide:shield-check', permission: 'roles:read' },
   ]
-  const maxCount = Math.max(...items.map(i => i.count), 1)
-  return items.map(item => ({
-    ...item,
-    percentage: Math.round((item.count / maxCount) * 100)
-  }))
+  return actions.filter((action) => can(action.permission)).slice(0, 6)
 })
 
-// Weekly activity chart derived from audit logs by day
-const weeklyActivity = computed(() => {
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  const todayIndex = new Date().getDay() // 0=Sun
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-  
-  // Count audit logs per day of week from the last 7 days
-  const dayCounts: Record<string, number> = {}
-  days.forEach(d => dayCounts[d] = 0)
-  
-  const now = new Date()
-  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-  
-  ;(auditLogs?.value || []).forEach((log: any) => {
-    const logDate = new Date(log.createdAt)
-    if (logDate >= sevenDaysAgo) {
-      const dayName = dayNames[logDate.getDay()]
-      if (dayName in dayCounts) {
-        dayCounts[dayName]++
-      }
-    }
-  })
+const distribution = computed(() => {
+  const items = [
+    { label: 'Journo', permission: 'publications:read', count: publications.publications.value?.length || 0, color: '#7c3aed' },
+    { label: 'Blogs', permission: 'blogs:read', count: blogs.blogs.value?.length || 0, color: '#0369a1' },
+    { label: 'LabCast', permission: 'labcast:read', count: labcasts.labcasts.value?.length || 0, color: '#be185d' },
+    { label: 'Convo Stack', permission: 'convostack:read', count: convoStacks.publications.value?.length || 0, color: '#0f766e' },
+    { label: 'Programs', permission: 'programs:read', count: programs.programs.value?.length || 0, color: '#be123c' },
+    { label: 'Products', permission: 'products:read', count: products.products.value?.length || 0, color: '#c2410c' },
+  ].filter((item) => can(item.permission))
 
-  const maxCount = Math.max(...Object.values(dayCounts), 1)
-  const todayName = dayNames[todayIndex]
-  
-  return days.map(day => ({
-    day,
-    count: dayCounts[day],
-    height: Math.max((dayCounts[day] / maxCount) * 100, 8), // minimum 8% visibility
-    isToday: day === todayName,
-  }))
+  const max = Math.max(...items.map((item) => item.count), 1)
+  return items.map((item) => ({ ...item, percentage: Math.round((item.count / max) * 100) }))
 })
 
-const recentActivities = computed(() => auditLogs?.value?.slice(0, 8) || [])
+const recentActivities = computed(() => audit.auditLogs.value?.slice(0, 7) || [])
 
-const getActivityBg = (action: string) => {
-  const map: Record<string, string> = { create: 'bg-green-500', update: 'bg-[#033958]', delete: 'bg-rose-500', login: 'bg-[#3BAB22]', logout: 'bg-slate-400' }
-  return map[action] || 'bg-slate-500'
+const greeting = computed(() => {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Good morning'
+  if (hour < 17) return 'Good afternoon'
+  return 'Good evening'
+})
+
+const relativeTime = (date: string) => {
+  if (!date) return '—'
+  const diff = Math.floor((Date.now() - new Date(date).getTime()) / 60000)
+  if (diff < 1) return 'just now'
+  if (diff < 60) return `${diff}m ago`
+  if (diff < 1440) return `${Math.floor(diff / 60)}h ago`
+  return `${Math.floor(diff / 1440)}d ago`
 }
 
-const getActivityIcon = (action: string) => {
-  const map: Record<string, string> = { create: 'lucide:plus-circle', update: 'lucide:refresh-cw', delete: 'lucide:trash-2', login: 'lucide:key-round', logout: 'lucide:lock' }
-  return map[action] || 'lucide:info'
-}
+const activityIcon = (action: string) =>
+  ({
+    create: 'lucide:plus-circle',
+    update: 'lucide:refresh-cw',
+    delete: 'lucide:trash-2',
+    soft_delete: 'lucide:archive',
+    login: 'lucide:key-round',
+    logout: 'lucide:lock',
+  })[action] || 'lucide:info'
 
-const formatActivityDescription = (activity: any) => {
-  const resource = activity.resource?.replace('_', ' ') || 'platform item'
-  const action = activity.action || 'modified'
-  return `${action.charAt(0).toUpperCase() + action.slice(1)} ${resource} in the administrative environment.`
-}
-
-const formatRelativeTime = (date: string) => {
-  const diff = Math.floor((new Date().getTime() - new Date(date).getTime()) / 60000)
-  if (diff < 1) return 'now'
-  if (diff < 60) return `${diff}m`
-  if (diff < 1440) return `${Math.floor(diff / 60)}h`
-  return `${Math.floor(diff / 1440)}d`
-}
+const activityTone = (action: string) =>
+  ({
+    create: { color: '#15803d', soft: '#ecfdf3' },
+    update: { color: '#27628c', soft: '#eff6fb' },
+    delete: { color: '#d92d20', soft: '#fef3f2' },
+    soft_delete: { color: '#b45309', soft: '#fffaeb' },
+    login: { color: '#7c3aed', soft: '#f5f3ff' },
+  })[action] || { color: '#6b8192', soft: '#f4f7f9' }
 
 onMounted(async () => {
-  await Promise.all([
-    getUsers(), getEnquiries(), getSubscriptions(), getBlogs(), 
-    getTeamMembers(), getPublications(), getLabCasts(), getProducts(), 
-    getPrograms(), getForms(), getAuditLogs(), getConvoStacks()
-  ])
+  const permitted = STAT_DEFINITIONS.filter((stat) => can(stat.permission) && stat.load)
+  await Promise.allSettled(permitted.map((stat) => stat.load?.()))
+  loadingStats.value = false
 })
 </script>
 
 <style scoped>
-.custom-scrollbar::-webkit-scrollbar { width: 4px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vw, 32px);
+}
+
+/* Welcome */
+.welcome {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid var(--mc-brand-500);
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(255, 255, 255, 0.16) 0%, transparent 55%),
+    linear-gradient(120deg, #1f5378 0%, #27628c 58%, #3a7499 100%);
+  color: #fff;
+  padding: clamp(22px, 3.5vw, 40px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  box-shadow: 0 26px 50px -34px rgba(31, 83, 120, 0.8);
+}
+.welcome::after {
+  content: '';
+  position: absolute;
+  right: -70px;
+  top: -100px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 0 40px rgba(255, 255, 255, 0.04), 0 0 0 90px rgba(255, 255, 255, 0.03);
+  pointer-events: none;
+}
+.welcome-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+}
+.welcome-eyebrow {
+  font-family: var(--mc-font-heading);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.welcome-title {
+  font-family: var(--mc-font-heading);
+  color: #fff;
+  font-size: clamp(25px, 3.4vw, 38px);
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.welcome-title span {
+  color: #cfe9f8;
+  white-space: nowrap;
+}
+.welcome-meta {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.76);
+}
+.welcome-divider {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+}
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #86efac;
+  box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.2);
+}
+.welcome-actions {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 330px);
+}
+.welcome-action {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.18s ease, transform 0.18s ease;
+  backdrop-filter: blur(8px);
+}
+.welcome-action:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+.welcome-action-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.16);
+  flex-shrink: 0;
+}
+.welcome-action strong {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.welcome-action small {
+  display: block;
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 2px;
+}
+
+/* Section heads */
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 13px;
+}
+.section-title {
+  font-family: var(--mc-font-heading);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--mc-ink);
+}
+.section-sub {
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--mc-muted);
+}
+.inline-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--mc-muted);
+}
+.mini-spinner {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 2px solid var(--mc-brand-100);
+  border-top-color: var(--mc-brand);
+  animation: spin 0.7s linear infinite;
+}
+
+/* Metrics */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 10px;
+}
+.metric-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  box-shadow: var(--mc-shadow-sm);
+  text-decoration: none;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  overflow: hidden;
+}
+.metric-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--mc-brand-200);
+  box-shadow: var(--mc-shadow);
+}
+.metric-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
+}
+.metric-value {
+  font-family: var(--mc-font-heading);
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--mc-ink);
+}
+.metric-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--mc-muted);
+  margin-top: 4px;
+}
+.metric-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--mc-brand);
+  margin-top: 12px;
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: all 0.18s ease;
+}
+.metric-card:hover .metric-link {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.dashboard-empty {
+  padding: 42px 20px;
+  border-radius: 18px;
+  border: 1px dashed var(--mc-border-strong);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--mc-muted);
+  font-size: 13px;
+}
+
+/* Panels */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+}
+.panel {
+  grid-column: span 12;
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  border-radius: 18px;
+  box-shadow: var(--mc-shadow-sm);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--mc-border);
+}
+.panel-title {
+  font-family: var(--mc-font-heading);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--mc-ink);
+}
+.panel-sub {
+  font-size: 11px;
+  color: var(--mc-muted);
+  margin-top: 2px;
+}
+.panel-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--mc-brand-50);
+  border: 1px solid var(--mc-brand-100);
+  color: var(--mc-brand-700);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.activity-list {
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 6px;
+}
+.activity-row {
+  display: flex;
+  gap: 11px;
+  padding: 9px 10px;
+  border-radius: 11px;
+}
+.activity-row:hover {
+  background: #f8fbfd;
+}
+.activity-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.activity-copy {
+  min-width: 0;
+  flex: 1;
+}
+.activity-copy p {
+  font-size: 12.5px;
+  color: var(--mc-body);
+  line-height: 1.4;
+}
+.activity-action {
+  display: inline-block;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: var(--mc-brand-50);
+  color: var(--mc-brand-700);
+  margin-right: 4px;
+}
+.activity-copy > span {
+  font-size: 10.5px;
+  color: var(--mc-subtle);
+}
+.activity-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 36px 16px;
+  color: var(--mc-subtle);
+  font-size: 12px;
+  text-align: center;
+}
+.panel-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px;
+  border-top: 1px solid var(--mc-border);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--mc-brand);
+  text-decoration: none;
+  margin-top: auto;
+}
+.panel-link:hover {
+  background: var(--mc-brand-50);
+}
+
+.quick-list {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+}
+.quick-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 11px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.quick-row:hover {
+  background: #f8fbfd;
+}
+.quick-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--mc-brand-50);
+  color: var(--mc-brand);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.quick-copy {
+  flex: 1;
+  min-width: 0;
+}
+.quick-copy strong {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--mc-ink);
+}
+.quick-copy small {
+  display: block;
+  font-size: 10.5px;
+  color: var(--mc-muted);
+  margin-top: 1px;
+}
+
+.distribution {
+  padding: 16px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+.distribution-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.distribution-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--mc-muted);
+  font-weight: 600;
+}
+.distribution-meta strong {
+  color: var(--mc-ink);
+  font-size: 12px;
+}
+.distribution-track {
+  height: 6px;
+  border-radius: 999px;
+  background: #eef4f8;
+  overflow: hidden;
+}
+.distribution-track span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  min-width: 3px;
+  transition: width 0.5s ease;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 900px) {
+  .panel:nth-child(1) {
+    grid-column: span 7;
+  }
+  .panel:nth-child(2) {
+    grid-column: span 5;
+  }
+  .panel:nth-child(3) {
+    grid-column: span 12;
+  }
+}
+
+@media (min-width: 640px) {
+  .panel:nth-child(3) .distribution {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 26px;
+  }
+}
+
+@media (max-width: 640px) {
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .metric-card {
+    padding: 13px;
+  }
+  .metric-value {
+    font-size: 26px;
+  }
+  .welcome-actions {
+    width: 100%;
+  }
+}
 </style>

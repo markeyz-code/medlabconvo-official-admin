@@ -8,22 +8,5 @@
   <body>
     <!-- Nuxt will inject your application here -->
     {{ APP }}
-
-    <!-- Add the EmailJS CDN -->
-    <script
-    type="text/javascript"
-    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-  </script>
-  <script type="text/javascript">
-    (function(){
-      emailjs.init({
-        publicKey: "q-OlS4tMTSeJQl4Xq",
-      });
-    })();
-  </script>
-    <script type="module">
-      import emailjsCom from 'https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/+esm';
-      window.emailjsCom = emailjsCom;
-    </script>
   </body>
 </html>

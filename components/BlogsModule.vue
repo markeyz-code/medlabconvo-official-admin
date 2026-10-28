@@ -22,9 +22,9 @@
           />
         </div>
       </div>
-      <button
+      <button v-if="hasPermission('blogs:create')"
         @click="openCreateModal"
-        class="w-full md:w-auto px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
+        class="w-full md:w-auto px-6 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all duration-300 flex items-center justify-center space-x-3 group"
       >
         <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
         <span class="font-bold text-sm">Create post</span>
@@ -36,12 +36,12 @@
       <div
         v-for="blog in filteredBlogs"
         :key="blog._id"
-        class="group bg-white rounded-2xl border border-slate-100 overflow-hidden hover:border-[#033958]/20 transition-all duration-500"
+        class="group bg-white rounded-2xl border border-slate-100 overflow-hidden hover:border-[#27628C]/20 transition-all duration-500"
       >
         <!-- Blog Image -->
         <div class="relative h-56 bg-slate-50 overflow-hidden">
           <div 
-            class="absolute inset-0 bg-gradient-to-br from-[#033958]/5 to-transparent group-hover:scale-110 transition-transform duration-700"
+            class="absolute inset-0 bg-gradient-to-br from-[#27628C]/5 to-transparent group-hover:scale-110 transition-transform duration-700"
           ></div>
           <div class="absolute inset-0 flex items-center justify-center">
             <Icon name="lucide:image" class="w-16 h-16 text-slate-100 group-hover:text-slate-200 transition-colors duration-500" />
@@ -63,13 +63,13 @@
           <div class="flex items-center justify-between mb-4">
             <span class="text-sm font-bold text-slate-400">{{ formatDate(blog.createdAt) }}</span>
             <div class="flex items-center space-x-1 transition-opacity duration-300">
-              <button
+              <button v-if="hasPermission('blogs:update')"
                 @click="editBlog(blog)"
-                class="p-2 text-slate-400 hover:text-[#033958] hover:bg-slate-50 rounded-lg transition-all"
+                class="p-2 text-slate-400 hover:text-[#27628C] hover:bg-slate-50 rounded-lg transition-all"
               >
                 <Icon name="lucide:pencil" class="w-4 h-4" />
               </button>
-              <button
+              <button v-if="hasPermission('blogs:delete')"
                 @click="deleteBlog(blog.id)"
                 class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
               >
@@ -78,7 +78,7 @@
             </div>
           </div>
           
-          <h3 class="text-lg font-bold text-slate-900 mb-3 group-hover:text-[#033958] transition-colors duration-300 line-clamp-2 leading-tight tracking-tight">
+          <h3 class="text-lg font-bold text-slate-900 mb-3 group-hover:text-[#27628C] transition-colors duration-300 line-clamp-2 leading-tight tracking-tight">
             {{ blog.title }}
           </h3>
           <p class="text-sm text-slate-500 mb-6 line-clamp-3 leading-relaxed font-medium">
@@ -95,9 +95,9 @@
                 {{ blog.category }}
               </div>
             </div>
-            <button 
+            <button v-if="hasPermission('blogs:update')" 
               @click="editBlog(blog)"
-              class="text-[#033958] text-sm font-bold hover:underline decoration-2 underline-offset-4"
+              class="text-[#27628C] text-sm font-bold hover:underline decoration-2 underline-offset-4"
             >
               Edit
             </button>
@@ -108,7 +108,7 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-24 space-y-4">
-      <div class="w-12 h-12 rounded-full border-4 border-slate-50 border-t-[#033958] animate-spin"></div>
+      <div class="w-12 h-12 rounded-full border-4 border-slate-50 border-t-[#27628C] animate-spin"></div>
       <span class="text-sm font-bold text-slate-400 animate-pulse">Loading blog posts...</span>
     </div>
 
@@ -119,7 +119,7 @@
       </div>
       <h3 class="text-xl font-bold text-slate-900 mb-2">No blog posts found</h3>
       <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Create a new blog post to display content on the website.</p>
-      <button
+      <button v-if="hasPermission('blogs:create')"
         @click="openCreateModal"
         class="px-8 py-3 bg-white border border-slate-200 text-slate-900 rounded-xl hover:bg-slate-50 transition-all font-bold text-sm"
       >
@@ -160,6 +160,9 @@ import Icon from '@/components/Icon.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import { useUser } from '@/composables/modules/auth/user'
+
+const { hasPermission } = useUser()
 
 // Composables
 const { blogs, loading, getBlogs } = useGetBlogs()

@@ -84,7 +84,7 @@
       </button>
       <button
         type="submit"
-        class="px-10 py-4 bg-[#033958] text-white rounded-2xl font-bold text-sm hover:bg-[#022f42] transition-all active:scale-95 flex items-center space-x-3"
+        class="px-10 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center space-x-3"
       >
         <span>{{ member ? 'Save member' : 'Create member' }}</span>
       </button>

@@ -33,9 +33,9 @@
           <Icon name="lucide:layout-grid" class="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
           <span class="font-bold text-sm">Manage categories</span>
         </button>
-        <button
+        <button v-if="hasPermission('publications:create')"
           @click="openCreateModal"
-          class="w-full md:w-auto px-6 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all duration-300 flex items-center justify-center space-x-3 group"
+          class="w-full md:w-auto px-6 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all duration-300 flex items-center justify-center space-x-3 group"
         >
           <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
           <span class="font-bold text-sm">New publication</span>
@@ -50,7 +50,7 @@
       <div
         v-for="publication in filteredPublications"
         :key="publication.id"
-        class="group bg-white rounded-2xl border border-slate-100 p-8 hover:border-[#033958]/10 transition-all duration-500 relative"
+        class="group bg-white rounded-2xl border border-slate-100 p-8 hover:border-[#27628C]/10 transition-all duration-500 relative"
       >
         <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
           <div class="flex-1 space-y-4">
@@ -68,7 +68,7 @@
               <span class="text-sm font-bold text-slate-400">{{ publication.category || 'Scientific Paper' }}</span>
             </div>
             
-            <h3 class="text-xl font-bold text-slate-900 group-hover:text-[#033958] transition-colors duration-300 leading-tight tracking-tight">
+            <h3 class="text-xl font-bold text-slate-900 group-hover:text-[#27628C] transition-colors duration-300 leading-tight tracking-tight">
               {{ publication.title }}
             </h3>
             
@@ -120,15 +120,15 @@
               />
             </div>
             <div class="flex items-center gap-1">
-              <button
+              <button v-if="hasPermission('publications:update')"
                 @click="editPublication(publication)"
-                class="p-2 hover:text-[#033958] hover:bg-slate-50 rounded-xl transition-all"
+                class="p-2 hover:text-[#27628C] hover:bg-slate-50 rounded-xl transition-all"
                 title="Edit details"
               >
                 <Icon name="lucide:pencil" class="w-5 h-5" />
               </button>
               
-              <button
+              <button v-if="hasPermission('publications:delete')"
                 @click="deletePublication(publication.id)"
                 class="p-2 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                 title="Delete"
@@ -143,7 +143,7 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-24 space-y-4">
-      <div class="w-12 h-12 border-4 border-slate-50 border-t-[#033958] rounded-full animate-spin"></div>
+      <div class="w-12 h-12 border-4 border-slate-50 border-t-[#27628C] rounded-full animate-spin"></div>
       <span class="text-sm font-bold text-slate-400 animate-pulse">Loading publications...</span>
     </div>
 
@@ -154,9 +154,9 @@
       </div>
       <h3 class="text-xl font-bold text-slate-900 mb-2 tracking-tight">No publications found</h3>
       <p class="text-slate-500 mb-8 max-w-xs text-center leading-relaxed font-medium">Your research archive is currently empty. Start by adding a new publication.</p>
-      <button
+      <button v-if="hasPermission('publications:create')"
         @click="openCreateModal"
-        class="px-8 py-3 bg-[#033958] text-white rounded-xl hover:bg-[#022a41] transition-all font-bold text-sm"
+        class="px-8 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all font-bold text-sm"
       >
         Add publication
       </button>
