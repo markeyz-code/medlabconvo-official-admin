@@ -225,6 +225,9 @@
   font-weight: 500;
   transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
+.auth-input.pr-12 {
+  padding-right: 48px;
+}
 .auth-input::placeholder {
   color: #a9b9c4;
   font-weight: 400;
