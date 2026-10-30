@@ -15,7 +15,7 @@
   
       <!-- Header -->
       <div class="text-center mb-8">
-        <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div class="w-16 h-16 bg-gradient-to-r from-[#27628C] to-[#033958] rounded-full flex items-center justify-center mx-auto mb-4">
           <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
           </svg>
@@ -37,7 +37,7 @@
         </p>
         <NuxtLink 
           to="/auth/login"
-          class="inline-block w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:from-green-700 hover:to-blue-700 transition-all duration-200 transform hover:scale-[1.02] text-center"
+          class="inline-block w-full bg-gradient-to-r from-[#27628C] to-[#033958] text-white py-3 px-4 rounded-xl font-medium hover:from-[#1B4A6B] hover:to-[#022c42] transition-all duration-200 transform hover:scale-[1.02] text-center"
         >
           Continue to Login
         </NuxtLink>
@@ -145,7 +145,7 @@
         <button
           type="submit"
           :disabled="loading || !form.password || !form.password_confirmation || form.password !== form.password_confirmation"
-          class="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:from-green-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] disabled:hover:scale-100 flex items-center justify-center"
+          class="w-full bg-gradient-to-r from-[#27628C] to-[#033958] text-white py-3 px-4 rounded-xl font-medium hover:from-[#1B4A6B] hover:to-[#022c42] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] disabled:hover:scale-100 flex items-center justify-center"
         >
           <svg v-if="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

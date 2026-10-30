@@ -101,7 +101,7 @@
               <button
                 type="submit"
                 :disabled="loadingRegister"
-                class="w-full py-5 bg-[#27628C] text-white rounded-2xl font-black text-sm  tracking-normal hover:bg-[#1F5378] disabled:bg-slate-100 disabled:text-slate-300 transition-all shadow-sm border border-slate-200 shadow-green-900/10 active:scale-[0.98] flex items-center justify-center space-x-3"
+                class="w-full py-5 bg-[#27628C] text-white rounded-2xl font-black text-sm  tracking-normal hover:bg-[#1F5378] disabled:bg-slate-100 disabled:text-slate-300 transition-all shadow-sm border border-slate-200 active:scale-[0.98] flex items-center justify-center space-x-3"
               >
                 <div v-if="loadingRegister" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                 <span>{{ loadingRegister ? 'Signing up...' : 'Complete Registration' }}</span>

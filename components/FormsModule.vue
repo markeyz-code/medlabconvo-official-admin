@@ -24,7 +24,7 @@
       </div>
       <button v-if="hasPermission('forms:create')"
         @click="openCreateModal"
-        class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-[#27628C] to-[#044d77] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-3"
+        class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-[#27628C] to-[#033958] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-3"
       >
         <div class="bg-white/20 p-1 rounded-lg">
           <Plus class="w-4 h-4" />
@@ -87,7 +87,7 @@
                   :class="[
                     'px-4 py-1.5 inline-flex items-center text-sm font-black  tracking-normal rounded-full transition-all duration-300',
                     form.isActive 
-                      ? 'bg-emerald-100 text-emerald-700 shadow-sm shadow-emerald-200' 
+                      ? 'bg-emerald-100 text-emerald-700 shadow-sm' 
                       : 'bg-slate-100 text-slate-500 shadow-sm shadow-slate-200',
                     togglingFormId === form._id ? 'opacity-50 cursor-not-allowed scale-95' : 'hover:scale-105 active:scale-95'
                   ]"

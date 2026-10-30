@@ -164,7 +164,7 @@ const formatDate = (date: string) => {
 
 const statusClass = (status: string) => {
   switch (status) {
-    case 'SENT': return 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-sm shadow-emerald-500/10 font-black'
+    case 'SENT': return 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-sm font-black'
     case 'SENDING': return 'bg-blue-50 text-blue-600 border-blue-100 animate-pulse font-black'
     case 'SCHEDULED': return 'bg-amber-50 text-amber-600 border-amber-100 font-black'
     case 'RECURRING': return 'bg-indigo-50 text-indigo-600 border-indigo-100 font-black'

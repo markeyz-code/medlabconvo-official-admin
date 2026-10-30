@@ -24,14 +24,14 @@
         class="fixed inset-y-0 right-0 z-50 w-full max-w-4xl bg-white shadow-sm border border-slate-200 flex flex-col overflow-hidden"
       >
               <!-- Header with Gradient -->
-              <div class="relative flex-shrink-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 px-8 py-6">
+              <div class="relative flex-shrink-0 bg-[#033958] px-8 py-6">
                 <div class="absolute inset-0 bg-black/10"></div>
                 <div class="relative flex items-center justify-between">
                   <div class="space-y-1">
                     <h3 class="text-lg font-bold text-white">
                       {{ episode ? 'Edit Episode' : 'Create New Episode' }}
                     </h3>
-                    <p class="text-blue-100">
+                    <p class="text-white/60">
                       {{ episode ? 'Update your episode details' : 'Add a new episode to your podcast' }}
                     </p>
                   </div>
@@ -75,10 +75,10 @@
                             v-model="form.title"
                             type="text"
                             required
-                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
+                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-[#27628C] focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
                            
                           />
-                          <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
+                          <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-[#27628C]/5 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
                         </div>
                       </div>
 
@@ -92,10 +92,10 @@
                             v-model="form.description"
                             required
                             rows="4"
-                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white resize-none group-hover:border-gray-300"
+                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-[#27628C] focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white resize-none group-hover:border-gray-300"
                            
                           ></textarea>
-                          <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
+                          <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-[#27628C]/5 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
                         </div>
                       </div>
 
@@ -110,7 +110,7 @@
                             type="number"
                             required
                             min="1"
-                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
+                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-[#27628C] focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
                           />
                           <Icon name="lucide:hash" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                         </div>
@@ -126,7 +126,7 @@
                             type="number"
                             required
                             min="1"
-                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
+                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-[#27628C] focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
                           />
                           <Icon name="lucide:play" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                         </div>
@@ -143,7 +143,7 @@
                             type="number"
                             required
                             min="1"
-                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
+                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-[#27628C] focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
                           />
                           <Icon name="lucide:clock" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                         </div>
@@ -158,7 +158,7 @@
                             v-model="form.publishedAt"
                             type="datetime-local"
                             required
-                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
+                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-[#27628C] focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
                           />
                           <Icon name="lucide:calendar" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                         </div>
@@ -169,7 +169,7 @@
                   <!-- Media Upload Section -->
                   <div class="space-y-6">
                     <div class="flex items-center space-x-3 mb-6">
-                      <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center">
+                      <div class="w-8 h-8 bg-gradient-to-r from-[#27628C] to-[#1F5378] rounded-full flex items-center justify-center">
                         <Icon name="lucide:image" class="w-4 h-4 text-white" />
                       </div>
                       <h4 class="text-lg font-semibold text-gray-900">Media & Images</h4>
@@ -200,27 +200,27 @@
                             :class="[
                               'relative border-[0.5px] border-dashed rounded-2xl p-8 transition-all duration-300',
                               thumbnailDragOver 
-                                ? 'border-blue-500 bg-blue-50 scale-105' 
+                                ? 'border-[#27628C]/30 bg-[#eef5f9] scale-105' 
                                 : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
                             ]"
                           >
                             <div v-if="!form.thumbnailUrl && !thumbnailUploading" class="text-center space-y-4">
-                              <div class="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-200">
-                                <!-- <Icon name="lucide:image-plus" class="w-8 h-8 text-blue-500" /> -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-500" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg>
+                              <div class="w-16 h-16 bg-gradient-to-br from-[#eef5f9] to-[#e3eef5] rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-200">
+                                <!-- <Icon name="lucide:image-plus" class="w-8 h-8 text-[#27628C]" /> -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#27628C]" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg>
                               </div>
                               <div>
                                 <p class="text-sm font-medium text-gray-700">
-                                  <span class="text-blue-600">Click to upload</span> or drag and drop
+                                  <span class="text-[#27628C]">Click to upload</span> or drag and drop
                                 </p>
                                 <p class="text-sm text-gray-900 mt-1">PNG, JPG, GIF up to 10MB</p>
                               </div>
                             </div>
 
                             <div v-else-if="thumbnailUploading" class="text-center space-y-4">
-                              <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto">
-                                <!-- <Icon name="lucide:loader-2" class="w-8 h-8 text-blue-600 animate-spin" /> -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-600 animate-spin" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M136,32V64a8,8,0,0,1-16,0V32a8,8,0,0,1,16,0Zm37.25,58.75a8,8,0,0,0,5.66-2.35l22.63-22.62a8,8,0,0,0-11.32-11.32L167.6,77.09a8,8,0,0,0,5.65,13.66ZM224,120H192a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16Zm-45.09,47.6a8,8,0,0,0-11.31,11.31l22.62,22.63a8,8,0,0,0,11.32-11.32ZM128,184a8,8,0,0,0-8,8v32a8,8,0,0,0,16,0V192A8,8,0,0,0,128,184ZM77.09,167.6,54.46,190.22a8,8,0,0,0,11.32,11.32L88.4,178.91A8,8,0,0,0,77.09,167.6ZM72,128a8,8,0,0,0-8-8H32a8,8,0,0,0,0,16H64A8,8,0,0,0,72,128ZM65.78,54.46A8,8,0,0,0,54.46,65.78L77.09,88.4A8,8,0,0,0,88.4,77.09Z"></path></svg>
+                              <div class="w-16 h-16 bg-[#eef5f9] rounded-2xl flex items-center justify-center mx-auto">
+                                <!-- <Icon name="lucide:loader-2" class="w-8 h-8 text-[#27628C] animate-spin" /> -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#27628C] animate-spin" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M136,32V64a8,8,0,0,1-16,0V32a8,8,0,0,1,16,0Zm37.25,58.75a8,8,0,0,0,5.66-2.35l22.63-22.62a8,8,0,0,0-11.32-11.32L167.6,77.09a8,8,0,0,0,5.65,13.66ZM224,120H192a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16Zm-45.09,47.6a8,8,0,0,0-11.31,11.31l22.62,22.63a8,8,0,0,0,11.32-11.32ZM128,184a8,8,0,0,0-8,8v32a8,8,0,0,0,16,0V192A8,8,0,0,0,128,184ZM77.09,167.6,54.46,190.22a8,8,0,0,0,11.32,11.32L88.4,178.91A8,8,0,0,0,77.09,167.6ZM72,128a8,8,0,0,0-8-8H32a8,8,0,0,0,0,16H64A8,8,0,0,0,72,128ZM65.78,54.46A8,8,0,0,0,54.46,65.78L77.09,88.4A8,8,0,0,0,88.4,77.09Z"></path></svg>
                               </div>
                               <p class="text-sm font-medium text-gray-700">Uploading thumbnail...</p>
                               <div class="w-full bg-gray-200 rounded-full h-2">
@@ -273,31 +273,31 @@
                             :class="[
                               'relative border-[0.5px] border-dashed rounded-2xl p-8 transition-all duration-300',
                               imageDragOver 
-                                ? 'border-green-500 bg-green-50 scale-105' 
+                                ? 'border-[#27628C]/30 bg-[#eef5f9] scale-105' 
                                 : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
                             ]"
                           >
                             <div v-if="!form.image && !imageUploading" class="text-center space-y-4">
-                              <div class="w-16 h-16 bg-gradient-to-br from-green-100 to-teal-100 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-200">
-                                <!-- <Icon name="lucide:image" class="w-8 h-8 text-green-500" /> -->
-                                <svg xmlns="http://www.w3.org/2000/svg"  class="w-8 h-8 text-green-500" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V158.75l-26.07-26.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L40,149.37V56ZM40,172l52-52,80,80H40Zm176,28H194.63l-36-36,20-20L216,181.38V200ZM144,100a12,12,0,1,1,12,12A12,12,0,0,1,144,100Z"></path></svg>
+                              <div class="w-16 h-16 bg-gradient-to-br from-[#eef5f9] to-[#e3eef5] rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-200">
+                                <!-- <Icon name="lucide:image" class="w-8 h-8 text-[#27628C]" /> -->
+                                <svg xmlns="http://www.w3.org/2000/svg"  class="w-8 h-8 text-[#27628C]" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V158.75l-26.07-26.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L40,149.37V56ZM40,172l52-52,80,80H40Zm176,28H194.63l-36-36,20-20L216,181.38V200ZM144,100a12,12,0,1,1,12,12A12,12,0,0,1,144,100Z"></path></svg>
                               </div>
                               <div>
                                 <p class="text-sm font-medium text-gray-700">
-                                  <span class="text-green-600">Click to upload</span> or drag and drop
+                                  <span class="text-[#27628C]">Click to upload</span> or drag and drop
                                 </p>
                                 <p class="text-sm text-gray-900 mt-1">PNG, JPG, GIF up to 10MB</p>
                               </div>
                             </div>
 
                             <div v-else-if="imageUploading" class="text-center space-y-4">
-                              <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto">
-                                <!-- <Icon name="lucide:loader-2" class="w-8 h-8 text-green-600 animate-spin" /> -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-600 animate-spin" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M136,32V64a8,8,0,0,1-16,0V32a8,8,0,0,1,16,0Zm37.25,58.75a8,8,0,0,0,5.66-2.35l22.63-22.62a8,8,0,0,0-11.32-11.32L167.6,77.09a8,8,0,0,0,5.65,13.66ZM224,120H192a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16Zm-45.09,47.6a8,8,0,0,0-11.31,11.31l22.62,22.63a8,8,0,0,0,11.32-11.32ZM128,184a8,8,0,0,0-8,8v32a8,8,0,0,0,16,0V192A8,8,0,0,0,128,184ZM77.09,167.6,54.46,190.22a8,8,0,0,0,11.32,11.32L88.4,178.91A8,8,0,0,0,77.09,167.6ZM72,128a8,8,0,0,0-8-8H32a8,8,0,0,0,0,16H64A8,8,0,0,0,72,128ZM65.78,54.46A8,8,0,0,0,54.46,65.78L77.09,88.4A8,8,0,0,0,88.4,77.09Z"></path></svg>
+                              <div class="w-16 h-16 bg-[#eef5f9] rounded-2xl flex items-center justify-center mx-auto">
+                                <!-- <Icon name="lucide:loader-2" class="w-8 h-8 text-[#27628C] animate-spin" /> -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#27628C] animate-spin" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M136,32V64a8,8,0,0,1-16,0V32a8,8,0,0,1,16,0Zm37.25,58.75a8,8,0,0,0,5.66-2.35l22.63-22.62a8,8,0,0,0-11.32-11.32L167.6,77.09a8,8,0,0,0,5.65,13.66ZM224,120H192a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16Zm-45.09,47.6a8,8,0,0,0-11.31,11.31l22.62,22.63a8,8,0,0,0,11.32-11.32ZM128,184a8,8,0,0,0-8,8v32a8,8,0,0,0,16,0V192A8,8,0,0,0,128,184ZM77.09,167.6,54.46,190.22a8,8,0,0,0,11.32,11.32L88.4,178.91A8,8,0,0,0,77.09,167.6ZM72,128a8,8,0,0,0-8-8H32a8,8,0,0,0,0,16H64A8,8,0,0,0,72,128ZM65.78,54.46A8,8,0,0,0,54.46,65.78L77.09,88.4A8,8,0,0,0,88.4,77.09Z"></path></svg>
                               </div>
                               <p class="text-sm font-medium text-gray-700">Uploading image...</p>
                               <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-green-600 h-2 rounded-full animate-pulse" style="width: 60%"></div>
+                                <div class="bg-[#27628C] h-2 rounded-full animate-pulse" style="width: 60%"></div>
                               </div>
                             </div>
 
@@ -327,7 +327,7 @@
                   <!-- People Section -->
                   <div class="space-y-6">
                     <div class="flex items-center space-x-3 mb-6">
-                      <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                      <div class="w-8 h-8 bg-gradient-to-r from-[#27628C] to-[#1F5378] rounded-full flex items-center justify-center">
                         <!-- <Icon name="lucide:users" class="w-4 h-4 text-white" /> -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="w-4 h-4 text-white" fill="#000000" viewBox="0 0 256 256"><path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"></path></svg>
                       </div>
@@ -361,7 +361,7 @@
                                   v-model="form.hosts[index]"
                                   type="text"
                                   required
-                                  class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-purple-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
+                                  class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-[#27628C] focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
 
                                 />
                                 <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path></svg>
@@ -382,7 +382,7 @@
                           <button
                             @click="addHost"
                             type="button"
-                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200"
+                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-[#27628C] hover:text-[#27628C] hover:bg-[#eef5f9] rounded-xl transition-all duration-200"
                           >
                             <!-- <Icon name="lucide:plus" class="w-4 h-4 mr-2" /> -->
                             <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M256,136a8,8,0,0,1-8,8H232v16a8,8,0,0,1-16,0V144H200a8,8,0,0,1,0-16h16V112a8,8,0,0,1,16,0v16h16A8,8,0,0,1,256,136Zm-57.87,58.85a8,8,0,0,1-12.26,10.3C165.75,181.19,138.09,168,108,168s-57.75,13.19-77.87,37.15a8,8,0,0,1-12.25-10.3c14.94-17.78,33.52-30.41,54.17-37.17a68,68,0,1,1,71.9,0C164.6,164.44,183.18,177.07,198.13,194.85ZM108,152a52,52,0,1,0-52-52A52.06,52.06,0,0,0,108,152Z"></path></svg>
@@ -400,7 +400,7 @@
                           <input
                             v-model="form.guest"
                             type="text"
-                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-purple-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
+                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-[#27628C] focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
                            
                           />
                           <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"  xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M168,56a8,8,0,0,1,8-8h16V32a8,8,0,0,1,16,0V48h16a8,8,0,0,1,0,16H208V80a8,8,0,0,1-16,0V64H176A8,8,0,0,1,168,56Zm62.56,54.68a103.92,103.92,0,1,1-85.24-85.24,8,8,0,0,1-2.64,15.78A88.07,88.07,0,0,0,40,128a87.62,87.62,0,0,0,22.24,58.41A79.66,79.66,0,0,1,98.3,157.66a48,48,0,1,1,59.4,0,79.66,79.66,0,0,1,36.06,28.75A87.62,87.62,0,0,0,216,128a88.85,88.85,0,0,0-1.22-14.68,8,8,0,1,1,15.78-2.64ZM128,152a32,32,0,1,0-32-32A32,32,0,0,0,128,152Zm0,64a87.57,87.57,0,0,0,53.92-18.5,64,64,0,0,0-107.84,0A87.57,87.57,0,0,0,128,216Z"></path></svg>
@@ -416,7 +416,7 @@
                           <input
                             v-model="form.guestTitle"
                             type="text"
-                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-purple-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
+                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-[#27628C] focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
                            
                           />
                           <svg xmlns="http://www.w3.org/2000/svg" width="32" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M216,56H176V48a24,24,0,0,0-24-24H104A24,24,0,0,0,80,48v8H40A16,16,0,0,0,24,72V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56ZM96,48a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM216,72v41.61A184,184,0,0,1,128,136a184.07,184.07,0,0,1-88-22.38V72Zm0,128H40V131.64A200.19,200.19,0,0,0,128,152a200.25,200.25,0,0,0,88-20.37V200ZM104,112a8,8,0,0,1,8-8h32a8,8,0,0,1,0,16H112A8,8,0,0,1,104,112Z"></path></svg>
@@ -429,7 +429,7 @@
                   <!-- Links & Distribution -->
                   <div class="space-y-6">
                     <div class="flex items-center space-x-3 mb-6">
-                      <div class="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                      <div class="w-8 h-8 bg-gradient-to-r from-[#27628C] to-[#1F5378] rounded-full flex items-center justify-center">
                         <!-- <Icon name="lucide:link" class="w-4 h-4 text-white" /> -->
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M240,88.23a54.43,54.43,0,0,1-16,37L189.25,160a54.27,54.27,0,0,1-38.63,16h-.05A54.63,54.63,0,0,1,96,119.84a8,8,0,0,1,16,.45A38.62,38.62,0,0,0,150.58,160h0a38.39,38.39,0,0,0,27.31-11.31l34.75-34.75a38.63,38.63,0,0,0-54.63-54.63l-11,11A8,8,0,0,1,135.7,59l11-11A54.65,54.65,0,0,1,224,48,54.86,54.86,0,0,1,240,88.23ZM109,185.66l-11,11A38.41,38.41,0,0,1,70.6,208h0a38.63,38.63,0,0,1-27.29-65.94L78,107.31A38.63,38.63,0,0,1,144,135.71a8,8,0,0,0,16,.45A54.86,54.86,0,0,0,144,96a54.65,54.65,0,0,0-77.27,0L32,130.75A54.62,54.62,0,0,0,70.56,224h0a54.28,54.28,0,0,0,38.64-16l11-11A8,8,0,0,0,109,185.66Z"></path></svg>
                       </div>
@@ -445,10 +445,10 @@
                           <input
                             v-model="form.spotifyUrl"
                             type="url"
-                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-green-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
+                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-[#27628C] focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
                            
                           />
-                          <div class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                          <div class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-[#27628C] rounded-full flex items-center justify-center">
                             <!-- <Icon name="lucide:music" class="w-3 h-3 text-white" /> -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" class="w-3 h-3 text-white"  height="32" fill="#000000" viewBox="0 0 256 256"><path d="M201.89,54.66A103.43,103.43,0,0,0,128.79,24H128A104,104,0,0,0,24,128v56a24,24,0,0,0,24,24H64a24,24,0,0,0,24-24V144a24,24,0,0,0-24-24H40.36A88.12,88.12,0,0,1,190.54,65.93,87.39,87.39,0,0,1,215.65,120H192a24,24,0,0,0-24,24v40a24,24,0,0,0,24,24h24a24,24,0,0,1-24,24H136a8,8,0,0,0,0,16h56a40,40,0,0,0,40-40V128A103.41,103.41,0,0,0,201.89,54.66ZM64,136a8,8,0,0,1,8,8v40a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V136Zm128,56a8,8,0,0,1-8-8V144a8,8,0,0,1,8-8h24v56Z"></path></svg>
                           </div>
@@ -478,7 +478,7 @@
                   <!-- Tags & Settings -->
                   <div class="space-y-6">
                     <div class="flex items-center space-x-3 mb-6">
-                      <div class="w-8 h-8 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center">
+                      <div class="w-8 h-8 bg-gradient-to-r from-[#27628C] to-[#1F5378] rounded-full flex items-center justify-center">
                         <Icon name="lucide:tag" class="w-4 h-4 text-white" />
                       </div>
                       <h4 class="text-lg font-semibold text-gray-900">Tags & Settings</h4>
@@ -494,7 +494,7 @@
                           <input
                             v-model="tagsInput"
                             type="text"
-                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-teal-500 focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
+                            class="w-full px-4 py-3 border-[0.5px] border-gray-200 rounded-xl focus:border-[#27628C] focus:ring-0 transition-all duration-200 bg-gray-50/50 hover:bg-white group-hover:border-gray-300"
                            
                             @input="updateTags"
                           />
@@ -516,13 +516,13 @@
                           <span
                             v-for="tag in form.tags"
                             :key="tag"
-                            class="inline-flex items-center px-3 py-1 bg-gradient-to-r from-teal-100 to-cyan-100 text-teal-800 rounded-full text-sm font-medium border border-teal-200 hover:from-teal-200 hover:to-cyan-200 transition-all duration-200"
+                            class="inline-flex items-center px-3 py-1 bg-gradient-to-r from-[#eef5f9] to-[#e3eef5] text-[#27628C] rounded-full text-sm font-medium border border-[#27628C]/30 hover:from-[#e3eef5] hover:to-[#d7e7f0] transition-all duration-200"
                           >
                             {{ tag }}
                             <button
                               @click="removeTag(tag)"
                               type="button"
-                              class="ml-2 text-teal-600 hover:text-teal-800 transition-colors duration-200"
+                              class="ml-2 text-[#27628C] hover:text-[#27628C] transition-colors duration-200"
                             >
                               <!-- <Icon name="lucide:x" class="w-3 h-3" /> -->
                               <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path></svg>
@@ -549,7 +549,7 @@
                             type="checkbox"
                             class="sr-only peer"
                           />
-                          <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-purple-500"></div>
+                          <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#27628C]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-[#27628C] peer-checked:to-[#1F5378]"></div>
                         </label>
                       </div>
                     </div>
@@ -933,7 +933,7 @@ watch(() => props.modelValue, (isOpen) => {
 /* Custom focus styles */
 input:focus, textarea:focus, select:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(39, 98, 140, 0.12);
 }
 
 /* Smooth transitions for all interactive elements */

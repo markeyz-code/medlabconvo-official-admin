@@ -153,7 +153,7 @@
       <button 
         @click="submit"
         :disabled="loading"
-        class="h-16 px-16 bg-gray-900 text-white rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all shadow-sm border border-slate-200 shadow-gray-900/10 flex items-center gap-3 disabled:opacity-50 disabled:scale-100"
+        class="h-16 px-16 bg-gray-900 text-white rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all shadow-sm border border-slate-200 flex items-center gap-3 disabled:opacity-50 disabled:scale-100"
       >
         <span v-if="!loading">{{ form.deliveryType === 'immediate' ? 'Send Campaign' : 'Schedule Campaign' }}</span>
         <div v-else class="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>

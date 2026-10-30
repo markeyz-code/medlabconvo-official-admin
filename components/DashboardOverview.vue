@@ -228,10 +228,10 @@ interface StatDefinition {
 
 const STAT_DEFINITIONS: StatDefinition[] = [
   { title: 'Users', permission: 'users:read', link: '/dashboard/users', icon: 'lucide:users', color: '#27628c', soft: '#eff6fb', value: () => users.users.value?.length || 0, load: () => users.getUsers() },
-  { title: 'Leadership', permission: 'teams:read', link: '/dashboard/teams', icon: 'lucide:users-round', color: '#7c3aed', soft: '#f5f3ff', value: () => teamMembers.teamMembers.value?.length || 0, load: () => teamMembers.getTeamMembers() },
+  { title: 'Leadership', permission: 'teams:read', link: '/dashboard/teams', icon: 'lucide:users-round', color: '#27628C', soft: '#eef5f9', value: () => teamMembers.teamMembers.value?.length || 0, load: () => teamMembers.getTeamMembers() },
   { title: 'Subscribers', permission: 'subscriptions:read', link: '/dashboard/subscriptions', icon: 'lucide:mail', color: '#15803d', soft: '#ecfdf3', value: () => subscriptions.subscriptions.value?.length || 0, load: () => subscriptions.getSubscriptions() },
   { title: 'Enquiries', permission: 'enquiries:read', link: '/dashboard/enquiries', icon: 'lucide:message-square', color: '#b45309', soft: '#fffaeb', value: () => enquiries.enquiries.value?.length || 0, load: () => enquiries.getEnquiries() },
-  { title: 'Journo', permission: 'publications:read', link: '/dashboard/publications', icon: 'lucide:file-text', color: '#7c3aed', soft: '#f5f3ff', value: () => publications.publications.value?.length || 0, load: () => publications.getPublications() },
+  { title: 'Journo', permission: 'publications:read', link: '/dashboard/publications', icon: 'lucide:file-text', color: '#27628C', soft: '#eef5f9', value: () => publications.publications.value?.length || 0, load: () => publications.getPublications() },
   { title: 'Blogs', permission: 'blogs:read', link: '/dashboard/blogs', icon: 'lucide:newspaper', color: '#0369a1', soft: '#e0f2fe', value: () => blogs.blogs.value?.length || 0, load: () => blogs.getBlogs() },
   { title: 'LabCast', permission: 'labcast:read', link: '/dashboard/labcast', icon: 'lucide:mic', color: '#be185d', soft: '#fdf2f8', value: () => labcasts.labcasts.value?.length || 0, load: () => labcasts.getLabCasts() },
   { title: 'Convo Stack', permission: 'convostack:read', link: '/dashboard/convostack', icon: 'lucide:book-open', color: '#0f766e', soft: '#f0fdfa', value: () => convoStacks.publications.value?.length || 0, load: () => convoStacks.getPublications() },
@@ -262,7 +262,7 @@ const quickActions = computed(() => {
 
 const distribution = computed(() => {
   const items = [
-    { label: 'Journo', permission: 'publications:read', count: publications.publications.value?.length || 0, color: '#7c3aed' },
+    { label: 'Journo', permission: 'publications:read', count: publications.publications.value?.length || 0, color: '#27628C' },
     { label: 'Blogs', permission: 'blogs:read', count: blogs.blogs.value?.length || 0, color: '#0369a1' },
     { label: 'LabCast', permission: 'labcast:read', count: labcasts.labcasts.value?.length || 0, color: '#be185d' },
     { label: 'Convo Stack', permission: 'convostack:read', count: convoStacks.publications.value?.length || 0, color: '#0f766e' },
@@ -308,7 +308,7 @@ const activityTone = (action: string) =>
     update: { color: '#27628c', soft: '#eff6fb' },
     delete: { color: '#d92d20', soft: '#fef3f2' },
     soft_delete: { color: '#b45309', soft: '#fffaeb' },
-    login: { color: '#7c3aed', soft: '#f5f3ff' },
+    login: { color: '#27628C', soft: '#eef5f9' },
   })[action] || { color: '#6b8192', soft: '#f4f7f9' }
 
 onMounted(async () => {
@@ -402,7 +402,7 @@ onMounted(async () => {
   height: 6px;
   border-radius: 50%;
   background: #86efac;
-  box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.2);
+  box-shadow: 0 0 0 3px rgba(39, 98, 140, 0.16);
 }
 .welcome-actions {
   position: relative;

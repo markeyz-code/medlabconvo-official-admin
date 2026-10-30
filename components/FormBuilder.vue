@@ -118,7 +118,7 @@
         <button
           @click="addField"
           type="button"
-          class="px-6 py-3 bg-gradient-to-r from-[#27628C] to-[#044d77] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-100 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-0.5 transition-all active:scale-95 flex items-center space-x-2"
+          class="px-6 py-3 bg-gradient-to-r from-[#27628C] to-[#033958] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-100 hover:shadow-sm border border-slate-200 hover:-translate-y-0.5 transition-all active:scale-95 flex items-center space-x-2"
         >
           <Icon name="lucide:plus" class="w-4 h-4" />
           <span>Add Field</span>
@@ -211,7 +211,7 @@
                       />
                       <div 
                         v-if="field.required" 
-                        class="w-full h-full bg-gradient-to-br from-[#27628C] to-[#044d77] flex items-center justify-center animate-in fade-in zoom-in duration-200"
+                        class="w-full h-full bg-gradient-to-br from-[#27628C] to-[#033958] flex items-center justify-center animate-in fade-in zoom-in duration-200"
                       >
                         <Icon name="lucide:check" class="w-4 h-4 text-white" />
                       </div>
@@ -357,7 +357,7 @@
         <button
           @click="handleSubmit"
           type="button"
-          class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-700 text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 shadow-blue-900/20 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-3 cursor-pointer"
+          class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-[#27628C] to-[#033958] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-3 cursor-pointer"
         >
           <Icon :name="mode === 'edit' ? 'lucide:save' : 'lucide:check-circle'" class="w-4 h-4" />
           <span>{{ mode === 'edit' ? 'Update' : 'Create' }} Professional Form</span>

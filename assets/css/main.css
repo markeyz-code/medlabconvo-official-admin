@@ -1099,3 +1099,24 @@ img.mc-img-fallback {
   font-size: 12px !important;
   line-height: 1 !important;
 }
+
+/* Admin: every drop shadow resolves to the brand palette. */
+[class*='shadow-blue-'],
+[class*='shadow-indigo-'],
+[class*='shadow-purple-'],
+[class*='shadow-violet-'],
+[class*='shadow-pink-'],
+[class*='shadow-rose-'],
+[class*='shadow-red-'],
+[class*='shadow-emerald-'],
+[class*='shadow-green-'],
+[class*='shadow-amber-'],
+[class*='shadow-orange-'],
+[class*='shadow-sky-'],
+[class*='shadow-cyan-'],
+[class*='shadow-teal-'],
+[class*='shadow-lime-'],
+[class*='shadow-fuchsia-'],
+[class*='shadow-gray-'] {
+  --tw-shadow-color: rgba(39, 98, 140, 0.16) !important;
+}

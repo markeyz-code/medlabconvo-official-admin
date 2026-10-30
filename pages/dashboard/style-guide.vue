@@ -73,7 +73,7 @@
             <p class="text-blue-100/60 text-sm font-medium leading-relaxed mb-8">The standard full-height sheet for entity creation and modification. Maintains focus and context.</p>
             <button 
               @click="showSheet = true"
-              class="px-8 py-4 bg-white text-[#27628C] rounded-2xl font-black text-sm  tracking-normal hover:bg-blue-50 transition-all flex items-center space-x-3 active:scale-95 shadow-sm border border-slate-200 shadow-blue-900/40"
+              class="px-8 py-4 bg-white text-[#27628C] rounded-2xl font-black text-sm  tracking-normal hover:bg-blue-50 transition-all flex items-center space-x-3 active:scale-95 shadow-sm border border-slate-200"
             >
               <Icon name="lucide:sparkles" class="w-4 h-4" />
               <span>Trigger Protocol Sheet</span>
@@ -155,7 +155,7 @@
     <SlideOver v-model="showSheet" title="Deployment Sheet (Example)">
       <div class="p-8 space-y-10">
          <div class="bg-slate-50 p-8 rounded-[1.25rem] border border-slate-100 flex flex-col items-center justify-center space-y-4">
-            <div class="w-16 h-16 bg-[#27628C] rounded-2xl flex items-center justify-center text-white shadow-sm border border-slate-200 shadow-blue-900/40">
+            <div class="w-16 h-16 bg-[#27628C] rounded-2xl flex items-center justify-center text-white shadow-sm border border-slate-200">
               <Icon name="lucide:box" class="w-8 h-8" />
             </div>
             <p class="text-sm font-black text-slate-900  tracking-tight">Context Retention Protocol</p>
@@ -184,7 +184,7 @@
         </div>
         <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-50">
           <button @click="showModal = false" class="py-4 text-sm font-black  tracking-normal text-slate-400">Cancel</button>
-          <button @click="showModal = false" class="py-4 bg-rose-600 text-white rounded-2xl text-sm font-black  tracking-normal shadow-sm border border-slate-100 shadow-rose-900/10">Confirm Purge</button>
+          <button @click="showModal = false" class="py-4 bg-rose-600 text-white rounded-2xl text-sm font-black  tracking-normal shadow-sm border border-slate-100">Confirm Purge</button>
         </div>
       </div>
     </Modal>

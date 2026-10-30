@@ -33,7 +33,7 @@
                   class="pl-10 pr-4 w-full py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-200 placeholder-gray-400"
                   @input="debouncedSearch"
                 />
-                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
+                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-[#27628C]/10 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
               </div>
             </div>
   
@@ -155,7 +155,7 @@
                 {
                   'cursor-move': !searchQuery && !selectedSeason,
                   'opacity-50 scale-95': draggedIndex === index,
-                  'border-amber-300 shadow-amber-100': dropTargetIndex === index && draggedIndex !== index,
+                  'border-amber-300': dropTargetIndex === index && draggedIndex !== index,
                   'cursor-not-allowed opacity-60': reorderLoading
                 }
               ]"
@@ -188,7 +188,7 @@
               <div class="flex gap-4 p-4 sm:p-6">
                 <!-- Episode Thumbnail -->
                 <div class="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 relative">
-                  <div class="w-full h-full bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg overflow-hidden">
+                  <div class="w-full h-full bg-gradient-to-br from-[#eef5f9] to-[#e3eef5] rounded-lg overflow-hidden">
                     <img 
                       :src="episode.image" 
                       :alt="episode.title"
@@ -326,7 +326,7 @@
 
               <div class="relative">
    
-                <div class="relative h-48 bg-gradient-to-br from-blue-100 to-indigo-100 overflow-hidden">
+                <div class="relative h-48 bg-gradient-to-br from-[#eef5f9] to-[#e3eef5] overflow-hidden">
                   <img :src="episode.image" class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                   <div class="absolute top-4 right-4 flex gap-2">
                     <span :class="[
@@ -478,7 +478,7 @@
                 <div class="lg:col-span-2 space-y-6">
                   <!-- Episode Thumbnail -->
                    <!-- <img :src="previewingEpisode.image" />
-                  <div class="aspect-video bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl overflow-hidden relative">
+                  <div class="aspect-video bg-gradient-to-br from-[#eef5f9] to-[#e3eef5] rounded-2xl overflow-hidden relative">
                     <div class="absolute inset-0 flex items-center justify-center">
                       <button class="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm border border-slate-100 hover:scale-110 transition-transform duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-600 ml-1" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"></path></svg>
@@ -577,7 +577,7 @@
                   <div class="bg-gray-50 rounded-2xl p-6">
                     <h3 class="font-bold text-gray-900 mb-4">Host Information</h3>
                     <div class="flex items-center gap-3 mb-4">
-                      <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold">
+                      <div class="w-12 h-12 bg-gradient-to-br from-[#27628C] to-[#1F5378] rounded-full flex items-center justify-center text-white font-bold">
                         {{ (previewingEpisode.host || 'Dr. Sarah Johnson').split(' ').map(n => n[0]).join('') }}
                       </div>
                       <div>
