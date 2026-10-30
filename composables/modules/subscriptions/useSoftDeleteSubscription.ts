@@ -14,10 +14,9 @@ export const useSoftDeleteSubscription = () => {
     success.value = false
 
     try {
-      await subscriptions_api.$_soft_delete_subscription(subscriptionId)
+      const response = await subscriptions_api.$_soft_delete_subscription(subscriptionId)
       if ([200, 201].includes(response?.status)) {
         success.value = true
-
       }
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to delete subscription'

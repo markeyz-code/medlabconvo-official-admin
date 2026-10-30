@@ -5,6 +5,7 @@ export type Subscription = {
   id?: string
   email: string
   isActive?: boolean
+  subscribedTo?: string[]
   unsubscribedAt?: string
   createdAt?: string
   updatedAt?: string

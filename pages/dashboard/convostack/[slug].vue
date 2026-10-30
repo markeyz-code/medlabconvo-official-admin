@@ -1,30 +1,25 @@
 <template>
-  <div class="-m-6 md:-m-8 lg:-m-10 bg-slate-100 min-h-screen relative">
-    <div v-if="loading" class="absolute inset-0 flex flex-col items-center justify-center bg-white/50 backdrop-blur-sm z-50">
-      <div class="w-12 h-12 rounded-full border-4 border-slate-200 border-t-[#27628C] animate-spin"></div>
-      <p class="mt-4 text-sm font-bold text-slate-500">Loading publication...</p>
-    </div>
-    
-    <div v-else-if="!publication && !loading" class="flex flex-col items-center justify-center min-h-[60vh]">
-      <Icon name="lucide:file-search" class="w-20 h-20 text-slate-300 mb-4" />
-      <h3 class="text-xl font-bold text-slate-900">Publication not found</h3>
-      <button @click="onCancel" class="mt-6 px-6 py-3 bg-slate-100 font-bold text-slate-600 rounded-xl hover:bg-slate-200 transition-all">Go back</button>
+  <div class="min-h-screen overflow-x-hidden bg-slate-100 relative">
+    <div v-if="loading" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/60 backdrop-blur-sm">
+      <div class="h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-[#27628C]" />
+      <p class="mt-4 text-sm font-bold text-slate-500">Loading publication…</p>
     </div>
 
-    <ConvoStackEditor
-      v-else
-      :publication="publication"
-      @save="onSave"
-      @cancel="onCancel"
-    />
+    <div v-else-if="!publication" class="flex min-h-[60vh] flex-col items-center justify-center">
+      <Icon name="lucide:file-search" class="mb-4 h-20 w-20 text-slate-300" />
+      <h3 class="text-xl font-bold text-slate-900">Publication not found</h3>
+      <button class="mt-6 rounded-xl bg-slate-100 px-6 py-3 font-bold text-slate-600 transition hover:bg-slate-200" @click="onCancel">Go back</button>
+    </div>
+
+    <ConvoStackEditor v-else :publication="publication" :saving="saving" @save="onSave" @cancel="onCancel" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from '#imports'
 import ConvoStackEditor from '@/components/convostack/ConvoStackEditor.vue'
 import { convostack_api } from '@/api_factory/modules/convostack'
+import { useUpdateConvoStack } from '@/composables/modules/convostack/useUpdateConvoStack'
 
 definePageMeta({
   layout: 'dashboard',
@@ -35,9 +30,10 @@ definePageMeta({
 const router = useRouter()
 const route = useRoute()
 const slug = route.params.slug as string
-
 const loading = ref(true)
+const saving = ref(false)
 const publication = ref<any>(null)
+const { updatePublication } = useUpdateConvoStack()
 
 onMounted(async () => {
   loading.value = true
@@ -51,11 +47,17 @@ onMounted(async () => {
   }
 })
 
-const onSave = () => {
-  router.push('/dashboard/convostack')
+const onSave = async (payload: any) => {
+  if (!publication.value?._id) return
+  saving.value = true
+  try {
+    const updated = await updatePublication(publication.value._id, payload)
+    publication.value = updated || publication.value
+    if (updated?.slug && updated.slug !== slug) router.replace(`/dashboard/convostack/${updated.slug}`)
+  } finally {
+    saving.value = false
+  }
 }
 
-const onCancel = () => {
-  router.push('/dashboard/convostack')
-}
+const onCancel = () => router.push('/dashboard/convostack')
 </script>

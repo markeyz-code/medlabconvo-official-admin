@@ -18,5 +18,17 @@ export const convostack_api = {
   },
   $_get_comments: (id: string) => {
     return GATEWAY_ENDPOINT.get(`/convostack/${id}/comments`)
+  },
+  $_get_studio_stats: () => {
+    return GATEWAY_ENDPOINT.get('/convostack/admin/stats')
+  },
+  $_get_all_comments: () => {
+    return GATEWAY_ENDPOINT.get('/convostack/admin/comments')
+  },
+  $_delete_comment: (id: string) => {
+    return GATEWAY_ENDPOINT.delete(`/convostack/comments/${id}`)
+  },
+  $_set_comment_approval: (id: string, isApproved: boolean) => {
+    return GATEWAY_ENDPOINT.patch(`/convostack/comments/${id}/approval`, { isApproved })
   }
 }

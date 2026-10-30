@@ -24,17 +24,11 @@
           />
         </div>
       </div>
-      <button v-if="hasPermission('convostack:create')"
-        @click="openEditor(null)"
-        class="w-full lg:w-auto px-8 py-3.5 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all duration-300 flex items-center justify-center space-x-3 group"
-      >
-        <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
-        <span class="font-bold text-sm">New publication</span>
-      </button>
+
     </div>
 
     <!-- Premium Stats Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
       <div v-for="stat in convoStats" :key="stat.title" class="group bg-white p-6 rounded-3xl border border-slate-100 flex items-center space-x-5">
         <div :class="['w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 duration-500', stat.bg]">
           <Icon :name="stat.icon" :class="['w-7 h-7', stat.color]" />
@@ -94,9 +88,9 @@
             <td class="px-4 py-4 hidden lg:table-cell">
               <div class="flex items-center space-x-2">
                 <div class="w-7 h-7 rounded-full bg-[#27628C] text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
-                  {{ pub.authorName?.charAt(0) || 'M' }}
+                  {{ (pub.authors?.[0] || pub.authorName || 'M').charAt(0) }}
                 </div>
-                <span class="text-xs font-medium text-slate-600">{{ pub.authorName || 'Unknown' }}</span>
+                <span class="text-xs font-medium text-slate-600">{{ pub.authors?.[0] || pub.authorName || 'MedLabConvo' }}</span>
               </div>
             </td>
             <!-- Metrics -->
@@ -223,6 +217,7 @@ import SelectInput from '@/components/ui/SelectInput.vue'
 import { useUser } from '@/composables/modules/auth/user'
 import AdminEmptyState from '@/components/AdminEmptyState.vue'
 import AdminTableLoading from '@/components/AdminTableLoading.vue'
+import { convostack_api } from '@/api_factory/modules/convostack'
 
 const { hasPermission } = useUser()
 
@@ -241,16 +236,28 @@ const deletingPublication = ref<any>(null)
 
 const showCommentsModal = ref(false)
 const selectedPublicationForComments = ref<any>(null)
+const studioStats = ref<any>(null)
+
+const loadStudioStats = async () => {
+  try {
+    const response = await convostack_api.$_get_studio_stats()
+    studioStats.value = response.data
+  } catch (error) {
+    console.error('Failed to load studio stats', error)
+  }
+}
 
 onMounted(() => {
   getPublications()
+  loadStudioStats()
 })
 
 const convoStats = computed(() => [
-  { title: 'Total publications', value: publications.value?.length || 0, icon: 'lucide:terminal', color: 'text-blue-600', bg: 'bg-blue-50' },
-  { title: 'Live records', value: (publications.value || []).filter((p: any) => p.status === 'published').length, icon: 'lucide:badge-check', color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  { title: 'In incubation', value: (publications.value || []).filter((p: any) => p.status === 'draft').length, icon: 'lucide:beaker', color: 'text-amber-600', bg: 'bg-amber-50' },
-  { title: 'Total views', value: (publications.value || []).reduce((sum: number, p: any) => sum + (p.viewCount || 0), 0), icon: 'lucide:signal', color: 'text-indigo-600', bg: 'bg-indigo-50' }
+  { title: 'Subscribers', value: studioStats.value?.subscribers ?? '—', icon: 'lucide:users', color: 'text-[#27628C]', bg: 'bg-[#eef5f9]' },
+  { title: 'Published', value: studioStats.value?.publishedPublications ?? (publications.value || []).filter((p: any) => p.status === 'published').length, icon: 'lucide:send', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  { title: 'Drafts', value: studioStats.value?.draftPublications ?? (publications.value || []).filter((p: any) => p.status === 'draft').length, icon: 'lucide:file-pen-line', color: 'text-amber-600', bg: 'bg-amber-50' },
+  { title: 'Total views', value: studioStats.value?.totalViews ?? (publications.value || []).reduce((sum: number, p: any) => sum + (p.viewCount || 0), 0), icon: 'lucide:eye', color: 'text-indigo-600', bg: 'bg-indigo-50' },
+  { title: 'Comments', value: studioStats.value?.totalComments ?? (publications.value || []).reduce((sum: number, p: any) => sum + (p.commentsCount || 0), 0), icon: 'lucide:message-square', color: 'text-rose-500', bg: 'bg-rose-50' },
 ])
 
 const filteredPublications = computed(() => {

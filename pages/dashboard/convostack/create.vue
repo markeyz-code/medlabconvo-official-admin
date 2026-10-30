@@ -1,16 +1,13 @@
 <template>
-  <div class="-mx-2 -mt-2 sm:-m-6 md:-m-8 lg:-m-10 bg-slate-100 min-h-screen">
-    <ConvoStackEditor
-      :publication="null"
-      @save="onSave"
-      @cancel="onCancel"
-    />
+  <div class="min-h-screen overflow-x-hidden bg-slate-100">
+    <ConvoStackEditor :publication="null" :saving="saving" @save="onSave" @cancel="onCancel" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from '#imports'
 import ConvoStackEditor from '@/components/convostack/ConvoStackEditor.vue'
+import { useCreateConvoStack } from '@/composables/modules/convostack/useCreateConvoStack'
 
 definePageMeta({
   layout: 'dashboard',
@@ -19,9 +16,17 @@ definePageMeta({
 })
 
 const router = useRouter()
+const saving = ref(false)
+const { createPublication } = useCreateConvoStack()
 
-const onSave = () => {
-  router.push('/dashboard/convostack')
+const onSave = async (payload: any) => {
+  saving.value = true
+  try {
+    const publication = await createPublication(payload)
+    router.push(publication?.slug ? `/dashboard/convostack/${publication.slug}` : '/dashboard/convostack')
+  } finally {
+    saving.value = false
+  }
 }
 
 const onCancel = () => {
