@@ -338,29 +338,19 @@
 
     <!-- Form Actions -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-6 border-t border-slate-200 sticky bottom-0 bg-white/90 backdrop-blur-md pb-2 px-1 sm:px-2 z-[60]">
-      <div class="flex flex-col">
-        <span class="text-sm font-black text-slate-400  tracking-normal">Current Status</span>
-        <div class="flex items-center space-x-2">
-          <div :class="['w-2 h-2 rounded-full animate-pulse', form.isActive ? 'bg-green-500' : 'bg-slate-300']"></div>
-          <span class="text-sm font-bold text-slate-700">{{ form.isActive ? 'Active & Accepting Submissions' : 'Inactive / Draft' }}</span>
+      <div class="flex items-center gap-2">
+        <span class="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400">Status</span>
+        <div class="flex items-center gap-1.5">
+          <span :class="['h-1.5 w-1.5 rounded-full', form.isActive ? 'bg-emerald-500' : 'bg-slate-300']" />
+          <span class="text-[11px] font-semibold text-slate-600">{{ form.isActive ? 'Active' : 'Inactive' }}</span>
         </div>
       </div>
-      
-      <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-        <button
-          type="button"
-          @click="handleDiscard"
-          class="w-full sm:w-auto px-6 py-3 border-2 border-slate-200 text-slate-600 rounded-2xl font-bold text-sm hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95 cursor-pointer"
-        >
-          Discard Changes
-        </button>
-        <button
-          @click="handleSubmit"
-          type="button"
-          class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-[#27628C] to-[#033958] text-white rounded-2xl font-bold text-sm shadow-sm border border-slate-200 hover:shadow-sm border border-slate-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-3 cursor-pointer"
-        >
-          <Icon :name="mode === 'edit' ? 'lucide:save' : 'lucide:check-circle'" class="w-4 h-4" />
-          <span>{{ mode === 'edit' ? 'Update' : 'Create' }} Professional Form</span>
+
+      <div class="flex flex-wrap items-center justify-end gap-2">
+        <button type="button" class="btn btn-outline" @click="handleDiscard">Discard</button>
+        <button type="button" class="btn btn-primary" @click="handleSubmit">
+          <Icon :name="mode === 'edit' ? 'lucide:save' : 'lucide:check-circle'" class="h-3.5 w-3.5" />
+          {{ mode === 'edit' ? 'Save changes' : 'Create form' }}
         </button>
       </div>
     </div>
