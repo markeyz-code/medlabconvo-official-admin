@@ -1,9 +1,6 @@
 <template>
-    <div class="space-y-6">
-      <div class="text-center">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Batch Import Products</h3>
-        <p class="text-sm text-gray-600">Upload a CSV file to import multiple products at once</p>
-      </div>
+    <div class="space-y-4">
+      <p class="text-[11.5px] leading-5 text-slate-500">Upload a CSV file to create multiple products in one pass.</p>
   
       <!-- File Upload -->
       <div
@@ -11,7 +8,7 @@
         @dragover.prevent="handleDragOver"
         @dragleave.prevent="handleDragLeave"
         @drop.prevent="handleFileDrop"
-        class="relative border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-indigo-400 transition-all duration-200 cursor-pointer group"
+        class="group relative cursor-pointer rounded-lg border border-dashed border-slate-300 p-5 text-center transition-all duration-200 hover:border-[#27628C]/50"
         :class="{ 'border-indigo-500 bg-indigo-50': dragOver }"
       >
         <input
@@ -23,8 +20,8 @@
         />
         
         <div v-if="!uploading && !selectedFile" class="text-center">
-          <Upload class="mx-auto h-12 w-12 text-gray-400 group-hover:text-indigo-500 transition-colors" />
-          <div class="mt-4">
+          <Upload class="mx-auto h-7 w-7 text-slate-400 transition-colors group-hover:text-[#27628C]" />
+          <div class="mt-2">
             <p class="text-sm text-gray-600">
               <span class="font-medium text-indigo-600 hover:text-indigo-700">Click to upload</span>
               or drag and drop
@@ -40,7 +37,7 @@
   
         <div v-else-if="selectedFile" class="text-center">
           <FileText class="mx-auto h-12 w-12 text-green-600" />
-          <div class="mt-4">
+          <div class="mt-2">
             <p class="text-sm font-medium text-gray-900">{{ selectedFile.name }}</p>
             <p class="text-sm text-gray-900">{{ formatFileSize(selectedFile.size) }}</p>
           </div>
@@ -48,7 +45,7 @@
       </div>
   
       <!-- CSV Template Download -->
-      <div class="bg-blue-50 rounded-lg p-4">
+      <div class="rounded-lg bg-slate-50 p-3">
         <div class="flex items-start space-x-3">
           <Info class="w-5 h-5 text-blue-600 mt-0.5" />
           <div class="flex-1">
@@ -114,21 +111,21 @@
       </div>
   
       <!-- Actions -->
-      <div class="flex justify-end space-x-3">
+      <div class="flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 pt-3">
         <button
           @click="emit('cancel')"
           type="button"
-          class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          class="btn btn-outline"
         >
           Cancel
         </button>
         <button
           @click="handleImport"
           :disabled="!previewData?.length || errors.length > 0 || importing"
-          class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center space-x-2"
+          class="btn btn-primary"
         >
           <Loader2 v-if="importing" class="w-4 h-4 animate-spin" />
-          <span>Import {{ previewData?.length || 0 }} Products</span>
+          <span>Import {{ previewData?.length || 0 }} products</span>
         </button>
       </div>
     </div>

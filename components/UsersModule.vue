@@ -121,22 +121,27 @@
       </AdminEmptyState>
     </div>
 
-    <!-- Invite User Modal -->
-    <Modal v-model="showInviteModal" title="Invite new user" size="lg">
-      <div class="p-8 space-y-10">
-        <div class="bg-slate-50 p-8 rounded-[1.25rem] border border-slate-100">
-          <div class="flex items-start gap-4">
-             <div class="w-10 h-10 bg-[#27628C] rounded-xl flex items-center justify-center text-white flex-shrink-0">
-               <Icon name="lucide:shield-check" class="w-6 h-6" />
-             </div>
-             <div>
-               <p class="text-[#27628C] text-sm font-bold  tracking-normal mb-3">Invitation protocol</p>
-               <p class="text-slate-600 text-sm font-medium leading-relaxed">Send an invitation to a new team member. They will receive a link to set up their account with the specified role.</p>
-             </div>
+    <!-- Invite user (centered) -->
+    <Modal
+      v-model="showInviteModal"
+      title="Invite new user"
+      eyebrow="Team access"
+      description="Send a secure invitation to a new team member."
+      size="md"
+      @close="closeInviteModal"
+    >
+      <div class="space-y-4">
+        <div class="flex items-start gap-3 rounded-lg border border-slate-100 bg-slate-50 p-3.5">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#27628C] text-white">
+            <Icon name="lucide:shield-check" class="h-4 w-4" />
+          </span>
+          <div>
+            <p class="text-[11px] font-semibold text-[#0A202B]">Invitation protocol</p>
+            <p class="mt-0.5 text-[10.5px] leading-5 text-slate-500">They will receive a link to set up their account with the role you choose.</p>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-[1.5fr_1fr]">
           <AnimatedInput
             v-model="inviteForm.email"
             id="invite-email"
@@ -146,41 +151,36 @@
           />
           <SelectInput
             v-model="inviteForm.role"
-            :options="availableRoleOptions"
+            label="Role"
+            placeholder="Select role"
+            :options="availableRoleOptions.filter((option: any) => option.value)"
           />
         </div>
 
-        <div v-if="invitationLink" class="bg-emerald-50 p-8 rounded-[1.25rem] border border-emerald-100 flex items-center justify-between gap-6 animate-in fade-in zoom-in-95">
-          <div class="flex-1 min-w-0">
-            <p class="text-emerald-800 text-sm font-bold  tracking-normal mb-3">Invitation link generated</p>
-            <p class="text-emerald-700 text-sm truncate font-mono bg-white/50 px-4 py-2 rounded-lg border border-emerald-100">{{ invitationLink }}</p>
+        <div v-if="invitationLink" class="flex flex-col gap-2 rounded-lg border border-emerald-100 bg-emerald-50 p-3 sm:flex-row sm:items-center">
+          <div class="min-w-0 flex-1">
+            <p class="text-[10px] font-bold uppercase tracking-[0.08em] text-emerald-700">Invitation link ready</p>
+            <p class="mt-1 truncate rounded-md border border-emerald-100 bg-white/70 px-2.5 py-1.5 font-mono text-[10px] text-emerald-700">{{ invitationLink }}</p>
           </div>
-          <button 
-            @click="copyInviteLink"
-            class="flex-shrink-0 px-8 py-4 bg-emerald-600 text-white rounded-2xl font-bold text-sm hover:bg-emerald-700 transition-all flex items-center space-x-3 active:scale-95"
-          >
-            <Icon :name="copied ? 'lucide:badge-check' : 'lucide:clipboard-check'" class="w-4 h-4" />
-            <span>{{ copied ? 'Link copied' : 'Copy link' }}</span>
-          </button>
-        </div>
-
-        <div class="flex justify-end pt-10 border-t border-slate-50 gap-6">
-          <button
-            @click="closeInviteModal"
-            class="text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            @click="handleSendInvite"
-            :disabled="inviteLoading || !inviteForm.email"
-            class="px-12 py-5 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1F5378] disabled:bg-slate-100 disabled:text-slate-400 transition-all flex items-center space-x-3 active:scale-95"
-          >
-            <div v-if="inviteLoading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-            <span>{{ inviteLoading ? 'Sending...' : 'Send invitation' }}</span>
+          <button type="button" class="btn btn-outline shrink-0" @click="copyInviteLink">
+            <Icon :name="copied ? 'lucide:badge-check' : 'lucide:clipboard-check'" class="h-3.5 w-3.5" />
+            {{ copied ? 'Copied' : 'Copy link' }}
           </button>
         </div>
       </div>
+
+      <template #footer>
+        <button type="button" class="btn btn-outline" @click="closeInviteModal">Cancel</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          :disabled="inviteLoading || !inviteForm.email"
+          @click="handleSendInvite"
+        >
+          <span v-if="inviteLoading" class="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+          {{ inviteLoading ? 'Sending…' : 'Send invitation' }}
+        </button>
+      </template>
     </Modal>
 
     <!-- Configure personnel (centered) -->

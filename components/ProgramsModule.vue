@@ -207,91 +207,31 @@
       </div>
     </SlideOver>
 
-    <!-- Program Gateway (Premium Sharing Experience) -->
-    <Modal v-model="showLinkModal" title="Program Connectivity" size="md">
-      <div v-if="registrationLink" class="p-0 overflow-hidden">
-        <!-- Hero Header -->
-        <div class="bg-[#27628C] p-10 text-center relative overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent"></div>
-          <Icon name="lucide:link-2" class="w-32 h-32 text-white/5 absolute -top-8 -right-8 rotate-12" />
-          
-          <div class="relative z-10 space-y-4">
-            <div class="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[1.25rem] border border-white/20 flex items-center justify-center mx-auto shadow-sm border border-slate-200">
-              <Icon name="lucide:globe" class="w-10 h-10 text-white" />
-            </div>
-            <div>
-              <h3 class="text-lg font-black text-white tracking-normal">Gateway Activated</h3>
-              <p class="text-blue-100/60 text-sm font-bold  tracking-normal">Global enrollment ready</p>
-            </div>
+    <!-- Registration link -->
+    <Modal v-model="showLinkModal" title="Registration link" eyebrow="Programme" description="Share this secure link with applicants." size="md">
+      <div v-if="registrationLink" class="space-y-4">
+        <div class="flex items-start gap-3 rounded-lg border border-[#e0e9ef] bg-[#f4f8fb] p-3.5">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#27628C] text-white"><Icon name="lucide:globe" class="h-4 w-4" /></span>
+          <div>
+            <p class="text-[11px] font-semibold text-[#0A202B]">Registration is live</p>
+            <p class="mt-0.5 text-[10.5px] leading-5 text-slate-500">Anyone with this link can open and submit the application form.</p>
           </div>
         </div>
-
-        <!-- Content Body -->
-        <div class="p-10 space-y-10 bg-white">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between px-1">
-              <label class="text-sm font-black  tracking-normal text-slate-400">Secure Enrollment URL</label>
-              <span class="text-sm font-black text-emerald-500  tracking-normal flex items-center gap-1">
-                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                HTTPS Secure
-              </span>
-            </div>
-            
-            <div class="group relative">
-              <div class="absolute inset-0 bg-blue-500/5 blur-xl group-hover:bg-blue-500/10 transition-all rounded-3xl"></div>
-              <div class="relative flex items-center bg-slate-50 border border-slate-100 rounded-3xl p-2 pl-6 focus-within:border-blue-300 focus-within:bg-white transition-all shadow-inner">
-                <span class="text-sm font-bold text-slate-400 select-none mr-2">/</span>
-                <input
-                  :value="registrationLink.split('/').pop()"
-                  readonly
-                  class="flex-1 bg-transparent border-none text-sm font-black text-[#27628C] focus:ring-0 cursor-default truncate py-4"
-                />
-                <button
-                  @click="copyToClipboard(registrationLink)"
-                  class="px-6 py-4 bg-[#27628C] text-white rounded-[1.2rem] font-bold text-xs hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center gap-2 shadow-sm border border-slate-100"
-                >
-                  <Icon :name="copiedLink ? 'lucide:check' : 'lucide:copy'" class="w-4 h-4" />
-                  <span>{{ copiedLink ? 'Copied' : 'Copy' }}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Strategy Grid -->
-          <div class="grid grid-cols-2 gap-4">
-            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 group hover:border-blue-100 transition-all cursor-pointer">
-              <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-blue-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
-                <Icon name="lucide:qr-code" class="w-5 h-5" />
-              </div>
-              <h4 class="text-xs font-black text-slate-900  mb-1">Visual Entry</h4>
-              <p class="text-sm text-slate-400 font-bold leading-tight">Generate QR asset for physical collateral</p>
-            </div>
-            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 group hover:border-emerald-100 transition-all cursor-pointer">
-              <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-emerald-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
-                <Icon name="lucide:mail" class="w-5 h-5" />
-              </div>
-              <h4 class="text-xs font-black text-slate-900  mb-1">Email Blast</h4>
-              <p class="text-sm text-slate-400 font-bold leading-tight">Notify all qualified practitioners</p>
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
-            <button 
-              @click="showLinkModal = false"
-              class="text-xs font-black  tracking-normal text-slate-400 hover:text-slate-900 transition-colors"
-            >
-              Close Gateway
+        <div>
+          <label class="field-label">Secure enrollment URL</label>
+          <div class="flex items-stretch gap-2">
+            <input :value="registrationLink" readonly class="input min-w-0 flex-1 font-mono text-[11px]" />
+            <button type="button" class="btn btn-primary shrink-0" @click="copyToClipboard(registrationLink)">
+              <Icon :name="copiedLink ? 'lucide:check' : 'lucide:copy'" class="h-3.5 w-3.5" />
+              {{ copiedLink ? 'Copied' : 'Copy' }}
             </button>
-            <a 
-              :href="registrationLink" 
-              target="_blank"
-              class="text-xs font-black  tracking-normal text-[#27628C] flex items-center gap-2 hover:gap-3 transition-all"
-            >
-              Test Portal
-              <Icon name="lucide:arrow-right" class="w-4 h-4" />
-            </a>
           </div>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
+          <button type="button" class="btn btn-outline" @click="showLinkModal = false">Close</button>
+          <a :href="registrationLink" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            Open registration <Icon name="lucide:arrow-up-right" class="h-3.5 w-3.5" />
+          </a>
         </div>
       </div>
     </Modal>

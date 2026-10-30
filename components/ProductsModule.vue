@@ -214,27 +214,17 @@
       </div>
     </SlideOver>
 
-    <Modal v-model="showBatchModal" title="Batch import products" size="lg">
-      <div class="p-8">
-        <BatchImportForm @imported="handleBatchImported" @cancel="showBatchModal = false" />
-      </div>
+    <Modal v-model="showBatchModal" title="Batch import" eyebrow="Inventory" description="Upload a CSV to create multiple products." size="lg">
+      <BatchImportForm @imported="handleBatchImported" @cancel="showBatchModal = false" />
     </Modal>
 
-    <Modal v-model="showDeleteModal" title="Delete product" size="sm">
-      <div class="p-8 text-center space-y-6">
-        <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mx-auto">
-          <Icon name="lucide:alert-triangle" class="w-8 h-8" />
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-slate-900">Delete product?</h3>
-          <p class="text-sm text-slate-500 mt-2 font-medium">This will permanently remove <span class="font-bold text-slate-900">{{ deletingProduct?.name }}</span> from your inventory.</p>
-        </div>
-        <div class="flex items-center gap-3 pt-4 border-t border-slate-50">
-          <button @click="showDeleteModal = false" class="flex-1 py-3 text-sm font-bold text-slate-400 hover:text-slate-900">Cancel</button>
-          <button @click="confirmDelete" class="flex-1 py-3 bg-rose-600 text-white text-sm font-bold rounded-xl hover:bg-rose-700 active:scale-95 transition-all">Delete product</button>
-        </div>
-      </div>
-    </Modal>
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Delete product"
+      :message="`This will permanently remove ${deletingProduct?.name || 'this product'} from your inventory. This cannot be undone.`"
+      confirm-text="Delete product"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
@@ -259,6 +249,7 @@ import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import ProductCard from '@/components/ProductCard.vue'
 import ProductForm from '@/components/ProductForm.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 import AdminEmptyState from '@/components/AdminEmptyState.vue'
 import AdminTableLoading from '@/components/AdminTableLoading.vue'
 import SlideOver from '@/components/SlideOver.vue'

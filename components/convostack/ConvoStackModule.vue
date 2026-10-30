@@ -143,20 +143,17 @@
 
 
     <!-- Delete Confirmation -->
-    <Modal v-model="showDeleteModal" title="Archive Purge Confirmation" size="sm">
-      <div class="p-8 text-center space-y-6">
-        <div class="w-20 h-20 bg-red-50 rounded-[30px] flex items-center justify-center mx-auto text-red-500">
-          <Icon name="lucide:trash-2" class="w-10 h-10" />
+    <Modal v-model="showDeleteModal" title="Delete publication" size="sm" eyebrow="Convo Stack">
+      <div class="space-y-4 text-center">
+        <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-rose-50 text-rose-500">
+          <Icon name="lucide:trash-2" class="h-5 w-5" />
         </div>
-        <div>
-          <h3 class="text-xl font-bold text-slate-900">Purge publication?</h3>
-          <p class="text-sm text-slate-500 mt-2 leading-relaxed">This will permanently remove <span class="font-bold text-slate-900">"{{ deletingPublication?.title }}"</span> from the Convo Stack registry.</p>
-        </div>
-        <div class="flex items-center gap-4 pt-6 border-t border-slate-50">
-          <button @click="showDeleteModal = false" class="flex-1 py-4 text-sm font-black  tracking-normal text-slate-400 hover:text-slate-900">Safe Abort</button>
-          <button @click="handleDelete" class="flex-1 py-4 bg-red-600 text-white text-sm font-black  tracking-normal rounded-2xl hover:bg-red-700  -600/20">Purge Record</button>
-        </div>
+        <p class="text-xs leading-5 text-slate-500">Permanently remove <strong class="text-slate-900">“{{ deletingPublication?.title }}”</strong> from the Convo Stack? This cannot be undone.</p>
       </div>
+      <template #footer>
+        <button type="button" class="btn btn-outline" @click="showDeleteModal = false">Cancel</button>
+        <button type="button" class="btn btn-danger" @click="handleDelete">Delete publication</button>
+      </template>
     </Modal>
 
     <!-- Comments Drawer -->

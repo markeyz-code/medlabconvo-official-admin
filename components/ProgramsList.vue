@@ -310,32 +310,19 @@
       />
     </Modal>
 
-    <Modal v-model="showLinkModal" title="Registration link" size="md">
-      <div v-if="registrationLink" class="space-y-6 p-2">
-        <div class="space-y-2">
-          <label class="block text-sm font-bold text-slate-400  tracking-normal ml-1">Unique URL</label>
-          <div class="flex items-center space-x-3">
-            <input
-              :value="registrationLink"
-              readonly
-              class="flex-1 px-4 py-4 border border-slate-100 rounded-xl bg-slate-50 text-sm font-medium text-slate-600 outline-none"
-            />
-            <button
-              @click="copyToClipboard(registrationLink)"
-              class="px-6 py-4 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all flex items-center space-x-2 text-sm font-bold active:scale-95"
-            >
-              <Copy class="w-4 h-4" />
-              <span>Copy</span>
+    <Modal v-model="showLinkModal" title="Registration link" eyebrow="Programme" size="md">
+      <div v-if="registrationLink" class="space-y-3">
+        <div>
+          <label class="field-label">Unique registration URL</label>
+          <div class="flex items-stretch gap-2">
+            <input :value="registrationLink" readonly class="input min-w-0 flex-1 font-mono text-[11px]" />
+            <button type="button" class="btn btn-primary shrink-0" @click="copyToClipboard(registrationLink)">
+              <Copy class="h-3.5 w-3.5" /> Copy
             </button>
           </div>
         </div>
-        <div class="flex justify-end pt-4 border-t border-slate-50">
-          <button
-            @click="showLinkModal = false"
-            class="px-8 py-3 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
-          >
-            Close
-          </button>
+        <div class="flex justify-end border-t border-slate-100 pt-3">
+          <button type="button" class="btn btn-outline" @click="showLinkModal = false">Close</button>
         </div>
       </div>
     </Modal>

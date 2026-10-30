@@ -220,91 +220,31 @@
       @confirm="executeDelete"
     />
 
-    <!-- Form Connectivity Gateway (Premium Modal) -->
-    <Modal v-model="showLinkModal" title="Gateway Activation" size="md">
-      <div v-if="generatedLink" class="p-0 overflow-hidden">
-        <!-- Hero Header -->
-        <div class="bg-gradient-to-br from-[#27628C] to-[#044d77] p-10 text-center relative overflow-hidden">
-          <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-          <Icon name="lucide:zap" class="w-32 h-32 text-white/5 absolute -top-8 -right-8 rotate-12" />
-          
-          <div class="relative z-10 space-y-4">
-            <div class="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[1.25rem] border border-white/20 flex items-center justify-center mx-auto shadow-sm border border-slate-200">
-              <Icon name="lucide:rocket" class="w-10 h-10 text-white" />
-            </div>
-            <div>
-              <h3 class="text-lg font-black text-white tracking-normal">Form is Live!</h3>
-              <p class="text-blue-100/60 text-sm font-bold  tracking-normal">Premium sharing enabled</p>
-            </div>
+    <!-- Form link -->
+    <Modal v-model="showLinkModal" title="Form link" eyebrow="Public form" description="Share this link with respondents." size="md">
+      <div v-if="generatedLink" class="space-y-4">
+        <div class="flex items-start gap-3 rounded-lg border border-[#e0e9ef] bg-[#f4f8fb] p-3.5">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#27628C] text-white"><Icon name="lucide:rocket" class="h-4 w-4" /></span>
+          <div>
+            <p class="text-[11px] font-semibold text-[#0A202B]">Your form is live</p>
+            <p class="mt-0.5 text-[10.5px] leading-5 text-slate-500">The link is publicly reachable and ready to share.</p>
           </div>
         </div>
-
-        <!-- Content Body -->
-        <div class="p-10 space-y-10 bg-white">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between px-1">
-              <label class="text-sm font-black  tracking-normal text-slate-400">Your Unique Form URL</label>
-              <span class="text-sm font-black text-emerald-500  tracking-normal flex items-center gap-1">
-                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                Publicly Reachable
-              </span>
-            </div>
-            
-            <div class="group relative">
-              <div class="absolute inset-0 bg-blue-500/5 blur-xl group-hover:bg-blue-500/10 transition-all rounded-3xl"></div>
-              <div class="relative flex items-center bg-slate-50 border border-slate-100 rounded-3xl p-2 pl-6 focus-within:border-blue-300 focus-within:bg-white transition-all shadow-inner">
-                <span class="text-sm font-bold text-slate-400 select-none mr-2">/</span>
-                <input
-                  :value="generatedLink.split('/').pop()"
-                  readonly
-                  class="flex-1 bg-transparent border-none text-sm font-black text-[#27628C] focus:ring-0 cursor-default truncate py-4"
-                />
-                <button
-                  @click="copyGeneratedLink"
-                  class="px-6 py-4 bg-[#27628C] text-white rounded-[1.2rem] font-bold text-xs hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center gap-2 shadow-sm border border-slate-100"
-                >
-                  <Icon :name="isCopied ? 'lucide:check' : 'lucide:copy'" class="w-4 h-4" />
-                  <span>{{ isCopied ? 'Copied' : 'Copy' }}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Sharing Strategies -->
-          <div class="grid grid-cols-2 gap-4">
-            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 group hover:border-blue-100 transition-all cursor-pointer">
-              <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-blue-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
-                <Icon name="lucide:qr-code" class="w-5 h-5" />
-              </div>
-              <h4 class="text-xs font-black text-slate-900  mb-1">QR Access</h4>
-              <p class="text-sm text-slate-400 font-bold leading-tight">Instant access via mobile scan</p>
-            </div>
-            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 group hover:border-indigo-100 transition-all cursor-pointer">
-              <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-indigo-600 mb-4 shadow-sm group-hover:scale-110 transition-transform">
-                <Icon name="lucide:share-2" class="w-5 h-5" />
-              </div>
-              <h4 class="text-xs font-black text-slate-900  mb-1">Social Share</h4>
-              <p class="text-sm text-slate-400 font-bold leading-tight">Broaden your campaign reach</p>
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
-            <button 
-              @click="showLinkModal = false"
-              class="text-xs font-black  tracking-normal text-slate-400 hover:text-slate-900 transition-colors"
-            >
-              Back to Dashboard
+        <div>
+          <label class="field-label">Public form URL</label>
+          <div class="flex items-stretch gap-2">
+            <input :value="generatedLink" readonly class="input min-w-0 flex-1 font-mono text-[11px]" />
+            <button type="button" class="btn btn-primary shrink-0" @click="copyGeneratedLink">
+              <Icon :name="isCopied ? 'lucide:check' : 'lucide:copy'" class="h-3.5 w-3.5" />
+              {{ isCopied ? 'Copied' : 'Copy' }}
             </button>
-            <a 
-              :href="generatedLink" 
-              target="_blank"
-              class="text-xs font-black  tracking-normal text-[#27628C] flex items-center gap-2 hover:gap-3 transition-all"
-            >
-              View Live Form
-              <Icon name="lucide:external-link" class="w-4 h-4" />
-            </a>
           </div>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
+          <button type="button" class="btn btn-outline" @click="showLinkModal = false">Close</button>
+          <a :href="generatedLink" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            View live form <Icon name="lucide:external-link" class="h-3.5 w-3.5" />
+          </a>
         </div>
       </div>
     </Modal>
