@@ -1,173 +1,128 @@
 <template>
-  <div class="max-w-4xl mx-auto space-y-10 pb-20 animate-in fade-in slide-in-from-bottom-6 duration-700">
-    
-    <!-- Header with Back Button -->
-    <div class="flex items-center justify-between">
-      <button @click="$emit('close')" class="flex items-center gap-2 text-slate-400 font-bold text-xs  tracking-normal hover:text-slate-900 transition-colors group">
-        <Icon name="lucide:arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        Back to Campaigns
-      </button>
-      <h2 class="text-xl font-black text-slate-900 tracking-tight">Craft New Campaign</h2>
-    </div>
-
-    <!-- 1. Campaign Details -->
-    <div class="bg-white rounded-[1.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
-      <h3 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-blue-50 text-[#27628C] flex items-center justify-center text-xs">1</span>
-        Campaign Details
-      </h3>
-
-      <div class="space-y-6">
-        <div class="grid grid-cols-1 gap-6">
-          <div class="space-y-2">
-            <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Campaign Name</label>
-            <input 
-              v-model="form.name" 
-              type="text" 
-
-              class="w-full h-16 px-6 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-600/20 focus:ring-4 focus:ring-blue-600/5 transition-all outline-none font-bold text-sm"
-            />
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Subject Line</label>
-            <input 
-              v-model="form.subject" 
-              type="text" 
-
-              class="w-full h-16 px-6 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-600/20 focus:ring-4 focus:ring-blue-600/5 transition-all outline-none font-bold text-sm"
-            />
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Preview Text (Optional)</label>
-            <input 
-              v-model="form.previewText" 
-              type="text" 
-
-              class="w-full h-16 px-6 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-600/20 focus:ring-4 focus:ring-blue-600/5 transition-all outline-none font-bold text-sm"
-            />
-          </div>
-        </div>
-
-        <!-- Banner Upload -->
-        <div class="space-y-4">
-          <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Campaign Banner</label>
-          <ImageUpload v-model="form.bannerImage" />
-          <p class="text-sm text-slate-400 font-medium px-1 italic">Recommended size: 1200x600px. Max size: 5MB.</p>
-        </div>
+  <div class="mx-auto max-w-[1180px] space-y-5 pb-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <!-- Header -->
+    <div class="flex flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <button type="button" class="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-400 transition hover:text-[#27628C]" @click="$emit('close')">
+          <Icon name="lucide:arrow-left" class="h-3.5 w-3.5" />
+          Back to campaigns
+        </button>
+        <h1 class="mt-2 text-xl font-semibold tracking-[-0.03em] text-slate-900">New email campaign</h1>
+        <p class="mt-1 text-[11.5px] text-slate-500">Write the message, choose an audience and decide when it goes out.</p>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="rounded-full bg-amber-50 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.08em] text-amber-700">Draft</span>
+        <span class="rounded-full bg-[#eef5f9] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.08em] text-[#27628C]">Email</span>
       </div>
     </div>
 
-    <!-- 2. Content -->
-    <div class="bg-white rounded-[1.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
-      <h3 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-orange-50 text-[#DE6129] flex items-center justify-center text-xs">2</span>
-        Content Builder
-      </h3>
-      
-      <TiptapEditor v-model="form.content" />
-    </div>
-
-    <!-- 3. Audience -->
-    <div class="bg-white rounded-[1.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
-      <h3 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs">3</span>
-        Target Audience
-      </h3>
-
-      <div class="space-y-6">
-        <CampaignDropdown 
-          v-model="form.primaryAudience" 
-          :options="audienceOptions" 
-          label="Select Target Segment"
-
-        />
-
-        <!-- Specific Emails logic -->
-        <Transition name="fade">
-          <div v-if="form.primaryAudience === 'Specific Emails'" class="space-y-2">
-            <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Specific Email Addresses</label>
-            <textarea 
-              v-model="manualEmails"
-
-              class="w-full h-32 p-6 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-600/20 focus:ring-4 focus:ring-blue-600/5 transition-all outline-none font-medium text-sm leading-relaxed"
-            ></textarea>
+    <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <main class="min-w-0 space-y-4">
+        <!-- Campaign details -->
+        <section class="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-[9px] font-bold uppercase tracking-[0.12em] text-[#27628C]">01 · Details</p>
+              <h2 class="mt-1 text-sm font-semibold text-slate-900">Campaign details</h2>
+            </div>
+            <span class="text-[9px] text-slate-400">Required</span>
           </div>
-        </Transition>
-      </div>
-    </div>
 
-    <!-- 4. Schedule -->
-    <div class="bg-white rounded-[1.5rem] p-10 border border-slate-100 shadow-sm space-y-8">
-      <h3 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs">4</span>
-        Delivery Schedule
-      </h3>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        <CampaignDropdown 
-          v-model="form.deliveryType" 
-          :options="scheduleOptions" 
-          label="Delivery Strategy"
-
-        />
-
-        <div class="pt-1">
-          <!-- Future Schedule -->
-          <Transition name="fade" mode="out-in">
-            <div v-if="form.deliveryType === 'future'" class="space-y-2 animate-in slide-in-from-top-2 duration-300">
-               <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Schedule Date & Time</label>
-               <input 
-                 type="datetime-local" 
-                 v-model="form.scheduledAt"
-                 class="w-full h-16 px-6 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-600/20 focus:ring-4 focus:ring-blue-600/5 transition-all outline-none font-bold text-sm"
-               />
+          <div class="mt-4 grid gap-3 sm:grid-cols-2">
+            <div>
+              <label class="field-label">Campaign name <span class="text-rose-500">*</span></label>
+              <input v-model="form.name" type="text" class="input" placeholder="e.g. October newsletter" />
             </div>
-            <!-- Cron Option -->
-            <div v-else-if="form.deliveryType === 'recurring'" class="space-y-2 animate-in slide-in-from-top-2 duration-300">
-               <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Cron Expression (e.g. 0 0 * * *)</label>
-               <input 
-                 v-model="form.cronExpression"
+            <div>
+              <label class="field-label">Subject line <span class="text-rose-500">*</span></label>
+              <input v-model="form.subject" type="text" class="input" placeholder="What lands in the inbox" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="field-label">Preview text <span class="font-normal text-slate-400">(optional)</span></label>
+              <input v-model="form.previewText" type="text" class="input" placeholder="A short inbox preview" />
+            </div>
+          </div>
 
-                 class="w-full h-16 px-6 bg-slate-50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-600/20 focus:ring-4 focus:ring-blue-600/5 transition-all outline-none font-bold text-sm"
-               />
+          <div class="mt-4">
+            <label class="field-label">Campaign banner <span class="font-normal text-slate-400">(optional)</span></label>
+            <div class="h-32 overflow-hidden rounded-lg border border-dashed border-slate-300 bg-slate-50/50">
+              <ImageUpload v-model="form.bannerImage" />
             </div>
-            <!-- Immediate Info -->
-            <div v-else class="h-full flex items-center px-4">
-              <p class="text-xs font-bold text-slate-400 leading-relaxed italic">Campaign will be processed immediately upon creation.</p>
+            <p class="mt-1.5 text-[9px] text-slate-400">1200 × 600px recommended · 5MB max</p>
+          </div>
+        </section>
+
+        <!-- Content -->
+        <section class="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-[9px] font-bold uppercase tracking-[0.12em] text-[#27628C]">02 · Message</p>
+              <h2 class="mt-1 text-sm font-semibold text-slate-900">Content</h2>
             </div>
-          </Transition>
+            <span class="text-[9px] text-slate-400">{{ form.content ? 'Ready' : 'Required' }}</span>
+          </div>
+          <div class="mt-3">
+            <TiptapEditor v-model="form.content" placeholder="Write your campaign message…" />
+          </div>
+        </section>
+      </main>
+
+      <!-- Delivery rail -->
+      <aside class="space-y-3 lg:sticky lg:top-4 lg:self-start">
+        <section class="rounded-xl border border-slate-200 bg-white p-4">
+          <p class="text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400">Audience</p>
+          <div class="mt-3">
+            <SelectInput v-model="form.primaryAudience" :options="audienceOptions" />
+          </div>
+          <p v-if="selectedAudience?.description" class="mt-2 text-[9.5px] leading-4 text-slate-400">{{ selectedAudience.description }}</p>
+          <div v-if="form.primaryAudience === 'Specific Emails'" class="mt-3">
+            <label class="field-label">Email addresses</label>
+            <textarea v-model="manualEmails" rows="4" class="textarea" placeholder="one@example.com, two@example.com" />
+          </div>
+        </section>
+
+        <section class="rounded-xl border border-slate-200 bg-white p-4">
+          <p class="text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400">Delivery</p>
+          <div class="mt-3">
+            <SelectInput v-model="form.deliveryType" :options="scheduleOptions" />
+          </div>
+          <div v-if="form.deliveryType === 'future'" class="mt-3">
+            <label class="field-label">Schedule date &amp; time</label>
+            <input v-model="form.scheduledAt" type="datetime-local" class="input" />
+          </div>
+          <div v-else-if="form.deliveryType === 'recurring'" class="mt-3">
+            <label class="field-label">Cron expression</label>
+            <input v-model="form.cronExpression" type="text" class="input" placeholder="0 0 * * *" />
+          </div>
+          <p v-else class="mt-2 text-[9.5px] leading-4 text-slate-400">The campaign will be queued immediately after creation.</p>
+        </section>
+
+        <section class="rounded-xl border border-[#dbe7ee] bg-[#f5f9fb] p-4">
+          <p class="text-[9px] font-bold uppercase tracking-[0.12em] text-[#27628C]">Summary</p>
+          <div class="mt-2 space-y-1.5 text-[10px]">
+            <div class="flex items-center justify-between gap-2"><span class="text-slate-400">Audience</span><span class="truncate font-semibold text-slate-700">{{ selectedAudience?.label || '—' }}</span></div>
+            <div class="flex items-center justify-between gap-2"><span class="text-slate-400">Delivery</span><span class="font-semibold text-slate-700">{{ selectedSchedule?.label || '—' }}</span></div>
+            <div class="flex items-center justify-between gap-2"><span class="text-slate-400">Message</span><span class="font-semibold" :class="form.content ? 'text-emerald-600' : 'text-amber-600'">{{ form.content ? 'Ready' : 'Not written' }}</span></div>
+          </div>
+        </section>
+
+        <div class="flex flex-col gap-2">
+          <button type="button" class="btn btn-primary w-full" :disabled="loading || !canSubmit" @click="submit">
+            <span v-if="loading" class="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            <Icon v-else name="lucide:send" class="h-3.5 w-3.5" />
+            {{ loading ? 'Processing…' : form.deliveryType === 'immediate' ? 'Send campaign' : 'Schedule campaign' }}
+          </button>
+          <button type="button" class="btn btn-outline w-full" @click="$emit('close')">Discard</button>
         </div>
-      </div>
+      </aside>
     </div>
-
-    <!-- Actions -->
-    <div class="flex items-center justify-end gap-6 pt-4">
-      <button 
-        @click="$emit('close')" 
-        class="px-10 py-4 text-sm font-black text-slate-400 hover:text-slate-900 transition-colors  tracking-normal"
-      >
-        Discard
-      </button>
-      <button 
-        @click="submit"
-        :disabled="loading"
-        class="h-16 px-16 bg-gray-900 text-white rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all shadow-sm border border-slate-200 flex items-center gap-3 disabled:opacity-50 disabled:scale-100"
-      >
-        <span v-if="!loading">{{ form.deliveryType === 'immediate' ? 'Send Campaign' : 'Schedule Campaign' }}</span>
-        <div v-else class="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-        <Icon v-if="!loading" name="lucide:send" class="w-4 h-4 -rotate-45" />
-      </button>
-    </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import TiptapEditor from './ui/TiptapEditor.vue'
-import CampaignDropdown from './ui/CampaignDropdown.vue'
+import SelectInput from './ui/SelectInput.vue'
 import ImageUpload from './ImageUpload.vue'
 import Icon from './Icon.vue'
 import { useEmailCampaigns } from '@/composables/modules/emails/useEmailCampaigns'
@@ -201,10 +156,14 @@ const audienceOptions = [
 ]
 
 const scheduleOptions = [
-  { label: 'Send Immediately', value: 'immediate', description: 'Email will be queued right now' },
-  { label: 'Schedule for Future', value: 'future', description: 'Set a specific date and time' },
-  { label: 'Recurring (Cron)', value: 'recurring', description: 'Continuous delivery based on a pattern' },
+  { label: 'Send immediately', value: 'immediate', description: 'Queue the email now' },
+  { label: 'Schedule for later', value: 'future', description: 'Pick a date and time' },
+  { label: 'Recurring', value: 'recurring', description: 'Run on a cron schedule' },
 ]
+
+const selectedAudience = computed(() => audienceOptions.find(option => option.value === form.primaryAudience))
+const selectedSchedule = computed(() => scheduleOptions.find(option => option.value === form.deliveryType))
+const canSubmit = computed(() => Boolean(form.name.trim() && form.subject.trim() && form.content.trim()))
 
 const submit = async () => {
   if (!form.name || !form.subject || !form.content) {
