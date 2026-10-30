@@ -1,6 +1,6 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+  <form @submit.prevent="handleSubmit" class="space-y-4">
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <AnimatedInput
         v-model="form.firstName"
         id="firstName"
@@ -15,7 +15,7 @@
       />
     </div>
 
-    <div class="grid grid-cols-1 gap-8">
+    <div class="grid grid-cols-1 gap-3">
       <AnimatedInput
         v-model="form.email"
         id="email"
@@ -24,7 +24,7 @@
       />
     </div>
 
-    <div v-if="!user" class="grid grid-cols-1 gap-8">
+    <div v-if="!user" class="grid grid-cols-1 gap-3">
       <AnimatedInput
         v-model="form.password"
         id="password"
@@ -33,7 +33,7 @@
       />
     </div>
 
-    <div class="grid grid-cols-1 gap-8">
+    <div class="grid grid-cols-1 gap-3">
       <SelectInput
         v-model="form.role"
         label="User Role"
@@ -41,20 +41,9 @@
       />
     </div>
 
-    <div class="flex justify-end space-x-6 pt-10 border-t border-slate-50">
-      <button
-        type="button"
-        @click="$emit('cancel')"
-        class="text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
-      >
-        Cancel
-      </button>
-      <button
-        type="submit"
-        class="px-10 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center space-x-3"
-      >
-        <span>{{ user ? 'Save Changes' : 'Create User' }}</span>
-      </button>
+    <div class="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4">
+      <button type="button" class="btn btn-outline" @click="$emit('cancel')">Cancel</button>
+      <button type="submit" class="btn btn-primary">{{ user ? 'Save changes' : 'Create user' }}</button>
     </div>
   </form>
 </template>

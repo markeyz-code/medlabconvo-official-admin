@@ -29,7 +29,7 @@
       </div>
       <button v-if="hasPermission('publications:create')"
         @click="openCreateModal"
-        class="w-full sm:w-auto px-6 py-2.5 bg-primary text-white rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-200 flex items-center justify-center space-x-2  hover: transform hover:-translate-y-0.5"
+        class="btn btn-primary w-full sm:w-auto"
       >
         <Plus class="w-5 h-5" />
         <span>New Publication</span>

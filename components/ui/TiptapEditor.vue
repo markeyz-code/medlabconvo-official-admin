@@ -1,7 +1,7 @@
 <template>
-  <div class="border-[1.5rem] border-[#F8FAFC] rounded-[1.5rem] overflow-hidden bg-white shadow-sm ring-1 ring-slate-100">
+  <div class="overflow-hidden rounded-lg border-[6px] border-[#F8FAFC] bg-white ring-1 ring-slate-100">
     <!-- Toolbar -->
-    <div v-if="editor" class="flex flex-wrap items-center gap-1.5 p-3 bg-slate-50/80 border-b border-slate-100 backdrop-blur-sm sticky top-0 z-20">
+    <div v-if="editor" class="sticky top-0 z-20 flex flex-wrap items-center gap-1 border-b border-slate-100 bg-slate-50/90 p-2 backdrop-blur-sm">
       <!-- History -->
       <ToolbarButton @click="editor.chain().focus().undo().run()" :disabled="!editor.can().undo()" icon="lucide:undo" />
       <ToolbarButton @click="editor.chain().focus().redo().run()" :disabled="!editor.can().redo()" icon="lucide:redo" />
@@ -48,27 +48,27 @@
       <button 
         type="button"
         @click="showPreview = !showPreview"
-        class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-black  tracking-normal text-[#27628C] hover:bg-blue-50 transition-colors shadow-sm"
+        class="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-[10.5px] font-semibold text-[#27628C] transition-colors hover:bg-blue-50"
       >
         {{ showPreview ? 'Edit Content' : 'Live Preview' }}
       </button>
     </div>
 
     <!-- Editor / Preview Area -->
-    <div class="relative min-h-[400px]">
-      <div v-show="!showPreview" class="prose-container p-10">
+    <div class="relative min-h-[180px]">
+      <div v-show="!showPreview" class="prose-container p-4">
         <editor-content :editor="editor" />
       </div>
 
       <!-- Live Email Preview Overlay -->
-      <div v-if="showPreview" class="absolute inset-0 z-30 bg-white overflow-y-auto p-10">
+      <div v-if="showPreview" class="absolute inset-0 z-30 overflow-y-auto bg-white p-4">
         <div class="max-w-[600px] mx-auto border border-slate-100 rounded-[1.25rem] shadow-sm overflow-hidden bg-white">
           <!-- Branded Wrapper Context -->
-          <div class="bg-[#27628C] p-8 text-center">
+          <div class="bg-[#27628C] p-5 text-center">
             <h1 class="text-white text-xl font-black  tracking-normal">MedLabConvo</h1>
           </div>
-          <div class="p-12 prose max-w-none text-slate-700" v-html="modelValue"></div>
-          <div class="bg-slate-50 p-8 text-center">
+          <div class="prose max-w-none p-6 text-slate-700" v-html="modelValue"></div>
+          <div class="bg-slate-50 p-4 text-center">
              <p class="text-sm font-bold text-slate-400  tracking-normal">Sent from MedLabConvo Admin Panel</p>
           </div>
         </div>

@@ -230,11 +230,15 @@ onBeforeUnmount(() => {
 .sheet-footer {
   flex-shrink: 0;
   display: flex;
+  align-items: center;
   justify-content: flex-end;
-  gap: 10px;
-  padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
+  gap: 8px;
+  padding: 10px 18px calc(10px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--mc-border);
   background: #fbfdfe;
+}
+.sheet-footer > :first-child:not(:last-child) {
+  margin-right: auto;
 }
 
 /* Transition */

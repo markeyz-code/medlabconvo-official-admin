@@ -1,8 +1,8 @@
 <template>
-  <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+  <div class="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
     <!-- Action Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-8 rounded-3xl border border-slate-100">
-      <div class="flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
+    <div class="flex flex-col gap-3 rounded-xl border border-slate-100 bg-white p-4 md:flex-row md:items-end md:justify-between">
+      <div class="w-full md:w-80">
         <div class="w-full md:w-80">
           <AnimatedInput
             v-model="searchQuery"
@@ -13,11 +13,11 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-4 w-full md:w-auto">
+      <div class="flex items-center gap-2 w-full md:w-auto">
         <button
           v-if="canCreate"
           @click="openCreateModal"
-          class="flex-1 md:flex-none px-8 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] transition-all flex items-center justify-center space-x-3 group active:scale-95"
+          class="btn btn-primary w-full md:w-auto"
         >
           <Icon name="lucide:plus-circle" class="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
           <span>Create Permission</span>
@@ -26,36 +26,36 @@
     </div>
 
     <!-- Permissions Registry -->
-    <div class="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden relative">
+    <div class="overflow-hidden rounded-xl border border-slate-100 bg-white">
       <AdminTableLoading v-if="loading" :columns="4" :rows="7" label="Loading permissions" />
 
-      <div v-else-if="filteredPermissions.length" class="overflow-x-auto text-sm">
+      <div v-else-if="filteredPermissions.length" class="overflow-x-auto">
         <table class="admin-table stack-table w-full text-left border-separate border-spacing-0">
           <thead>
-            <tr class="bg-slate-50/50 text-sm font-bold text-slate-400">
-              <th class="px-10 py-6 border-b border-slate-100">Permission name</th>
-              <th class="px-10 py-6 border-b border-slate-100">Resource</th>
-              <th class="px-10 py-6 border-b border-slate-100">Action</th>
-              <th class="px-10 py-6 border-b border-slate-100">Description</th>
+            <tr class="bg-slate-50/60 text-[10px] font-bold uppercase tracking-[0.06em] text-slate-400">
+              <th class="px-5 py-3 border-b border-slate-100 text-left">Permission name</th>
+              <th class="px-5 py-3 border-b border-slate-100 text-left">Resource</th>
+              <th class="px-5 py-3 border-b border-slate-100 text-left">Action</th>
+              <th class="px-5 py-3 border-b border-slate-100 text-left">Description</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-50">
             <tr v-for="perm in filteredPermissions" :key="perm._id" class="group hover:bg-slate-50/50 transition-all duration-300">
-              <td class="px-10 py-8">
-                <span class="font-bold text-slate-900 font-mono text-sm">{{ perm.name }}</span>
+              <td class="px-5 py-3.5 text-xs text-slate-600">
+                <span class="font-semibold text-slate-900 font-mono text-[11.5px]">{{ perm.name }}</span>
               </td>
-              <td class="px-10 py-8">
-                <div class="inline-flex items-center px-3 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100">
-                  <span class="text-sm font-bold">{{ perm.resource }}</span>
+              <td class="px-5 py-3.5 text-xs text-slate-600">
+                <div class="inline-flex items-center rounded-md border border-blue-100 bg-blue-50 px-2 py-0.5 text-blue-700">
+                  <span class="text-[10.5px] font-bold">{{ perm.resource }}</span>
                 </div>
               </td>
-              <td class="px-10 py-8">
-                <span :class="['px-3 py-1 text-sm font-bold rounded-lg ring-1 ring-inset', getActionBadgeStyle(perm.action)]">
+              <td class="px-5 py-3.5 text-xs text-slate-600">
+                <span :class="['rounded-md px-2 py-0.5 text-[10px] font-bold ring-1 ring-inset', getActionBadgeStyle(perm.action)]">
                   {{ perm.action }}
                 </span>
               </td>
-              <td class="px-10 py-8">
-                <div class="font-medium text-slate-500 max-w-sm leading-relaxed">{{ perm.description || `Grants ${perm.action} capability on the ${perm.resource} resource.` }}</div>
+              <td class="px-5 py-3.5 text-xs text-slate-600">
+                <div class="max-w-sm text-[11px] leading-5 text-slate-500">{{ perm.description || `Grants ${perm.action} capability on the ${perm.resource} resource.` }}</div>
               </td>
             </tr>
           </tbody>
@@ -75,73 +75,36 @@
       </AdminEmptyState>
     </div>
 
-    <!-- Injection Sheet -->
-    <SlideOver v-model="showModal" size="lg" title="Create permission">
-      <div class="p-8 space-y-10">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <AnimatedInput
-            v-model="form.resource"
-            @update:modelValue="buildPermName"
-            id="resource"
-            label="Resource name"
-            type="text"
-          />
-          <AnimatedInput
-            v-model="form.action"
-            @update:modelValue="buildPermName"
-            id="action"
-            label="Action name"
-            type="text"
-          />
+    <Modal v-model="showModal" size="md" title="Create permission" eyebrow="Access control" description="Define a granular capability for a resource.">
+      <div class="space-y-4">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <AnimatedInput v-model="form.resource" id="resource" label="Resource name" type="text" @update:model-value="buildPermName" />
+          <AnimatedInput v-model="form.action" id="action" label="Action name" type="text" @update:model-value="buildPermName" />
         </div>
 
-        <div class="space-y-4 pt-4 border-t border-slate-50">
-          <label class="block text-sm font-bold text-slate-400 ml-1">Generated permission string</label>
-          <div class="relative group">
-            <div class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#27628C] transition-colors">
-              <Icon name="lucide:tag" class="w-5 h-5" />
-            </div>
-            <input
-              v-model="form.name"
-              type="text"
-              class="w-full pl-16 pr-8 py-5 bg-slate-50 border border-slate-100 rounded-2xl text-slate-700 font-mono text-sm outline-none transition-all focus:bg-white focus:border-[#27628C] focus:ring-1 focus:ring-[#27628C]"
-              readonly
-            />
+        <div>
+          <label class="field-label">Generated identifier</label>
+          <div class="relative">
+            <Icon name="lucide:tag" class="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+            <input v-model="form.name" type="text" class="input bg-slate-50 pl-9 font-mono" readonly />
           </div>
-          <div class="flex items-center gap-2 text-sm font-bold text-slate-400 ml-1">
-            <Icon name="lucide:info" class="w-4 h-4" />
-            This identifier is automatically created from your resource and action.
-          </div>
+          <p class="mt-1.5 flex items-center gap-1.5 text-[10px] text-slate-400"><Icon name="lucide:info" class="h-3 w-3" /> Automatically generated from the resource and action.</p>
         </div>
 
-        <div class="space-y-4 pt-4 border-t border-slate-50">
-          <label class="block text-sm font-bold text-slate-400 ml-1">Description</label>
-          <textarea
-            v-model="form.description"
-            rows="4"
-            class="w-full p-6 bg-slate-50 border border-slate-100 rounded-3xl focus:ring-2 focus:ring-[#27628C] focus:bg-white font-medium text-slate-700 resize-none transition-all outline-none"
-
-          ></textarea>
-        </div>
-
-        <div class="flex justify-end pt-10 gap-6 border-t border-slate-50">
-          <button
-            @click="closeModal"
-            class="text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            @click="handleSave"
-            :disabled="createLoading || !form.name"
-            class="px-12 py-5 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] disabled:bg-slate-100 disabled:text-slate-400 transition-all flex items-center space-x-3 active:scale-95"
-          >
-            <div v-if="createLoading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-            <span>{{ createLoading ? 'Saving...' : 'Save Permission' }}</span>
-          </button>
+        <div>
+          <label class="field-label">Description</label>
+          <textarea v-model="form.description" rows="3" class="textarea" placeholder="What does this permission allow?" />
         </div>
       </div>
-    </SlideOver>
+
+      <template #footer>
+        <button type="button" class="btn btn-outline" @click="closeModal">Cancel</button>
+        <button type="button" class="btn btn-primary" :disabled="createLoading || !form.name" @click="handleSave">
+          <span v-if="createLoading" class="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+          {{ createLoading ? 'Saving…' : 'Save permission' }}
+        </button>
+      </template>
+    </Modal>
   </div>
 </template>
 
@@ -149,7 +112,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useGetPermissions } from '@/composables/modules/roles/useGetPermissions'
 import { useCreatePermission } from '@/composables/modules/roles/useCreatePermission'
-import SlideOver from '@/components/SlideOver.vue'
+import Modal from '@/components/Modal.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import Icon from '@/components/Icon.vue'
 import { useUser } from '@/composables/modules/auth/user'

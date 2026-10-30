@@ -181,7 +181,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   background: #fff;
   border: 1px solid var(--mc-border);
-  border-radius: 22px;
+  border-radius: 16px;
   box-shadow: 0 32px 90px -32px rgba(4, 29, 47, 0.55), 0 4px 18px -8px rgba(4, 29, 47, 0.16);
   overflow: hidden;
   transform-origin: bottom center;
@@ -267,10 +267,13 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 10px;
-  padding: 13px 18px calc(13px + env(safe-area-inset-bottom));
+  gap: 8px;
+  padding: 11px 18px calc(11px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--mc-border);
   background: #fbfdfe;
+}
+.modal-footer > :first-child:not(:last-child) {
+  margin-right: auto;
 }
 
 /* Animations */
@@ -303,19 +306,19 @@ onBeforeUnmount(() => {
   }
   .modal-panel {
     max-height: min(88dvh, 900px);
-    border-radius: 20px;
+    border-radius: 14px;
   }
   .modal-grabber {
     display: none;
   }
   .modal-head {
-    padding: 18px 22px 15px;
+    padding: 16px 20px 13px;
   }
   .modal-title {
-    font-size: 20px;
+    font-size: 18px;
   }
   .modal-footer {
-    padding: 14px 22px;
+    padding: 11px 20px;
   }
   .modal-panel-enter-from,
   .modal-panel-leave-to {
@@ -345,10 +348,14 @@ onBeforeUnmount(() => {
 
 @media (max-width: 639px) {
   .modal-footer {
-    flex-direction: column-reverse;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
   }
   .modal-footer > * {
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
   }
 }
 </style>

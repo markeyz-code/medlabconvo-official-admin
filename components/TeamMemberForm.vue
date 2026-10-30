@@ -1,12 +1,12 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-6">
+  <form @submit.prevent="handleSubmit" class="space-y-4">
     <!-- Image Upload Area -->
     <div>
-      <label class="block text-sm font-medium text-slate-700 mb-2">Profile Image</label>
+      <label class="field-label">Profile Image</label>
       <ImageUpload v-model="form.image" :multiple="false" folder="team" />
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <div>
         <AnimatedInput
           v-model="form.name"
@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <div>
         <AnimatedInput
           v-model="form.title"
@@ -46,16 +46,16 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-8">
+    <div class="grid grid-cols-1 gap-4">
       <div class="space-y-4">
-        <label class="text-sm font-black  tracking-normal text-slate-400 px-1">Biography</label>
+        <label class="field-label">Biography</label>
         <TiptapEditor
           v-model="form.bio"
         />
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <div>
         <AnimatedInput
           v-model="form.linkedin"
@@ -74,20 +74,9 @@
       </div>
     </div>
 
-    <div class="flex justify-end space-x-6 pt-10 border-t border-slate-50">
-      <button
-        type="button"
-        @click="$emit('cancel')"
-        class="text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
-      >
-        Cancel
-      </button>
-      <button
-        type="submit"
-        class="px-10 py-4 bg-[#27628C] text-white rounded-2xl font-bold text-sm hover:bg-[#1B4A6B] transition-all active:scale-95 flex items-center space-x-3"
-      >
-        <span>{{ member ? 'Save member' : 'Create member' }}</span>
-      </button>
+    <div class="sticky bottom-0 z-30 -mx-1 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 bg-white/95 px-1 py-3 backdrop-blur">
+      <button type="button" class="btn btn-outline" @click="$emit('cancel')">Cancel</button>
+      <button type="submit" class="btn btn-primary">{{ member ? 'Save member' : 'Create member' }}</button>
     </div>
   </form>
 </template>

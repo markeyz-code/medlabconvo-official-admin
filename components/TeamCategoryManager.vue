@@ -1,10 +1,10 @@
 <template>
-  <div class="space-y-6">
+  <div class="space-y-4">
     <!-- Header/Form Area -->
-    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
-      <h3 class="text-lg font-medium text-slate-900 mb-4">{{ editingId ? 'Edit Category' : 'Create New Category' }}</h3>
-      <form @submit.prevent="saveCategory" class="flex flex-col sm:flex-row gap-4 items-end">
-        <div class="flex-1 w-full">
+    <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+      <h3 class="mb-3 text-sm font-semibold text-slate-900">{{ editingId ? 'Edit Category' : 'Create New Category' }}</h3>
+      <form @submit.prevent="saveCategory" class="flex flex-col gap-3 sm:flex-row sm:items-end">
+        <div class="w-full flex-1">
           <AnimatedInput
             v-model="form.name"
             id="categoryName"
@@ -13,7 +13,7 @@
             required
           />
         </div>
-        <div class="w-full sm:w-32">
+        <div class="w-full sm:w-24">
           <AnimatedInput
             v-model="form.position"
             id="categoryPosition"
@@ -23,10 +23,10 @@
           />
         </div>
         <div class="flex gap-2">
-          <button v-if="editingId" type="button" @click="resetForm" class="px-4 py-3 bg-white text-slate-500 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-sm font-medium">
+          <button v-if="editingId" type="button" @click="resetForm" class="btn btn-outline">
             Cancel
           </button>
-          <button type="submit" :disabled="saving" class="px-6 py-3 bg-[#27628C] text-white rounded-xl hover:bg-[#1B4A6B] transition-all font-medium disabled:opacity-50 whitespace-nowrap text-sm">
+          <button type="submit" :disabled="saving" class="btn btn-primary">
             {{ saving ? 'Saving...' : (editingId ? 'Update' : 'Create') }}
           </button>
         </div>
@@ -34,7 +34,7 @@
     </div>
 
     <!-- List Area -->
-    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden relative min-h-[200px]">
+    <div class="relative overflow-hidden rounded-lg border border-slate-200 bg-white">
       <AdminTableLoading v-if="loading" :columns="3" :rows="3" label="Loading categories" />
 
       <AdminEmptyState
@@ -48,16 +48,16 @@
       <table v-else class="admin-table stack-table w-full text-left border-collapse">
         <thead>
           <tr class="bg-slate-50 border-b border-slate-100">
-            <th class="px-6 py-4 text-sm font-medium text-slate-500">Category Name</th>
-            <th class="px-6 py-4 text-sm font-medium text-slate-500 text-center">Order</th>
-            <th class="px-6 py-4 text-sm font-medium text-slate-500 text-right">Actions</th>
+            <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-[0.06em] text-slate-400">Category Name</th>
+            <th class="px-4 py-3 text-center text-[10px] font-bold uppercase tracking-[0.06em] text-slate-400">Order</th>
+            <th class="px-4 py-3 text-right text-[10px] font-bold uppercase tracking-[0.06em] text-slate-400">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
           <tr v-for="category in categories" :key="category._id" class="group hover:bg-slate-50/50 transition-colors">
-            <td class="px-6 py-4 font-medium text-slate-900">{{ category.name }}</td>
-            <td class="px-6 py-4 text-center text-slate-500">{{ category.position }}</td>
-            <td class="px-6 py-4 text-right">
+            <td class="px-4 py-3 text-xs font-semibold text-slate-900">{{ category.name }}</td>
+            <td class="px-4 py-3 text-center text-xs text-slate-500">{{ category.position }}</td>
+            <td class="px-4 py-3 text-right">
               <div class="flex items-center justify-end space-x-2">
                 <button @click="editCategory(category)" class="p-2 text-[#27628C] hover:bg-[#27628C]/10 rounded-lg border border-transparent hover:border-[#27628C]/20 transition-all" title="Edit">
                   <Icon name="lucide:square-pen" class="w-4 h-4" />

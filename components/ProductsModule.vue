@@ -41,7 +41,7 @@
 
         <button v-if="hasPermission('products:create')"
           @click="showBatchModal = true"
-          class="flex-1 md:flex-none px-6 py-3 border border-slate-200 text-slate-900 rounded-xl hover:bg-slate-50 transition-all font-bold text-sm flex items-center justify-center space-x-2"
+          class="btn btn-outline flex-1 md:flex-none"
         >
           <Icon name="lucide:upload" class="w-5 h-4" />
           <span>Batch Import</span>

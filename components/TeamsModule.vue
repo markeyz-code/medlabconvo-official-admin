@@ -1,16 +1,16 @@
 <template>
-  <div class="space-y-12 animate-in fade-in duration-700">
+  <div class="space-y-5 animate-in fade-in duration-500">
     <!-- Action Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8 bg-white p-10 rounded-xl border border-slate-200 relative overflow-hidden">
+    <div class="relative flex flex-col items-start justify-between gap-4 overflow-hidden rounded-xl border border-slate-200 bg-white p-5 sm:flex-row sm:items-center">
       <!-- Background Decor -->
       <div class="absolute right-0 top-0 w-64 h-64 bg-[#27628C]/5 blur-3xl rounded-full"></div>
       
       <div class="relative z-10 space-y-2">
-        <h2 class="text-xl font-medium text-slate-900 tracking-normal ">Team Management</h2>
-        <p class="text-sm font-medium text-slate-400 tracking-normal">Manage your team members and leadership profiles</p>
+        <h2 class="text-base font-semibold text-slate-900">Team Management</h2>
+        <p class="mt-0.5 text-[11.5px] text-slate-500">Manage your team members and leadership profiles</p>
       </div>
 
-      <div class="relative z-10 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+      <div class="relative z-10 flex w-full flex-col items-center gap-2 sm:w-auto sm:flex-row">
         <button v-if="hasPermission('teams:update')"
           @click="showCategoryDrawer = true"
           class="flex-1 sm:flex-none px-8 py-3 bg-white text-[#27628C] border border-[#27628C] rounded-2xl font-medium text-sm tracking-normal hover:bg-slate-50 transition-all flex items-center justify-center space-x-2 active:scale-95"
@@ -29,7 +29,7 @@
     </div>
 
     <!-- Search & Filters -->
-    <div class="flex flex-col md:flex-row gap-6 max-w-4xl">
+    <div class="flex max-w-3xl flex-col gap-3 md:flex-row">
       <div class="flex-1">
         <AnimatedInput 
           v-model="searchQuery" 
@@ -47,7 +47,7 @@
     </div>
 
     <!-- Members Table -->
-    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden relative min-h-[400px]">
+    <div class="relative overflow-hidden rounded-xl border border-slate-200 bg-white">
       <AdminTableLoading v-if="loading" :columns="5" :rows="6" label="Loading team members" />
 
       <AdminEmptyState
@@ -119,37 +119,24 @@
       </table>
     </div>
 
-    <!-- Side Drawer -->
+    <!-- Team member (centered) -->
     <ClientOnly>
-      <SlideOver 
-        v-model="showDrawer" 
-        size="full"
-        :title="selectedMember ? 'Edit Team Member' : 'Add Team Member'"
+      <Modal
+        v-model="showDrawer"
+        size="lg"
+        :title="selectedMember ? 'Edit team member' : 'Add team member'"
+        eyebrow="Public team"
+        description="Profile details shown on the About us page."
       >
-        <div class="p-8">
-          <TeamMemberForm 
-            :member="selectedMember" 
-            @save="handleSave" 
-            @cancel="showDrawer = false" 
-          />
-        </div>
-      </SlideOver>
+        <TeamMemberForm :member="selectedMember" @save="handleSave" @cancel="showDrawer = false" />
+      </Modal>
     </ClientOnly>
 
-    <!-- Category Side Drawer -->
+    <!-- Categories (centered) -->
     <ClientOnly>
-      <SlideOver 
-        v-model="showCategoryDrawer" 
-        size="full"
-        title="Manage Categories"
-      >
-        <div class="p-8">
-          <TeamCategoryManager 
-            @changed="fetchCategories" 
-            @close="showCategoryDrawer = false" 
-          />
-        </div>
-      </SlideOver>
+      <Modal v-model="showCategoryDrawer" size="md" title="Manage categories" eyebrow="Team directory">
+        <TeamCategoryManager @changed="fetchCategories" @close="showCategoryDrawer = false" />
+      </Modal>
     </ClientOnly>
 
     <!-- Delete Confirmation Modal -->
@@ -170,7 +157,7 @@ import { useCustomToast } from '@/composables/core/useCustomToast'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import Icon from '@/components/Icon.vue'
-import SlideOver from '@/components/SlideOver.vue'
+import Modal from '@/components/Modal.vue'
 import TeamMemberForm from '@/components/TeamMemberForm.vue'
 import TeamCategoryManager from '@/components/TeamCategoryManager.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'

@@ -1,10 +1,7 @@
 <template>
   <div class="w-full">
     <div class="mb-2 relative">
-      <label 
-        :for="id || inputId"
-        class="block text-sm font-medium text-[#27628C] mb-1.5 ml-1"
-      >
+      <label :for="id || inputId" class="field-label">
         {{ label }}
       </label>
       <div class="relative input-container">
@@ -20,7 +17,7 @@
         :readonly="readonly"
         :rows="rows"
         :class="[
-          'w-full py-3.5 px-4 bg-white border border-slate-200 focus:outline-none focus:ring-0 focus:border-[#27628C] transition-all duration-300 resize-none font-medium text-slate-900 rounded-2xl',
+          'w-full min-h-[88px] px-3 py-2.5 bg-white border border-slate-200 focus:outline-none focus:ring-0 focus:border-[#27628C] transition-all duration-200 resize-y font-medium text-slate-900 rounded-[9px] text-[12.5px]',
           roundedClasses,
           disabled ? 'opacity-50 cursor-not-allowed' : '',
           (hasError || (errorMessage && showError)) ? 'border-[0.5px] ring-red-500 border-red-500' : ''
@@ -41,7 +38,7 @@
         :readonly="readonly || type === 'date' || type === 'time' || type === 'datetime-local'"
         :autocomplete="autocomplete"
         :class="[
-          'w-full py-3.5 px-4 bg-white border border-slate-200 focus:outline-none focus:ring-0 focus:border-[#27628C] transition-all duration-300 font-medium text-slate-900 rounded-2xl',
+          'w-full min-h-[38px] px-3 py-2 bg-white border border-slate-200 focus:outline-none focus:ring-0 focus:border-[#27628C] transition-all duration-200 font-medium text-slate-900 rounded-[9px] text-[12.5px]',
           roundedClasses,
           disabled ? 'opacity-50 cursor-not-allowed' : '',
           (type === 'date' || type === 'time' || type === 'datetime-local') ? 'cursor-pointer' : '',
@@ -77,7 +74,7 @@
     </div>
     
     <Transition name="slide-fade">
-      <p v-if="errorMessage && showError" class="text-sm text-red-500 mt-1 ml-3">
+      <p v-if="errorMessage && showError" class="mt-1.5 text-[10.5px] font-medium text-red-500">
         {{ errorMessage }}
       </p>
     </Transition>
@@ -95,7 +92,7 @@
           class="bg-white rounded-3xl  w-full max-w-md overflow-hidden transform"
           @click.stop
         >
-          <div class="bg-gradient-to-br from-[#27628C] to-[#1F5378] p-6 text-white">
+          <div class="bg-gradient-to-br from-[#27628C] to-[#1F5378] p-4 text-white">
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-xl font-medium">Select Date</h3>
               <button 
@@ -203,7 +200,7 @@
           class="bg-white rounded-3xl  w-full max-w-sm overflow-hidden transform"
           @click.stop
         >
-          <div class="bg-gradient-to-br from-[#27628C] to-[#1F5378] p-6 text-white">
+          <div class="bg-gradient-to-br from-[#27628C] to-[#1F5378] p-4 text-white">
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-xl font-medium">Select Time</h3>
               <button 
@@ -338,7 +335,7 @@
           class="bg-white rounded-3xl  w-full max-w-4xl my-8 overflow-hidden transform"
           @click.stop
         >
-          <div class="bg-gradient-to-br from-[#27628C] to-[#1F5378] p-6 text-white">
+          <div class="bg-gradient-to-br from-[#27628C] to-[#1F5378] p-4 text-white">
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-lg font-medium">Select Date & Time</h3>
               <button 

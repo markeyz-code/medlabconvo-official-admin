@@ -183,14 +183,14 @@
       </div>
     </Modal>
 
-    <!-- Configure Personnel (SlideOver) -->
-    <SlideOver v-model="showModal" size="lg" title="User settings">
+    <!-- Configure personnel (centered) -->
+    <Modal v-model="showModal" size="md" title="User settings" eyebrow="Team access" description="Update profile details, role and sign-in credentials.">
       <UserForm
         :user="selectedUser"
         @save="handleSaveUser"
         @cancel="closeModal"
       />
-    </SlideOver>
+    </Modal>
 
     <!-- Delete Confirmation Modal -->
     <ConfirmModal
@@ -216,7 +216,6 @@ import { useGetRoles } from '@/composables/modules/roles/useGetRoles'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
-import SlideOver from '@/components/SlideOver.vue'
 import Modal from '@/components/Modal.vue'
 import Icon from '@/components/Icon.vue'
 import UserForm from '@/components/userForm.vue'
