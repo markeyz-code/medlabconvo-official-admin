@@ -1,343 +1,226 @@
 <template>
-  <div class="flex flex-col h-full min-h-screen">
-    <!-- Editor Header -->
-    <div class="sticky top-0 z-10 bg-white border-b border-slate-200 px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <div class="flex items-center space-x-3 sm:space-x-4 min-w-0">
-        <button @click="$emit('cancel')" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all flex-shrink-0">
-          <Icon name="lucide:x" class="w-5 h-5" />
+  <div class="min-h-screen bg-[#f5f7f8]">
+    <!-- Writing toolbar -->
+    <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <div class="mx-auto flex max-w-[1480px] flex-wrap items-center gap-2 px-4 py-2.5">
+        <button
+          type="button"
+          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+          title="Back to Convo Stack"
+          @click="$emit('cancel')"
+        >
+          <Icon name="lucide:arrow-left" class="h-4 w-4" />
         </button>
+
         <div class="min-w-0">
-          <h2 class="text-base sm:text-lg font-bold text-slate-900 truncate">{{ publication ? 'Edit Publication' : 'New Publication' }}</h2>
-          <p class="text-xs sm:text-sm text-slate-400 font-medium">Convo Stack Editor</p>
+          <p class="text-[8px] font-bold uppercase tracking-[0.18em] text-[#27628C]">Convo Stack</p>
+          <div class="flex items-center gap-2">
+            <h1 class="truncate text-[13px] font-semibold text-slate-900">{{ publication ? 'Edit post' : 'New post' }}</h1>
+            <span :class="['rounded-full px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.08em]', displayStatus === 'Published' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700']">
+              {{ displayStatus }}
+            </span>
+          </div>
+        </div>
+
+        <div class="ml-auto flex flex-wrap items-center justify-end gap-1.5">
+          <button
+            type="button"
+            class="btn btn-ghost"
+            :class="showSettings ? 'bg-[#27628C]/5 text-[#27628C]' : ''"
+            :aria-expanded="showSettings"
+            @click="showSettings = !showSettings"
+          >
+            <Icon name="lucide:sliders-horizontal" class="h-3.5 w-3.5" />
+            Settings
+          </button>
+          <a
+            v-if="publication?.slug"
+            :href="`https://www.medlabconvo.com/convostack/${publication.slug}`"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-outline hidden sm:inline-flex"
+          >
+            <Icon name="lucide:eye" class="h-3.5 w-3.5" />
+            Preview
+          </a>
+          <button type="button" class="btn btn-outline" :disabled="!isValid || saving" @click="handleSave('draft')">
+            Save draft
+          </button>
+          <button type="button" class="btn btn-primary" :disabled="!isValid || saving" @click="handleSave('published')">
+            <Icon :name="saving ? 'lucide:loader-2' : 'lucide:send'" class="h-3.5 w-3.5" :class="{ 'animate-spin': saving }" />
+            {{ saving ? 'Saving…' : publication?.status === 'published' ? 'Update' : 'Publish' }}
+          </button>
         </div>
       </div>
-      <div class="flex items-center gap-3 w-full sm:w-auto">
-        <a v-if="publication?.slug" :href="`https://www.medlabconvo.com/convostack/${publication.slug}`" target="_blank" rel="noopener noreferrer" class="hidden items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-600 transition hover:border-[#27628C]/30 hover:text-[#27628C] sm:flex">
-          <Icon name="lucide:eye" class="h-4 w-4" />
-          Preview
-        </a>
-        <button
-          type="button"
-          @click="handleSave('draft')"
-          :disabled="!isValid || saving"
-          class="flex-1 justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:flex-none"
-        >
-          Save draft
-        </button>
-        <button
-          type="button"
-          @click="handleSave('published')"
-          :disabled="!isValid || saving"
-          :class="[
-            'flex-1 sm:flex-none justify-center px-4 sm:px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 flex items-center space-x-2 active:scale-95',
-            isValid && !saving
-              ? 'bg-[#27628C] text-white hover:bg-[#1B4A6B]'
-              : 'bg-slate-100 text-slate-400 cursor-not-allowed'
-          ]"
-        >
-          <Icon :name="saving ? 'lucide:loader-2' : 'lucide:send'" class="w-4 h-4" :class="saving ? 'animate-spin' : ''" />
-          <span>{{ saving ? 'Saving…' : publication?.status === 'published' ? 'Update post' : 'Publish' }}</span>
-        </button>
-      </div>
-    </div>
+    </header>
 
-    <!-- Editor Body -->
-    <div class="flex-1 overflow-y-auto bg-slate-100">
-      <div class="max-w-5xl mx-auto py-6 sm:py-10 lg:py-12 px-4 sm:px-6 space-y-8 sm:space-y-12">
-
-        <!-- Cover Image Upload -->
-        <div class="relative group">
-          <div v-if="form.coverImage" class="relative rounded-3xl overflow-hidden aspect-[21/9] ring-1 ring-slate-200">
-            <img :src="form.coverImage" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-            <div class="absolute top-4 right-4 flex items-center space-x-2">
-              <button @click="triggerCoverUpload" class="px-4 py-2 bg-white/90 backdrop-blur text-slate-900 rounded-xl font-bold text-sm hover:bg-white transition-all transform hover:scale-105">Change cover</button>
-              <button @click="form.coverImage = ''" class="px-4 py-2 bg-red-500/90 backdrop-blur text-white rounded-xl font-bold text-sm hover:bg-red-600 transition-all transform hover:scale-105">Remove</button>
+    <div class="mx-auto flex max-w-[1480px] flex-col gap-5 px-4 py-5 xl:flex-row">
+      <!-- Writing surface -->
+      <main class="min-w-0 flex-1">
+        <div class="mx-auto max-w-[760px] space-y-3">
+          <!-- Cover -->
+          <div v-if="form.coverImage" class="group relative h-[210px] overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+            <img :src="form.coverImage" :alt="form.title || 'Cover'" class="h-full w-full object-cover" />
+            <div class="absolute right-2 top-2 flex items-center gap-1.5">
+              <button type="button" class="btn btn-outline !bg-white/95" @click="triggerCoverUpload">Change</button>
+              <button type="button" class="btn btn-danger" @click="form.coverImage = ''">Remove</button>
             </div>
           </div>
-          <div v-else-if="uploadingCover" class="relative rounded-3xl border-2 border-dashed border-[#27628C] bg-slate-50 aspect-[21/9] flex flex-col items-center justify-center animate-pulse">
-            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#27628C] mb-3"></div>
-            <p class="text-sm font-bold text-[#27628C]">Uploading publication...</p>
+
+          <div v-else-if="uploadingCover" class="flex h-16 items-center justify-center gap-2 rounded-xl border border-[#27628C]/20 bg-white">
+            <span class="h-4 w-4 animate-spin rounded-full border-2 border-[#27628C]/20 border-t-[#27628C]" />
+            <span class="text-[11px] font-semibold text-[#27628C]">Uploading cover…</span>
           </div>
-          <div v-else class="relative rounded-3xl border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50 hover:border-[#27628C] transition-all aspect-[21/9] flex flex-col items-center justify-center cursor-pointer group/upload" @click="triggerCoverUpload">
-            <div class="p-4 bg-slate-50 rounded-2xl group-hover/upload:bg-slate-100 transition-colors mb-4">
-              <Icon name="lucide:image" class="w-12 h-12 text-slate-300 group-hover/upload:text-[#27628C] transition-colors" />
-            </div>
-            <p class="text-sm font-bold text-slate-500">Upload cover image</p>
-            <p class="text-sm text-slate-400 mt-2 font-medium">Recommended: landscape (21:9)</p>
-          </div>
+
+          <button v-else type="button" class="group flex w-full items-center gap-3 rounded-xl border border-dashed border-slate-300 bg-white px-4 py-3 text-left transition hover:border-[#27628C]/40 hover:bg-[#fbfdfe]" @click="triggerCoverUpload">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-50 text-slate-400 transition group-hover:bg-[#27628C]/5 group-hover:text-[#27628C]">
+              <Icon name="lucide:image-plus" class="h-4 w-4" />
+            </span>
+            <span class="min-w-0">
+              <span class="block text-[11px] font-semibold text-slate-700">Add a cover image</span>
+              <span class="block text-[9.5px] text-slate-400">Optional · landscape works best</span>
+            </span>
+            <span class="ml-auto text-[9px] font-medium text-slate-300">21:9</span>
+          </button>
           <input ref="coverInputRef" type="file" accept="image/*" class="hidden" @change="handleCoverUpload" />
-        </div>
 
-        <!-- Document Header (Substack Style) -->
-        <div class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-10 md:p-14 border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
-          <div>
-            <label class="text-sm font-bold text-slate-400  tracking-normal mb-2 block ml-1">Main Title</label>
-            <input
+          <!-- Document -->
+          <article class="rounded-xl border border-slate-200 bg-white px-6 py-7 shadow-[0_1px_2px_rgba(16,42,58,0.03)] sm:px-12 sm:py-10">
+            <textarea
+              ref="titleRef"
               v-model="form.title"
-              type="text"
-
-              class="w-full text-lg md:text-xl font-black text-slate-900 bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight tracking-tight block"
-              style="all: unset; display: block; width: 100%; font-size: 2.5rem; font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; color: #0f172a;"
+              rows="1"
+              placeholder="Title"
+              class="editor-title"
+              aria-label="Post title"
+              @input="resizeTitle"
             />
-          </div>
-          
-          <div class="pt-4 border-t border-slate-50">
-            <label class="text-sm font-bold text-[#27628C]  tracking-normal mb-2 block ml-1">Feature subtitle</label>
             <input
               v-model="form.subtitle"
               type="text"
-
-              class="w-full text-xl md:text-lg font-bold text-[#27628C] bg-transparent border-none outline-none focus:ring-0 p-0 m-0 leading-tight block italic"
-              style="all: unset; display: block; width: 100%; font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: #27628C; font-style: italic;"
+              placeholder="Add a subtitle…"
+              class="editor-subtitle"
+              aria-label="Post subtitle"
             />
-          </div>
 
-          <div class="pt-4 border-t border-slate-50">
-            <label class="text-sm font-bold text-slate-400  tracking-normal mb-2 block ml-1">Excerpt (SEO Summary)</label>
-            <textarea
-              v-model="form.excerpt"
-              rows="2"
+            <div class="my-6 flex flex-wrap items-center gap-2 border-y border-slate-100 py-3 text-[10px] text-slate-400">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-[#27628C] text-[9px] font-bold text-white">
+                {{ (form.authors?.[0] || 'M').charAt(0).toUpperCase() }}
+              </span>
+              <span class="font-semibold text-slate-600">{{ form.authors?.join(', ') || 'MedLabConvo Editorial' }}</span>
+              <span>·</span>
+              <span>{{ displayStatus }}</span>
+              <span class="ml-auto inline-flex items-center gap-1"><Icon name="lucide:clock" class="h-3 w-3" />{{ computedReadTime }} min read</span>
+            </div>
 
-              class="w-full text-lg md:text-xl font-medium text-slate-500 bg-transparent border-none outline-none resize-none focus:ring-0 p-0 m-0 block leading-relaxed"
-              style="all: unset; display: block; width: 100%; font-size: 1.25rem; font-weight: 500; line-height: 1.6; color: #64748b; height: 3.2rem;"
-            ></textarea>
-          </div>
+            <RichTextEditor v-model="form.bodyHtml" placeholder="Tell your story…" class="editor-body" />
+
+            <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-[9.5px] text-slate-400">
+              <span>{{ wordCount }} words</span>
+              <span>{{ computedReadTime }} min read</span>
+            </div>
+          </article>
         </div>
+      </main>
 
-        <!-- Substack Raw HTML Integration (High Fidelity) -->
-        <div class="bg-[#27628C]/5 rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-[#27628C]/10 space-y-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-[#27628C] rounded-xl flex items-center justify-center text-white shadow-sm border border-slate-100">
-                <Icon name="lucide:code-2" class="w-5 h-5" />
-              </div>
+      <!-- Settings rail -->
+      <aside v-if="showSettings" class="w-full shrink-0 space-y-3 xl:w-[300px]">
+        <div class="space-y-3 xl:sticky xl:top-[4.6rem] xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto xl:pr-1">
+          <section class="rounded-xl border border-slate-200 bg-white p-4">
+            <div class="flex items-center justify-between">
+              <p class="text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400">Publishing</p>
+              <span :class="['rounded-full px-1.5 py-0.5 text-[8px] font-bold uppercase', displayStatus === 'Published' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700']">{{ displayStatus }}</span>
+            </div>
+            <div class="mt-3 space-y-3">
               <div>
-                <h4 class="text-sm font-bold text-slate-900 leading-tight">Paste rich content (optional)</h4>
-                <p class="text-sm font-bold text-slate-400 ">Paste HTML or use the block editor below</p>
+                <label class="field-label">Category</label>
+                <input v-model="form.category" type="text" class="input" placeholder="e.g. Careers" />
               </div>
-            </div>
-            <div v-if="form.bodyHtml" class="flex items-center bg-green-50 text-green-600 px-3 py-1.5 rounded-full text-sm font-bold border border-green-100">
-              <Icon name="lucide:check-circle-2" class="w-3 h-3 mr-1.5" />
-              ACTIVE
-            </div>
-          </div>
-          <textarea
-            v-model="form.bodyHtml"
-            rows="6"
-
-            class="w-full p-6 bg-white border border-slate-200 rounded-2xl text-sm font-mono text-slate-600 focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-inner"
-          ></textarea>
-          <p class="text-sm text-slate-400 font-medium">If this field contains content, it will be used instead of the block editor on the public page.</p>
-        </div>
-
-        <!-- Content Blocks -->
-        <div class="space-y-8 relative">
-          <div v-if="form.contentBlocks.length === 0" class="text-center py-20 bg-white rounded-3xl border border-slate-100">
-            <Icon name="lucide:file-plus" class="w-16 h-16 text-slate-200 mx-auto mb-4" />
-            <h3 class="text-lg font-bold text-slate-400">Start your publication</h3>
-            <p class="text-sm text-slate-300 mt-2 font-medium">Add your first content block below to begin</p>
-          </div>
-
-          <div
-            v-for="(block, index) in form.contentBlocks"
-            :key="index"
-            class="group relative bg-white border border-slate-200 rounded-2xl sm:rounded-3xl p-4 sm:p-8 hover:border-indigo-400 hover: hover:-500/10 transition-all duration-300 transform hover:-translate-y-1"
-          >
-            <!-- Block Controls (Sleeker) -->
-            <div class="absolute -top-4 right-8 transition-all duration-200 flex items-center space-x-1 bg-white rounded-2xl  border border-slate-100 p-1.5 z-10">
-              <button v-if="index > 0" @click="moveBlock(index, -1)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors"><Icon name="lucide:chevron-up" class="w-4 h-4" /></button>
-              <button v-if="index < form.contentBlocks.length - 1" @click="moveBlock(index, 1)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors"><Icon name="lucide:chevron-down" class="w-4 h-4" /></button>
-              <div class="w-px h-4 bg-slate-100 mx-1"></div>
-              <button @click="removeBlock(index)" class="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"><Icon name="lucide:trash-2" class="w-4 h-4" /></button>
-            </div>
-
-            <!-- Block Type Label -->
-            <div class="flex items-center space-x-3 mb-6">
-              <div :class="[
-                'w-8 h-8 rounded-xl flex items-center justify-center',
-                block.type === 'text' ? 'bg-blue-100 text-blue-600' :
-                block.type === 'image' ? 'bg-green-100 text-green-600' :
-                block.type === 'video' ? 'bg-purple-100 text-purple-600' :
-                block.type === 'audio' ? 'bg-amber-100 text-amber-600' :
-                block.type === 'quote' ? 'bg-pink-100 text-pink-600' :
-                'bg-slate-100 text-slate-600'
-              ]">
-                <Icon v-if="block.type === 'text'" name="lucide:file-text" class="w-4 h-4" />
-                <Icon v-if="block.type === 'image'" name="lucide:image" class="w-4 h-4" />
-                <Icon v-if="block.type === 'video'" name="lucide:video" class="w-4 h-4" />
-                <Icon v-if="block.type === 'audio'" name="lucide:music" class="w-4 h-4" />
-                <Icon v-if="block.type === 'quote'" name="lucide:quote" class="w-4 h-4" />
-                <Icon v-if="block.type === 'divider'" name="lucide:minus" class="w-4 h-4" />
-              </div>
-              <span class="text-sm font-bold text-slate-400 capitalize">{{ block.type }} block</span>
-            </div>
-
-            <!-- Text Block -->
-            <div v-if="block.type === 'text'">
-              <RichTextEditor v-model="block.content" />
-            </div>
-
-            <!-- Image Block -->
-            <div v-if="block.type === 'image'" class="space-y-6">
-              <div v-if="block.content" class="rounded-2xl overflow-hidden border border-slate-200  group/img relative">
-                <img :src="block.content" class="w-full max-h-[500px] object-contain bg-slate-50" />
-                <div class="absolute top-4 right-4 flex items-center justify-center">
-                  <button @click="triggerBlockImageUpload(index)" class="px-4 py-2 bg-white/90 text-slate-900 rounded-xl font-bold text-sm shadow-md">Replace Image</button>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="field-label">Read time</label>
+                  <div class="input flex items-center text-slate-500">{{ computedReadTime }} min</div>
+                </div>
+                <div>
+                  <label class="field-label">Words</label>
+                  <div class="input flex items-center text-slate-400">{{ wordCount }}</div>
                 </div>
               </div>
-              <div v-else-if="blockUploading[index]" class="border-2 border-dashed border-slate-100 rounded-2xl p-16 flex flex-col items-center justify-center bg-white animate-pulse">
-                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#27628C] mb-3"></div>
-                <span class="text-sm text-[#27628C] font-bold">Uploading...</span>
-              </div>
-              <div v-else class="border-2 border-dashed border-slate-200 rounded-2xl p-16 flex flex-col items-center justify-center bg-slate-50/50 cursor-pointer hover:bg-white hover:border-[#27628C] transition-all group/inner" @click="triggerBlockImageUpload(index)">
-                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-4 group-hover/inner:scale-110 transition-transform">
-                  <Icon name="lucide:image" class="w-8 h-8 text-slate-300" />
-                </div>
-                <span class="text-sm text-slate-400 font-bold">Add image</span>
-              </div>
-              <input :ref="el => setBlockImageRef(index, el)" type="file" accept="image/*" class="hidden" @change="e => handleBlockImageUpload(e, index)" />
-              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
-            </div>
-
-            <!-- Video Block -->
-            <div v-if="block.type === 'video'" class="space-y-6">
-              <div class="relative">
-                <Icon name="lucide:link" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
-                <input v-model="block.content" type="text" class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
-              </div>
-              <div v-if="block.content && isEmbeddableVideo(block.content)" class="rounded-2xl overflow-hidden  aspect-video bg-black">
-                <iframe :src="getEmbedUrl(block.content)" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
-              </div>
-              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
-            </div>
-
-            <!-- Quote Block -->
-            <div v-if="block.type === 'quote'" class="space-y-6">
-              <div class="relative">
-                <Icon name="lucide:message-square" class="absolute -left-2 -top-2 w-10 h-10 text-indigo-100 -z-0" />
-                <textarea
-                  v-model="block.content"
-                  rows="3"
-                 
-                  class="relative z-10 w-full px-6 py-6 bg-indigo-50/50 border-l-4 border-indigo-500 rounded-r-3xl text-xl font-bold  text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"
-                ></textarea>
-              </div>
-              <input v-model="block.caption" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
-            </div>
-
-            <!-- Divider -->
-            <div v-if="block.type === 'divider'" class="py-10 flex items-center justify-center">
-              <div class="w-24 h-1 bg-slate-100 rounded-full"></div>
-            </div>
-          </div>
-
-          <!-- Add Block Toolbar (Floating or Bottom) -->
-          <div class="sticky bottom-8 z-10 flex justify-center">
-            <div class="flex items-center space-x-2 bg-white/80 backdrop-blur-xl p-2 rounded-3xl  border border-white/50 ring-1 ring-slate-200/50">
-              <button @click="addBlock('text')" class="p-3 text-blue-600 hover:bg-blue-50 rounded-2xl transition-all" title="Add Text"><Icon name="lucide:file-text" class="w-6 h-6" /></button>
-              <button @click="addBlock('image')" class="p-3 text-green-600 hover:bg-green-50 rounded-2xl transition-all" title="Add Image"><Icon name="lucide:image" class="w-6 h-6" /></button>
-              <button @click="addBlock('video')" class="p-3 text-purple-600 hover:bg-purple-50 rounded-2xl transition-all" title="Add Video"><Icon name="lucide:video" class="w-6 h-6" /></button>
-              <button @click="addBlock('quote')" class="p-3 text-pink-600 hover:bg-pink-50 rounded-2xl transition-all" title="Add Quote"><Icon name="lucide:quote" class="w-6 h-6" /></button>
-              <div class="w-px h-6 bg-slate-200 mx-1"></div>
-              <button @click="addBlock('divider')" class="p-3 text-slate-400 hover:bg-slate-100 rounded-2xl transition-all" title="Add Divider"><Icon name="lucide:minus" class="w-6 h-6" /></button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Settings Section -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-8 space-y-8">
-          <div class="flex items-center space-x-4 text-slate-900">
-            <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center">
-              <Icon name="lucide:settings" class="w-6 h-6" />
-            </div>
-            <h3 class="text-xl font-bold tracking-tight">Publication settings</h3>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="space-y-2">
-              <label class="text-sm font-bold text-slate-400 ml-1">Category</label>
-              <input v-model="form.category" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
-            </div>
-            <div class="space-y-2">
-              <label class="text-xs font-semibold text-slate-500 ml-1">Estimated read time (min)</label>
-              <input v-model.number="form.readTime" type="number" min="1" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
-            </div>
-          </div>
-
-          <!-- Newsletter Toggle -->
-          <div class="p-6 bg-blue-50/50 rounded-[32px] border border-blue-100/50 flex items-center justify-between group/news">
-            <div class="flex items-center space-x-4">
-              <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover/news:scale-110 transition-transform">
-                <Icon name="lucide:mail" class="w-6 h-6 text-blue-600" />
-              </div>
               <div>
-                <h4 class="text-sm font-bold text-slate-900">Push to Newsletter</h4>
-                <p class="text-xs text-slate-500 font-medium">Email this post to all active subscribers when you publish</p>
+                <label class="field-label">Social preview excerpt</label>
+                <textarea v-model="form.excerpt" rows="3" class="textarea" placeholder="Optional. Generated from the post if left empty." />
               </div>
             </div>
-            <button 
-              type="button"
-              @click="form.sendAsNewsletter = !form.sendAsNewsletter"
-              :class="[
-                'w-14 h-8 rounded-full p-1 transition-all duration-300 ring-1 ring-inset',
-                form.sendAsNewsletter ? 'bg-primary ring-blue-700' : 'bg-slate-200 ring-slate-300'
-              ]"
-            >
-              <div :class="['w-6 h-6 rounded-full bg-white shadow-sm transform transition-transform duration-300', form.sendAsNewsletter ? 'translate-x-6' : 'translate-x-0']"></div>
+          </section>
+
+          <section class="rounded-xl border border-slate-200 bg-white p-4">
+            <button type="button" class="flex w-full items-start justify-between gap-3 text-left" @click="form.sendAsNewsletter = !form.sendAsNewsletter">
+              <span>
+                <span class="block text-[11px] font-semibold text-slate-800">Email subscribers</span>
+                <span class="mt-0.5 block text-[9.5px] leading-4 text-slate-400">Send this post to active Convo Stack subscribers on publish.</span>
+              </span>
+              <span :class="['mt-0.5 flex h-4 w-7 shrink-0 items-center rounded-full p-0.5 transition', form.sendAsNewsletter ? 'bg-[#27628C]' : 'bg-slate-200']">
+                <span :class="['h-3 w-3 rounded-full bg-white shadow-sm transition-transform', form.sendAsNewsletter ? 'translate-x-3' : 'translate-x-0']" />
+              </span>
             </button>
-          </div>
+          </section>
 
-          <!-- Authors Management -->
-          <div class="space-y-2 border-t border-slate-50 pt-8">
-            <label class="text-xs font-semibold text-slate-500 ml-1">Authors (separated by commas)</label>
-            <input v-model="authorsInput" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
-            <div v-if="form.authors.length" class="flex flex-wrap gap-2 mt-3">
-              <span v-for="(author, i) in form.authors" :key="i" class="px-3 py-1.5 bg-blue-50 text-[#27628C] text-sm font-bold rounded-full border border-blue-100 flex items-center space-x-2">
-                <span>{{ author }}</span>
-                <button @click="form.authors.splice(i, 1); authorsInput = form.authors.join(', ')" class="hover:text-rose-500 transition-colors"><Icon name="lucide:x" class="w-3 h-3" /></button>
-              </span>
+          <section class="rounded-xl border border-slate-200 bg-white p-4">
+            <p class="text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400">People &amp; topics</p>
+            <div class="mt-3 space-y-3">
+              <div>
+                <label class="field-label">Authors</label>
+                <input v-model="authorsInput" type="text" class="input" placeholder="Comma-separated names" />
+                <div v-if="form.authors.length" class="mt-2 flex flex-wrap gap-1">
+                  <span v-for="(author, i) in form.authors" :key="author" class="inline-flex items-center gap-1 rounded-md bg-[#27628C]/5 px-1.5 py-0.5 text-[9px] font-semibold text-[#27628C]">
+                    {{ author }}
+                    <button type="button" class="text-[#27628C]/50 hover:text-rose-500" @click="form.authors.splice(i, 1); authorsInput = form.authors.join(', ')"><Icon name="lucide:x" class="h-2.5 w-2.5" /></button>
+                  </span>
+                </div>
+              </div>
+              <div>
+                <label class="field-label">Tags</label>
+                <input v-model="tagsInput" type="text" class="input" placeholder="Comma-separated tags" />
+                <div v-if="form.tags.length" class="mt-2 flex flex-wrap gap-1">
+                  <span v-for="(tag, i) in form.tags" :key="tag" class="inline-flex items-center gap-1 rounded-md bg-slate-50 px-1.5 py-0.5 text-[9px] font-semibold text-slate-500">
+                    {{ tag }}
+                    <button type="button" class="text-slate-400 hover:text-rose-500" @click="form.tags.splice(i, 1); tagsInput = form.tags.join(', ')"><Icon name="lucide:x" class="h-2.5 w-2.5" /></button>
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
+          </section>
 
+          <details class="group rounded-xl border border-slate-200 bg-white">
+            <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              SEO &amp; metadata
+              <Icon name="lucide:chevron-down" class="h-3 w-3 transition group-open:rotate-180" />
+            </summary>
+            <div class="space-y-3 border-t border-slate-100 px-4 py-3">
+              <div>
+                <label class="field-label">SEO title</label>
+                <input v-model="form.metaTitle" type="text" class="input" placeholder="Optional override" />
+              </div>
+              <div>
+                <label class="field-label">Meta description</label>
+                <textarea v-model="form.metaDescription" rows="2" class="textarea" placeholder="Optional override" />
+              </div>
+              <div>
+                <label class="field-label">Canonical URL</label>
+                <input v-model="form.canonicalUrl" type="url" class="input" placeholder="Optional" />
+              </div>
+            </div>
+          </details>
 
-          <div class="space-y-2">
-            <label class="text-xs font-semibold text-slate-500 ml-1">Tags (separated by commas)</label>
-            <input v-model="tagsInput" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
-            <div v-if="form.tags.length" class="flex flex-wrap gap-2 mt-3">
-              <span v-for="(tag, i) in form.tags" :key="i" class="px-3 py-1.5 bg-slate-50 text-slate-700 text-sm font-bold rounded-full border border-slate-200 flex items-center space-x-2">
-                <span>{{ tag }}</span>
-                <button @click="form.tags.splice(i, 1); tagsInput = form.tags.join(', ')" class="hover:text-rose-500 transition-colors"><Icon name="lucide:x" class="w-3 h-3" /></button>
-              </span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 gap-8 opacity-60 hover:opacity-100 transition-opacity">
-            <div class="space-y-2">
-              <label class="text-xs font-semibold text-slate-500 ml-1">SEO title override</label>
-              <input v-model="form.metaTitle" type="text" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
-            </div>
-            <div class="space-y-2">
-              <label class="text-xs font-semibold text-slate-500 ml-1">Meta description</label>
-              <textarea v-model="form.metaDescription" rows="3" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none resize-none transition-all shadow-sm"></textarea>
-            </div>
-            <div class="space-y-2">
-              <label class="text-xs font-semibold text-slate-500 ml-1">Canonical URL (optional)</label>
-              <input v-model="form.canonicalUrl" type="url" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-[#27628C]/20 focus:border-[#27628C] outline-none transition-all shadow-sm" />
-            </div>
-            <div class="space-y-2">
-              <label class="text-xs font-semibold text-slate-500 ml-1">Legacy external ID</label>
-              <input v-model.number="form.substackId" type="number" readonly class="w-full px-5 py-3.5 bg-slate-100 border border-slate-200 rounded-xl text-sm font-medium text-slate-400 cursor-not-allowed outline-none transition-all shadow-sm" />
-            </div>
-          </div>
+          <p class="px-1 text-[9px] leading-4 text-slate-400">Changes are saved when you choose Save draft or Publish.</p>
         </div>
-      </div>
+      </aside>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, watch, watchEffect } from 'vue'
+import { reactive, ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 import { useSingleUploadFile } from '@/composables/core/useSingleUpload'
 import RichTextEditor from './RichTextEditor.vue'
@@ -352,6 +235,8 @@ const emit = defineEmits(['save', 'cancel'])
 const { showToast } = useCustomToast()
 const { singleUploadFile } = useSingleUploadFile()
 
+const showSettings = ref(true)
+const titleRef = ref<HTMLTextAreaElement | null>(null)
 const coverInputRef = ref<HTMLInputElement | null>(null)
 const blockImageElements = ref<Record<number, HTMLInputElement | null>>({})
 const uploadingCover = ref(false)
@@ -375,6 +260,20 @@ const form = reactive({
   substackId: null as number | null,
   canonicalUrl: ''
 })
+
+const resizeTitle = () => {
+  const el = titleRef.value
+  if (!el) return
+  el.style.height = 'auto'
+  el.style.height = `${el.scrollHeight}px`
+}
+
+onMounted(() => {
+  if (typeof window !== 'undefined' && window.innerWidth < 1280) showSettings.value = false
+  nextTick(resizeTitle)
+})
+
+watch(() => form.title, () => nextTick(resizeTitle))
 
 const tagsInput = ref('')
 const authorsInput = ref('')
@@ -412,8 +311,9 @@ watchEffect(() => {
     authorsInput.value = (props.publication.authors || []).join(', ')
   } else {
     Object.assign(form, {
-      title: '', excerpt: '', coverImage: '', contentBlocks: [], tags: [], category: '',
-      status: 'draft', readTime: 5, metaTitle: '', metaDescription: '', authors: []
+      title: '', subtitle: '', excerpt: '', coverImage: '', contentBlocks: [], tags: [], category: '',
+      status: 'draft', readTime: 5, metaTitle: '', metaDescription: '', authors: [],
+      sendAsNewsletter: false, bodyHtml: '', substackId: null, canonicalUrl: ''
     })
     tagsInput.value = ''
     authorsInput.value = ''
@@ -421,7 +321,11 @@ watchEffect(() => {
 })
 
 
-const isValid = computed(() => form.title.trim() !== '' && form.excerpt.trim() !== '')
+const plainBody = computed(() => (form.bodyHtml || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/gi, ' ').replace(/\s+/g, ' ').trim())
+const wordCount = computed(() => plainBody.value ? plainBody.value.split(/\s+/).filter(Boolean).length : 0)
+const computedReadTime = computed(() => Math.max(1, Math.round(wordCount.value / 220)))
+const displayStatus = computed(() => form.status === 'published' ? 'Published' : form.status === 'in_review' ? 'In review' : form.status === 'archived' ? 'Archived' : 'Draft')
+const isValid = computed(() => form.title.trim().length > 0)
 
 // Block operations
 const addBlock = (type: string) => {
@@ -510,6 +414,81 @@ const getEmbedUrl = (url: string) => {
 
 const handleSave = (status: 'draft' | 'published') => {
   if (!isValid.value) return
-  emit('save', { ...form, status, sendAsNewsletter: status === 'published' && form.sendAsNewsletter })
+  const excerpt = (form.excerpt || form.subtitle || plainBody.value || form.title).trim().slice(0, 240)
+  emit('save', {
+    ...form,
+    excerpt,
+    readTime: computedReadTime.value,
+    status,
+    sendAsNewsletter: status === 'published' && form.sendAsNewsletter,
+  })
 }
 </script>
+
+<style scoped>
+.editor-title {
+  display: block;
+  width: 100%;
+  min-height: 0 !important;
+  height: auto;
+  overflow: hidden;
+  resize: none;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-family: var(--mc-font-heading, inherit);
+  font-size: clamp(1.85rem, 3.4vw, 2.6rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.14 !important;
+  letter-spacing: -0.045em !important;
+  color: #0a202b !important;
+}
+.editor-title::placeholder {
+  color: #c3ced5 !important;
+  font-weight: 700 !important;
+}
+.editor-subtitle {
+  display: block;
+  width: 100%;
+  min-height: 0 !important;
+  margin-top: 10px;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 1.05rem !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  color: #5f7482 !important;
+}
+.editor-subtitle::placeholder {
+  color: #aab9c2 !important;
+}
+.editor-body :deep(.rich-text-editor) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.editor-body :deep(.rich-text-editor > div:first-child) {
+  margin: 0 -30px 14px;
+  border: 1px solid #eef2f5;
+  border-radius: 8px;
+  background: #fbfcfc !important;
+}
+.editor-body :deep(.prose) {
+  min-height: 320px;
+  padding: 4px 0 !important;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #283f4d;
+}
+@media (max-width: 639px) {
+  .editor-body :deep(.rich-text-editor > div:first-child) {
+    margin: 0 0 14px;
+  }
+}
+</style>

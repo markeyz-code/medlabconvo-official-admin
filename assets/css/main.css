@@ -1046,7 +1046,7 @@ html {
 }
 
 /* Consistent, compact admin form controls (including teleported modals). */
-input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='hidden']):not([type='range']):not([type='color']):not(.input):not(.field):not(.select):not(.select-search),
+input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='hidden']):not([type='range']):not([type='color']):not(.input):not(.field):not(.select):not(.select-search):not(.editor-title):not(.editor-subtitle),
 select,
 textarea {
   min-height: 38px !important;
