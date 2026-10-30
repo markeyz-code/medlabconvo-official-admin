@@ -24,11 +24,7 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700">Status</label>
-          <select v-model="form.status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-          </select>
+          <SelectInput v-model="form.status" label="Status" :options="[{ label: 'Draft', value: 'draft' }, { label: 'Published', value: 'published' }]" />
         </div>
 
         <div>
@@ -53,12 +49,7 @@
           
           <div class="space-y-3">
             <div>
-              <label class="block text-xs font-medium text-gray-700">Type</label>
-              <select v-model="slide.type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border text-sm">
-                <option value="text">Text Only</option>
-                <option value="image">Image Only</option>
-                <option value="mixed">Mixed (Image + Text)</option>
-              </select>
+              <SelectInput v-model="slide.type" label="Type" :options="[{ label: 'Text Only', value: 'text' }, { label: 'Image Only', value: 'image' }, { label: 'Mixed (Image + Text)', value: 'mixed' }]" />
             </div>
             
             <div v-if="slide.type !== 'image'">
@@ -92,6 +83,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useUpdateShortRead } from '@/composables/modules/short-reads/useUpdateShortRead'
 import { short_reads_api, type UpdateShortReadData } from '@/api_factory/modules/short-reads'
 import { useCustomToast } from "@/composables/core/useCustomToast"
+import SelectInput from '@/components/ui/SelectInput.vue'
 
 const { updateShortRead, loading } = useUpdateShortRead()
 const router = useRouter()

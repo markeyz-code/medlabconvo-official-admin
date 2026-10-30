@@ -5,6 +5,7 @@ import { useUnsubscribe } from '@/composables/modules/subscriptions/useUnsubscri
 import { useHardDeleteSubscription } from '@/composables/modules/subscriptions/useHardDeleteSubscription'
 import Modal from '@/components/Modal.vue'
 import AnimatedInput from '@/components/ui/AnimatedInput.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
 import AdminTableLoading from '@/components/AdminTableLoading.vue'
 import AdminEmptyState from '@/components/AdminEmptyState.vue'
 
@@ -114,13 +115,18 @@ const formatDate = (value?: string) => value ? new Date(value).toLocaleDateStrin
         <div class="flex flex-1 flex-col gap-2 sm:flex-row">
           <div class="relative w-full sm:max-w-xs">
             <Icon name="lucide:search" class="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-            <input v-model="search" type="search" placeholder="Search by email" class="h-9 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-xs outline-none focus:border-[#27628C]/40" />
+            <input v-model="search" type="search" placeholder="Search by email" class="input w-full pl-9" />
           </div>
-          <select v-model="status" class="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 outline-none">
-            <option value="all">All subscribers</option>
-            <option value="active">Active</option>
-            <option value="inactive">Unsubscribed</option>
-          </select>
+          <div class="w-40">
+            <SelectInput
+              v-model="status"
+              :options="[
+                { label: 'All subscribers', value: 'all' },
+                { label: 'Active', value: 'active' },
+                { label: 'Unsubscribed', value: 'inactive' },
+              ]"
+            />
+          </div>
         </div>
         <div class="flex items-center gap-2">
           <button type="button" class="btn btn-secondary" @click="exportCsv"><Icon name="lucide:download" class="h-3.5 w-3.5" /> Export CSV</button>

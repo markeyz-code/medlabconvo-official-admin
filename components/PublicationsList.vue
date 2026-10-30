@@ -9,7 +9,7 @@
             v-model="searchQuery"
             type="text"
            
-            class="w-full sm:w-80 pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white "
+            class="input w-full pl-10 sm:w-80"
           />
         </div>
         <div class="w-full sm:w-48">
@@ -179,20 +179,13 @@
               </button>
               
               <!-- Aggressive Status Dropdown -->
-              <select
-                v-if="hasPermission('publications:update')"
-                :value="publication.status"
-                @change="handleAggressiveStatusUpdate(publication, $event.target.value)"
-                class="p-2 text-sm border-2 border-amber-500 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none font-semibold text-slate-700 bg-amber-50 cursor-pointer transition-all duration-200 hover:bg-amber-100 max-w-full"
-                title="Update Status Aggressively"
-              >
-                <option value="draft">Draft</option>
-                <option value="pending_review">Pending Review</option>
-                <option value="under-review">Under Review</option>
-                <option value="approved">Approved</option>
-                <option value="published">Published</option>
-                <option value="rejected">Rejected</option>
-              </select>
+              <div v-if="hasPermission('publications:update')" class="w-32 shrink-0">
+                <SelectInput
+                  :model-value="publication.status"
+                  :options="publicationStatusOptions"
+                  @update:model-value="value => handleAggressiveStatusUpdate(publication, String(value))"
+                />
+              </div>
               
               <!-- Delete Button -->
               <button v-if="hasPermission('publications:delete')"
@@ -293,6 +286,7 @@ import { useUpdatePublication } from '@/composables/modules/publications/useUpda
 import { useSubmitForReview } from '@/composables/modules/publications/useSubmitPublicationForReview'
 import { useApprovePublication } from '@/composables/modules/publications/useApprovePublication'
 import { usePublishPublication } from '@/composables/modules/publications/usePublishPublication'
+import SelectInput from '@/components/ui/SelectInput.vue'
 import { useSoftDeletePublication } from '@/composables/modules/publications/useSoftDeletePublication'
 import { useReorderPublication } from '@/composables/modules/publications/useReorderPublication'
 import { useUser } from '@/composables/modules/auth/user'
@@ -515,6 +509,15 @@ const rejectPublication = async (publicationId: string) => {
   // Implement reject functionality if needed
   console.log('Reject publication:', publicationId)
 }
+
+const publicationStatusOptions = [
+  { label: 'Draft', value: 'draft' },
+  { label: 'Pending Review', value: 'pending_review' },
+  { label: 'Under Review', value: 'under-review' },
+  { label: 'Approved', value: 'approved' },
+  { label: 'Published', value: 'published' },
+  { label: 'Rejected', value: 'rejected' },
+]
 
 const handleAggressiveStatusUpdate = async (publication: any, newStatus: string) => {
   try {

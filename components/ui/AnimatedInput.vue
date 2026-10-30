@@ -122,22 +122,13 @@
                 </svg>
               </button>
               
-              <div class="flex gap-3">
-                <select 
-                  v-model="currentMonth" 
-                  @click.stop
-                  class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-[#27628C] rounded-xl font-medium focus:outline-none focus:border-[#27628C] transition-all"
-                >
-                  <option v-for="(m, i) in months" :key="i" :value="i">{{ m }}</option>
-                </select>
-                
-                <select 
-                  v-model="currentYear" 
-                  @click.stop
-                  class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-[#27628C] rounded-xl font-medium focus:outline-none focus:border-[#27628C] transition-all"
-                >
-                  <option v-for="y in yearRange" :key="y" :value="y">{{ y }}</option>
-                </select>
+              <div class="flex gap-2" @click.stop>
+                <div class="w-28">
+                  <SelectInput v-model="currentMonth" :options="months.map((m, i) => ({ label: m, value: i }))" />
+                </div>
+                <div class="w-24">
+                  <SelectInput v-model="currentYear" :options="yearRange.map(y => ({ label: String(y), value: y }))" />
+                </div>
               </div>
               
               <button 
@@ -365,13 +356,13 @@
                     <path d="M15 18l-6-6 6-6"/>
                   </svg>
                 </button>
-                <div class="flex gap-2">
-                  <select v-model="currentMonth" @click.stop class="px-3 py-2 bg-gray-50 border border-transparent hover:border-[#27628C] rounded-xl font-medium text-sm">
-                    <option v-for="(m, i) in months" :key="i" :value="i">{{ m.slice(0,3) }}</option>
-                  </select>
-                  <select v-model="currentYear" @click.stop class="px-3 py-2 bg-gray-50 border border-transparent hover:border-[#27628C] rounded-xl font-medium text-sm">
-                    <option v-for="y in yearRange" :key="y" :value="y">{{ y }}</option>
-                  </select>
+                <div class="flex gap-2" @click.stop>
+                  <div class="w-20">
+                    <SelectInput v-model="currentMonth" :options="months.map((m, i) => ({ label: m.slice(0, 3), value: i }))" />
+                  </div>
+                  <div class="w-24">
+                    <SelectInput v-model="currentYear" :options="yearRange.map(y => ({ label: String(y), value: y }))" />
+                  </div>
                 </div>
                 <button type="button" @click.stop="nextMonth" class="p-2 hover:bg-gray-100 rounded-xl">
                   <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -501,6 +492,7 @@
 
 <script setup lang="ts">
 import { ref, computed, useId, watch, onMounted, onUnmounted } from 'vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
 
 interface Props {
   modelValue?: string | number
