@@ -130,7 +130,7 @@
       size="md"
       @close="closeInviteModal"
     >
-      <div class="space-y-4">
+      <form id="invite-user-form" class="space-y-4" @submit.prevent="handleSendInvite">
         <div class="flex items-start gap-3 rounded-lg border border-slate-100 bg-slate-50 p-3.5">
           <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#27628C] text-white">
             <Icon name="lucide:shield-check" class="h-4 w-4" />
@@ -167,15 +167,15 @@
             {{ copied ? 'Copied' : 'Copy link' }}
           </button>
         </div>
-      </div>
+        </form>
 
       <template #footer>
         <button type="button" class="btn btn-outline" @click="closeInviteModal">Cancel</button>
         <button
-          type="button"
+          type="submit"
+          form="invite-user-form"
           class="btn btn-primary"
           :disabled="inviteLoading || !inviteForm.email"
-          @click="handleSendInvite"
         >
           <span v-if="inviteLoading" class="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
           {{ inviteLoading ? 'Sending…' : 'Send invitation' }}

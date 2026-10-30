@@ -471,7 +471,7 @@
   
       <!-- Preview Modal -->
       <Modal v-model="showPreviewModal" title="Episode preview" size="2xl" @update:model-value="closePreviewModal">
-        <div v-if="previewingEpisode" class="p-5 sm:p-6">
+        <div v-if="previewingEpisode">
 
               <div class="grid lg:grid-cols-3 gap-8">
                 <!-- Main Content -->

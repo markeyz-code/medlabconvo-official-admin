@@ -168,25 +168,23 @@ const formatDate = (value?: string) => value ? new Date(value).toLocaleDateStrin
       <AdminEmptyState v-else icon="lucide:users" title="No subscribers yet" description="Readers who subscribe to the Convo Stack will appear here." />
     </div>
 
-    <Modal v-model="showAdd" title="Add subscriber" size="sm">
-      <form class="space-y-4 p-5" @submit.prevent="addSubscriber">
+    <Modal v-model="showAdd" title="Add subscriber" eyebrow="Audience" size="sm">
+      <form id="add-subscriber-form" class="space-y-3" @submit.prevent="addSubscriber">
         <AnimatedInput v-model="email" id="new-subscriber-email" label="Email address" type="email" />
-        <p class="text-[11px] leading-5 text-slate-500">The reader will receive the next published post by email.</p>
-        <div class="flex justify-end gap-2 border-t border-slate-100 pt-3">
-          <button type="button" class="btn btn-secondary" @click="showAdd = false">Cancel</button>
-          <button type="submit" class="btn btn-primary" :disabled="creating || !email">Add subscriber</button>
-        </div>
+        <p class="text-[10.5px] leading-5 text-slate-500">The reader will receive the next published post by email.</p>
       </form>
+      <template #footer>
+        <button type="button" class="btn btn-outline" @click="showAdd = false">Cancel</button>
+        <button type="submit" form="add-subscriber-form" class="btn btn-primary" :disabled="creating || !email">Add subscriber</button>
+      </template>
     </Modal>
 
-    <Modal v-model="showDelete" title="Delete subscriber" size="sm">
-      <div class="space-y-4 p-5">
-        <p class="text-xs leading-5 text-slate-600">Permanently delete <strong>{{ deleting?.email }}</strong> from the audience? This cannot be undone.</p>
-        <div class="flex justify-end gap-2 border-t border-slate-100 pt-3">
-          <button type="button" class="btn btn-secondary" @click="showDelete = false">Cancel</button>
-          <button type="button" class="btn btn-danger" @click="handleDelete">Delete</button>
-        </div>
-      </div>
+    <Modal v-model="showDelete" title="Delete subscriber" eyebrow="Audience" size="sm">
+      <p class="text-xs leading-5 text-slate-600">Permanently delete <strong>{{ deleting?.email }}</strong> from the audience? This cannot be undone.</p>
+      <template #footer>
+        <button type="button" class="btn btn-outline" @click="showDelete = false">Cancel</button>
+        <button type="button" class="btn btn-danger" @click="handleDelete">Delete</button>
+      </template>
     </Modal>
   </div>
 </template>

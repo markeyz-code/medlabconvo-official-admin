@@ -159,15 +159,15 @@ const postLink = (comment: any) => {
       <AdminEmptyState v-else icon="lucide:message-circle" title="No comments found" description="Reader comments on your posts will appear here for moderation." />
     </div>
 
-    <Modal v-model="showDelete" title="Delete comment" size="sm">
-      <div class="space-y-4 p-5">
+    <Modal v-model="showDelete" title="Delete comment" eyebrow="Moderation" size="sm">
+      <div class="space-y-3">
         <p class="text-xs leading-5 text-slate-600">Delete this comment and its replies? This cannot be undone.</p>
         <p class="rounded-lg bg-slate-50 p-3 text-[11px] leading-5 text-slate-600">{{ deleting?.content }}</p>
-        <div class="flex justify-end gap-2 border-t border-slate-100 pt-3">
-          <button type="button" class="btn btn-secondary" @click="showDelete = false">Cancel</button>
-          <button type="button" class="btn btn-danger" @click="handleDelete">Delete comment</button>
-        </div>
       </div>
+      <template #footer>
+        <button type="button" class="btn btn-outline" @click="showDelete = false">Cancel</button>
+        <button type="button" class="btn btn-danger" @click="handleDelete">Delete comment</button>
+      </template>
     </Modal>
   </div>
 </template>
